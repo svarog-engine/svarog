@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ImGui.NET" Version="1.91.0.1" />
+    <PackageReference Include="LuaCSharp" Version="0.3.1" />
+    <PackageReference Include="OpenTK" Version="4.9.3" />
+    <PackageReference Include="SadRex" Version="1.0.3" />
+    <PackageReference Include="SFML.Net" Version="2.6.0" />
+    <PackageReference Include="System.Drawing.Common" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="100x100.xp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="60x60.xp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="6x6.xp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="config.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="MRMOGOB.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="MRMOTEXTEX.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
