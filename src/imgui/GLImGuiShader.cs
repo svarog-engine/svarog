@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using System.Threading;
 using OpenTK.Graphics.OpenGL4;
 
-namespace svarog.Source.imgui
+namespace svarog.src.imgui
 {
     struct UniformFieldInfo
     {

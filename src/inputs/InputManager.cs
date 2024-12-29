@@ -1,4 +1,4 @@
-﻿namespace svarog.Source.inputs
+﻿namespace svarog.src.inputs
 {
     public class InputManager<TKey> where TKey : notnull
     {

@@ -9,9 +9,9 @@ using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
 
-using svarog.Source.imgui;
+using svarog.src.imgui;
 
-namespace svarog.Source.windowing
+namespace svarog.src.windowing
 {
     public class MainWindow : IWindow
     {
@@ -26,8 +26,8 @@ namespace svarog.Source.windowing
         bool m_ToolsVisible = false;
 
         RenderWindow? m_Window = null;
-        GameWindow m_GLWindow;
-        ImGuiController m_ImGui;
+        GameWindow? m_GLWindow;
+        ImGuiController? m_ImGui;
         Clock m_Clock;
 
         int m_Width;
@@ -36,15 +36,17 @@ namespace svarog.Source.windowing
         string m_ConfigFile;
 
         readonly LuaState m_Scripting;
+        readonly Svarog m_Svarog;
         public LuaState Scripting => m_Scripting;
 
-        public event Action<IWindow> StartGame;
-        public event Action<IWindow> RenderGame;
-        public event Action<IWindow> RenderGUI;
+        public event Action<IWindow>? StartGame;
+        public event Action<IWindow>? RenderGame;
+        public event Action<IWindow>? RenderGUI;
 
-        public MainWindow(string configFile)
+        public MainWindow(Svarog svarog, string configFile)
         {
             m_Scripting = LuaState.Create();
+            m_Svarog = svarog;
 
             m_ConfigFile = configFile;
 
@@ -99,7 +101,21 @@ namespace svarog.Source.windowing
             m_Window.SetFramerateLimit(60);
 
             m_Window.KeyPressed += (sender, e) => m_Keyboard.InputDown(e.Scancode);
+            m_Window.TextEntered += (sender, e) =>
+            {
+                char k = e.Unicode.First();
+                if (k == 8)
+                {
+                    ImGui.GetIO().AddKeyEvent(ImGuiKey.Backspace, true);
+                    ImGui.GetIO().AddKeyEvent(ImGuiKey.Backspace, false);
+                }
+                else
+                {
+                    m_ImGui?.PressChar(e.Unicode.First());
+                }
+            };
             m_Window.KeyReleased += (sender, e) => m_Keyboard.InputUp(e.Scancode);
+            
             m_Window.MouseMoved += (sender, e) => m_Mouse.Move(e.X, e.Y);
             m_Window.MouseButtonPressed += (sender, e) => m_Mouse.InputDown(e.Button);
             m_Window.MouseButtonReleased += (sender, e) => m_Mouse.InputUp(e.Button);
@@ -143,7 +159,7 @@ namespace svarog.Source.windowing
             {
                 GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
                 RenderGUI?.Invoke(this);
-
+                
                 m_ImGui.Render();
                 m_GLWindow.SwapBuffers();
             }
@@ -166,6 +182,11 @@ namespace svarog.Source.windowing
         public inputs.Mouse GetMouse()
         {
             return m_Mouse;
+        }
+
+        public Svarog GetCore()
+        {
+            return m_Svarog;
         }
     }
 }

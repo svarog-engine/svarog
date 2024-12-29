@@ -11,7 +11,7 @@ using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using System.Diagnostics;
 
-namespace svarog.Source.imgui
+namespace svarog.src.imgui
 {
     public class GLWindow : GameWindow
     {
@@ -84,6 +84,11 @@ namespace svarog.Source.imgui
         {
             base.OnTextInput(e);
             imgui.PressChar((char)e.Unicode);
+        }
+
+        public void OnTextInputReaction(TextInputEventArgs e)
+        {
+            OnTextInput(e);
         }
 
         protected override void OnMouseWheel(MouseWheelEventArgs e)

@@ -10,7 +10,7 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 using SFML.Graphics;
 using PrimitiveType = OpenTK.Graphics.OpenGL4.PrimitiveType;
 
-namespace svarog.Source.imgui
+namespace svarog.src.imgui
 {
     /// <summary>
     /// A modified version of Veldrid.ImGui's ImGuiRenderer.
@@ -50,7 +50,7 @@ namespace svarog.Source.imgui
             io.BackendFlags |= ImGuiBackendFlags.RendererHasVtxOffset;
 
             CreateDeviceResources();
-            //SetKeyMappings();
+            SetKeyMappings();
 
             SetPerFrameImGuiData(1f / 60f);
 
@@ -217,10 +217,10 @@ void main()
             io.MouseDown[0] = SFML.Window.Mouse.IsButtonPressed(SFML.Window.Mouse.Button.Left);
             io.MouseDown[1] = SFML.Window.Mouse.IsButtonPressed(SFML.Window.Mouse.Button.Right);
             io.MouseDown[2] = SFML.Window.Mouse.IsButtonPressed(SFML.Window.Mouse.Button.Middle);
-            //io.KeyCtrl = SFML.Window.Keyboard.IsKeyPressed(SFML.Window.Keyboard.Key.LControl);
-            //io.KeyAlt = SFML.Window.Keyboard.IsKeyPressed(SFML.Window.Keyboard.Key.LAlt);
-            //io.KeyShift = SFML.Window.Keyboard.IsKeyPressed(SFML.Window.Keyboard.Key.LShift);
-            //io.KeySuper = SFML.Window.Keyboard.IsKeyPressed(SFML.Window.Keyboard.Key.LSystem);
+            io.KeyCtrl = SFML.Window.Keyboard.IsKeyPressed(SFML.Window.Keyboard.Key.LControl);
+            io.KeyAlt = SFML.Window.Keyboard.IsKeyPressed(SFML.Window.Keyboard.Key.LAlt);
+            io.KeyShift = SFML.Window.Keyboard.IsKeyPressed(SFML.Window.Keyboard.Key.LShift);
+            io.KeySuper = SFML.Window.Keyboard.IsKeyPressed(SFML.Window.Keyboard.Key.LSystem);
 
 
             var screenPoint = new Vector2i(SFML.Window.Mouse.GetPosition(wnd).X, SFML.Window.Mouse.GetPosition(wnd).Y);
@@ -274,7 +274,6 @@ void main()
         internal void PressChar(char keyChar)
         {
             PressedChars.Add(keyChar);
-            Console.WriteLine($"[ImGui] Pressed (Char) {keyChar}");
         }
 
         internal void MouseScroll(Vector2 offset)
