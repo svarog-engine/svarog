@@ -1,21 +1,39 @@
 ﻿using svarog.src.windowing;
 using ImGuiNET;
 using svarog.src.tools;
-using System.Runtime.Serialization;
+using SFML.Graphics;
+using svarog.src.render;
+using SFML.System;
 
 namespace svarog.src
 {
+    static class RandomExtensions
+    {
+        public static void Shuffle<T>(this Random rng, List<T> array)
+        {
+            int n = array.Count;
+            while (n > 1)
+            {
+                int k = rng.Next(n--);
+                T temp = array[n];
+                array[n] = array[k];
+                array[k] = temp;
+            }
+        }
+    }
+
     public class Svarog
     {
-        MainWindow m_GameWindow;
+        readonly MainWindow m_GameWindow;
         public MainWindow MainWindow => m_GameWindow;
 
         ToolBox m_Toolbox;
         public ToolBox ToolBox => m_Toolbox;
 
         FileManager m_FileManager;
+        GlyphRenderer m_Renderer;
 
-        private string m_PatternName = "";
+        public GlyphRenderer Renderer => m_Renderer;
 
         static void Main(string[] args)
         {
@@ -27,12 +45,15 @@ namespace svarog.src
             m_GameWindow = new MainWindow(this, config);
             m_GameWindow.StartGame += StartGame;
             m_GameWindow.RenderGUI += RenderGUI;
+            m_GameWindow.RenderGame += RenderGame;
         }
 
         private void StartGame(IWindow window)
         {
             m_Toolbox = new ToolBox(this);
             m_FileManager = new FileManager(this);
+
+            m_Renderer = new(this);
         }
 
         private string m_NewPatternName = "";
@@ -40,6 +61,7 @@ namespace svarog.src
         private int m_NewPatternY = 3;
         private int m_GridSize = 12;
         private string m_NewName = "";
+
         public bool OpenPopup { get; set; } = false;
 
         private void RenderGUI(IWindow window)
@@ -143,6 +165,13 @@ namespace svarog.src
             {
                 ToolBox.Redo();
             }
+        }
+
+        private void RenderGame(IWindow window)
+        {
+            m_Renderer.Clear();
+            m_Renderer.Draw(ToolBox.GetPattern("gob.pat"), new Vector2f(100, 100), 2);
+            m_Renderer.Display();
         }
 
         public void Run(string[] args)

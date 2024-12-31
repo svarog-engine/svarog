@@ -3,7 +3,6 @@
 using Lua;
 
 using OpenTK.Graphics.OpenGL;
-using OpenTK.Windowing.Desktop;
 
 using SFML.Graphics;
 using SFML.System;
@@ -26,12 +25,14 @@ namespace svarog.src.windowing
         bool m_ToolsVisible = false;
 
         RenderWindow? m_Window = null;
-        GameWindow? m_GLWindow;
         ImGuiController? m_ImGui;
         Clock m_Clock;
 
         int m_Width;
         int m_Height;
+
+        public int Width => m_Width;
+        public int Height => m_Height;
 
         string m_ConfigFile;
 
@@ -67,16 +68,12 @@ namespace svarog.src.windowing
 
             var config = context.Environment["config"].Read<LuaTable>();
             var window = config["window"].Read<LuaTable>();
-            if (window["width"].TryRead(out double w) && window["height"].TryRead(out double h))
+            if (window["width"].TryRead(out double w) && window["height"].TryRead(out double h) && window["grid"].TryRead(out double g))
             {
-                m_Width = (int)w;
-                m_Height = (int)h;
+                m_Width = (int)(w * g);
+                m_Height = (int)((h + 0.1f) * g);
             }
 
-            GameWindowSettings glWindowSettings = new GameWindowSettings();
-            NativeWindowSettings glNativeWindowSettings = new NativeWindowSettings();
-            glNativeWindowSettings.StartVisible = false;
-            m_GLWindow = new GameWindow(glWindowSettings, glNativeWindowSettings);
             m_VideoMode = new SFML.Window.VideoMode((uint)m_Width, (uint)m_Height);
 
             if (window["title"].TryRead(out string title))
@@ -95,11 +92,18 @@ namespace svarog.src.windowing
             }
 
             m_Title = title;
-            
-            m_Window = new RenderWindow(m_VideoMode, m_Title);
+
+            var settings = new ContextSettings();
+            settings.MajorVersion = 3;
+            settings.MinorVersion = 3;
+            settings.DepthBits = 24;
+            settings.StencilBits = 8;
+            settings.AntialiasingLevel = 2;
+            settings.AttributeFlags = ContextSettings.Attribute.Default;
+            m_Window = new RenderWindow(m_VideoMode, m_Title, Styles.Default, settings);
             m_Window.SetKeyRepeatEnabled(false);
             m_Window.SetFramerateLimit(60);
-
+            
             m_Window.KeyPressed += (sender, e) => m_Keyboard.InputDown(e.Scancode);
             m_Window.TextEntered += (sender, e) =>
             {
@@ -119,11 +123,14 @@ namespace svarog.src.windowing
             m_Window.MouseMoved += (sender, e) => m_Mouse.Move(e.X, e.Y);
             m_Window.MouseButtonPressed += (sender, e) => m_Mouse.InputDown(e.Button);
             m_Window.MouseButtonReleased += (sender, e) => m_Mouse.InputUp(e.Button);
-            m_Window.Closed += (window, _) => m_Window.Close();
-            m_Window.Resized += Window_Resized;
+            m_Window.Closed += (window, _) =>
+            {
+                m_Window.Close();
+            };
 
-            m_GLWindow.Size = new OpenTK.Mathematics.Vector2i((int)m_Window.Size.X, (int)m_Window.Size.Y);
-            m_GLWindow.Location = new OpenTK.Mathematics.Vector2i(m_Window.Position.X, m_Window.Position.Y);
+            m_Window.Resized += Window_Resized;
+            m_Window.SetActive(true);
+
             m_ImGui = new ImGuiController((int)m_Window.Size.X, (int)m_Window.Size.Y);
             
             ImGui.GetIO().ConfigWindowsMoveFromTitleBarOnly = true;
@@ -138,12 +145,17 @@ namespace svarog.src.windowing
             m_ImGui.WindowResized((int)e.Width, (int)e.Height);
         }
 
+        Sprite spr = new Sprite();
+
         public bool Frame()
         {
             if (m_Window == null) return false;
 
-            var time = m_Clock.Restart();
-            m_ImGui.Update(ref m_Window, time.AsSeconds());
+            if (m_ToolsVisible)
+            {
+                var time = m_Clock.Restart();
+                m_ImGui?.Update(ref m_Window, time.AsSeconds());
+            }
 
             m_Window.DispatchEvents();
             if (m_Keyboard.IsJustReleased(Keyboard.Scancode.Tab))
@@ -152,24 +164,22 @@ namespace svarog.src.windowing
             }
 
             m_Window.Clear();
-
+            
             RenderGame?.Invoke(this);
+            
+            spr.Texture = m_Svarog.Renderer.Surface.Texture;
+            m_Window.Draw(spr);
 
-            if (m_ToolsVisible)
+            if (m_ToolsVisible && m_Window.IsOpen)
             {
-                GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
                 RenderGUI?.Invoke(this);
-                
-                m_ImGui.Render();
-                m_GLWindow.SwapBuffers();
+                m_ImGui?.Render();
             }
 
-            m_Window.Display(); 
+            m_Window.Display();
 
             m_Keyboard.Frame();
             m_Mouse.Frame();
-
-            Thread.Yield();
 
             return m_Window.IsOpen;
         }

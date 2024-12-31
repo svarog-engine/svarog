@@ -1,5 +1,7 @@
 ﻿using ImGuiNET;
 
+using SFML.Graphics;
+
 using svarog.src.imgui;
 using svarog.src.windowing;
 
@@ -74,6 +76,7 @@ namespace svarog.src.tools
     public class ToolBox : ITool
     {
         private Dictionary<string, GLImGuiTexture> m_ImguiTextures = new();
+        private Dictionary<string, Texture> m_Textures = new();
         private Dictionary<string, ITool> m_Tools = new();
         private HashSet<ITool> m_ToClose = new();
         private List<string> m_Files = new();
@@ -88,6 +91,7 @@ namespace svarog.src.tools
         private Svarog m_Svarog;
 
         internal Dictionary<string, GLImGuiTexture> ImguiTextures => m_ImguiTextures;
+        internal Dictionary<string, Texture> Textures => m_Textures;
 
         public Dictionary<string, FileData> FileData => m_FileData;
         public List<string> Files => m_Files;
@@ -152,38 +156,38 @@ namespace svarog.src.tools
                     if (file.EndsWith("_6x6.png"))
                     {
                         data.Type = EFileType.Spritesheet6x6;
-                        data.Width = (int)(image.Width / 6);
-                        data.Height = (int)(image.Height / 6);
+                        data.Width = (int)(image.Size.X / 6);
+                        data.Height = (int)(image.Size.Y / 6);
                     }
                     else if (file.EndsWith("_8x8.png"))
                     {
                         data.Type = EFileType.Spritesheet8x8;
-                        data.Width = (int)(image.Width / 8);
-                        data.Height = (int)(image.Height / 8);
+                        data.Width = (int)(image.Size.X / 8);
+                        data.Height = (int)(image.Size.Y / 8);
                     }
                     else if (file.EndsWith("_10x10.png"))
                     {
                         data.Type = EFileType.Spritesheet10x10;
-                        data.Width = (int)(image.Width / 10);
-                        data.Height = (int)(image.Height / 10);
+                        data.Width = (int)(image.Size.X / 10);
+                        data.Height = (int)(image.Size.Y / 10);
                     }
                     else if (file.EndsWith("_12x12.png"))
                     {
                         data.Type = EFileType.Spritesheet12x12;
-                        data.Width = (int)(image.Width / 12);
-                        data.Height = (int)(image.Height / 12);
+                        data.Width = (int)(image.Size.X / 12);
+                        data.Height = (int)(image.Size.Y / 12);
                     }
                     else if (file.EndsWith("_16x16.png"))
                     {
                         data.Type = EFileType.Spritesheet16x16;
-                        data.Width = (int)(image.Width / 16);
-                        data.Height = (int)(image.Height / 16);
+                        data.Width = (int)(image.Size.X / 16);
+                        data.Height = (int)(image.Size.Y / 16);
                     }
                     else
                     {
                         data.Type = EFileType.Image;
-                        data.Width = (int)image.Width;
-                        data.Height = (int)image.Height;
+                        data.Width = (int)image.Size.X;
+                        data.Height = (int)image.Size.Y;
                     }
 
                     m_FileData[file] = data;
@@ -203,17 +207,27 @@ namespace svarog.src.tools
             }
         }
 
-        internal GLImGuiTexture GetTexture(string name)
+        internal Texture GetTexture(string name)
+        {
+            if (m_Textures.ContainsKey(name)) return m_Textures[name];
+
+            var texture = new Texture(name, true);
+            
+            m_Textures[name] = texture;
+            return texture;
+        }
+
+        internal GLImGuiTexture GetImguiTexture(string name)
         {
             if (m_ImguiTextures.ContainsKey(name)) return m_ImguiTextures[name];
 
             using var bitmap = new Bitmap(name);
-            var m_Texture = new GLImGuiTexture(name, bitmap, true, true);
+            var texture = new GLImGuiTexture(name, bitmap, true, true);
 
-            m_Texture.SetMinFilter(OpenTK.Graphics.OpenGL4.TextureMinFilter.Nearest);
-            m_Texture.SetMagFilter(OpenTK.Graphics.OpenGL4.TextureMagFilter.Nearest);
-            m_ImguiTextures[name] = m_Texture;
-            return m_Texture;
+            texture.SetMinFilter(OpenTK.Graphics.OpenGL4.TextureMinFilter.Nearest);
+            texture.SetMagFilter(OpenTK.Graphics.OpenGL4.TextureMagFilter.Nearest);
+            m_ImguiTextures[name] = texture;
+            return texture;
         }
 
         public void OpenImageSampler(FileData data)
@@ -331,9 +345,10 @@ namespace svarog.src.tools
         }
         public Pattern GetPattern(string name)
         {
-            if (m_PatternsCached.ContainsKey(name))
+            var n = name.Replace(".pat", "");
+            if (m_PatternsCached.ContainsKey(n))
             {
-                return m_PatternsCached[name];
+                return m_PatternsCached[n];
             }
             else
             {
@@ -354,7 +369,7 @@ namespace svarog.src.tools
     
         public void ImGuiDraw(string image, Vector2 source, Vector2 xy, float scale, Vector3 color)
         {
-            var texture = ImguiTextures[image];
+            var texture = GetImguiTexture(image);
             var data = FileData[image];
 
             var dg = (float)data.Type.GridSize();

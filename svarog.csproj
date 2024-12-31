@@ -33,6 +33,9 @@
     <None Update="kenney_16x16.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="kenney_8x8.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="MRMOGOB_12x12.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

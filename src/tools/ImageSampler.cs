@@ -30,7 +30,7 @@ namespace svarog.src.tools
             m_GridSize = gridSize;
             m_Scale = scale;
 
-            m_Texture = svarog.ToolBox.GetTexture(image);
+            m_Texture = svarog.ToolBox.GetImguiTexture(image);
         }
 
         public string Name { get; set; }
