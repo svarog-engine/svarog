@@ -1,4 +1,5 @@
-﻿using ImGuiNET;
+﻿using SFML.System;
+
 using svarog.src.windowing;
 
 namespace svarog.src.tools
@@ -76,6 +77,14 @@ namespace svarog.src.tools
             var keyboard = window.GetKeyboard();
             var toolbox = m_Svarog.ToolBox;
 
+            GUI.SetNextWindowPosition(50, 50);
+            GUI.SetNextWindowSize(500, 300);
+            GUI.Begin("File Manager");
+            for (int i = 0; i < 10; i++)
+                GUI.Text($"File {i}");
+
+            GUI.End();
+            /*
             ImGui.SetNextWindowSize(new System.Numerics.Vector2(500, 200), ImGuiCond.FirstUseEver);
             ImGui.Begin("File Manager");
 
@@ -107,7 +116,7 @@ namespace svarog.src.tools
 
                         if (ImGui.IsItemHovered() && file.EndsWith(".pat"))
                         {
-                            //m_Svarog.ToolBox.PatternPreview = file;
+                            //ms_Svarog.ToolBox.PatternPreview = file;
                         }
                         ImGui.TreePop();
                     }
@@ -117,6 +126,7 @@ namespace svarog.src.tools
             }
            
             ImGui.End();
+            */
         }
     }
 }

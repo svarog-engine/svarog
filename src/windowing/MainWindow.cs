@@ -1,14 +1,8 @@
-﻿using ImGuiNET;
-
-using Lua;
-
-using OpenTK.Graphics.OpenGL;
+﻿using Lua;
 
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
-
-using svarog.src.imgui;
 
 namespace svarog.src.windowing
 {
@@ -25,7 +19,8 @@ namespace svarog.src.windowing
         bool m_ToolsVisible = false;
 
         RenderWindow? m_Window = null;
-        ImGuiController? m_ImGui;
+        public RenderWindow? Window => m_Window;
+
         Clock m_Clock;
 
         int m_Width;
@@ -105,19 +100,9 @@ namespace svarog.src.windowing
             m_Window.SetFramerateLimit(60);
             
             m_Window.KeyPressed += (sender, e) => m_Keyboard.InputDown(e.Scancode);
-            m_Window.TextEntered += (sender, e) =>
-            {
-                char k = e.Unicode.First();
-                if (k == 8)
-                {
-                    ImGui.GetIO().AddKeyEvent(ImGuiKey.Backspace, true);
-                    ImGui.GetIO().AddKeyEvent(ImGuiKey.Backspace, false);
-                }
-                else
-                {
-                    m_ImGui?.PressChar(e.Unicode.First());
-                }
-            };
+            //m_Window.TextEntered += (sender, e) =>
+            //{
+            //};
             m_Window.KeyReleased += (sender, e) => m_Keyboard.InputUp(e.Scancode);
             
             m_Window.MouseMoved += (sender, e) => m_Mouse.Move(e.X, e.Y);
@@ -131,18 +116,18 @@ namespace svarog.src.windowing
             m_Window.Resized += Window_Resized;
             m_Window.SetActive(true);
 
-            m_ImGui = new ImGuiController((int)m_Window.Size.X, (int)m_Window.Size.Y);
+            //m_ImGui = new ImGuiController((int)m_Window.Size.X, (int)m_Window.Size.Y);
             
-            ImGui.GetIO().ConfigWindowsMoveFromTitleBarOnly = true;
-            ImGui.GetIO().ConfigFlags |= ImGuiConfigFlags.DockingEnable;
+            //ImGui.GetIO().ConfigWindowsMoveFromTitleBarOnly = true;
+            //ImGui.GetIO().ConfigFlags |= ImGuiConfigFlags.DockingEnable;
 
             StartGame?.Invoke(this);
         }
 
         private void Window_Resized(object? sender, SizeEventArgs e)
         {
-            GL.Viewport(0, 0, (int)e.Width, (int)e.Height);
-            m_ImGui.WindowResized((int)e.Width, (int)e.Height);
+            //GL.Viewport(0, 0, (int)e.Width, (int)e.Height);
+            //m_ImGui.WindowResized((int)e.Width, (int)e.Height);
         }
 
         Sprite spr = new Sprite();
@@ -154,7 +139,7 @@ namespace svarog.src.windowing
             if (m_ToolsVisible)
             {
                 var time = m_Clock.Restart();
-                m_ImGui?.Update(ref m_Window, time.AsSeconds());
+                //m_ImGui?.Update(ref m_Window, time.AsSeconds());
             }
 
             m_Window.DispatchEvents();
@@ -173,7 +158,7 @@ namespace svarog.src.windowing
             if (m_ToolsVisible && m_Window.IsOpen)
             {
                 RenderGUI?.Invoke(this);
-                m_ImGui?.Render();
+                //m_ImGui?.Render();
             }
 
             m_Window.Display();

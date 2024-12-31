@@ -1,11 +1,6 @@
-﻿using ImGuiNET;
+﻿using SFML.Graphics;
 
-using SFML.Graphics;
-
-using svarog.src.imgui;
 using svarog.src.windowing;
-
-using System.Drawing;
 using System.Numerics;
 
 namespace svarog.src.tools
@@ -46,36 +41,36 @@ namespace svarog.src.tools
 
         public void ImGuiDraw(ToolBox toolBox, Vector2 xy, float scale)
         {
-            var texture = toolBox.ImguiTextures[Image];
-            var data = toolBox.FileData[Image];
+            //var texture = toolBox.ImguiTextures[Image];
+            //var data = toolBox.FileData[Image];
 
-            var dg = (float)data.Type.GridSize();
-            var scaled = new Vector2(dg, dg) * scale;
-            var dw = dg / (float)texture.Width;
-            var dh = dg / (float)texture.Height;
+            //var dg = (float)data.Type.GridSize();
+            //var scaled = new Vector2(dg, dg) * scale;
+            //var dw = dg / (float)texture.Width;
+            //var dh = dg / (float)texture.Height;
 
-            var min = Min;
-            var max = Max;
+            //var min = Min;
+            //var max = Max;
 
-            for (int i = (int)min.X; i <= (int)max.X; i++)
-            {
-                for (int j = (int)min.Y; j <= (int)max.Y; j++)
-                {
-                    var block = new Vector2(i, j);
-                    var place = block - min;
-                    if (Blocks.Contains(block))
-                    {
-                        ImGui.SetCursorPos(xy + place * dg * scale);
-                        ImGui.Image(texture.GLTexture, scaled, new Vector2(i * dw, j * dh), new Vector2((i + 1) * dw, (j + 1) * dh));
-                    }
-                }
-            }
+            //for (int i = (int)min.X; i <= (int)max.X; i++)
+            //{
+            //    for (int j = (int)min.Y; j <= (int)max.Y; j++)
+            //    {
+            //        var block = new Vector2(i, j);
+            //        var place = block - min;
+            //        if (Blocks.Contains(block))
+            //        {
+            //            ImGui.SetCursorPos(xy + place * dg * scale);
+            //            ImGui.Image(texture.GLTexture, scaled, new Vector2(i * dw, j * dh), new Vector2((i + 1) * dw, (j + 1) * dh));
+            //        }
+            //    }
+            //}
         }
     }
 
     public class ToolBox : ITool
     {
-        private Dictionary<string, GLImGuiTexture> m_ImguiTextures = new();
+        //private Dictionary<string, GLImGuiTexture> m_ImguiTextures = new();
         private Dictionary<string, Texture> m_Textures = new();
         private Dictionary<string, ITool> m_Tools = new();
         private HashSet<ITool> m_ToClose = new();
@@ -90,7 +85,7 @@ namespace svarog.src.tools
         private Stack<IUndoableChange> m_RedoStack = new();
         private Svarog m_Svarog;
 
-        internal Dictionary<string, GLImGuiTexture> ImguiTextures => m_ImguiTextures;
+        //internal Dictionary<string, GLImGuiTexture> ImguiTextures => m_ImguiTextures;
         internal Dictionary<string, Texture> Textures => m_Textures;
 
         public Dictionary<string, FileData> FileData => m_FileData;
@@ -217,18 +212,18 @@ namespace svarog.src.tools
             return texture;
         }
 
-        internal GLImGuiTexture GetImguiTexture(string name)
-        {
-            if (m_ImguiTextures.ContainsKey(name)) return m_ImguiTextures[name];
+        //internal GLImGuiTexture GetImguiTexture(string name)
+        //{
+        //    if (m_ImguiTextures.ContainsKey(name)) return m_ImguiTextures[name];
 
-            using var bitmap = new Bitmap(name);
-            var texture = new GLImGuiTexture(name, bitmap, true, true);
+        //    using var bitmap = new Bitmap(name);
+        //    var texture = new GLImGuiTexture(name, bitmap, true, true);
 
-            texture.SetMinFilter(OpenTK.Graphics.OpenGL4.TextureMinFilter.Nearest);
-            texture.SetMagFilter(OpenTK.Graphics.OpenGL4.TextureMagFilter.Nearest);
-            m_ImguiTextures[name] = texture;
-            return texture;
-        }
+        //    texture.SetMinFilter(OpenTK.Graphics.OpenGL4.TextureMinFilter.Nearest);
+        //    texture.SetMagFilter(OpenTK.Graphics.OpenGL4.TextureMagFilter.Nearest);
+        //    m_ImguiTextures[name] = texture;
+        //    return texture;
+        //}
 
         public void OpenImageSampler(FileData data)
         {
@@ -369,16 +364,16 @@ namespace svarog.src.tools
     
         public void ImGuiDraw(string image, Vector2 source, Vector2 xy, float scale, Vector3 color)
         {
-            var texture = GetImguiTexture(image);
-            var data = FileData[image];
+            //var texture = GetImguiTexture(image);
+            //var data = FileData[image];
 
-            var dg = (float)data.Type.GridSize();
-            var scaled = new Vector2(dg, dg) * scale;
-            var dw = dg / (float)texture.Width;
-            var dh = dg / (float)texture.Height;
+            //var dg = (float)data.Type.GridSize();
+            //var scaled = new Vector2(dg, dg) * scale;
+            //var dw = dg / (float)texture.Width;
+            //var dh = dg / (float)texture.Height;
             
-            ImGui.SetCursorPos(xy);
-            ImGui.Image(texture.GLTexture, scaled, new Vector2(source.X * dw, source.Y * dh), new Vector2((source.X + 1) * dw, (source.Y + 1) * dh), new Vector4(color, 1.0f));
+            //ImGui.SetCursorPos(xy);
+            //ImGui.Image(texture.GLTexture, scaled, new Vector2(source.X * dw, source.Y * dh), new Vector2((source.X + 1) * dw, (source.Y + 1) * dh), new Vector4(color, 1.0f));
         }
     }
 }

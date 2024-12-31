@@ -1,6 +1,4 @@
-﻿using ImGuiNET;
-
-using svarog.src.windowing;
+﻿using svarog.src.windowing;
 using System.Numerics;
 
 namespace svarog.src.tools
@@ -25,16 +23,16 @@ namespace svarog.src.tools
             var data = m_Svarog.ToolBox.FileData[brush.Image];
             var size = new Vector2(50, 50);
 
-            ImGui.SetNextWindowSize(2 * size + brush.Size * data.Type.GridSize() + brush.Size * data.Type.GridSize() * 2.0f, ImGuiCond.Always);
-            ImGui.Begin("Preview", ImGuiWindowFlags.NoResize);
+            //ImGui.SetNextWindowSize(2 * size + brush.Size * data.Type.GridSize() + brush.Size * data.Type.GridSize() * 2.0f, ImGuiCond.Always);
+            //ImGui.Begin("Preview", ImGuiWindowFlags.NoResize);
 
-            var xy = ImGui.GetCursorPos();
-            brush.ImGuiDraw(m_Svarog.ToolBox, xy, 1.0f);
+            //var xy = ImGui.GetCursorPos();
+            //brush.ImGuiDraw(ms_Svarog.ToolBox, xy, 1.0f);
 
-            xy.X += brush.Size.X * data.Type.GridSize() + 20;
-            ImGui.SetCursorPos(xy);
-            brush.ImGuiDraw(m_Svarog.ToolBox, xy, 2.0f);
-            ImGui.End();
+            //xy.X += brush.Size.X * data.Type.GridSize() + 20;
+            //ImGui.SetCursorPos(xy);
+            //brush.ImGuiDraw(ms_Svarog.ToolBox, xy, 2.0f);
+            //ImGui.End();
         }
     }
 }

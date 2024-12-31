@@ -1,6 +1,4 @@
-﻿using ImGuiNET;
-
-using SFML.Window;
+﻿using SFML.Window;
 
 using svarog.src.windowing;
 
@@ -102,6 +100,7 @@ namespace svarog.src.tools
 
         public void Render(IWindow window)
         {
+            /*
             var halfSize = new Vector2(m_Pattern.Width, m_Pattern.Height) * m_Pattern.GridSize / 2;
             ImGui.SetNextWindowSize(new Vector2(300, 300), ImGuiCond.FirstUseEver);
 
@@ -130,7 +129,7 @@ namespace svarog.src.tools
                     var target = new Vector2(block.TargetId % m_Pattern.Width, block.TargetId / m_Pattern.Width);
                     var (w, h) = GetTextureSize(block.Source);
                     var source = new Vector2(block.SourceId % w, block.SourceId / w);
-                    m_Svarog.ToolBox.ImGuiDraw(block.Source, source, 
+                    ms_Svarog.ToolBox.ImGuiDraw(block.Source, source, 
                         windowSize / 2 + target * m_Pattern.GridSize * m_Scale - halfSize * m_Scale, m_Scale, block.Color);
                 }
 
@@ -147,7 +146,7 @@ namespace svarog.src.tools
                 {
                     if (mouse.Y - windowPos.Y > 55)
                     {
-                        m_Svarog.ToolBox.CurrentBrush?.ImGuiDraw(m_Svarog.ToolBox,
+                        ms_Svarog.ToolBox.CurrentBrush?.ImGuiDraw(ms_Svarog.ToolBox,
                             windowSize / 2 + dxy * m_Pattern.GridSize * m_Scale - halfSize * m_Scale, m_Scale);
                     }
                 }
@@ -176,13 +175,13 @@ namespace svarog.src.tools
                 {
                     if (window.GetMouse().IsJustPressed(Mouse.Button.Left))
                     {
-                        if (m_Tool == EPatternEditorTool.Stamp && m_Svarog.ToolBox.CurrentBrush.HasValue)
+                        if (m_Tool == EPatternEditorTool.Stamp && ms_Svarog.ToolBox.CurrentBrush.HasValue)
                         {
-                            var brush = m_Svarog.ToolBox.CurrentBrush.Value;
+                            var brush = ms_Svarog.ToolBox.CurrentBrush.Value;
                             var oldBlocks = m_Pattern.Data.ToArray();
                             foreach (var posInTexture in brush.Blocks)
                             {
-                                var data = m_Svarog.ToolBox.FileData[brush.Image];
+                                var data = ms_Svarog.ToolBox.FileData[brush.Image];
                                 var id = (int)(data.Width * posInTexture.Y + posInTexture.X);
 
                                 var targetXY = posInTexture - brush.Min + dxy;
@@ -196,7 +195,7 @@ namespace svarog.src.tools
                             }
 
                             var newBlocks = m_Pattern.Data.ToArray();
-                            m_Svarog.ToolBox.Apply(new StampBrushAction(m_Pattern.Name, oldBlocks, m_Pattern.Data.ToArray()));
+                            ms_Svarog.ToolBox.Apply(new StampBrushAction(m_Pattern.Name, oldBlocks, m_Pattern.Data.ToArray()));
                         }
                     }
 
@@ -212,7 +211,7 @@ namespace svarog.src.tools
                                 var affected = m_Pattern.Data.Where(b => b.TargetId == target);
                                 if (affected.Count() == 1)
                                 {
-                                    m_Svarog.ToolBox.Apply(new PaintBrushAction(m_Pattern.Name, target, affected.First().Color, m_Svarog.ToolBox.CurrentPaint));
+                                    ms_Svarog.ToolBox.Apply(new PaintBrushAction(m_Pattern.Name, target, affected.First().Color, ms_Svarog.ToolBox.CurrentPaint));
                                 }
                             }
                         }
@@ -227,7 +226,7 @@ namespace svarog.src.tools
 
             if (!m_Open)
             {
-                m_Svarog.ToolBox.ShouldClose(this);
+                ms_Svarog.ToolBox.ShouldClose(this);
                 return;
             }
 
@@ -236,9 +235,11 @@ namespace svarog.src.tools
                 ImGui.SetNextWindowSize(new Vector2(400, 400));
                 if (ImGui.Begin("PaintPicker", ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoDecoration))
                 {
-                    ImGui.ColorPicker3("PaintPickerWheel", ref m_Svarog.ToolBox.CurrentPaint, ImGuiColorEditFlags.PickerHueWheel);
+                    ImGui.ColorPicker3("PaintPickerWheel", ref ms_Svarog.ToolBox.CurrentPaint, ImGuiColorEditFlags.PickerHueWheel);
                 }
             }
+
+            */
         }
     }
 }

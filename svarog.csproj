@@ -9,10 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ImGui.NET" Version="1.91.0.1" />
     <PackageReference Include="LuaCSharp" Version="0.3.1" />
-    <PackageReference Include="OpenTK" Version="4.9.3" />
-    <PackageReference Include="SadRex" Version="1.0.3" />
     <PackageReference Include="SFML.Net" Version="2.6.0" />
     <PackageReference Include="System.Drawing.Common" Version="9.0.0" />
   </ItemGroup>
@@ -34,6 +31,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="kenney_8x8.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="mont.ttf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="MRMOGOB_12x12.png">
