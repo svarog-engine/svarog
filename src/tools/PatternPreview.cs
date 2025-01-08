@@ -24,7 +24,7 @@ namespace svarog.src.tools
             var size = new Vector2(50, 50);
 
             //ImGui.SetNextWindowSize(2 * size + brush.Size * data.Type.GridSize() + brush.Size * data.Type.GridSize() * 2.0f, ImGuiCond.Always);
-            //ImGui.Begin("Preview", ImGuiWindowFlags.NoResize);
+            //ImGui.Window("Preview", ImGuiWindowFlags.NoResize);
 
             //var xy = ImGui.GetCursorPos();
             //brush.ImGuiDraw(ms_Svarog.ToolBox, xy, 1.0f);

@@ -104,7 +104,7 @@ namespace svarog.src.tools
             var halfSize = new Vector2(m_Pattern.Width, m_Pattern.Height) * m_Pattern.GridSize / 2;
             ImGui.SetNextWindowSize(new Vector2(300, 300), ImGuiCond.FirstUseEver);
 
-            if (ImGui.Begin($"{Name} ({m_Pattern.Width}x{m_Pattern.Height} @ {m_Pattern.GridSize})", ref m_Open, ImGuiWindowFlags.NoScrollbar))
+            if (ImGui.Window($"{Name} ({m_Pattern.Width}x{m_Pattern.Height} @ {m_Pattern.GridSize})", ref m_Open, ImGuiWindowFlags.NoScrollbar))
             {
                 var windowSize = ImGui.GetWindowSize();
                 var grid = m_Grid ? "x" : " ";
@@ -233,7 +233,7 @@ namespace svarog.src.tools
             if (m_Tool == EPatternEditorTool.Paint)
             {
                 ImGui.SetNextWindowSize(new Vector2(400, 400));
-                if (ImGui.Begin("PaintPicker", ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoDecoration))
+                if (ImGui.Window("PaintPicker", ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoDecoration))
                 {
                     ImGui.ColorPicker3("PaintPickerWheel", ref ms_Svarog.ToolBox.CurrentPaint, ImGuiColorEditFlags.PickerHueWheel);
                 }

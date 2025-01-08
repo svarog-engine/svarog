@@ -42,7 +42,7 @@ namespace svarog.src
         public Svarog(string config)
         {
             m_GameWindow = new MainWindow(this, config);
-            GUI.Init(this);
+            
             m_GameWindow.StartGame += StartGame;
             m_GameWindow.RenderGUI += RenderGUI;
             m_GameWindow.RenderGame += RenderGame;

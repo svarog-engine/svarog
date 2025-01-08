@@ -1,4 +1,7 @@
-﻿using svarog.src.inputs;
+﻿using svagui.platform;
+
+using svarog.src.inputs;
+using svarog.src.render;
 
 namespace svarog.src.windowing
 {
@@ -7,5 +10,6 @@ namespace svarog.src.windowing
         Keyboard GetKeyboard();
         Mouse GetMouse();
         Svarog GetCore();
+        SFMLGUIPlatform GetGUI();
     }
 }

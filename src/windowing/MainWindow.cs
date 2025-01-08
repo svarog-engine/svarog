@@ -4,6 +4,9 @@ using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
 
+using svarog.src.inputs;
+using svarog.src.render;
+
 namespace svarog.src.windowing
 {
     public class MainWindow : IWindow
@@ -18,7 +21,15 @@ namespace svarog.src.windowing
         bool m_KeyRepeat = false;
         bool m_ToolsVisible = false;
 
+        public bool ToolsVisible 
+        { 
+            get { return m_ToolsVisible; } 
+            set { m_ToolsVisible = value; }
+        }
+
         RenderWindow? m_Window = null;
+        SFMLGUIPlatform m_GUI;
+
         public RenderWindow? Window => m_Window;
 
         Clock m_Clock;
@@ -93,7 +104,7 @@ namespace svarog.src.windowing
             settings.MinorVersion = 3;
             settings.DepthBits = 24;
             settings.StencilBits = 8;
-            settings.AntialiasingLevel = 2;
+            settings.AntialiasingLevel = 8;
             settings.AttributeFlags = ContextSettings.Attribute.Default;
             m_Window = new RenderWindow(m_VideoMode, m_Title, Styles.Default, settings);
             m_Window.SetKeyRepeatEnabled(false);
@@ -108,6 +119,7 @@ namespace svarog.src.windowing
             m_Window.MouseMoved += (sender, e) => m_Mouse.Move(e.X, e.Y);
             m_Window.MouseButtonPressed += (sender, e) => m_Mouse.InputDown(e.Button);
             m_Window.MouseButtonReleased += (sender, e) => m_Mouse.InputUp(e.Button);
+            m_Window.MouseWheelScrolled += (sender, e) => m_Mouse.Scroll(e.Delta);
             m_Window.Closed += (window, _) =>
             {
                 m_Window.Close();
@@ -117,11 +129,17 @@ namespace svarog.src.windowing
             m_Window.SetActive(true);
 
             //m_ImGui = new ImGuiController((int)m_Window.Size.X, (int)m_Window.Size.Y);
-            
+
             //ImGui.GetIO().ConfigWindowsMoveFromTitleBarOnly = true;
             //ImGui.GetIO().ConfigFlags |= ImGuiConfigFlags.DockingEnable;
 
+            m_GUI = new SFMLGUIPlatform(this);
             StartGame?.Invoke(this);
+        }
+
+        private void M_Window_MouseWheelScrolled(object? sender, MouseWheelScrollEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private void Window_Resized(object? sender, SizeEventArgs e)
@@ -136,14 +154,20 @@ namespace svarog.src.windowing
         {
             if (m_Window == null) return false;
 
+            m_Window.DispatchEvents();
+
             if (m_ToolsVisible)
             {
                 var time = m_Clock.Restart();
-                //m_ImGui?.Update(ref m_Window, time.AsSeconds());
+                var (x, y) = m_Mouse.Position;
+                var left = m_Mouse.IsJustPressed(SFML.Window.Mouse.Button.Left);
+                var right = m_Mouse.IsJustPressed(SFML.Window.Mouse.Button.Right);
+                var down = m_Mouse.IsDown(SFML.Window.Mouse.Button.Left);
+                var scroll = m_Mouse.MouseDelta;
+                m_GUI.Update(new svagui.platform.GUIInputState(m_GUI.GetMouseInputsEnabled(), new svagui.abstraction.Vector2(x, y), left, right, down, scroll));
             }
 
-            m_Window.DispatchEvents();
-            if (m_Keyboard.IsJustReleased(Keyboard.Scancode.Tab))
+            if (m_Keyboard.IsJustReleased(SFML.Window.Keyboard.Scancode.Tab))
             {
                 m_ToolsVisible = !m_ToolsVisible;
             }
@@ -182,6 +206,11 @@ namespace svarog.src.windowing
         public Svarog GetCore()
         {
             return m_Svarog;
+        }
+
+        public SFMLGUIPlatform GetGUI()
+        {
+            return m_GUI;
         }
     }
 }

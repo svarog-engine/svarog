@@ -36,7 +36,7 @@ namespace svarog.src.tools
         {
             //ImGui.SetNextWindowSize(new System.Numerics.Vector2(m_Scale * m_Texture.Width + 25, m_Scale * m_Texture.Height + 100), ImGuiCond.Always);
             
-            //if (ImGui.Begin(Name, ref m_Open, ImGuiWindowFlags.NoResize))
+            //if (ImGui.Window(Name, ref m_Open, ImGuiWindowFlags.NoResize))
             //{
             //    var keyboard = window.GetKeyboard();
 

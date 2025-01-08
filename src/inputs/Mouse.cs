@@ -6,7 +6,7 @@ namespace svarog.src.inputs
     {
         private (int, int) position = (0, 0);
         private List<Func<(int, int), (int, int)>> Warpers = new();
-
+        private float m_MouseDelta = 0.0f;
         public (int, int) Position => Warpers.Aggregate(position, (xy, f) => f(xy));
 
         public void AddWarper(Func<(int, int), (int, int)> warper)
@@ -24,5 +24,11 @@ namespace svarog.src.inputs
             position.Item1 = x;
             position.Item2 = y;
         }
+        public void Scroll(float ds)
+        {
+            m_MouseDelta += ds;
+        }
+
+        public float MouseDelta => m_MouseDelta;
     }
 }
