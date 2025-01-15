@@ -2,6 +2,8 @@
 {
     public class InputParser
     {
+        private static readonly int INPUT_BUFFER_SIZE = 100;
+
         private readonly Queue<IInput> m_Inputs = new();
         private readonly Queue<IInput> m_UnconsumedInputs = new();
 
@@ -13,6 +15,10 @@
         public void Enqueue(IInput input) 
         {
             m_Inputs.Enqueue(input);
+            if (m_Inputs.Count > INPUT_BUFFER_SIZE)
+            {
+                m_Inputs.Dequeue();
+            }
         }
 
         public void ProduceGameEvents()
