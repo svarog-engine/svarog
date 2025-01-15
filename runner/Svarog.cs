@@ -1,12 +1,12 @@
 ﻿using CommandLine;
 
+using NLua;
+using NLua.Exceptions;
+
 using Serilog;
 using Serilog.Core;
 
 using svarog.input;
-using svarog.input.contexts;
-
-using System.Reflection;
 
 namespace svarog.runner
 {
@@ -16,8 +16,6 @@ namespace svarog.runner
         
         private static readonly Svarog ms_Instance = new Svarog();
         static Svarog() { }
-
-        private Svarog() { }
 
         public static Svarog Instance => ms_Instance;
 
@@ -69,25 +67,16 @@ namespace svarog.runner
 
             if (!options.Headless)
             {
-                var assembly = Assembly.GetAssembly(typeof(Svarog))?.GetName().FullName;
-                if (assembly != null)
+                var parts = options.Presenter.Split(",", 2);
+                var presenter = Activator.CreateInstance(parts[1].Trim(), parts[0].Trim());
+                if (presenter != null)
                 {
-                    var presenter = Activator.CreateInstance(assembly, options.Presenter);
-                    if (presenter != null)
-                    {
-                        m_PresentationLayer = (IPresentationLayer?)presenter.Unwrap();
-                        m_PresentationLayer?.Create(options);
-                        Svarog.Instance.LogInfo($"Svarog presenter class ({options.Presenter}) instantiated successfully.");
-                    }
-                    else
-                    {
-                        Svarog.Instance.LogFatal($"Svarog presenter class ({options.Presenter}) not found. Quitting.");
-                        Shutdown();
-                    }
+                    m_PresentationLayer = (IPresentationLayer?)presenter.Unwrap();
+                    Svarog.Instance.LogInfo($"Svarog presenter class ({options.Presenter}) instantiated successfully.");
                 }
                 else
                 {
-                    Svarog.Instance.LogFatal("Svarog assembly is found to be null. Quitting.");
+                    Svarog.Instance.LogFatal($"Svarog presenter class ({options.Presenter}) not found. Quitting.");
                     Shutdown();
                 }
             }
@@ -95,14 +84,47 @@ namespace svarog.runner
 
         #endregion Display
 
-        //
+        #region Scripting
+
+        public void RunScript(string code)
+        {
+            try
+            {
+                m_Lua.DoString(code);
+            }
+            catch (LuaScriptException scriptingException)
+            {
+                LogError(scriptingException.ToString());
+            }
+            catch (LuaException luaException)
+            {
+                LogError(luaException.ToString());
+            }
+        }
+
+        #endregion Scripting
 
         bool m_ShouldShutdown = false;
-        InputParser m_InputParser = new();
+
+        readonly Lua m_Lua;
+        readonly InputParser m_InputParser;
         IPresentationLayer? m_PresentationLayer = null;
 
-        public void EnqueueInput(IInput input) => m_InputParser.Enqueue(input);
+        private SparseMatrix<Glyph> m_Glyphs;
+
+        public void EnqueueInput(IInput input)
+        {
+            m_InputParser.Enqueue(input);
+        }
+
         public void Shutdown() => m_ShouldShutdown = true;
+
+        private Svarog()
+        {
+            m_InputParser = new();
+            m_Lua = new();
+            m_Glyphs = new SparseMatrix<Glyph>(80, 40);
+        }
 
         static void Main(string[] args)
         {
@@ -120,9 +142,15 @@ namespace svarog.runner
                 Svarog.Instance.LogInfo("Starting up Svarog!");
 
                 SetupDisplayMode(options);
+                m_PresentationLayer?.Create(options);
             });
 
-            m_InputParser.Contexts.Push(new DebugPrintConsumeInputContext());
+            m_Lua.DoString("require \"ECS\"");
+            RunScript("Pipeline_Player = ECS.World()");
+            RunScript("Pipeline_World = ECS.World()");
+            RunScript("Pipeline_Render = ECS.World()");
+
+            Svarog.Instance.LogInfo("Scripting ECS up and running!");
 
             while (!m_ShouldShutdown)
             {

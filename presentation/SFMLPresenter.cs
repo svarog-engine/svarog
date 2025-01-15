@@ -14,6 +14,7 @@ namespace svarog.presentation
         public void Create(CommandLineOptions options)
         {
             m_Window = new RenderWindow(new SFML.Window.VideoMode(800, 600), "Svarog");
+            
             m_Window.Closed += (object? _, EventArgs _) => 
             {
                 m_Window.Close(); 
@@ -42,8 +43,10 @@ namespace svarog.presentation
 
             m_Window.MouseMoved += (object? _, MouseMoveEventArgs args) =>
             {
-                Svarog.Instance.EnqueueInput(new MouseInput(-1, 0, args.X, args.Y));
+                Svarog.Instance.EnqueueInput(new MouseInput(null, 0, args.X, args.Y));
             };
+
+            Svarog.Instance.LogInfo("SFML Presenter up and running!");
         }
 
         public void Update()
