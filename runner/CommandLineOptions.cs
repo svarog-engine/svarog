@@ -19,5 +19,17 @@ namespace svarog.runner
 
         [Option('p', "presenter", Default = "svarog.presentation.SFMLPresenter, svarog, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null", Required = false, HelpText = "Name of the presenter to use to render the game. Defaults to SFML.")]
         public string Presenter { get; set; }
+
+        [Option('f', "font", Default = "mont", Required = false, HelpText = "Sets default font")]
+        public string? Font { get; set; }
+
+        [Option("font-size", Default = 10u, Required = false, HelpText = "Sets default font size")]
+        public uint? FontSize { get; set; }
+
+        [Option("world-width", Default = 59, Required = false, HelpText = "Sets world width")]
+        public int? WorldWidth { get; set; }
+
+        [Option("world-height", Default = 79, Required = false, HelpText = "Sets world height")]
+        public int? WorldHeight { get; set; }
     }
 }

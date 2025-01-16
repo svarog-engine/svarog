@@ -22,6 +22,10 @@
     <None Update="ECS.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+
+	<Content Include="resources\**">
+		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</Content>
   </ItemGroup>
 
 </Project>
