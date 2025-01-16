@@ -5,7 +5,7 @@ using NLua.Exceptions;
 
 using Serilog;
 using Serilog.Core;
-
+using SFML.System;
 using svarog.input;
 
 namespace svarog.runner
@@ -13,7 +13,7 @@ namespace svarog.runner
     public class Svarog
     {
         #region Singleton
-        
+
         private static readonly Svarog ms_Instance = new Svarog();
         static Svarog() { }
 
@@ -112,6 +112,12 @@ namespace svarog.runner
 
         private SparseMatrix<Glyph> m_Glyphs;
 
+        public SparseMatrix<Glyph> Glyphs => m_Glyphs;
+
+        private Clock clock = new Clock();
+        long time = 0;
+        int counter = 0;
+
         public void EnqueueInput(IInput input)
         {
             m_InputParser.Enqueue(input);
@@ -123,7 +129,6 @@ namespace svarog.runner
         {
             m_InputParser = new();
             m_Lua = new();
-            m_Glyphs = new SparseMatrix<Glyph>(80, 40);
         }
 
         static void Main(string[] args)
@@ -142,6 +147,7 @@ namespace svarog.runner
                 Svarog.Instance.LogInfo("Starting up Svarog!");
 
                 SetupDisplayMode(options);
+                SetupGlyphsMapTest(options);
                 m_PresentationLayer?.Create(options);
             });
 
@@ -154,14 +160,38 @@ namespace svarog.runner
 
             while (!m_ShouldShutdown)
             {
+                clock.Restart();
                 m_InputParser.ProduceGameEvents();
                 m_PresentationLayer?.Update();
+
+                counter++;
+                time += clock.ElapsedTime.AsMicroseconds();
+
+                if (time >= 1000000)
+                {
+                    LogInfo($"FPS -- {counter}");
+                    time = 0;
+                    counter = 0;
+                }
+
                 Thread.Yield();
             }
 
             Svarog.Instance.LogInfo("Shutting Svarog down!");
         }
 
-
+        void SetupGlyphsMapTest(CommandLineOptions options)
+        {
+            Random r = new Random();
+            var alp = "thequickbrownfoxjumpsoverthelazydog";
+            m_Glyphs = new SparseMatrix<Glyph>(options.WorldWidth.GetValueOrDefault(), options.WorldHeight.GetValueOrDefault());
+            for (int i = 0; i < options.WorldHeight; i++)
+            {
+                for (int j = 0; j < options.WorldWidth; j++)
+                {
+                    m_Glyphs[i, j] = new Glyph($"{alp[r.Next(0, alp.Length)]}", SFML.Graphics.Color.White);
+                }
+            }
+        }
     }
 }
