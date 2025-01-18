@@ -26,10 +26,10 @@ namespace svarog.runner
         [Option("font-size", Default = 10u, Required = false, HelpText = "Sets default font size")]
         public uint? FontSize { get; set; }
 
-        [Option("world-width", Default = 59, Required = false, HelpText = "Sets world width")]
+        [Option("world-width", Default = 80, Required = false, HelpText = "Sets world width")]
         public int? WorldWidth { get; set; }
 
-        [Option("world-height", Default = 79, Required = false, HelpText = "Sets world height")]
+        [Option("world-height", Default = 60, Required = false, HelpText = "Sets world height")]
         public int? WorldHeight { get; set; }
     }
 }

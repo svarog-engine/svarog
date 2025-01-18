@@ -7,6 +7,8 @@ using Serilog;
 using Serilog.Core;
 using SFML.System;
 using svarog.input;
+using svarog.presentation;
+using svarog.utility;
 
 namespace svarog.runner
 {
@@ -102,6 +104,22 @@ namespace svarog.runner
             }
         }
 
+        public void RunScriptFile(string filename)
+        {
+            try
+            {
+                m_Lua.DoFile(filename);
+            }
+            catch (LuaScriptException scriptingException)
+            {
+                LogError(scriptingException.ToString());
+            }
+            catch (LuaException luaException)
+            {
+                LogError(luaException.ToString());
+            }
+        }
+
         #endregion Scripting
 
         bool m_ShouldShutdown = false;
@@ -110,9 +128,9 @@ namespace svarog.runner
         readonly InputParser m_InputParser;
         IPresentationLayer? m_PresentationLayer = null;
 
-        private SparseMatrix<Glyph> m_Glyphs;
+        private Glyph[][] m_Glyphs;
 
-        public SparseMatrix<Glyph> Glyphs => m_Glyphs;
+        public Glyph[][] Glyphs => m_Glyphs;
 
         private Clock clock = new Clock();
         long time = 0;
@@ -141,20 +159,38 @@ namespace svarog.runner
             Parser.Default.ParseArguments<CommandLineOptions>(args)
             .WithParsed(options =>
             {
+                m_Lua["Options"] = options;
                 SetupLogging(options);
 
                 Svarog.Instance.LogInfo("===========================================");
                 Svarog.Instance.LogInfo("Starting up Svarog!");
 
                 SetupDisplayMode(options);
-                SetupGlyphsMapTest(options);
+                var width = options.WorldWidth.GetValueOrDefault();
+                var height = options.WorldHeight.GetValueOrDefault();
+                m_Glyphs = new Glyph[width][];
+
+                for (int i = 0; i < options.WorldWidth; i++)
+                {
+                    m_Glyphs[i] = new Glyph[height];
+                    for (int j = 0; j < options.WorldHeight; j++)
+                    {
+                        m_Glyphs[i][j] = new Glyph();
+                    }
+                }
+
                 m_PresentationLayer?.Create(options);
             });
 
-            m_Lua.DoString("require \"ECS\"");
-            RunScript("Pipeline_Player = ECS.World()");
-            RunScript("Pipeline_World = ECS.World()");
-            RunScript("Pipeline_Render = ECS.World()");
+            m_Lua.LoadCLRPackage();
+            m_Lua["Rand"] = new Randomness();
+            m_Lua["Glyphs"] = m_Glyphs;
+            m_Lua["Colors"] = new Colors();
+
+            RunScript(@"require ""ECS""");
+            RunScript(@"Engine = require ""scripts\\Engine""");
+            RunScriptFile("scripts\\Main.lua");
+            RunScript("Engine.Setup()");
 
             Svarog.Instance.LogInfo("Scripting ECS up and running!");
 
@@ -165,33 +201,20 @@ namespace svarog.runner
                 m_PresentationLayer?.Update();
 
                 counter++;
-                time += clock.ElapsedTime.AsMicroseconds();
+                time += clock.ElapsedTime.AsMilliseconds();
 
-                if (time >= 1000000)
+                if (time >= 1000)
                 {
                     LogInfo($"FPS -- {counter}");
                     time = 0;
                     counter = 0;
                 }
 
+                RunScript("Engine.Update()");
                 Thread.Yield();
             }
 
             Svarog.Instance.LogInfo("Shutting Svarog down!");
-        }
-
-        void SetupGlyphsMapTest(CommandLineOptions options)
-        {
-            Random r = new Random();
-            var alp = "thequickbrownfoxjumpsoverthelazydog";
-            m_Glyphs = new SparseMatrix<Glyph>(options.WorldWidth.GetValueOrDefault(), options.WorldHeight.GetValueOrDefault());
-            for (int i = 0; i < options.WorldHeight; i++)
-            {
-                for (int j = 0; j < options.WorldWidth; j++)
-                {
-                    m_Glyphs[i, j] = new Glyph($"{alp[r.Next(0, alp.Length)]}", SFML.Graphics.Color.White);
-                }
-            }
         }
     }
 }
