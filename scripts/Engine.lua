@@ -35,6 +35,23 @@ function PlayerSystem() return "process" end
 function WorldSystem() return "transform" end
 function RenderSystem() return "render" end
 
+function RegisterPlayerSystem()
+    local system = ECS.System(Engine.PlayerSystem())
+    table.insert(Pipeline_Player, system)
+    return system
+end
+
+function RegisterInputSystem(input, fn)
+    local system = ECS.System(Engine.PlayerSystem(), ECS.Query.All(input), function(self) 
+        for _, e in self:Result(self.queryAction):Iterator() do
+		    fn()
+            Input.Consume(input)
+	    end
+    end)
+
+    table.insert(Pipeline_Player, system)
+end
+
 function OnStartup(fun) 
     table.insert(Pipeline_Startup, fun)
 end
@@ -47,4 +64,6 @@ return {
     WorldSystem = WorldSystem,
     RenderSystem = RenderSystem,
     OnStartup = OnStartup,
+    RegisterPlayerSystem = RegisterPlayerSystem,
+    RegisterInputSystem = RegisterInputSystem
 }

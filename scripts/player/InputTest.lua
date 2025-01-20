@@ -1,20 +1,10 @@
 ﻿
-table.insert(Pipeline_Player, ECS.System(
-	Engine.PlayerSystem(), 
-	ECS.Query.All(Action_Default_Menu), 
-	function(self)
-		print("MENU")
-		Input.Push("Menu")
-		Input.Consume(Action_Default_Menu)
-	end
-))
+Engine.RegisterInputSystem(Action_Default_Menu, function() 
+	print "MENU"
+	Input.Push("Menu")
+end)
 
-table.insert(Pipeline_Player, ECS.System(
-	Engine.PlayerSystem(), 
-	ECS.Query.All(Action_Menu_Back), 
-	function(self)
+Engine.RegisterInputSystem(Action_Menu_Back, function()
 		print("BACK")
 		Input.Pop()
-		Input.Consume(Action_Menu_Back)
-	end
-))
+end)
