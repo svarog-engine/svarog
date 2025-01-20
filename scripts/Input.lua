@@ -32,6 +32,8 @@ Input.Update = function()
 			local action = "Action_" .. (InputStack:Peek()) .. "_" .. (ActionTriggers[i])
 			if _G[action] ~= nil then
 				InputEntity:Set(_G[action]())
+			else
+				Svarog:LogError("Action " .. ActionTriggers[i] .. " not found in context " .. (InputStack:Peek()))
 			end
 		end
 	end

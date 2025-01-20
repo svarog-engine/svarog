@@ -8,4 +8,8 @@ Actions.Default = {
 	Exit	= { Input.Hold("Key: F10", 1000) }
 }
 
+Actions.Menu = {
+	Back = { Input.Release("Key: Escape") }
+}
+
 Input.Push("Default")

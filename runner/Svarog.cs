@@ -189,6 +189,7 @@ namespace svarog.runner
             });
 
             m_Lua.LoadCLRPackage();
+            m_Lua["Svarog"] = this;
             m_Lua["Rand"] = new Randomness();
             m_Lua["Glyphs"] = m_Glyphs;
             m_Lua["Colors"] = new Colors();
