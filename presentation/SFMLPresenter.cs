@@ -2,7 +2,7 @@
 using SFML.Graphics;
 using SFML.Window;
 
-using svarog.input.devices;
+using svarog.input;
 using svarog.runner;
 
 namespace svarog.presentation
@@ -31,27 +31,27 @@ namespace svarog.presentation
 
             m_Window.KeyPressed += (object? _, KeyEventArgs args) =>
             {
-                Svarog.Instance.EnqueueInput(new KeyboardInput((int)args.Scancode, 1));
+                Svarog.Instance.EnqueueInput(new InputAction(EInputActionType.Press, $"Key: {args.Scancode}", 0));
             };
 
             m_Window.KeyReleased += (object? _, KeyEventArgs args) =>
             {
-                Svarog.Instance.EnqueueInput(new KeyboardInput((int)args.Scancode, 0));
+                Svarog.Instance.EnqueueInput(new InputAction(EInputActionType.Release, $"Key: {args.Scancode}", 0));
             };
 
             m_Window.MouseButtonPressed += (object? _, MouseButtonEventArgs args) =>
             {
-                Svarog.Instance.EnqueueInput(new MouseInput((int)args.Button, 1, args.X, args.Y));
+                Svarog.Instance.EnqueueInput(new InputAction(EInputActionType.Press, $"Mouse: {args.Button}", 1, args.X, args.Y));
             };
 
             m_Window.MouseButtonReleased += (object? _, MouseButtonEventArgs args) =>
             {
-                Svarog.Instance.EnqueueInput(new MouseInput((int)args.Button, 0, args.X, args.Y));
+                Svarog.Instance.EnqueueInput(new InputAction(EInputActionType.Release, $"Mouse: {args.Button}", 0, args.X, args.Y));
             };
 
             m_Window.MouseMoved += (object? _, MouseMoveEventArgs args) =>
             {
-                Svarog.Instance.EnqueueInput(new MouseInput(null, 0, args.X, args.Y));
+                Svarog.Instance.EnqueueInput(new InputAction(EInputActionType.Hold, "Mouse: Move", 0, args.X, args.Y));
             };
 
             LoadFonts();

@@ -1,7 +1,6 @@
 ﻿using svarog.runner;
-using System.Runtime.InteropServices;
 using SDL2;
-using svarog.input.devices;
+using svarog.input;
 
 namespace svarog.presentation
 {
@@ -31,6 +30,14 @@ namespace svarog.presentation
             }
         }
 
+        private static string[] MOUSE_BUTTON_NAMES = [
+            "Left",
+            "Right",
+            "Middle",
+            "XButton1",
+            "XButton2" 
+        ];
+
         public void Update()
         {
             while (SDL.SDL_PollEvent(out SDL.SDL_Event e) == 1)
@@ -47,25 +54,24 @@ namespace svarog.presentation
                         break;
 
                     case SDL.SDL_EventType.SDL_KEYDOWN:
-                        Svarog.Instance.EnqueueInput(new KeyboardInput((int)e.key.keysym.scancode, 1));
+                        Svarog.Instance.EnqueueInput(new InputAction(EInputActionType.Press, $"Key: {e.key.keysym.scancode}", 0));
                         break;
 
                     case SDL.SDL_EventType.SDL_KEYUP:
-                        Svarog.Instance.EnqueueInput(new KeyboardInput((int)e.key.keysym.scancode, 0));
+                        Svarog.Instance.EnqueueInput(new InputAction(EInputActionType.Release, $"Key: {e.key.keysym.scancode}", 0));
                         break;
 
                     case SDL.SDL_EventType.SDL_MOUSEBUTTONDOWN:
-                        Svarog.Instance.EnqueueInput(new MouseInput((int)e.button.button, 1, e.button.x, e.button.y));
+                        Svarog.Instance.EnqueueInput(new InputAction(EInputActionType.Press, $"Mouse: {MOUSE_BUTTON_NAMES[(int)e.button.button]}", 1, e.button.x, e.button.y));
                         break;
 
                     case SDL.SDL_EventType.SDL_MOUSEBUTTONUP:
-                        Svarog.Instance.EnqueueInput(new MouseInput((int)e.button.button, 0, e.button.x, e.button.y));
+                        Svarog.Instance.EnqueueInput(new InputAction(EInputActionType.Release, $"Mouse: {MOUSE_BUTTON_NAMES[(int)e.button.button]}", 1, e.button.x, e.button.y));
                         break;
 
                     case SDL.SDL_EventType.SDL_MOUSEMOTION:
-                        Svarog.Instance.EnqueueInput(new MouseInput(-1, 0, e.motion.x, e.motion.y));
+                        Svarog.Instance.EnqueueInput(new InputAction(EInputActionType.Hold, "Mouse: Move", 0, e.motion.x, e.motion.y));
                         break;
-
                 }
             }
             SDL.SDL_SetRenderDrawColor(m_Renderer, 135, 206, 235, 255);

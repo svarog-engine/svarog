@@ -1,9 +1,14 @@
 ﻿World = ECS.World()
 
+Actions = {}
+
 Pipeline_Startup = {}
 Pipeline_Player = {}
 Pipeline_Enviro = {}
 Pipeline_Render = {}
+
+RenderChangelist = ECS.Component({ changes = {} })
+Changes = World:Entity(RenderChangelist())
 
 local FrameCount = 0
 

@@ -125,28 +125,34 @@ namespace svarog.runner
         bool m_ShouldShutdown = false;
 
         readonly Lua m_Lua;
-        readonly InputParser m_InputParser;
+
+        public Lua Scripting => m_Lua;
+
+        readonly InputManager m_InputManager;
         IPresentationLayer? m_PresentationLayer = null;
 
         private Glyph[][] m_Glyphs;
 
         public Glyph[][] Glyphs => m_Glyphs;
 
-        private Clock clock = new Clock();
-        long time = 0;
-        int counter = 0;
+        private Clock m_Clock = new Clock();
+        long m_Time = 0;
+        int m_Counter = 0;
+        
+        float m_Delta = 0.0f;
+        public float DeltaTime => m_Delta;
 
-        public void EnqueueInput(IInput input)
+        public void EnqueueInput(InputAction input)
         {
-            m_InputParser.Enqueue(input);
+            m_InputManager.Enqueue(input);
         }
 
         public void Shutdown() => m_ShouldShutdown = true;
 
         private Svarog()
         {
-            m_InputParser = new();
             m_Lua = new();
+            m_InputManager = new();
         }
 
         static void Main(string[] args)
@@ -186,31 +192,43 @@ namespace svarog.runner
             m_Lua["Rand"] = new Randomness();
             m_Lua["Glyphs"] = m_Glyphs;
             m_Lua["Colors"] = new Colors();
+            m_Lua["InputStack"] = m_InputManager;
+            m_Lua["ActionTriggers"] = m_InputManager.Triggered;
 
             RunScript(@"require ""ECS""");
             RunScript(@"Engine = require ""scripts\\Engine""");
-            RunScriptFile("scripts\\Main.lua");
-            RunScript("Engine.Setup()");
+            RunScript(@"Input = require ""scripts\\Input""");
+            m_InputManager.ReloadActions();
+            RunScriptFile(@"scripts\\Main.lua");
+            RunScript(@"Engine.Setup()");
 
             Svarog.Instance.LogInfo("Scripting ECS up and running!");
 
+            var triggerUpdateFunction = (m_Lua["Input.Update"] as LuaFunction);
+            var frameUpdateFunction = (m_Lua["Engine.Update"] as LuaFunction);
+
             while (!m_ShouldShutdown)
             {
-                clock.Restart();
-                m_InputParser.ProduceGameEvents();
+                m_InputManager.Clear();
+                m_Clock.Restart();
+
+                m_InputManager.Update();
                 m_PresentationLayer?.Update();
 
-                counter++;
-                time += clock.ElapsedTime.AsMilliseconds();
+                triggerUpdateFunction?.Call();
+                frameUpdateFunction?.Call();
 
-                if (time >= 1000)
+                m_Counter++;
+                m_Delta = m_Clock.ElapsedTime.AsMilliseconds();
+                m_Time += (int)m_Delta;
+
+                if (m_Time >= 1000)
                 {
-                    LogInfo($"FPS -- {counter}");
-                    time = 0;
-                    counter = 0;
+                    LogInfo($"FPS -- {m_Counter}");
+                    m_Time = 0;
+                    m_Counter = 0;
                 }
 
-                RunScript("Engine.Update()");
                 Thread.Yield();
             }
 
