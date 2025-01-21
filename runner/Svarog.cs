@@ -170,8 +170,9 @@ namespace svarog.runner
 
         public void Run(string[] args)
         {
-            Parser.Default.ParseArguments<CommandLineOptions>(args)
-            .WithParsed(options =>
+            var commandLine = Parser.Default.ParseArguments<CommandLineOptions>(args);
+
+            commandLine.WithParsed(options =>
             {
                 m_Lua["Options"] = options;
                 SetupLogging(options);
@@ -192,8 +193,6 @@ namespace svarog.runner
                         m_Glyphs[i][j] = new Glyph();
                     }
                 }
-
-                m_PresentationLayer?.Create(options);
             });
 
             m_Lua.LoadCLRPackage();
@@ -207,7 +206,11 @@ namespace svarog.runner
             RunScript(@"ECS = require ""scripts\\engine\\ECS""");
             RunScript(@"Engine = require ""scripts\\engine\\Engine""");
             RunScript(@"Input = require ""scripts\\engine\\Input""");
+            RunScriptFile(@"scripts\\Config.lua");
+
             m_InputManager.ReloadActions();
+            commandLine.WithParsed(options => m_PresentationLayer?.Create(options));
+            
             RunScriptMain();
             RunScript(@"Engine.Setup()");
 

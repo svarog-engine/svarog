@@ -1,4 +1,9 @@
-﻿World = ECS.World()
+﻿Config = {
+    Font = "AppleII",
+    Font_Size = 10,
+}
+
+World = ECS.World()
 
 Actions = {}
 
