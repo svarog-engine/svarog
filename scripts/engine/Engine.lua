@@ -35,7 +35,7 @@ local function RenderPass()
 end
 
 local function UpdateWorld(time)
-    if World ~= nil then
+    if World then
         World:Update("process", time)
         World:Update("transform", time)
         if not Options.Headless then
@@ -52,21 +52,30 @@ local function NextFrame()
 end
 
 local function Setup()
+    InputEntity = World:Entity()
+
+    print("Adding systems to world ", World)
+    print(" Player systems: #" .. #Pipeline_Player)
+    print(" Enviro systems: #" .. #Pipeline_Enviro)
+    print(" Render systems: #" .. #Pipeline_Render)
+    print(" Startup calls : #" .. #Pipeline_Startup)
     for _, v in ipairs(Pipeline_Player) do World:AddSystem(v) end
     for _, v in ipairs(Pipeline_Enviro) do World:AddSystem(v) end
     for _, v in ipairs(Pipeline_Render) do World:AddSystem(v) end
-    for _, v in ipairs(Pipeline_Startup) do v() end
+
+    for _, v in ipairs(Pipeline_Startup) do
+        v() 
+    end
 end
 
 local function Reload()
-    for _, v in ipairs(Pipeline_Player) do v:Destroy() end
-    for _, v in ipairs(Pipeline_Enviro) do v:Destroy() end
-    for _, v in ipairs(Pipeline_Render) do v:Destroy() end
-    print("Destroying world")
-    World.Destroy()
-    print("Creating world")
+    print("Destroying world: ", World)
+    World:Destroy()
+    World = nil
+
     World = ECS.World()
-    print("World okay")
+    print("Creating world:", World)
+
     Pipeline_Startup = {}
     Pipeline_Player = {}
     Pipeline_Enviro = {}
@@ -74,6 +83,8 @@ local function Reload()
 
     FrameCount = 0
     Input.Clear()
+    
+    InputStack:ReloadActions()
     Svarog.Instance:RunScriptMain()
     Setup()
 end
@@ -109,6 +120,7 @@ function RegisterInputSystem(input, fn)
     end)
 
     table.insert(Pipeline_Player, system)
+    print("Pipeline Player #: " .. (#Pipeline_Player))
 end
 
 function OnStartup(fun) 

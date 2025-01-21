@@ -14,3 +14,4 @@ Actions.Debug = {
 }
 
 Input.Push("Default")
+print "Actions reloaded"

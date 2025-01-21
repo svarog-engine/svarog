@@ -90,7 +90,7 @@ namespace svarog.runner
 
         public void RunScriptMain()
         {
-            RunScriptFile(@"scripts\\Main.lua");
+            RunScript(@"dofile ""scripts\\Main.lua""");
         }
 
         public void RunScript(string code)
@@ -204,7 +204,7 @@ namespace svarog.runner
             m_Lua["InputStack"] = m_InputManager;
             m_Lua["ActionTriggers"] = m_InputManager.Triggered;
 
-            RunScript(@"ECS = require ""scripts\\engine\\ECS""");
+            RunScript(@"ECS = require ""scripts\\engine\\ecs\\ECS""");
             RunScript(@"Engine = require ""scripts\\engine\\Engine""");
             RunScript(@"Input = require ""scripts\\engine\\Input""");
             m_InputManager.ReloadActions();

@@ -1,6 +1,5 @@
 ﻿
 Input = {}
-InputEntity = World:Entity()
 
 Input.Press = function(input)
 	return { action = "press", input = input, length = 0 }
@@ -41,7 +40,9 @@ Input.Update = function()
 	if ActionTriggers.Count > 0 then
 		for i = 0, ActionTriggers.Count - 1 do
 			local action = "Action_" .. (InputStack:Peek()) .. "_" .. (ActionTriggers[i])
+			print("Action received: " .. action)
 			if _G[action] ~= nil then
+				print("Action found, setting component.")
 				InputEntity:Set(_G[action]())
 			else
 				Svarog:LogError("Action " .. ActionTriggers[i] .. " not found in context " .. (InputStack:Peek()))

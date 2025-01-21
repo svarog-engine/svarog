@@ -1,4 +1,4 @@
 ﻿
-require "scripts\\player\\InputTest"
-require "scripts\\render\\RandomGlyphTest"
-require "scripts\\render\\DebugRender"
+dofile "scripts\\player\\InputTest.lua"
+dofile "scripts\\render\\RandomGlyphTest.lua"
+dofile "scripts\\render\\DebugRender.lua"

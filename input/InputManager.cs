@@ -36,8 +36,13 @@ namespace svarog.input
         public void ReloadActions()
         {
             var svarog = Svarog.Instance;
+            m_RegisteredActions.Clear();
+            m_ContextStack.Clear();
+            m_HeldLengths.Clear();
+            m_RegisteredContexts.Clear();
+
             svarog.RunScript("Actions = {}");
-            svarog.RunScriptFile(@"scripts\\Actions.lua");
+            svarog.RunScript(@"dofile ""scripts\\Actions.lua""");
 
             if (svarog.Scripting["Actions"] is LuaTable table)
             {

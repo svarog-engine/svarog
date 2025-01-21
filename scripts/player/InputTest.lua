@@ -1,7 +1,8 @@
 ﻿
 -- DEFAULT
-
-Engine.RegisterInputSystem(Action_Default_Debug, function() Input.Push("Debug") end)
+Engine.RegisterInputSystem(Action_Default_Debug, function() 
+	Input.Push("Debug") 
+end)
 
 Engine.RegisterInputSystem(Action_Default_Left, function()
 	for i = 0, Options.WorldWidth - 1 do
