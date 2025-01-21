@@ -105,6 +105,11 @@ namespace svarog.input
             m_ContextStack.Push(context);
         }
 
+        public void PopAll()
+        {
+            m_ContextStack.Clear();
+        }
+
         public void Pop()
         {
             if (m_ContextStack.Count > 0)

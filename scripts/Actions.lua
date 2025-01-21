@@ -4,11 +4,12 @@ Actions.Default = {
 	Right	= { Input.Press("Key: Right") },
 	Up		= { Input.Press("Key: Up") },
 	Down	= { Input.Press("Key: Down") },
-	Menu	= { Input.Release("Key: Escape") },
+	Debug	= { Input.Release("Key: Escape") },
 	Exit	= { Input.Hold("Key: F10", 1000) }
 }
 
-Actions.Menu = {
+Actions.Debug = {
+	Reload  = { Input.Press("Key: F5") },
 	Back = { Input.Release("Key: Escape") }
 }
 

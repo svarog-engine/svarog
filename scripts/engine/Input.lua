@@ -15,11 +15,22 @@ Input.Release = function(input)
 end
 
 Input.Push = function(ctx)
+	Svarog:LogInfo("Pushed input context: " .. ctx)
 	InputStack:Push(ctx)
 end
 
+Input.Clear = function()
+	Svarog:LogInfo("Input contexts cleared")
+	InputStack:PopAll()
+end
+
 Input.Pop = function()
+	Svarog:LogInfo("Popped input context")
 	InputStack:Pop()
+end
+
+Input.Peek = function()
+	return InputStack:Peek()
 end
 
 Input.Consume = function(input)

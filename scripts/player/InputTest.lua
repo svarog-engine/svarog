@@ -1,10 +1,7 @@
 ﻿
 -- DEFAULT
 
-Engine.RegisterInputSystem(Action_Default_Menu, function() 
-	print "MENU"
-	Input.Push("Menu")
-end)
+Engine.RegisterInputSystem(Action_Default_Debug, function() Input.Push("Debug") end)
 
 Engine.RegisterInputSystem(Action_Default_Left, function()
 	for i = 0, Options.WorldWidth - 1 do
@@ -14,9 +11,7 @@ Engine.RegisterInputSystem(Action_Default_Left, function()
 	end
 end)
 
--- MENU
+-- DEBUG
 
-Engine.RegisterInputSystem(Action_Menu_Back, function()
-	print("BACK")
-	Input.Pop()
-end)
+Engine.RegisterInputSystem(Action_Debug_Back, function() Input.Pop() end)
+Engine.RegisterInputSystem(Action_Debug_Reload, function() Svarog.Instance:Reload() end)

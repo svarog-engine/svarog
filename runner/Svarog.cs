@@ -88,6 +88,11 @@ namespace svarog.runner
 
         #region Scripting
 
+        public void RunScriptMain()
+        {
+            RunScriptFile(@"scripts\\Main.lua");
+        }
+
         public void RunScript(string code)
         {
             try
@@ -138,7 +143,10 @@ namespace svarog.runner
         private Clock m_Clock = new Clock();
         long m_Time = 0;
         int m_Counter = 0;
-        
+
+        private bool m_Reload = false;
+        public void Reload() { m_Reload = true; }
+
         float m_Delta = 0.0f;
         public float DeltaTime => m_Delta;
 
@@ -200,24 +208,26 @@ namespace svarog.runner
             RunScript(@"Engine = require ""scripts\\engine\\Engine""");
             RunScript(@"Input = require ""scripts\\engine\\Input""");
             m_InputManager.ReloadActions();
-            RunScriptFile(@"scripts\\Main.lua");
+            RunScriptMain();
             RunScript(@"Engine.Setup()");
 
             Svarog.Instance.LogInfo("Scripting ECS up and running!");
-
-            var triggerUpdateFunction = (m_Lua["Input.Update"] as LuaFunction);
-            var frameUpdateFunction = (m_Lua["Engine.Update"] as LuaFunction);
 
             while (!m_ShouldShutdown)
             {
                 m_InputManager.Clear();
                 m_Clock.Restart();
 
+                if (m_Reload)
+                {
+                    RunScript(@"Engine.Reload()");
+                    m_Reload = false;
+                }
+
                 m_InputManager.Update();
                 m_PresentationLayer?.Update();
 
-                triggerUpdateFunction?.Call();
-                frameUpdateFunction?.Call();
+                RunScript(@"Engine.Update()");
 
                 m_Counter++;
                 m_Delta = m_Clock.ElapsedTime.AsMilliseconds();
