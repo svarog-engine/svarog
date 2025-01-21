@@ -1,4 +1,6 @@
 ﻿
+using CommandLine;
+using NLua;
 using SFML.Graphics;
 using SFML.Window;
 
@@ -56,15 +58,20 @@ namespace svarog.presentation
 
             LoadFonts();
 
-            m_Renderer.FontSize = options.FontSize.GetValueOrDefault();
-            if (m_Fonts.ContainsKey(options.Font))
+            if(Svarog.Instance.Scripting["Config"] is LuaTable config)
             {
-                m_Renderer.CurrentFont = m_Fonts[options.Font];
+                var size = config["FontSize"].ToString();
+                m_Renderer.FontSize = uint.Parse(size);
 
-            }
-            else
-            {
-                Svarog.Instance.LogWarning($"Font [{options.Font}] was not found. No default font set!");
+                var fontName = config["Font"].ToString();
+                if (m_Fonts.ContainsKey(fontName))
+                {
+                    m_Renderer.CurrentFont = m_Fonts[fontName];
+                }
+                else
+                {
+                    Svarog.Instance.LogWarning($"Font [{fontName}] was not found. No default font set!");
+                }
             }
 
             m_Surface = new RenderTexture(800, 600);
