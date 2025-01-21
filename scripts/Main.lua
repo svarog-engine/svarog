@@ -1,3 +1,3 @@
 ﻿
 require "scripts\\player\\InputTest"
-require "scripts\\render\\GlyphMapTest"
+require "scripts\\render\\RandomGlyphTest"

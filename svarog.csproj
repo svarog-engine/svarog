@@ -20,16 +20,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="ECS.lua">
+    <None Update="scripts\engine\ECS.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="scripts\Actions.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="scripts\Engine.lua">
+    <None Update="scripts\engine\Engine.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="scripts\Input.lua">
+    <None Update="scripts\engine\Input.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="scripts\Main.lua">
@@ -38,7 +38,7 @@
     <None Update="scripts\player\InputTest.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="scripts\render\GlyphMapTest.lua">
+    <None Update="scripts\render\RandomGlyphTest.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
 

@@ -7,22 +7,21 @@ Pipeline_Player = {}
 Pipeline_Enviro = {}
 Pipeline_Render = {}
 
-RenderChangelist = ECS.Component({ changes = {} })
-Changes = World:Entity(RenderChangelist())
+RenderChangelist = {}
 
 local FrameCount = 0
 
 local function Draw(changes)
-    table.insert(Changes[RenderChangelist].changes, changes)
+    table.insert(RenderChangelist, changes)
 end
 
 local function RenderPass()
-	for i, c in ipairs(Changes[RenderChangelist].changes) do
+	for i, c in ipairs(RenderChangelist) do
 		if c.Presentation ~= nil then Glyphs[c.X][c.Y].Presentation = c.Presentation end
 		if c.Foreground ~= nil then Glyphs[c.X][c.Y].Foreground = c.Foreground end
 		if c.Background ~= nil then Glyphs[c.X][c.Y].Background = c.Background end
 	end
-	Changes[RenderChangelist].changes = {}
+	RenderChangelist = {}
 end
 
 local function UpdateWorld(time)
@@ -51,6 +50,18 @@ function RenderSystem() return "render" end
 function RegisterPlayerSystem()
     local system = ECS.System(Engine.PlayerSystem())
     table.insert(Pipeline_Player, system)
+    return system
+end
+
+function RegisterEnviroSystem()
+    local system = ECS.System(Engine.WorldSystem())
+    table.insert(Pipeline_Enviro, system)
+    return system
+end
+
+function RegisterRenderSystem()
+    local system = ECS.System(Engine.RenderSystem())
+    table.insert(Pipeline_Render, system)
     return system
 end
 

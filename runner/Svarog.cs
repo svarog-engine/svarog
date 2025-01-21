@@ -196,9 +196,9 @@ namespace svarog.runner
             m_Lua["InputStack"] = m_InputManager;
             m_Lua["ActionTriggers"] = m_InputManager.Triggered;
 
-            RunScript(@"require ""ECS""");
-            RunScript(@"Engine = require ""scripts\\Engine""");
-            RunScript(@"Input = require ""scripts\\Input""");
+            RunScript(@"ECS = require ""scripts\\engine\\ECS""");
+            RunScript(@"Engine = require ""scripts\\engine\\Engine""");
+            RunScript(@"Input = require ""scripts\\engine\\Input""");
             m_InputManager.ReloadActions();
             RunScriptFile(@"scripts\\Main.lua");
             RunScript(@"Engine.Setup()");

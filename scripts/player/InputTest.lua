@@ -1,4 +1,6 @@
 ﻿
+-- DEFAULT
+
 Engine.RegisterInputSystem(Action_Default_Menu, function() 
 	print "MENU"
 	Input.Push("Menu")
@@ -12,7 +14,9 @@ Engine.RegisterInputSystem(Action_Default_Left, function()
 	end
 end)
 
+-- MENU
+
 Engine.RegisterInputSystem(Action_Menu_Back, function()
-		print("BACK")
-		Input.Pop()
+	print("BACK")
+	Input.Pop()
 end)
