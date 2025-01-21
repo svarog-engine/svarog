@@ -12,22 +12,35 @@ Changes = World:Entity(RenderChangelist())
 
 local FrameCount = 0
 
-local function Update(time)
+local function Draw(changes)
+    table.insert(Changes[RenderChangelist].changes, changes)
+end
+
+local function RenderPass()
+	for i, c in ipairs(Changes[RenderChangelist].changes) do
+		if c.Presentation ~= nil then Glyphs[c.X][c.Y].Presentation = c.Presentation end
+		if c.Foreground ~= nil then Glyphs[c.X][c.Y].Foreground = c.Foreground end
+		if c.Background ~= nil then Glyphs[c.X][c.Y].Background = c.Background end
+	end
+	Changes[RenderChangelist].changes = {}
+end
+
+local function UpdateWorld(time)
     World:Update("process", time)
     World:Update("transform", time)
     World:Update("render", time)
+    RenderPass()
 end
 
 local function NextFrame()
     FrameCount = FrameCount + 1
-    Update(FrameCount)
+    UpdateWorld(FrameCount)
 end
 
 local function Setup()
     for _, v in ipairs(Pipeline_Player) do World:AddSystem(v) end
     for _, v in ipairs(Pipeline_Enviro) do World:AddSystem(v) end
     for _, v in ipairs(Pipeline_Render) do World:AddSystem(v) end
-    
     for _, v in ipairs(Pipeline_Startup) do v() end
 end
 
@@ -57,6 +70,7 @@ function OnStartup(fun)
 end
 
 return {
+    Draw = Draw,
     Setup = Setup,
     Frame = function() return FrameCount end,
     Update = NextFrame,

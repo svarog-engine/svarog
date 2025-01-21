@@ -25,8 +25,8 @@ namespace svarog.input
         private Stack<string> m_ContextStack = new();
 
         private Dictionary<string, float> m_HeldLengths = [];
+
         private List<string> m_Triggered = [];
-        
         public List<string> Triggered => m_Triggered;
 
         public InputManager()
