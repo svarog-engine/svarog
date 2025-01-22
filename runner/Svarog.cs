@@ -3,6 +3,8 @@
 using NLua;
 using NLua.Exceptions;
 
+using RandomColorGenerator;
+
 using Serilog;
 using Serilog.Core;
 using SFML.System;
@@ -141,11 +143,39 @@ namespace svarog.runner
         public Glyph[][] Glyphs => m_Glyphs;
 
         private Clock m_Clock = new Clock();
-        long m_Time = 0;
+        long m_FrameTime = 0;
+        long m_RenderTime = 0;
         int m_Counter = 0;
+
+        private bool m_Redraw = true;
+        public bool ShouldRedraw() => m_Redraw;
+        public void Redraw() { m_Redraw = true; }
+        public void ResetRedraw() { m_Redraw = false; }
 
         private bool m_Reload = false;
         public void Reload() { m_Reload = true; }
+
+        public void ReloadConfig()
+        {
+            RunScriptFile(@"scripts\\Config.lua");
+        }
+
+        public void ReloadGlyphs()
+        {
+            var width = (int)((double)m_Lua["Config.WorldWidth"]);
+            var height = (int)((double)m_Lua["Config.WorldHeight"]);
+            m_Glyphs = new Glyph[width][];
+
+            for (int i = 0; i < width; i++)
+            {
+                m_Glyphs[i] = new Glyph[height];
+                for (int j = 0; j < height; j++)
+                {
+                    m_Glyphs[i][j] = new Glyph();
+                }
+            }
+            m_Lua["Glyphs"] = m_Glyphs;
+        }
 
         float m_Delta = 0.0f;
         public float DeltaTime => m_Delta;
@@ -181,24 +211,11 @@ namespace svarog.runner
                 Svarog.Instance.LogInfo("Starting up Svarog!");
 
                 SetupDisplayMode(options);
-                var width = options.WorldWidth.GetValueOrDefault();
-                var height = options.WorldHeight.GetValueOrDefault();
-                m_Glyphs = new Glyph[width][];
-
-                for (int i = 0; i < options.WorldWidth; i++)
-                {
-                    m_Glyphs[i] = new Glyph[height];
-                    for (int j = 0; j < options.WorldHeight; j++)
-                    {
-                        m_Glyphs[i][j] = new Glyph();
-                    }
-                }
             });
 
             m_Lua.LoadCLRPackage();
             m_Lua["Svarog"] = this;
             m_Lua["Rand"] = new Randomness();
-            m_Lua["Glyphs"] = m_Glyphs;
             m_Lua["Colors"] = new Colors();
             m_Lua["InputStack"] = m_InputManager;
             m_Lua["ActionTriggers"] = m_InputManager.Triggered;
@@ -206,7 +223,9 @@ namespace svarog.runner
             RunScript(@"ECS = require ""scripts\\engine\\ecs\\ECS""");
             RunScript(@"Engine = require ""scripts\\engine\\Engine""");
             RunScript(@"Input = require ""scripts\\engine\\Input""");
-            RunScriptFile(@"scripts\\Config.lua");
+
+            ReloadConfig();
+            ReloadGlyphs();
 
             m_InputManager.ReloadActions();
             commandLine.WithParsed(options => m_PresentationLayer?.Create(options));
@@ -231,16 +250,22 @@ namespace svarog.runner
                 m_PresentationLayer?.Update();
 
                 RunScript(@"Engine.Update()");
-
                 m_Counter++;
                 m_Delta = m_Clock.ElapsedTime.AsMilliseconds();
-                m_Time += (int)m_Delta;
+                m_FrameTime += (int)m_Delta;
 
-                if (m_Time >= 1000)
+                if (m_FrameTime >= 1000)
                 {
                     LogInfo($"FPS -- {m_Counter}");
-                    m_Time = 0;
+                    m_FrameTime = 0;
                     m_Counter = 0;
+                }
+
+                m_RenderTime += (int)m_Delta;
+                if (m_RenderTime >= 166)
+                {
+                    Redraw();
+                    m_RenderTime = 0;
                 }
 
                 Thread.Yield();

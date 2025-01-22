@@ -1,6 +1,9 @@
 ﻿Config = {
     Font = "AppleII",
-    FontSize = 10,
+    FontSize = 12,
+    
+    WorldWidth = 80,
+    WorldHeight = 60,
 }
 
 World = ECS.World()
@@ -43,9 +46,11 @@ local function UpdateWorld(time)
     if World then
         World:Update("process", time)
         World:Update("transform", time)
-        if not Options.Headless then
+
+        if not Options.Headless and Svarog:ShouldRedraw() then
             World:Update("render", time)
             RenderPass()
+            Svarog:ResetRedraw()
         end
     end
 end
@@ -60,10 +65,6 @@ local function Setup()
     InputEntity = World:Entity()
 
     print("Adding systems to world ", World)
-    print(" Player systems: #" .. #Pipeline_Player)
-    print(" Enviro systems: #" .. #Pipeline_Enviro)
-    print(" Render systems: #" .. #Pipeline_Render)
-    print(" Startup calls : #" .. #Pipeline_Startup)
     for _, v in ipairs(Pipeline_Player) do World:AddSystem(v) end
     for _, v in ipairs(Pipeline_Enviro) do World:AddSystem(v) end
     for _, v in ipairs(Pipeline_Render) do World:AddSystem(v) end
@@ -79,6 +80,7 @@ local function Reload()
     World = nil
 
     World = ECS.World()
+
     print("Creating world:", World)
 
     Pipeline_Startup = {}
@@ -89,6 +91,9 @@ local function Reload()
     FrameCount = 0
     Input.Clear()
     
+    Svarog.Instance:ReloadConfig()
+    Svarog.Instance:ReloadGlyphs()
+
     InputStack:ReloadActions()
     Svarog.Instance:RunScriptMain()
     Setup()
@@ -100,18 +105,26 @@ function RenderSystem() return "render" end
 
 function RegisterPlayerSystem()
     local system = ECS.System(Engine.PlayerSystem())
+    system.Order = #Pipeline_Player
     table.insert(Pipeline_Player, system)
     return system
 end
 
 function RegisterEnviroSystem()
     local system = ECS.System(Engine.WorldSystem())
+    system.Order = #Pipeline_Enviro
     table.insert(Pipeline_Enviro, system)
     return system
 end
 
-function RegisterRenderSystem()
-    local system = ECS.System(Engine.RenderSystem())
+function RegisterRenderSystem(q)
+    if q == nil then q = function(id) return id end end
+    local system = ECS.System(Engine.RenderSystem(), q(ECS.Query.All(Redraw)), function(self)
+        if next(self:Result():ToArray()) ~= nil then
+            self:Render()
+        end
+    end)
+    system.Order = #Pipeline_Render
     table.insert(Pipeline_Render, system)
     return system
 end
@@ -125,7 +138,6 @@ function RegisterInputSystem(input, fn)
     end)
 
     table.insert(Pipeline_Player, system)
-    print("Pipeline Player #: " .. (#Pipeline_Player))
 end
 
 function OnStartup(fun) 
