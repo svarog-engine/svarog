@@ -262,7 +262,7 @@ namespace svarog.runner
                 }
 
                 m_RenderTime += (int)m_Delta;
-                if (m_RenderTime >= 166)
+                if (m_RenderTime >= (double)m_Lua["Config.RenderTime"])
                 {
                     Redraw();
                     m_RenderTime = 0;

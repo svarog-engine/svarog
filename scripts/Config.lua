@@ -1,9 +1,12 @@
 ﻿-- Uncomment any of the following lines to apply these settings without changing the engine code.
 
 -- Font configuration:
-		Config.Font = "AppleII"
-		Config.FontSize = 12
+--		Config.Font = "AppleII"
+--		Config.FontSize = 12
 
--- Window configuration:
+-- World configuration:
 		Config.WorldWidth = 67
 		Config.WorldHeight = 50
+
+-- Render configuration:
+--		Config.RenderTime = 166

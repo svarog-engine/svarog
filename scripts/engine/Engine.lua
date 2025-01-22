@@ -4,6 +4,8 @@
     
     WorldWidth = 80,
     WorldHeight = 60,
+
+    RenderTime = 166,
 }
 
 World = ECS.World()
