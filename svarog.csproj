@@ -77,6 +77,9 @@
     <None Update="scripts\engine\ecs\World.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="scripts\enviro\DungeonMaker.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="scripts\Main.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -86,17 +89,13 @@
     <None Update="scripts\render\DebugRender.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="scripts\render\RandomGlyphTest.lua">
+    <None Update="scripts\render\DungeonRender.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
 
 	<Content Include="resources\**">
 		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	</Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="scripts\enviro\" />
   </ItemGroup>
 
 </Project>

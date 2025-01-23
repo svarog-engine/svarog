@@ -1,5 +1,5 @@
 ﻿Config = {
-    Font = "AppleII",
+    Font = "whitrabt",
     FontSize = 12,
     
     WorldWidth = 80,
@@ -131,11 +131,13 @@ function RegisterRenderSystem(q)
     return system
 end
 
-function RegisterInputSystem(input, fn)
-    local system = ECS.System(Engine.PlayerSystem(), ECS.Query.All(input), function(self) 
+function RegisterInputSystem(inputs, fn)
+    local system = ECS.System(Engine.PlayerSystem(), ECS.Query.Any(table.unpack(inputs)), function(self) 
         for _, e in self:Result(self.queryAction):Iterator() do
-		    fn()
-            Input.Consume(input)
+		    fn(e)
+            for _, i in ipairs(inputs) do
+                Input.Consume(i)
+            end
 	    end
     end)
 

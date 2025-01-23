@@ -7,7 +7,7 @@ namespace svarog
         public Color Background { get; set; } = background;
         public Color Foreground { get; set; } = foreground; 
 
-        public Glyph() : this(".", Color.Green, Color.Black)
+        public Glyph() : this(" ", Color.Black, Color.Black)
         {}
     }
 }
