@@ -95,6 +95,7 @@ local function Reload()
     
     Svarog.Instance:ReloadConfig()
     Svarog.Instance:ReloadGlyphs()
+    Svarog.Instance:ReloadPresenter()
 
     InputStack:ReloadActions()
     Svarog.Instance:RunScriptMain()

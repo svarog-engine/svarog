@@ -58,7 +58,7 @@ namespace svarog.presentation
 
             LoadFonts();
 
-            if(Svarog.Instance.Scripting["Config"] is LuaTable config)
+            if (Svarog.Instance.Scripting["Config"] is LuaTable config)
             {
                 var size = config["FontSize"].ToString();
                 m_Renderer.FontSize = uint.Parse(size);
@@ -82,6 +82,11 @@ namespace svarog.presentation
 
         void LoadFonts()
         {
+            if (m_Fonts.Count > 0)
+            {
+                m_Fonts.Clear();
+            }
+
             DirectoryInfo d = new DirectoryInfo(@"resources/font");
 
             FileInfo[] Files = d.GetFiles("*.ttf");
@@ -113,6 +118,27 @@ namespace svarog.presentation
                 m_Window.Draw(m_DrawSprite);
 
                 m_Window.Display();
+            }
+        }
+
+        public void Reload()
+        {
+            LoadFonts();
+
+            if (Svarog.Instance.Scripting["Config"] is LuaTable config)
+            {
+                var size = config["FontSize"].ToString();
+                m_Renderer.FontSize = uint.Parse(size);
+
+                var fontName = config["Font"].ToString();
+                if (m_Fonts.ContainsKey(fontName))
+                {
+                    m_Renderer.CurrentFont = m_Fonts[fontName];
+                }
+                else
+                {
+                    Svarog.Instance.LogWarning($"Font [{fontName}] was not found. No default font set!");
+                }
             }
         }
     }
