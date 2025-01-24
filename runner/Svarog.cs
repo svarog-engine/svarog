@@ -220,6 +220,7 @@ namespace svarog.runner
             m_Lua["InputStack"] = m_InputManager;
             m_Lua["ActionTriggers"] = m_InputManager.Triggered;
 
+            RunScript(@"Map = require ""scripts\\engine\\Map""");
             RunScript(@"ECS = require ""scripts\\engine\\ecs\\ECS""");
             RunScript(@"Engine = require ""scripts\\engine\\Engine""");
             RunScript(@"Input = require ""scripts\\engine\\Input""");
@@ -229,7 +230,8 @@ namespace svarog.runner
 
             m_InputManager.ReloadActions();
             commandLine.WithParsed(options => m_PresentationLayer?.Create(options));
-            
+
+            RunScript(@"dofile ""scripts\\Library.lua""");
             RunScriptMain();
             RunScript(@"Engine.Setup()");
 

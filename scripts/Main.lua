@@ -1,13 +1,12 @@
 ﻿
-Player = ECS.Component()
-Position = ECS.Component({ x = 0, y = 0 })
-
 World:Entity(Player, Position({ x = 10, y = 10 }))
+World:Entity(MakeDungeonRequest)
 
-dofile "scripts\\player\\InputTest.lua"
+dofile "scripts\\player\\InputActions.lua"
+dofile "scripts\\player\\BumpMechanics.lua"
+dofile "scripts\\player\\ResolveMove.lua"
 
 dofile "scripts\\enviro\\DungeonMaker.lua"
-World:Entity(CreateDungeon)
 
 dofile "scripts\\render\\DungeonRender.lua"
 dofile "scripts\\render\\DebugRender.lua"

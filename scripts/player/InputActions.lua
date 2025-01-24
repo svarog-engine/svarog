@@ -1,8 +1,5 @@
 ﻿
 -- DEFAULT
-Engine.RegisterInputSystem({ Action_Default_Debug }, function() 
-	Input.Push("Debug") 
-end)
 
 Engine.RegisterInputSystem(
 	{
@@ -20,14 +17,15 @@ Engine.RegisterInputSystem(
 		local dx = dxl + dxr
 		local dy = dyl + dyr
 		local pos = entity[Position]
-		pos.x = pos.x + dx
-		pos.y = pos.y + dy
-		entity[Position] = pos
-		print(pos.x, pos.y)
+		entity:Set(Bump({ x = pos.x, y = pos.y, dx = dx, dy = dy }))
 	end)
 end)
 
 -- DEBUG
+
+Engine.RegisterInputSystem({ Action_Default_Debug }, function() 
+	Input.Push("Debug") 
+end)
 
 Engine.RegisterInputSystem({ Action_Debug_Back }, function() Input.Pop() end)
 Engine.RegisterInputSystem({ Action_Debug_Reload }, function() Svarog.Instance:Reload() end)

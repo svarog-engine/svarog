@@ -2,11 +2,17 @@
 local DungeonRenderSystem = Engine.RegisterRenderSystem()
 
 function DungeonRenderSystem:Render()
-	for _, e in World:Exec(ECS.Query.All(Dungeon)):Iterator() do
-		local map = e[Dungeon].map
-		for _, tile in ipairs(map) do
-			Engine.Glyph(tile.x, tile.y, tile.type, Colors.White, Colors.Black)
+	
+	local map = DungeonEntity[Dungeon].map
+	for _, k in map:Iterate() do
+		local tile = map.tiles[k]
+		local char = " "
+		if tile.value.type == Floor then
+			char = "."
+		elseif tile.value.type == Door then
+			char = "+"
 		end
+		Engine.Glyph(tile.x, tile.y, char, Colors.White, Colors.Black)
 	end
 
 	for _, e in World:Exec(ECS.Query.All(Player, Position)):Iterator() do

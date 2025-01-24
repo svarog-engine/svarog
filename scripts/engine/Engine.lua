@@ -5,7 +5,7 @@
     WorldWidth = 80,
     WorldHeight = 60,
 
-    RenderTime = 166,
+    RenderTime = 66,
 }
 
 World = ECS.World()
@@ -37,9 +37,11 @@ end
 
 local function RenderPass()
 	for i, c in ipairs(RenderChangelist) do
-		if c.Presentation ~= nil then Glyphs[c.X][c.Y].Presentation = c.Presentation end
-		if c.Foreground ~= nil then Glyphs[c.X][c.Y].Foreground = c.Foreground end
-		if c.Background ~= nil then Glyphs[c.X][c.Y].Background = c.Background end
+        if Glyphs[c.X] ~= nil and Glyphs[c.X][c.Y] ~= nil then
+		    if c.Presentation ~= nil then Glyphs[c.X][c.Y].Presentation = c.Presentation end
+		    if c.Foreground ~= nil then Glyphs[c.X][c.Y].Foreground = c.Foreground end
+		    if c.Background ~= nil then Glyphs[c.X][c.Y].Background = c.Background end
+        end
 	end
 	RenderChangelist = {}
 end
@@ -97,6 +99,7 @@ local function Reload()
     Svarog.Instance:ReloadGlyphs()
 
     InputStack:ReloadActions()
+    dofile "scripts\\Library.lua"
     Svarog.Instance:RunScriptMain()
     Setup()
 end
