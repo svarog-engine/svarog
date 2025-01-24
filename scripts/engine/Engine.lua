@@ -1,13 +1,12 @@
 ﻿Config = {
     Font = "whitrabt",
-    FontSize = 12,
-
-    MaxFontSize = 36,
-    MinFontSize = 12,
+    FontSize = 20,
     FontChangeStep = 8,
+    FontMaxSize = 36,
+    FontMinSize = 2,
     
     WorldWidth = 80,
-    WorldHeight = 60,
+    WorldHeight = 45,
 
     RenderTime = 66,
 }

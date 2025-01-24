@@ -5,8 +5,8 @@
 --		Config.FontSize = 12
 
 -- World configuration:
-		Config.WorldWidth = 67
-		Config.WorldHeight = 50
+--		Config.WorldWidth = 80
+--		Config.WorldHeight = 60
 
 -- Render configuration:
 --		Config.RenderTime = 66

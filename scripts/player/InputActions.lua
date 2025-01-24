@@ -23,7 +23,7 @@ end)
 
 Engine.RegisterInputSystem({Action_Default_IncreaseFontSize}, function()
 	local currentSize = Config.FontSize
-	local maxSize = Config.MaxFontSize
+	local maxSize = Config.FontMaxSize
 	local step = Config.FontChangeStep
 
 	if currentSize < maxSize then
@@ -39,7 +39,7 @@ end)
 
 Engine.RegisterInputSystem({Action_Default_DecreaseFontSize}, function() 
 	local currentSize = Config.FontSize
-	local minSize = Config.MinFontSize
+	local minSize = Config.FontMinSize
 	local step = Config.FontChangeStep
 
 	if currentSize > minSize then
