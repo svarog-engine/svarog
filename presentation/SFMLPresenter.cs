@@ -3,6 +3,7 @@ using SFML.Window;
 
 using svarog.input;
 using svarog.runner;
+using svarog.utility;
 
 namespace svarog.presentation
 {
@@ -175,8 +176,11 @@ namespace svarog.presentation
             m_Surface = new RenderTexture(m_WindowWidth, m_WindowHeight);
             m_DrawSprite.Texture = m_Surface.Texture;
 
-            m_Window?.Close();
-            InitializeWindow();
+            // doesn't work ???!!?
+            // m_Window?.Size = new SFML.System.Vector2u(m_WindowWidth, m_WindowHeight);
+
+            m_Window?.SetWindowSize(m_WindowWidth, m_WindowHeight);
+            m_Window?.SetView(new View(new FloatRect(0, 0, m_WindowWidth, m_WindowHeight)));
         }
     }
 }
