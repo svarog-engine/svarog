@@ -21,6 +21,38 @@ Engine.RegisterInputSystem(
 	end)
 end)
 
+Engine.RegisterInputSystem({Action_Default_IncreaseFontSize}, function()
+	local currentSize = Config.FontSize
+	local maxSize = Config.MaxFontSize
+	local step = Config.FontChangeStep
+
+	if currentSize < maxSize then
+		if currentSize + step > maxSize then
+			Config.FontSize = maxSize
+		else
+			Config.FontSize = currentSize + step
+		end
+
+		Svarog.Instance:ReloadPresenter()
+	end
+end)
+
+Engine.RegisterInputSystem({Action_Default_DecreaseFontSize}, function() 
+	local currentSize = Config.FontSize
+	local minSize = Config.MinFontSize
+	local step = Config.FontChangeStep
+
+	if currentSize > minSize then
+		if currentSize - step < minSize then
+			Config.FontSize = minSize
+		else
+			Config.FontSize = currentSize - step
+		end
+
+		Svarog.Instance:ReloadPresenter()
+	end
+end)
+
 -- DEBUG
 
 Engine.RegisterInputSystem({ Action_Default_Debug }, function() 

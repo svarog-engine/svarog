@@ -5,7 +5,9 @@ Actions.Default = {
 	Up		= { Input.Press("Key: Up") },
 	Down	= { Input.Press("Key: Down") },
 	Debug	= { Input.Release("Key: Escape") },
-	Exit	= { Input.Hold("Key: F10", 1000) }
+	Exit	= { Input.Hold("Key: F10", 1000) },
+	IncreaseFontSize = { Input.Press("Key: PageUp") },
+	DecreaseFontSize = { Input.Press("Key: PageDown")},
 }
 
 Actions.Debug = {
