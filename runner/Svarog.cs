@@ -177,6 +177,11 @@ namespace svarog.runner
             m_Lua["Glyphs"] = m_Glyphs;
         }
 
+        public void ReloadPresenter()
+        {
+            m_PresentationLayer?.Reload();
+        }
+
         float m_Delta = 0.0f;
         public float DeltaTime => m_Delta;
 

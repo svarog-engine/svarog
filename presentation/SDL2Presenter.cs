@@ -80,5 +80,10 @@ namespace svarog.presentation
 
             SDL.SDL_RenderPresent(m_Renderer);
         }
+
+        public void Reload()
+        {
+            // TBD
+        }
     }
 }

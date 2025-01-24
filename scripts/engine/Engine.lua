@@ -97,6 +97,7 @@ local function Reload()
     
     Svarog.Instance:ReloadConfig()
     Svarog.Instance:ReloadGlyphs()
+    Svarog.Instance:ReloadPresenter()
 
     InputStack:ReloadActions()
     dofile "scripts\\Library.lua"
