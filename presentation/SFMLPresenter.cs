@@ -1,7 +1,4 @@
-﻿
-using CommandLine;
-using NLua;
-using SFML.Graphics;
+﻿using SFML.Graphics;
 using SFML.Window;
 
 using svarog.input;
@@ -21,9 +18,54 @@ namespace svarog.presentation
 
         public RenderTexture? Surface => m_Surface;
 
+        private uint m_WindowWidth = 800;
+        private uint m_WindowHeight = 600;
+
         public void Create(CommandLineOptions options)
         {
-            m_Window = new RenderWindow(new SFML.Window.VideoMode(800, 600), "Svarog");
+            LoadFonts();
+
+            if (Svarog.Instance.Scripting["Config.FontSize"].ToString() is string fontSizeValue)
+            {
+                var fontSize = uint.Parse(fontSizeValue);
+                m_Renderer.FontSize = fontSize;
+
+                if (Svarog.Instance.Scripting["Config.WorldWidth"].ToString() is string worldWidhtValue)
+                {
+                    m_WindowWidth = uint.Parse(worldWidhtValue) * fontSize;
+                }
+
+                if (Svarog.Instance.Scripting["Config.WorldHeight"].ToString() is string worldHeightValue)
+                {
+                    m_WindowHeight = uint.Parse(worldHeightValue) * fontSize;
+                }
+            }
+
+            if (Svarog.Instance.Scripting["Config.Font"] is string fontFamily)
+            {
+                if (m_Fonts.ContainsKey(fontFamily))
+                {
+                    m_Renderer.CurrentFont = m_Fonts[fontFamily];
+                }
+                else
+                {
+                    Svarog.Instance.LogWarning($"Font [{fontFamily}] was not found. No default font set!");
+                }
+            }
+
+            m_Surface = new RenderTexture(m_WindowWidth, m_WindowHeight);
+            m_DrawSprite.Texture = m_Surface.Texture;
+
+            InitializeWindow();
+
+            Svarog.Instance.LogInfo($"Created window size: {m_WindowWidth} x {m_WindowHeight}");
+
+            Svarog.Instance.LogInfo("SFML Presenter up and running!");
+        }
+
+        void InitializeWindow()
+        {
+            m_Window = new RenderWindow(new SFML.Window.VideoMode(m_WindowWidth, m_WindowHeight), "Svarog");
 
             m_Window.Closed += (object? _, EventArgs _) =>
             {
@@ -55,29 +97,6 @@ namespace svarog.presentation
             {
                 Svarog.Instance.EnqueueInput(new InputAction(EInputActionType.Hold, "Mouse: Move", 0, args.X, args.Y));
             };
-
-            LoadFonts();
-
-            if (Svarog.Instance.Scripting["Config"] is LuaTable config)
-            {
-                var size = config["FontSize"].ToString();
-                m_Renderer.FontSize = uint.Parse(size);
-
-                var fontName = config["Font"].ToString();
-                if (m_Fonts.ContainsKey(fontName))
-                {
-                    m_Renderer.CurrentFont = m_Fonts[fontName];
-                }
-                else
-                {
-                    Svarog.Instance.LogWarning($"Font [{fontName}] was not found. No default font set!");
-                }
-            }
-
-            m_Surface = new RenderTexture(800, 600);
-            m_DrawSprite.Texture = m_Surface.Texture;
-
-            Svarog.Instance.LogInfo("SFML Presenter up and running!");
         }
 
         void LoadFonts()
@@ -125,21 +144,39 @@ namespace svarog.presentation
         {
             LoadFonts();
 
-            if (Svarog.Instance.Scripting["Config"] is LuaTable config)
+            if (Svarog.Instance.Scripting["Config.FontSize"].ToString() is string fontSizeValue)
             {
-                var size = config["FontSize"].ToString();
-                m_Renderer.FontSize = uint.Parse(size);
+                var fontSize = uint.Parse(fontSizeValue);
+                m_Renderer.FontSize = fontSize;
 
-                var fontName = config["Font"].ToString();
-                if (m_Fonts.ContainsKey(fontName))
+                if (Svarog.Instance.Scripting["Config.WorldWidth"].ToString() is string worldWidhtValue)
                 {
-                    m_Renderer.CurrentFont = m_Fonts[fontName];
+                    m_WindowWidth = uint.Parse(worldWidhtValue) * fontSize;
+                }
+
+                if (Svarog.Instance.Scripting["Config.WorldHeight"].ToString() is string worldHeightValue)
+                {
+                    m_WindowHeight = uint.Parse(worldHeightValue) * fontSize;
+                }
+            }
+
+            if (Svarog.Instance.Scripting["Config.Font"] is string fontFamily)
+            {
+                if (m_Fonts.ContainsKey(fontFamily))
+                {
+                    m_Renderer.CurrentFont = m_Fonts[fontFamily];
                 }
                 else
                 {
-                    Svarog.Instance.LogWarning($"Font [{fontName}] was not found. No default font set!");
+                    Svarog.Instance.LogWarning($"Font [{fontFamily}] was not found. No default font set!");
                 }
             }
+
+            m_Surface = new RenderTexture(m_WindowWidth, m_WindowHeight);
+            m_DrawSprite.Texture = m_Surface.Texture;
+
+            m_Window?.Close();
+            InitializeWindow();
         }
     }
 }
