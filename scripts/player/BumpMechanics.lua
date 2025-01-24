@@ -10,10 +10,11 @@ function BumpMechanicsSystem:Update()
 			local ny = bump.y + bump.dy
 			
 			local pass = map:Has(nx, ny) and map:Get(nx, ny).value.pass
+
 			if pass then
 				entity:Set(MoveTo({ x = nx, y = ny }))
-			elseif map:Has(nx, ny) and map:Get(nx, ny).entity ~= nil then
-				map:Get(nx, ny).entity:Set(Bumped({ by = entity }))
+			elseif map:Has(nx, ny) and map:Get(nx, ny).value.entity ~= nil then
+				map:Get(nx, ny).value.entity:Set(Bumped({ by = entity.id }))
 			end
 
 			entity:Unset(Bump)

@@ -51,6 +51,7 @@ function World.New(systemClasses, frequency, disableAutoUpdate)
       _timer = Timer.New(frequency),
       _systems = {}, -- systems in this world
       _repository = EntityRepository.New(),
+      _entitiesIndex = {},
       _entitiesCreated = {}, -- created during the execution of the Update
       _entitiesRemoved = {}, -- removed during execution (only removed after the last execution step)
       _entitiesUpdated = {}, -- changed during execution (received or lost components, therefore, changed the archetype)
@@ -134,11 +135,15 @@ function World:Entity(...)
 
    self._dirty = true
    self._entitiesCreated[entity] = true
-   
+   self._entitiesIndex[entity.id] = entity
    entity.version = self.version -- update entity version using current Global System Version (GSV)
    entity.isAlive = false
 
    return entity
+end
+
+function World:FetchEntityById(id)
+    return self._entitiesIndex[id]
 end
 
 --[[
@@ -171,6 +176,8 @@ function World:Remove(entity)
 
    self._dirty = true
    entity.isAlive = false
+
+   self._entitiesIndex[entity.id] = nil
 end
 
 --[[

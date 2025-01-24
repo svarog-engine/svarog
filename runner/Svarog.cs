@@ -259,11 +259,11 @@ namespace svarog.runner
                 RunScript(@"Engine.Update()");
                 m_Counter++;
                 m_Delta = m_Clock.ElapsedTime.AsMilliseconds();
-                m_FrameTime += (int)m_Delta;
 
+                m_FrameTime += (int)m_Delta;
                 if (m_FrameTime >= 1000)
                 {
-                    LogInfo($"FPS -- {m_Counter}");
+                    LogVerbose($"FPS -- {m_Counter}");
                     m_FrameTime = 0;
                     m_Counter = 0;
                 }

@@ -1,0 +1,20 @@
+﻿
+local FadeOutRendererSystem = Engine.RegisterRenderSystem()
+
+function FadeOutRendererSystem:Render()
+	for _, entity in World:Exec(ECS.Query.All(FadeOut, Glyph, Position)):Iterator() do
+		local glyph = entity[Glyph]
+		local fadeout = entity[FadeOut]
+		local pos = entity[Position]
+
+		glyph.bg = Colors:Lerp(fadeout.start, fadeout.target, fadeout.time)
+		fadeout.time = fadeout.time + fadeout.speed
+
+		Engine.Glyph(pos.x, pos.y, glyph.char, glyph.fg or Colors.White, glyph.bg or Colors.Black)
+
+		if fadeout.time > 1.0 then
+			entity:Unset(FadeOut)
+		end
+	end
+end
+

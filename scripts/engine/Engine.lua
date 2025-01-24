@@ -1,6 +1,6 @@
 ﻿Config = {
     Font = "whitrabt",
-    FontSize = 20,
+    FontSize = 12,
     FontChangeStep = 8,
     FontMaxSize = 36,
     FontMinSize = 2,
@@ -36,6 +36,12 @@ local function Write(x, y, text, fg, bg)
     for i = 0, #text - 1 do
         Engine.Glyph(x + i, y, string.sub(text, i + 1, i + 1), fg, bg)
     end 
+end
+
+local function Line(row, char, fg, bg)
+	for i = 0, Config.WorldWidth - 1 do
+		Engine.Write(i, row, char or " ", fg or Colors.White, bg or Colors.Black)
+	end
 end
 
 local function RenderPass()
@@ -159,6 +165,7 @@ return {
     Draw = Draw,
     Glyph = Glyph,
     Write = Write,
+    Line = Line,
     Setup = Setup,
     Reload = Reload,
     Frame = function() return FrameCount end,
