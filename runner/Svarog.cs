@@ -3,8 +3,6 @@
 using NLua;
 using NLua.Exceptions;
 
-using RandomColorGenerator;
-
 using Serilog;
 using Serilog.Core;
 using SFML.System;
@@ -92,7 +90,7 @@ namespace svarog.runner
 
         public void RunScriptMain()
         {
-            RunScript(@"dofile ""scripts\\Main.lua""");
+            RunScript(@"dofile ""scripts\\gameplay\\Main.lua""");
         }
 
         public void RunScript(string code)
@@ -236,7 +234,7 @@ namespace svarog.runner
             m_InputManager.ReloadActions();
             commandLine.WithParsed(options => m_PresentationLayer?.Create(options));
 
-            RunScript(@"dofile ""scripts\\Library.lua""");
+            RunScript(@"dofile ""scripts\\gameplay\\Library.lua""");
             RunScriptMain();
             RunScript(@"Engine.Setup()");
 

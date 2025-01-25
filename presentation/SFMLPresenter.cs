@@ -15,7 +15,7 @@ namespace svarog.presentation
 
         private Sprite m_DrawSprite = new();
         private RenderTexture m_Surface = new(800, 600);
-        private GlyphRenderer m_Renderer = new();
+        private GlyphFontRenderer m_Renderer = new();
 
         public RenderTexture? Surface => m_Surface;
 
@@ -175,9 +175,6 @@ namespace svarog.presentation
 
             m_Surface = new RenderTexture(m_WindowWidth, m_WindowHeight);
             m_DrawSprite.Texture = m_Surface.Texture;
-
-            // doesn't work ???!!?
-            // m_Window?.Size = new SFML.System.Vector2u(m_WindowWidth, m_WindowHeight);
 
             m_Window?.SetWindowSize(m_WindowWidth, m_WindowHeight);
             m_Window?.SetView(new View(new FloatRect(0, 0, m_WindowWidth, m_WindowHeight)));

@@ -9,7 +9,7 @@ function DoorMechanicsSystem:Update()
 
 		if door.locked then
 			Diary.Write("The door is locked.")
-			entity:Set(FadeOut{ start = Colors.Red, target = Colors.Black, time = 0, speed = 0.1 })
+			Fade(entity, Colors.Red, Colors.Black)
 			-- unlock logic here
 		elseif door.closed then
 			Diary.Write("You open the door.")

@@ -38,7 +38,7 @@
     <None Update="scripts\engine\ecs\ECS.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="scripts\Actions.lua">
+    <None Update="scripts\gameplay\Actions.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="scripts\engine\Engine.lua">
@@ -80,37 +80,37 @@
     <None Update="scripts\engine\Map.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="scripts\enviro\DoorMechanics.lua">
+    <None Update="scripts\gameplay\enviro\DoorMechanics.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="scripts\enviro\DungeonMaker.lua">
+    <None Update="scripts\gameplay\enviro\DungeonMaker.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="scripts\Library.lua">
+    <None Update="scripts\gameplay\Library.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="scripts\Main.lua">
+    <None Update="scripts\gameplay\Main.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="scripts\player\BumpMechanics.lua">
+    <None Update="scripts\gameplay\player\BumpMechanics.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="scripts\player\InputActions.lua">
+    <None Update="scripts\gameplay\player\InputActions.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="scripts\player\ResolveMove.lua">
+    <None Update="scripts\gameplay\player\ResolveMove.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="scripts\render\FadeOutRenderer.lua">
+    <None Update="scripts\gameplay\render\FadeOutRenderer.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="scripts\render\LogRender.lua">
+    <None Update="scripts\gameplay\render\LogRender.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="scripts\render\DebugRender.lua">
+    <None Update="scripts\gameplay\render\DebugRender.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="scripts\render\DungeonRender.lua">
+    <None Update="scripts\gameplay\render\DungeonRender.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
 

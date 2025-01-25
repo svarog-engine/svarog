@@ -1,7 +1,7 @@
 ﻿Config = {
     Font = "whitrabt",
-    FontSize = 12,
-    FontChangeStep = 8,
+    FontSize = 14,
+    FontChangeStep = 2,
     FontMaxSize = 36,
     FontMinSize = 2,
     
@@ -77,7 +77,6 @@ end
 local function Setup()
     InputEntity = World:Entity()
 
-    print("Adding systems to world ", World)
     for _, v in ipairs(Pipeline_Player) do World:AddSystem(v) end
     for _, v in ipairs(Pipeline_Enviro) do World:AddSystem(v) end
     for _, v in ipairs(Pipeline_Render) do World:AddSystem(v) end
@@ -88,13 +87,10 @@ local function Setup()
 end
 
 local function Reload()
-    print("Destroying world: ", World)
     World:Destroy()
     World = nil
 
     World = ECS.World()
-
-    print("Creating world:", World)
 
     Pipeline_Startup = {}
     Pipeline_Player = {}
@@ -109,7 +105,7 @@ local function Reload()
     Svarog.Instance:ReloadPresenter()
 
     InputStack:ReloadActions()
-    dofile "scripts\\Library.lua"
+    dofile "scripts\\gameplay\\Library.lua"
     Svarog.Instance:RunScriptMain()
     Setup()
 end
@@ -159,6 +155,18 @@ end
 
 function OnStartup(fun) 
     table.insert(Pipeline_Startup, fun)
+end
+
+function LoadPlayerSystem(name)
+    dofile("scripts\\gameplay\\player\\" .. name .. ".lua")
+end
+
+function LoadEnviroSystem(name)
+    dofile("scripts\\gameplay\\enviro\\" .. name .. ".lua")
+end
+
+function LoadRenderSystem(name)
+    dofile("scripts\\gameplay\\render\\" .. name .. ".lua")
 end
 
 return {

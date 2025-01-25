@@ -2,13 +2,13 @@
 
 namespace svarog.presentation
 {
-    public class GlyphRenderer
+    public class GlyphFontRenderer
     {
         SFML.Graphics.Font? m_CurrentFont = null;
         uint m_FontSize = 12;
 
         SFML.Graphics.Text m_Text = new();
-        private RectangleShape m_BackgroundRect = new RectangleShape();
+        private RectangleShape m_BackgroundRect = new();
 
         public SFML.Graphics.Font? CurrentFont
         {
@@ -39,7 +39,6 @@ namespace svarog.presentation
                     var item = matrix[i][j];
                     m_BackgroundRect.Position = new SFML.System.Vector2f(m_FontSize * i, m_FontSize * j);
                     m_BackgroundRect.FillColor = item.Background;
-
                     m_BackgroundRect.Draw(target, RenderStates.Default);
                 }
             }
@@ -51,8 +50,8 @@ namespace svarog.presentation
                     var item = matrix[i][j];
                     m_Text.DisplayedString = item.Presentation;
                     m_Text.FillColor = item.Foreground;
-                    m_Text.Position = new SFML.System.Vector2f(m_FontSize * i, m_FontSize * j);
-
+                    m_Text.Position = new SFML.System.Vector2f(m_FontSize * i + m_FontSize * 0.5f, m_FontSize * j + m_FontSize * 0.5f);
+                    m_Text.Origin = m_Text.GetLocalBounds().Size / 2.0f + m_Text.GetLocalBounds().Position;
                     m_Text.Draw(target, RenderStates.Default);
                 }
             }
