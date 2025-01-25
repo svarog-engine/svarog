@@ -101,7 +101,7 @@
     <None Update="scripts\gameplay\player\ResolveMove.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="scripts\gameplay\render\FadeOutRenderer.lua">
+    <None Update="scripts\gameplay\render\FadeOutRender.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="scripts\gameplay\render\LogRender.lua">
@@ -111,6 +111,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="scripts\gameplay\render\DungeonRender.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="scripts\gameplay\render\TopLevelRender.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
 

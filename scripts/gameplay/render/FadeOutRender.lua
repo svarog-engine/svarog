@@ -1,7 +1,7 @@
 ﻿
-local FadeOutRendererSystem = Engine.RegisterRenderSystem()
+local FadeOutRenderSystem = Engine.RegisterRenderSystem()
 
-function FadeOutRendererSystem:Render()
+function FadeOutRenderSystem:Render()
 	for _, entity in World:Exec(ECS.Query.All(FadeOut, Glyph, Position)):Iterator() do
 		local glyph = entity[Glyph]
 		local fadeout = entity[FadeOut]

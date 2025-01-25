@@ -12,10 +12,5 @@ function DungeonRenderSystem:Render()
 			Engine.Glyph(tile.x, tile.y, glyph.char, glyph.fg or Colors.White, glyph.bg or Colors.Black)
 		end
 	end
-
-	for _, e in World:Exec(ECS.Query.All(Player, Position)):Iterator() do
-		local pos = e[Position]
-		Engine.Glyph(pos.x, pos.y, "@", Colors.Yellow, Colors.Black)
-	end
 end
 

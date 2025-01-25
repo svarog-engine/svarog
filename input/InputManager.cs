@@ -99,7 +99,7 @@ namespace svarog.input
                     {
                         m_RegisteredActions.Add(component);
                         svarog.RunScript($"{component} = ECS.Component({{}})");
-                        svarog.LogInfo($"Generated input action component {component}");
+                        svarog.LogVerbose($"Generated input action component {component}");
                     }
                 }
             }
