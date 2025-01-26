@@ -18,5 +18,5 @@ World:Entity(
 )
 
 World:Entity(MakeDungeonRequest)
---Diary.Write("Welcome to Svarog.")
+Diary.Write("Welcome to Svarog")
 

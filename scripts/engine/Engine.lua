@@ -12,18 +12,22 @@ RenderChangelist = {}
 local FrameCount = 0
 
 local function RenderPass()
+    local pres = Config.Presentation or "Default"
+    
 	for i, c in ipairs(RenderChangelist) do
         if Glyphs[c.X] ~= nil and Glyphs[c.X][c.Y] ~= nil then
             if c.Tile ~= nil then 
-                local tile = Glossary[Config.Presentation or "Default"][c.Tile]
-                if Glossary.Meta[Config.Presentation or "Default"].Type == EPresentationMode.Sprite then    
-                    Glyphs[c.X][c.Y].TileX = tile.x
-                    Glyphs[c.X][c.Y].TileY = tile.y
-                else 
-                    Glyphs[c.X][c.Y].Presentation = tile.char
+                local tile = Glossary[pres][c.Tile]
+                if tile ~= nil then
+                    if Glossary.Meta[pres].Type == EPresentationMode.Sprite then
+                        Glyphs[c.X][c.Y].TileX = tile.x
+                        Glyphs[c.X][c.Y].TileY = tile.y
+                    else 
+                        Glyphs[c.X][c.Y].Presentation = tile.char
+                    end
+                    Glyphs[c.X][c.Y].Foreground = tile.fg
+                    Glyphs[c.X][c.Y].Background = tile.bg
                 end
-                Glyphs[c.X][c.Y].Foreground = tile.fg
-                Glyphs[c.X][c.Y].Background = tile.bg
             end
 
 		    if c.Presentation ~= nil then Glyphs[c.X][c.Y].Presentation = c.Presentation end
@@ -53,7 +57,16 @@ local function Glyph(x, y, name, overrides)
 end 
 
 local function Symbol(x, y, glyph, fg, bg)
-    Engine.Draw({ X = x, Y = y, Presentation = glyph or ".", Foreground = fg or Colors.Yellow, Background = bg or Colors.Red })
+    local def = Config.Presentation or "Default"
+    if Glossary.Meta[def].Type == EPresentationMode.Sprite then
+        if Glossary[def][glyph] == nil then glyph = "missing" end
+        local overrides = {}
+        if fg ~= nil then overrides.fg = fg end
+        if bg ~= nil then overrides.bg = bg end
+        Glyph(x, y, glyph, overrides)
+    else
+        Engine.Draw({ X = x, Y = y, Presentation = glyph or ".", Foreground = fg or Colors.Yellow, Background = bg or Colors.Red })
+    end
 end 
 
 local function Write(x, y, text, fg, bg)
@@ -64,7 +77,7 @@ end
 
 local function Line(row, char, fg, bg)
 	for i = 0, Config.Width - 1 do
-		Engine.Write(i, row, char or " ", fg or Colors.White, bg or Colors.Black)
+		Engine.Symbol(i, row, "missing", fg or Colors.White, bg or Colors.Black)
 	end
 end
 
