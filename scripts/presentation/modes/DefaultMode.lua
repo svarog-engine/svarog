@@ -14,12 +14,12 @@ Glossary.Default = {
 	mage = { char = "@", fg = Colors.Yellow, bg = Colors.Black },
 	monk = { char = "@", fg = Colors.Yellow, bg = Colors.Black },
 
-	door_closed = { char = "+", fg = Colors.Gray, bg = Colors.Black },
-	door_open = { char = "_", fg = Colors.Gray, bg = Colors.Black },
+	door_closed = { char = "+", fg = Colors.White, bg = Colors.Black },
+	door_open = { char = "_", fg = Colors.White, bg = Colors.Black },
 
-	back_dark = { char = ".", fg = Colors.Gray, bg = Colors.Black },
+	back_dark = { char = ".", fg = Colors.DarkGray, bg = Colors.Black },
 	back_semi = { char = ".", fg = Colors.Gray, bg = Colors.Black },
-	back_mid = { char = ".", fg = Colors.Gray, bg = Colors.Black },
+	back_mid = { char = ".", fg = Colors.LightGray, bg = Colors.Black },
 	back_lit = { char = ".", fg = Colors.White, bg = Colors.Black },
 
 	empty = { char = ".", fg = Colors.Gray, bg = Colors.Black },
