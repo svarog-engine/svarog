@@ -11,4 +11,6 @@
     Height = 45,
 
     FrameTime = 66,
+
+    Palette = nil
 }

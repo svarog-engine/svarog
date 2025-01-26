@@ -59,7 +59,7 @@ end
 local function Symbol(x, y, glyph, fg, bg)
     local def = Config.Presentation or "Default"
     if Glossary.Meta[def].Type == EPresentationMode.Sprite then
-        if Glossary[def][glyph] == nil then glyph = "missing" end
+        if Glossary[def][glyph] == nil then glyph = " " end
         local overrides = {}
         if fg ~= nil then overrides.fg = fg end
         if bg ~= nil then overrides.bg = bg end
@@ -77,7 +77,7 @@ end
 
 local function Line(row, char, fg, bg)
 	for i = 0, Config.Width - 1 do
-		Engine.Symbol(i, row, "missing", fg or Colors.White, bg or Colors.Black)
+		Engine.Symbol(i, row, " ", fg or Colors.White, bg or Colors.Black)
 	end
 end
 
@@ -128,6 +128,7 @@ local function Reload()
     
     Svarog.Instance:ReloadConfig()
     Svarog.Instance:ReloadGlyphs()
+    Svarog.Instance:ReloadGlossary()
     Svarog.Instance:ReloadPresenter()
 
     InputStack:ReloadActions()
@@ -193,6 +194,10 @@ end
 
 function LoadRenderSystem(name)
     dofile("scripts\\gameplay\\render\\" .. name .. ".lua")
+end
+
+function Hex(rgb)
+    return Colors:Hex(rgb)
 end
 
 return {

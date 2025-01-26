@@ -1,4 +1,4 @@
 ﻿-- Define your fonts here
 
-LoadPresentation("PresentDefault")
-LoadPresentation("PresentGoblins")
+LoadPresentation("DefaultMode")
+LoadPresentation("GoblinMode")

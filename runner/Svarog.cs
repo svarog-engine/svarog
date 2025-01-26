@@ -10,8 +10,6 @@ using svarog.input;
 using svarog.presentation;
 using svarog.utility;
 
-using System.Runtime.InteropServices;
-
 namespace svarog.runner
 {
     public class Svarog
@@ -164,8 +162,15 @@ namespace svarog.runner
         public void ReloadGlossary()
         {
             Svarog.Instance.LogInfo("Loading glossary");
+            RunScript(@"dofile ""scripts\\engine\\Presentation.lua""");
             RunScript("Glossary = {}");
             RunScript("Glossary.Meta = {}");
+            m_Colors = new();
+            m_Lua["Colors"] = m_Colors;
+            if (m_Lua["Config.Palette"] is string palette)
+            {
+                RunScript($@"dofile ""scripts\\presentation\\palettes\\{palette}.lua""");
+            }
             RunScript(@"dofile ""scripts\\presentation\\Glossary.lua""");
         }
 
@@ -194,6 +199,7 @@ namespace svarog.runner
         float m_Delta = 0.0f;
         public float DeltaTime => m_Delta;
 
+        Colors m_Colors;
         public void EnqueueInput(InputAction input)
         {
             m_InputManager.Enqueue(input);
@@ -230,12 +236,8 @@ namespace svarog.runner
             m_Lua.LoadCLRPackage();
             m_Lua["Svarog"] = this;
             m_Lua["Rand"] = new Randomness();
-            m_Lua["Colors"] = new Colors();
             m_Lua["InputStack"] = m_InputManager;
             m_Lua["ActionTriggers"] = m_InputManager.Triggered;
-
-            RunScript(@"dofile ""scripts\\engine\\Presentation.lua""");
-            ReloadGlossary();
 
             RunScript(@"Map = require ""scripts\\engine\\Map""");
             RunScript(@"ECS = require ""scripts\\engine\\ecs\\ECS""");
@@ -244,6 +246,7 @@ namespace svarog.runner
 
             ReloadConfig();
             ReloadGlyphs();
+            ReloadGlossary();
 
             m_InputManager.ReloadActions();
             commandLine.WithParsed(options => m_PresentationLayer?.Create(options));

@@ -122,10 +122,13 @@
     <None Update="scripts\gameplay\render\TopLevelRender.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="scripts\presentation\PresentDefault.lua">
+    <None Update="scripts\presentation\modes\DefaultMode.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="scripts\presentation\PresentGoblins.lua">
+    <None Update="scripts\presentation\modes\GoblinMode.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="scripts\presentation\palettes\alpha6-cc29.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
 

@@ -2,6 +2,7 @@
 
 -- Presentation configuration:
 		Config.Presentation = "Goblins"
+		Config.Palette = "alpha6-cc29"
 
 -- Font configuration:
 --		Config.FontSize = 12
