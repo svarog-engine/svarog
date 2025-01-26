@@ -39,6 +39,17 @@ function DungeonMakerSystem:Update()
 		self:MakeDoor(8, 13)
 		self:MakeDoor(13, 13, true, true)
 
+		for i = 14, 20 do 
+			self.floor:Set(8, i, { type = Floor, pass = true })
+		end 
+		
+		self:MakeDoor(9, 20)
+		for i = 10, 22 do
+			for j = 18, 25 do
+				self.floor:Set(i, j, { type = Floor, pass = true })
+			end
+		end
+
 		DungeonEntity[Dungeon].map = self.floor
 		e[MakeDungeonRequest] = nil
 	end

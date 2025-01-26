@@ -1,5 +1,7 @@
 ﻿using SFML.Graphics;
 
+using svarog.runner;
+
 namespace svarog
 {
     public class Glyph(string presentation, Color foreground, Color background) {
@@ -9,7 +11,7 @@ namespace svarog
         public Color Background { get; set; } = background;
         public Color Foreground { get; set; } = foreground; 
 
-        public Glyph() : this(" ", Color.Black, Color.Black)
+        public Glyph() : this(" ", Svarog.Instance.Colors.Black, Svarog.Instance.Colors.Black)
         {}
     }
 }

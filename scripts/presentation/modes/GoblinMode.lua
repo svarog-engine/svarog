@@ -18,14 +18,16 @@ Glossary.Goblins = {
 	door_open = { x = 15, y = 16, fg = Colors.Gray, bg = Colors.Black },
 	door_closed = { x = 16, y = 16, fg = Colors.Gray, bg = Colors.Black },
 
-	back_dark = { x = 0, y = 0, fg = Colors.DarkBrown, bg = Colors.Black },
-	back_semi = { x = 6, y = 17, fg = Colors.DarkBrown, bg = Colors.Black },
-	back_mid = { x = 6, y = 16, fg = Colors.DarkBrown, bg = Colors.Black },
-	back_lit = { x = 5, y = 15, fg = Colors.DarkBrown, bg = Colors.Black },
+	back_dark = { x = 5, y = 16, fg = Colors.DarkBrown, bg = Colors.Black },
+	back_semi = { x = 5, y = 16, fg = Colors.Brown, bg = Colors.Black },
+	back_mid = { x = 5, y = 15, fg = Colors.Brown, bg = Colors.Black },
+	back_lit = { x = 5, y = 14, fg = Colors.Brown, bg = Colors.Black },
 
-	back_old1 = { x = 6, y = 14, fg = Colors.DarkGray, bg = Colors.Black },
-	back_old2 = { x = 7, y = 14, fg = Colors.DarkGray, bg = Colors.Black },
-	back_old3 = { x = 8, y = 14, fg = Colors.DarkGray, bg = Colors.Black },
+	empty = { x = 5, y = 13, fg = Colors.DarkGray, bg = Colors.Black },
+	empty2 = { x = 6, y = 13, fg = Colors.DarkGray, bg = Colors.Black },
+	empty3 = { x = 7, y = 13, fg = Colors.DarkGray, bg = Colors.Black },
+
+	wall = { x = 16, y = 17, fg = Colors.DarkGray, bg = Colors.Black },
 }
 
 InsertSpriteCharRanges(Glossary.Goblins, 0, 0, " ")

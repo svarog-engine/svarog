@@ -22,9 +22,11 @@ Glossary.Default = {
 	back_mid = { char = ".", fg = Colors.Gray, bg = Colors.Black },
 	back_lit = { char = ".", fg = Colors.White, bg = Colors.Black },
 
-	back_old1 = { char = ".", fg = Colors.Gray, bg = Colors.Black },
-	back_old2 = { char = ".", fg = Colors.Gray, bg = Colors.Black },
-	back_old3 = { char = ".", fg = Colors.Gray, bg = Colors.Black },
+	empty = { char = ".", fg = Colors.Gray, bg = Colors.Black },
+	empty2 = { char = ".", fg = Colors.Gray, bg = Colors.Black },
+	empty3 = { char = ".", fg = Colors.Gray, bg = Colors.Black },
+
+	wall = { char = "#", fg = Colors.DarkGray, bg = Colors.Black },
 	
 	missing = { char = " ", fg = Colors.White, bg = Colors.Black },
 }

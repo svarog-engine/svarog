@@ -200,6 +200,8 @@ namespace svarog.runner
         public float DeltaTime => m_Delta;
 
         Colors m_Colors;
+        internal Colors Colors => m_Colors;
+
         public void EnqueueInput(InputAction input)
         {
             m_InputManager.Enqueue(input);
@@ -245,8 +247,8 @@ namespace svarog.runner
             RunScript(@"Input = require ""scripts\\engine\\Input""");
 
             ReloadConfig();
-            ReloadGlyphs();
             ReloadGlossary();
+            ReloadGlyphs();
 
             m_InputManager.ReloadActions();
             commandLine.WithParsed(options => m_PresentationLayer?.Create(options));

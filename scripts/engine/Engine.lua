@@ -127,8 +127,8 @@ local function Reload()
     Input.Clear()
     
     Svarog.Instance:ReloadConfig()
-    Svarog.Instance:ReloadGlyphs()
     Svarog.Instance:ReloadGlossary()
+    Svarog.Instance:ReloadGlyphs()
     Svarog.Instance:ReloadPresenter()
 
     InputStack:ReloadActions()

@@ -24,9 +24,9 @@ Colors.Yellow = Hex("#ede19e")
 Colors.LightYellow = Hex("#ede19e")
 Colors.DarkYellow = Hex("#d3a068")
 
-Colors.Brown = Hex("#a77b5b")
-Colors.LightBrown = Hex("#e5ceb4")
-Colors.DarkBrown = Hex("#80493a")
+Colors.Brown = Hex("#6c5744")
+Colors.LightBrown = Hex("#957a5a")
+Colors.DarkBrown = Hex("#5c4734")
 
 Colors.Gray = Hex("#646365")
 Colors.LightGray = Hex("#b8b5b9")

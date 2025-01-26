@@ -151,7 +151,7 @@ namespace svarog.presentation
             }
         }
 
-        void DrawTest()
+        void DrawSurface()
         {
             m_Surface.Clear();
             var map = Svarog.Instance.Glyphs;
@@ -167,7 +167,7 @@ namespace svarog.presentation
             {
                 m_Window.DispatchEvents();
 
-                DrawTest();
+                DrawSurface();
                 m_Window.Draw(m_DrawSprite);
 
                 m_Window.Display();
@@ -189,6 +189,7 @@ namespace svarog.presentation
 
             m_Surface = new RenderTexture(m_WindowWidth, m_WindowHeight);
             m_DrawSprite.Texture = m_Surface.Texture;
+            m_DrawSprite.TextureRect = new IntRect(0, 0, (int)m_WindowWidth, (int)m_WindowHeight);
         }
 
         public void Create(CommandLineOptions options)
