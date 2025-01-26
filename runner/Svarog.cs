@@ -281,7 +281,7 @@ namespace svarog.runner
                 m_FrameTime += (int)m_Delta;
                 if (m_FrameTime >= 1000)
                 {
-                    LogVerbose($"FPS -- {m_Counter}");
+                    LogInfo($"FPS -- {m_Counter}");
                     m_FrameTime = 0;
                     m_Counter = 0;
                 }

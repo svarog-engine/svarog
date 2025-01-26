@@ -1,6 +1,7 @@
 ﻿-- Define your input actions here
 
 Actions.Default = {
+	Wait	= { Input.Press("Key: Space") },
 	Left	= { Input.Press("Key: Left") },
 	Right	= { Input.Press("Key: Right") },
 	Up		= { Input.Press("Key: Up") },

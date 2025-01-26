@@ -2,6 +2,7 @@
 local DoorMechanicsSystem = Engine.RegisterEnviroSystem()
 
 function DoorMechanicsSystem:Update()
+	print("DoorMechanicsSystem")
 	for _, entity in World:Exec(ECS.Query.All(Door, Position, Bumped)):Iterator() do
 		local door = entity[Door]
 		local pos = entity[Position]

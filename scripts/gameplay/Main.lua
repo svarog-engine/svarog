@@ -2,16 +2,18 @@
 LoadPlayerSystem "InputActions"
 LoadPlayerSystem "BumpMechanics"
 LoadPlayerSystem "ResolveMove"
+LoadPlayerSystem "UpdateDijkstra"
 
 LoadEnviroSystem "DungeonMaker"
 LoadEnviroSystem "DoorMechanics"
+LoadEnviroSystem "FollowBehaviour"
 
 LoadRenderSystem "DungeonRender"
 LoadRenderSystem "FadeOutRender"
 LoadRenderSystem "PlayerLightRender"
+LoadRenderSystem "DebugDijkstraRender"
 LoadRenderSystem "TopLevelRender"
 LoadRenderSystem "LogRender"
-LoadRenderSystem "DebugDijkstraRender"
 
 World:Entity(
 	Player, 
@@ -21,6 +23,7 @@ World:Entity(
 
 World:Entity(
 	Creature, 
+	FollowBehaviour{ distance = 3 },
 	Position{ x = 14, y = 7 },
 	Glyph{ name = "gob1" }
 )

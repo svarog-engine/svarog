@@ -1,6 +1,12 @@
 ﻿
 -- DEFAULT
 
+Engine.RegisterInputSystem({ Action_Default_Wait }, function(input)
+	World:Exec(ECS.Query.All(Player)):ForEach(function(entity)
+		PlayerDone = true
+	end)
+end)
+
 Engine.RegisterInputSystem(
 	{
 		Action_Default_Left, 
@@ -18,6 +24,7 @@ Engine.RegisterInputSystem(
 		local dy = dyl + dyr
 		local pos = entity[Position]
 		entity:Set(Bump({ x = pos.x, y = pos.y, dx = dx, dy = dy }))
+		PlayerDone = true
 	end)
 end)
 

@@ -51,7 +51,8 @@ function DungeonMakerSystem:Update()
 		end
 
 		Dungeon.map = self.floor
-		Dungeon.dist = Dungeon.map:Dijkstra({ { 10, 10 } }, 0, function(t) return t.pass end)
+
+		Dungeon.playerDistance = Dungeon.map:Dijkstra({ { 10, 10 } }, 0, function(t) return t.pass end)
 		e[MakeDungeonRequest] = nil
 	end
 end

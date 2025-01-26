@@ -1,5 +1,6 @@
 ﻿World = ECS.World()
 
+PlayerDone = true
 Actions = {}
 
 Pipeline_Startup = {}
@@ -83,11 +84,15 @@ end
 
 local function UpdateWorld(time)
     if World then
-        World:Update("process", time)
-        World:Update("transform", time)
+        World:Update(PlayerSystem(), time)
+        
+        if PlayerDone then
+            World:Update(WorldSystem(), time)
+            PlayerDone = false
+        end
 
         if not Options.Headless and Svarog:ShouldRedraw() then
-            World:Update("render", time)
+            World:Update(RenderSystem(), time)
             RenderPass()
             Svarog:ResetRedraw()
         end
@@ -117,6 +122,8 @@ local function Reload()
     World = nil
 
     World = ECS.World()
+
+    PlayerDone = true
 
     Pipeline_Startup = {}
     Pipeline_Player = {}
