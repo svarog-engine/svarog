@@ -16,7 +16,7 @@ function DoorMechanicsSystem:Update()
 			door.closed = false
 			entity[Glyph].name = "door_open"
 			Fade(entity, Colors.Green, Colors.Black)
-			DungeonEntity[Dungeon].map:Get(pos.x, pos.y).value.pass = true
+			Dungeon.map:Get(pos.x, pos.y).value.pass = true
 		end
 		entity:Unset(Bumped)
 	end

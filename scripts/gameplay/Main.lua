@@ -11,6 +11,7 @@ LoadRenderSystem "FadeOutRender"
 LoadRenderSystem "PlayerLightRender"
 LoadRenderSystem "TopLevelRender"
 LoadRenderSystem "LogRender"
+LoadRenderSystem "DebugDijkstraRender"
 
 World:Entity(
 	Player, 

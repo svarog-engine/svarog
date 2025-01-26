@@ -44,13 +44,14 @@ function DungeonMakerSystem:Update()
 		end 
 		
 		self:MakeDoor(9, 20)
-		for i = 10, 22 do
-			for j = 18, 25 do
+		for i = 10, 33 do
+			for j = 14, 25 do
 				self.floor:Set(i, j, { type = Floor, pass = true })
 			end
 		end
 
-		DungeonEntity[Dungeon].map = self.floor
+		Dungeon.map = self.floor
+		Dungeon.dist = Dungeon.map:Dijkstra({ { 10, 10 } }, 0, function(t) return t.pass end)
 		e[MakeDungeonRequest] = nil
 	end
 end

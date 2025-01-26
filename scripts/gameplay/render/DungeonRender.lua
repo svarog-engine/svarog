@@ -2,7 +2,7 @@
 local DungeonRenderSystem = Engine.RegisterRenderSystem()
 
 function DungeonRenderSystem:Render()	
-	local map = DungeonEntity[Dungeon].map
+	local map = Dungeon.map
 	if map ~= nil then
 		for _, k in map:Iterate() do
 			local tile = map.tiles[k]

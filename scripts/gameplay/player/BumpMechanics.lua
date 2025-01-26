@@ -2,7 +2,7 @@
 local BumpMechanicsSystem = Engine.RegisterPlayerSystem()
 
 function BumpMechanicsSystem:Update()
-	local map = DungeonEntity[Dungeon].map
+	local map = Dungeon.map
 	if map ~= nil then
 		for _, entity in World:Exec(ECS.Query.All(Player, Bump)):Iterator() do
 			local bump = entity[Bump]

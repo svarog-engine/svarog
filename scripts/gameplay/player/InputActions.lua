@@ -53,6 +53,9 @@ Engine.RegisterInputSystem({ Action_Default_ZoomOut }, function()
 	end
 end)
 
--- DEBUG
-
 Engine.RegisterInputSystem({ Action_Default_Reload }, function() Svarog.Instance:Reload() end)
+
+DebugToggle_Dijkstra = false
+Engine.RegisterInputSystem({ Action_Default_DebugDijkstra }, function()
+	DebugToggle_Dijkstra = not DebugToggle_Dijkstra
+end)

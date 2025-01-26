@@ -33,5 +33,4 @@ MoveTo = ECS.Component{ x = 0, y = 0 }
 
 MakeDungeonRequest = ECS.Component()
 
-Dungeon = ECS.Component{ map = {} }
-DungeonEntity = World:Entity(Dungeon{ map = {} })
+Dungeon = {}

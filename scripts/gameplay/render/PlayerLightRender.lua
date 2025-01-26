@@ -1,7 +1,7 @@
 ﻿local PlayerLightRenderSystem = Engine.RegisterRenderSystem()
 
 function PlayerLightRenderSystem:Render()
-	local map = DungeonEntity[Dungeon].map
+	local map = Dungeon.map
 
 	for _, e in World:Exec(ECS.Query.All(Player, Position)):Iterator() do
 		local pos = e[Position]

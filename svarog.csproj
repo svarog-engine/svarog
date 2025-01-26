@@ -44,6 +44,9 @@
     <None Update="scripts\engine\Presentation.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="scripts\engine\Queue.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="scripts\gameplay\Actions.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -90,6 +93,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="scripts\gameplay\enviro\DungeonMaker.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="scripts\gameplay\render\DebugDijkstraRender.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="scripts\gameplay\render\PlayerLightRender.lua">
@@ -144,6 +150,10 @@
     <Content Update="resources\sprites\goblins-12x12.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="resources\sprites\" />
   </ItemGroup>
 
 </Project>
