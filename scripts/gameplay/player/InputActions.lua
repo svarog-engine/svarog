@@ -21,7 +21,7 @@ Engine.RegisterInputSystem(
 	end)
 end)
 
-Engine.RegisterInputSystem({Action_Default_IncreaseFontSize}, function()
+Engine.RegisterInputSystem({ Action_Default_ZoomIn }, function()
 	local currentSize = Config.FontSize
 	local maxSize = Config.FontMaxSize
 	local step = Config.FontChangeStep
@@ -37,7 +37,7 @@ Engine.RegisterInputSystem({Action_Default_IncreaseFontSize}, function()
 	end
 end)
 
-Engine.RegisterInputSystem({Action_Default_DecreaseFontSize}, function() 
+Engine.RegisterInputSystem({ Action_Default_ZoomOut }, function() 
 	local currentSize = Config.FontSize
 	local minSize = Config.FontMinSize
 	local step = Config.FontChangeStep
@@ -55,9 +55,4 @@ end)
 
 -- DEBUG
 
-Engine.RegisterInputSystem({ Action_Default_Debug }, function() 
-	Input.Push("Debug") 
-end)
-
-Engine.RegisterInputSystem({ Action_Debug_Back }, function() Input.Pop() end)
-Engine.RegisterInputSystem({ Action_Debug_Reload }, function() Svarog.Instance:Reload() end)
+Engine.RegisterInputSystem({ Action_Default_Reload }, function() Svarog.Instance:Reload() end)

@@ -10,6 +10,8 @@ using svarog.input;
 using svarog.presentation;
 using svarog.utility;
 
+using System.Runtime.InteropServices;
+
 namespace svarog.runner
 {
     public class Svarog
@@ -142,7 +144,7 @@ namespace svarog.runner
 
         private Clock m_Clock = new Clock();
         long m_FrameTime = 0;
-        long m_RenderTime = 0;
+        long m_RenderFrameTime = 0;
         int m_Counter = 0;
 
         private bool m_Redraw = true;
@@ -155,13 +157,22 @@ namespace svarog.runner
 
         public void ReloadConfig()
         {
-            RunScriptFile(@"scripts\\Config.lua");
+            RunScript(@"dofile ""scripts\\engine\\DefaultConfig.lua""");
+            RunScript(@"dofile ""scripts\\Config.lua""");
+        }
+
+        public void ReloadGlossary()
+        {
+            Svarog.Instance.LogInfo("Loading glossary");
+            RunScript("Glossary = {}");
+            RunScript("Glossary.Meta = {}");
+            RunScript(@"dofile ""scripts\\presentation\\Glossary.lua""");
         }
 
         public void ReloadGlyphs()
         {
-            var width = (int)((double)m_Lua["Config.WorldWidth"]);
-            var height = (int)((double)m_Lua["Config.WorldHeight"]);
+            var width = (int)((double)m_Lua["Config.Width"]);
+            var height = (int)((double)m_Lua["Config.Height"]);
             m_Glyphs = new Glyph[width][];
 
             for (int i = 0; i < width; i++)
@@ -223,6 +234,9 @@ namespace svarog.runner
             m_Lua["InputStack"] = m_InputManager;
             m_Lua["ActionTriggers"] = m_InputManager.Triggered;
 
+            RunScript(@"dofile ""scripts\\engine\\Presentation.lua""");
+            ReloadGlossary();
+
             RunScript(@"Map = require ""scripts\\engine\\Map""");
             RunScript(@"ECS = require ""scripts\\engine\\ecs\\ECS""");
             RunScript(@"Engine = require ""scripts\\engine\\Engine""");
@@ -266,11 +280,11 @@ namespace svarog.runner
                     m_Counter = 0;
                 }
 
-                m_RenderTime += (int)m_Delta;
-                if (m_RenderTime >= (double)m_Lua["Config.RenderTime"])
+                m_RenderFrameTime += (int)m_Delta;
+                if (m_RenderFrameTime >= (double)m_Lua["Config.FrameTime"])
                 {
                     Redraw();
-                    m_RenderTime = 0;
+                    m_RenderFrameTime = 0;
                 }
 
                 Thread.Yield();

@@ -1,19 +1,14 @@
-﻿
+﻿-- Define your input actions here
+
 Actions.Default = {
 	Left	= { Input.Press("Key: Left") },
 	Right	= { Input.Press("Key: Right") },
 	Up		= { Input.Press("Key: Up") },
 	Down	= { Input.Press("Key: Down") },
-	Debug	= { Input.Release("Key: Escape") },
 	Exit	= { Input.Hold("Key: F10", 1000) },
-	IncreaseFontSize = { Input.Press("Key: PageUp") },
-	DecreaseFontSize = { Input.Press("Key: PageDown")},
-}
-
-Actions.Debug = {
+	ZoomIn  = { Input.Press("Key: PageUp") },
+	ZoomOut = { Input.Press("Key: PageDown") },
 	Reload  = { Input.Press("Key: F5") },
-	Back = { Input.Release("Key: Escape") }
 }
 
 Input.Push("Default")
-print "Actions reloaded"

@@ -1,17 +1,4 @@
-﻿Config = {
-    Font = "whitrabt",
-    FontSize = 14,
-    FontChangeStep = 2,
-    FontMaxSize = 36,
-    FontMinSize = 2,
-    
-    WorldWidth = 80,
-    WorldHeight = 45,
-
-    RenderTime = 66,
-}
-
-World = ECS.World()
+﻿World = ECS.World()
 
 Actions = {}
 
@@ -24,35 +11,61 @@ RenderChangelist = {}
 
 local FrameCount = 0
 
-local function Draw(change)
-    table.insert(RenderChangelist, change)
-end
-
-local function Glyph(x, y, glyph, fg, bg)
-    Engine.Draw({ X = x, Y = y, Presentation = glyph or ".", Foreground = fg or Colors.Yellow, Background = bg or Colors.Red })
-end 
-
-local function Write(x, y, text, fg, bg)
-    for i = 0, #text - 1 do
-        Engine.Glyph(x + i, y, string.sub(text, i + 1, i + 1), fg, bg)
-    end 
-end
-
-local function Line(row, char, fg, bg)
-	for i = 0, Config.WorldWidth - 1 do
-		Engine.Write(i, row, char or " ", fg or Colors.White, bg or Colors.Black)
-	end
-end
-
 local function RenderPass()
 	for i, c in ipairs(RenderChangelist) do
         if Glyphs[c.X] ~= nil and Glyphs[c.X][c.Y] ~= nil then
+            if c.Tile ~= nil then 
+                local tile = Glossary[Config.Presentation or "Default"][c.Tile]
+                if Glossary.Meta[Config.Presentation or "Default"].Type == EPresentationMode.Sprite then    
+                    Glyphs[c.X][c.Y].TileX = tile.x
+                    Glyphs[c.X][c.Y].TileY = tile.y
+                else 
+                    Glyphs[c.X][c.Y].Presentation = tile.char
+                end
+                Glyphs[c.X][c.Y].Foreground = tile.fg
+                Glyphs[c.X][c.Y].Background = tile.bg
+            end
+
 		    if c.Presentation ~= nil then Glyphs[c.X][c.Y].Presentation = c.Presentation end
 		    if c.Foreground ~= nil then Glyphs[c.X][c.Y].Foreground = c.Foreground end
 		    if c.Background ~= nil then Glyphs[c.X][c.Y].Background = c.Background end
         end
 	end
 	RenderChangelist = {}
+end
+
+local function Draw(change)
+    table.insert(RenderChangelist, change)
+end
+
+local function Glyph(x, y, name, overrides)
+    message = {}
+    message.X = x
+    message.Y = y
+    message.Tile = name
+    
+    if overrides ~= nil then
+        if overrides.fg ~= nil then message.Foreground = overrides.fg end
+        if overrides.bg ~= nil then message.Background = overrides.bg end
+    end
+    
+    Engine.Draw(message)
+end 
+
+local function Symbol(x, y, glyph, fg, bg)
+    Engine.Draw({ X = x, Y = y, Presentation = glyph or ".", Foreground = fg or Colors.Yellow, Background = bg or Colors.Red })
+end 
+
+local function Write(x, y, text, fg, bg)
+    for i = 0, #text - 1 do
+        Engine.Symbol(x + i, y, string.sub(text, i + 1, i + 1), fg, bg)
+    end 
+end
+
+local function Line(row, char, fg, bg)
+	for i = 0, Config.Width - 1 do
+		Engine.Write(i, row, char or " ", fg or Colors.White, bg or Colors.Black)
+	end
 end
 
 local function UpdateWorld(time)
@@ -172,6 +185,7 @@ end
 return {
     Draw = Draw,
     Glyph = Glyph,
+    Symbol = Symbol,
     Write = Write,
     Line = Line,
     Setup = Setup,

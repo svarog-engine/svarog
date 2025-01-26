@@ -10,14 +10,13 @@ LoadRenderSystem "DungeonRender"
 LoadRenderSystem "FadeOutRender"
 LoadRenderSystem "TopLevelRender"
 LoadRenderSystem "LogRender"
-LoadRenderSystem "DebugRender"
 
 World:Entity(
 	Player, 
 	Position{ x = 10, y = 10 },
-	Glyph{ char = "@", fg = Colors.Yellow, bg = Colors.Black }
+	Glyph{ name = "mage" }
 )
 
 World:Entity(MakeDungeonRequest)
-Diary.Write("Welcome to Svarog.")
+--Diary.Write("Welcome to Svarog.")
 

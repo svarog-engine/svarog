@@ -7,10 +7,10 @@ function FadeOutRenderSystem:Render()
 		local fadeout = entity[FadeOut]
 		local pos = entity[Position]
 
-		glyph.bg = Colors:Lerp(fadeout.start, fadeout.target, fadeout.time)
+		bg = Colors:Lerp(fadeout.start, fadeout.target, fadeout.time)
 		fadeout.time = fadeout.time + fadeout.speed
 
-		Engine.Glyph(pos.x, pos.y, glyph.char, glyph.fg or Colors.White, glyph.bg or Colors.Black)
+		Engine.Glyph(pos.x, pos.y, glyph.name, { bg = bg })
 
 		if fadeout.time > 1.0 then
 			entity:Unset(FadeOut)

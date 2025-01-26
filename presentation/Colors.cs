@@ -25,6 +25,12 @@ namespace svarog.presentation
             }
         }
 
+        public Color Grayscale(int i)
+        {
+            byte b = (byte)(((float)i / 100.0f) * 255);
+            return new Color(b, b, b);
+        }
+
         public Color Lerp(Color a, Color b, float t)
             => a.Lerp(b, t);
     }

@@ -6,10 +6,10 @@ function DungeonRenderSystem:Render()
 	for _, k in map:Iterate() do
 		local tile = map.tiles[k]
 		if tile.value.type == Floor then
-			Engine.Glyph(tile.x, tile.y, ".", Colors.White, Colors.Black)
+			Engine.Glyph(tile.x, tile.y, "back_lit")
 		else
 			local glyph = tile.value.entity[Glyph]
-			Engine.Glyph(tile.x, tile.y, glyph.char, glyph.fg or Colors.White, glyph.bg or Colors.Black)
+			Engine.Glyph(tile.x, tile.y, glyph.name)
 		end
 	end
 end

@@ -1,4 +1,5 @@
-﻿
+﻿-- Define your components here
+
 Diary = ECS.Component{ log = {}, index = 0 }
 DiaryEntity = World:Entity(Diary{ log = {}, index = 0 })
 

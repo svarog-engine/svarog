@@ -5,18 +5,18 @@ function DungeonMakerSystem:MakeDoor(x, y, closed, locked)
 	if closed == nil then closed = true end
 	if locked == nil then locked = false end
 
-	local char = "+"
+	local glyph = "door_closed"
 
 	if not closed then 
 		locked = false
-		char = "_" 
+		glyph = "door_open" 
 	end
 
 	self.floor:Set(x, y, { 
 		type = Door, 
 		pass = false, 
 		entity = World:Entity(
-			Glyph{ char = char },
+			Glyph{ name = glyph },
 			Door{ 
 				closed = closed, 
 				locked = locked
@@ -28,7 +28,7 @@ end
 
 function DungeonMakerSystem:Update()
 	for _, e in World:Exec(ECS.Query.All(MakeDungeonRequest)):Iterator() do
-		self.floor = Map:New(Config.WorldWidth, Config.WorldHeight)
+		self.floor = Map:New(Config.Width, Config.Height)
 		
 		for i = 5, 15 do
 			for j = 6, 12 do

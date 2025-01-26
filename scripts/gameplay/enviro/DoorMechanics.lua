@@ -14,8 +14,7 @@ function DoorMechanicsSystem:Update()
 		elseif door.closed then
 			Diary.Write("You open the door.")
 			door.closed = false
-			entity[Glyph].char = "_"
-			entity[Glyph].fg = Colors.Gray
+			entity[Glyph].name = "door_open"
 			Fade(entity, Colors.Green, Colors.Black)
 			DungeonEntity[Dungeon].map:Get(pos.x, pos.y).value.pass = true
 		end

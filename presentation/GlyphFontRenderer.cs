@@ -2,7 +2,7 @@
 
 namespace svarog.presentation
 {
-    public class GlyphFontRenderer
+    public class GlyphFontRenderer : IRenderer
     {
         SFML.Graphics.Font? m_CurrentFont = null;
         uint m_FontSize = 12;
@@ -30,7 +30,7 @@ namespace svarog.presentation
             }
         }
 
-        public void DrawWithText(Glyph[][] matrix, RenderTexture target)
+        public void Draw(Glyph[][] matrix, RenderTexture target)
         {
             for (int i = 0; i < matrix.Length; i++)
             {
