@@ -107,7 +107,7 @@ function Map:Dijkstra(goals, worth, predicate)
 						end
 
 						if not (i == 0 or j == 0) then
-							cand = cand + 0.5
+							cand = cand + 0.707
 						end
 
 						if cand < min then min = cand end

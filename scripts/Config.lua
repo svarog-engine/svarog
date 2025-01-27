@@ -1,11 +1,17 @@
 ﻿-- Uncomment any of the following lines to apply these settings without changing the engine code.
 
 -- Presentation configuration:
-		Config.Presentation = "Goblins"
+		Config.Presentation = "Default"
+--		Config.Presentation = "Kenney"
+
+--	licensed (change to default if you don't have it):
+--		Config.Presentation = "Goblins"
+
 		Config.Palette = "alpha6-cc29"
 
 -- Font configuration:
 --		Config.FontSize = 12
+		Config.FontSize = 14
 
 -- World configuration:
 --		Config.Width = 80

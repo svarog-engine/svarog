@@ -15,17 +15,23 @@ LoadRenderSystem "DebugDijkstraRender"
 LoadRenderSystem "TopLevelRender"
 LoadRenderSystem "LogRender"
 
-World:Entity(
+PlayerEntity = World:Entity(
 	Player, 
 	Position{ x = 10, y = 10 },
-	Glyph{ name = "mage" }
+	Glyph{ name = "mage" },
+	UpdateDijkstra()
 )
+
+function RecalcPlayerPosition()
+	PlayerEntity:Set(UpdateDijkstra())
+end
+
 
 World:Entity(
 	Creature, 
-	FollowBehaviour{ distance = 3 },
+	FollowBehaviour{ distance = 2 },
 	Position{ x = 14, y = 7 },
-	Glyph{ name = "gob1" }
+	Glyph{ name = "pet" }
 )
 
 World:Entity(MakeDungeonRequest)

@@ -30,6 +30,7 @@ Door = ECS.Component{ closed = true, locked = false }
 
 Position = ECS.Component{ x = 0, y = 0 }
 MoveTo = ECS.Component{ x = 0, y = 0 }
+UpdateDijkstra = ECS.Component()
 
 MakeDungeonRequest = ECS.Component()
 Dungeon = {}

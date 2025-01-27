@@ -129,25 +129,67 @@ namespace svarog.presentation
             }
 
             DirectoryInfo d = new DirectoryInfo(@"resources/fonts");
-
-            FileInfo[] Files = d.GetFiles("*.ttf");
-
-            foreach (var file in Files)
+            if (d.Exists)
             {
-                var name = file.Name.Substring(0, file.Name.LastIndexOf(".ttf"));
-                m_Fonts[name] = new SFML.Graphics.Font(file.FullName);
+                FileInfo[] files = d.GetFiles("*.ttf");
+                foreach (var file in files)
+                {
+                    var name = file.Name.Substring(0, file.Name.LastIndexOf(".ttf"));
+                    m_Fonts[name] = new SFML.Graphics.Font(file.FullName);
+                }
+
+                d = new DirectoryInfo(@"resources/fonts/licensed");
+                if (d.Exists)
+                {
+                    files = d.GetFiles("*.ttf");
+
+                    foreach (var file in files)
+                    {
+                        var name = file.Name.Substring(0, file.Name.LastIndexOf(".ttf"));
+                        m_Fonts[name] = new SFML.Graphics.Font(file.FullName);
+                    }
+                } 
+                else
+                {
+                    Svarog.Instance.LogInfo("Licensed font folder not present.");
+                }
+            }
+            else
+            {
+                Svarog.Instance.LogInfo("Font folder not present.");
             }
         }
 
         void LoadSpritesheets()
         {
             DirectoryInfo d = new DirectoryInfo(@"resources/sprites");
-
-            FileInfo[] Files = d.GetFiles("*.png");
-
-            foreach (var file in Files)
+            if (d.Exists)
             {
-                m_Sprites[file.Name] = new SFML.Graphics.Texture(file.FullName);
+
+
+                FileInfo[] files = d.GetFiles("*.png");
+                foreach (var file in files)
+                {
+                    m_Sprites[file.Name] = new SFML.Graphics.Texture(file.FullName);
+                }
+
+                d = new DirectoryInfo(@"resources/sprites/licensed");
+                if (d.Exists)
+                {
+                    files = d.GetFiles("*.png");
+                    foreach (var file in files)
+                    {
+                        m_Sprites[file.Name] = new SFML.Graphics.Texture(file.FullName);
+                    }
+                }
+                else
+                {
+                    Svarog.Instance.LogInfo("Licensed sprite folder not present.");
+                }
+            }
+            else
+            {
+                Svarog.Instance.LogInfo("Sprite folder not present.");
             }
         }
 

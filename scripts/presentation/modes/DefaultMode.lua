@@ -2,29 +2,24 @@
 Glossary.Meta.Default = FontPresentationMode("whitrabt", 14, true)
 
 Glossary.Default = {
-	skel1 = { char = "t", fg = Colors.Gray, bg = Colors.Black },
-	skel2 = { char = "t", fg = Colors.White, bg = Colors.Black },
+	goblin = { char = "g", fg = Colors.LightGreen, bg = Colors.Black },
+	kobold = { char = "k", fg = Colors.LightRed, bg = Colors.Black },
 
-	gob1 = { char = "g", fg = Colors.White, bg = Colors.Black },
-	gob2 = { char = "g", fg = Colors.Green, bg = Colors.Black },
-
-	kobold1 = { char = "k", fg = Colors.White, bg = Colors.Black },
-	kobold2 = { char = "k", fg = Colors.Red, bg = Colors.Black },
-
-	mage = { char = "@", fg = Colors.Yellow, bg = Colors.Black },
-	monk = { char = "@", fg = Colors.Yellow, bg = Colors.Black },
+	player = { char = "@", fg = Colors.LightBlue, bg = Colors.Black },
+	pet = { char = "d", fg = Colors.LightYellow, bg = Colors.Black },
+	
+	mage = { char = "@", fg = Colors.LightBlue, bg = Colors.Black },
+	monk = { char = "@", fg = Colors.LightBlue, bg = Colors.Black },
 
 	door_closed = { char = "+", fg = Colors.White, bg = Colors.Black },
 	door_open = { char = "_", fg = Colors.White, bg = Colors.Black },
 
-	back_dark = { char = ".", fg = Colors.DarkGray, bg = Colors.Black },
-	back_semi = { char = ".", fg = Colors.Gray, bg = Colors.Black },
+	back_dark = { char = ".", fg = Colors.Gray, bg = Colors.Black },
+	back_semi = { char = ".", fg = Colors.LightGray, bg = Colors.Black },
 	back_mid = { char = ".", fg = Colors.LightGray, bg = Colors.Black },
 	back_lit = { char = ".", fg = Colors.White, bg = Colors.Black },
 
 	empty = { char = ".", fg = Colors.Gray, bg = Colors.Black },
-	empty2 = { char = ".", fg = Colors.Gray, bg = Colors.Black },
-	empty3 = { char = ".", fg = Colors.Gray, bg = Colors.Black },
 
 	wall = { char = "#", fg = Colors.DarkGray, bg = Colors.Black },
 	

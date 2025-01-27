@@ -7,6 +7,7 @@ function UpdateDijkstraSystem:Update()
 			Dungeon.playerDistance = Dungeon.map:Dijkstra({ 
 				{ player[Position].x, player[Position].y } 
 			}, 0, function(t) return t.pass end)
+
 			player:Unset(UpdateDijkstra)
 		end
 	end

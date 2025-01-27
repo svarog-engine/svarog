@@ -9,12 +9,17 @@ function PlayerLightRenderSystem:Render()
 			for i = -3, 3 do
 				for j = -3, 3 do
 					if not (i == 0 and j == 0) then 
-						local d = 4 - math.floor(math.sqrt(i * i + j * j) + 0.5)
-						if d < 4 and d > 0 then
-							if map:Has(pos.x + i, pos.y + j) then
-								local tile = map:Get(pos.x + i, pos.y + j)
-								if tile.value.type == Floor then
-									Engine.Glyph(pos.x + i, pos.y + j, levels[d])
+						local x = pos.x + i
+						local y = pos.y + j
+						if Dungeon.playerDistance:Has(x, y) then
+							local d = math.floor(Dungeon.playerDistance:Get(x, y).value)
+							if d < 4 and d > 0 then
+								d = 4 - d
+								if map:Has(x, y) then
+									local tile = map:Get(x, y)
+									if tile.value.type == Floor then
+										Engine.Glyph(x, y, levels[d])
+									end
 								end
 							end
 						end

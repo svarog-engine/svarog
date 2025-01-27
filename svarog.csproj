@@ -143,6 +143,9 @@
     <None Update="scripts\presentation\modes\GoblinMode.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="scripts\presentation\modes\KenneyMode.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="scripts\presentation\palettes\alpha6-cc29.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -153,12 +156,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="resources\sprites\goblins-12x12.png">
+    <Content Update="resources\sprites\licensed\goblins-12x12.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="resources\fonts\licensed\" />
     <Folder Include="resources\sprites\" />
   </ItemGroup>
 

@@ -2,3 +2,4 @@
 
 LoadPresentation("DefaultMode")
 LoadPresentation("GoblinMode")
+LoadPresentation("KenneyMode")
