@@ -6,6 +6,7 @@ LoadPlayerSystem "ResolveMove"
 LoadEnviroSystem "DungeonMaker"
 LoadEnviroSystem "DoorMechanics"
 LoadEnviroSystem "FollowBehaviour"
+LoadEnviroSystem "ApproachBehaviour"
 LoadEnviroSystem "PickUpMechanic"
 LoadEnviroSystem "PassabilityUpdate"
 LoadEnviroSystem "UpdateDistances"
@@ -28,6 +29,7 @@ World:Entity(
 
 World:Entity(
 	Creature(),
+	ApproachBehaviour(),
 	Position{ x = 22, y = 22 },
 	Glyph{ name = "goblin" }
 )

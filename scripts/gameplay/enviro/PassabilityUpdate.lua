@@ -1,6 +1,15 @@
 ﻿
 local PassabilityUpdateSystem = Engine.RegisterEnviroSystem()
 
+local function AddEntity(x, y, entity)
+	local id = Dungeon.floor:ID(x, y)
+	if Dungeon.entities[id] == nil then
+		Dungeon.entities[id] = {}
+	end
+
+	table.insert(Dungeon.entities[id], entity)
+end
+
 function PassabilityUpdateSystem:Update()
 	if Dungeon.created and PlayerEntity ~= nil then
 		for _, k in Dungeon.floor:Iterate() do
@@ -15,10 +24,16 @@ function PassabilityUpdateSystem:Update()
 			end
 		end
 
-		Dungeon.passable:Set(PlayerEntity[Position].x, PlayerEntity[Position].y, false)
+		Dungeon.entities = {}
+
+		AddEntity(PlayerEntity[Position].x, PlayerEntity[Position].y, PlayerEntity)
 		
-		for _, entity in World:Exec(ECS.Query.All(Creature, Position).None(Friendly)):Iterator() do
-			Dungeon.passable:Set(entity[Position].x, entity[Position].y, false)
+		for _, entity in World:Exec(ECS.Query.All(Creature, Position)):Iterator() do
+			AddEntity(entity[Position].x, entity[Position].y, entity)
+		end
+
+		for _, entity in World:Exec(ECS.Query.All(Item, Position)):Iterator() do
+			AddEntity(entity[Position].x, entity[Position].y, entity)
 		end
 	end
 end

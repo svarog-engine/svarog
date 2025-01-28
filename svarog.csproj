@@ -89,6 +89,9 @@
     <None Update="scripts\engine\Map.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="scripts\gameplay\enviro\ApproachBehaviour.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="scripts\gameplay\enviro\PassabilityUpdate.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
