@@ -1,4 +1,8 @@
-﻿-- Define your components here
+﻿-- Add library extensions here
+
+dofile "scripts\\ItemLibrary.lua"
+
+-- Define your components here
 
 Diary = ECS.Component{ log = {}, index = 0 }
 DiaryEntity = World:Entity(Diary{ log = {}, index = 0 })

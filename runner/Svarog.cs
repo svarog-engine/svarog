@@ -255,7 +255,6 @@ namespace svarog.runner
             commandLine.WithParsed(options => m_PresentationLayer?.Create(options));
 
             RunScript(@"dofile ""scripts\\Library.lua""");
-            RunScript(@"dofile ""scripts\\ItemLibrary.lua""");
             RunScriptMain();
             RunScript(@"Engine.Setup()");
 

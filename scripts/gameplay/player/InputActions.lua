@@ -70,7 +70,7 @@ end)
 InventoryOpen = false
 Engine.RegisterInputSystem({ Action_Default_Inventory}, function()
 	InventoryOpen = true
-	local widget =UI[InventoryWidget]
+	local widget = UI[InventoryWidget]
 	widget.source = PlayerEntity[Inventory]
 	widget.selected = 1
 	Input.Push("Inventory")
