@@ -21,7 +21,8 @@ PlayerEntity = World:Entity(
 	Player, 
 	Position{ x = 10, y = 10 },
 	Glyph{ name = "mage" },
-	UpdateDijkstra()
+	UpdateDijkstra(),
+	Inventory{ items = {}}
 )
 
 function RecalcPlayerPosition()

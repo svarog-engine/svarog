@@ -4,14 +4,16 @@ function PickUpMechanic:Update()
 	for _, entity in World:Exec(ECS.Query.All(Item, Bumped, Position)):Iterator() do
 		local item = entity[Item]
 		local pos = entity[Position]
-
-		Diary.Write("Item picked up.")
+		local who = World:FetchEntityById(entity[Bumped].by)
 
 		if Dungeon.map ~= nil then
 			Dungeon.map:Set(pos.x, pos.y, { type = Floor, pass = true })
 		end
 
-		Inventory.Add(item.name)
+		if who[Inventory] ~= nil then
+			Inventory.Add(who, item.name)
+			Diary.Write("Item picked up.")
+		end
 
 		World:Remove(entity)
 	end

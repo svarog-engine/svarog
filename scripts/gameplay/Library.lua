@@ -38,9 +38,13 @@ Dungeon = {}
 FollowBehaviour = ECS.Component{ distance = 5 }
 
 Inventory = ECS.Component{items = {}}
-InventoryEntity = World:Entity(Inventory{items = {}})
 
-function Inventory.Add(item)
-	local inventory = InventoryEntity[Inventory]
+function Inventory.Add(entity, item)
+	local inventory = entity[Inventory]
 	table.insert(inventory.items, item)
 end
+
+-- find new home for this lonely fella
+Widgets = {
+	Inventory = {top = 1, left = 39, width = 20, height = 20}
+}

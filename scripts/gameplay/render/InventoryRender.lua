@@ -34,7 +34,3 @@ function InventoryRender:Restore()
 		end
 	end
 end
-
-Widgets = {
-	Inventory = {top = 1, left = 39, width = 20, height = 20}
-}
