@@ -35,15 +35,27 @@ World:Entity(
 )
 
 World:Entity(
-	Item(), 
+	Item{name = "treasure"},
 	Position{ x = 7, y = 7 },
 	Glyph{ name = "treasure" }
 )
 
 World:Entity(
-	Item(), 
+	Item{name = "treasure"},
 	Position{ x = 10, y = 11 },
 	Glyph{ name = "treasure" }
+)
+
+ World:Entity(
+	Item{ name = "magic_sword"},
+	Position{ x = 11, y = 10},
+	Glyph{ name = "item"}
+)
+
+World:Entity(
+	Item{ name = "magic_wand"},
+	Position{ x = 12, y = 10},
+	Glyph{ name = "item"}
 )
 
 World:Entity(MakeDungeonRequest)

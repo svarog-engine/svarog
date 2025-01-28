@@ -110,6 +110,9 @@
     <None Update="scripts\gameplay\enviro\UpdateDistances.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="scripts\ItemLibrary.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="scripts\gameplay\render\DebugDijkstraRender.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
