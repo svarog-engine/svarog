@@ -1,4 +1,8 @@
-﻿-- Define your components here
+﻿-- Add library extensions here
+
+dofile "scripts\\ItemLibrary.lua"
+
+-- Define your components here
 
 Diary = ECS.Component{ log = {}, index = 0 }
 DiaryEntity = World:Entity(Diary{ log = {}, index = 0 })
@@ -45,7 +49,25 @@ function Inventory.Add(entity, item)
 	table.insert(inventory.items, item)
 end
 
--- find new home for this lonely fella
-Widgets = {
-	Inventory = {top = 1, left = 39, width = 20, height = 20}
-}
+-- UI
+
+InventoryWidget = ECS.Component{top = 1, left = 39, width = 20, height = 20, selected = 1, source = {}}
+ItemDetailsPanelWidget = ECS.Component {top = 0, left = 20, width = 15, height = 20}
+
+function InventoryWidget.GetSelected()
+	local widget = UI[InventoryWidget]
+	if widget.selected <= #(widget.source.items) then
+		for i, s in ipairs(widget.source.items) do
+			if i == widget.selected then
+				return s
+			end
+		end
+	end
+
+	return nil
+end
+
+UI = World:Entity(
+	InventoryWidget{ top = 1, left = 39, width = 20, height = 10, source = {}, selected = 1},
+	ItemDetailsPanelWidget{top = 1, left = 20, width = 15, height = 1}
+)

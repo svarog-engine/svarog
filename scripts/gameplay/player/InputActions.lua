@@ -70,6 +70,9 @@ end)
 InventoryOpen = false
 Engine.RegisterInputSystem({ Action_Default_Inventory}, function()
 	InventoryOpen = true
+	local widget = UI[InventoryWidget]
+	widget.source = PlayerEntity[Inventory]
+	widget.selected = 1
 	Input.Push("Inventory")
 end)
 
@@ -77,4 +80,22 @@ Engine.RegisterInputSystem({Action_Inventory_Exit}, function()
 	Input.Pop()
 	InventoryOpen = false
 	InventoryRender:Restore()
+end)
+
+Engine.RegisterInputSystem({Action_Inventory_SelectNext}, function()
+	local widget =UI[InventoryWidget]
+	local newSeleced = widget.selected + 1
+
+	if newSeleced <= #widget.source.items then
+		widget.selected = widget.selected + 1
+	end
+end)
+
+Engine.RegisterInputSystem({Action_Inventory_SelectPrevious}, function()
+	local widget =UI[InventoryWidget]
+	local newSeleced = widget.selected - 1
+
+	if newSeleced > 0 then
+		widget.selected = widget.selected - 1
+	end
 end)
