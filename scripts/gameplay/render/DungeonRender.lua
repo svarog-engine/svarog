@@ -2,10 +2,9 @@
 local DungeonRenderSystem = Engine.RegisterRenderSystem()
 
 function DungeonRenderSystem:Render()	
-	local map = Dungeon.map
-	if map ~= nil then
-		for _, k in map:Iterate() do
-			local tile = map.tiles[k]
+	if Dungeon.floor ~= nil then
+		for _, k in Dungeon.floor:Iterate() do
+			local tile = Dungeon.floor.tiles[k]
 			if tile.value.type == Floor then
 				Engine.Glyph(tile.x, tile.y, "back_dark")
 			else

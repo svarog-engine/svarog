@@ -3,10 +3,9 @@ local DebugDijkstraRenderSystem = Engine.RegisterRenderSystem()
 
 function DebugDijkstraRenderSystem:Render()
 	if DebugToggle_Dijkstra then
-		local map = Dungeon.playerDistance
-		if map ~= nil then
-			for _, k in map:Iterate() do
-				local tile = map.tiles[k]
+		if Dungeon.created then
+			for _, k in Dungeon.playerDistance:Iterate() do
+				local tile = Dungeon.playerDistance.tiles[k]
 				local char = ""
 				local neg = tile.value < 0
 				local color = Colors.LightBrown

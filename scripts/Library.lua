@@ -20,6 +20,7 @@ end
 
 Player = ECS.Component()
 Creature = ECS.Component()
+Friendly = ECS.Component()
 Item = ECS.Component()
 
 Bump = ECS.Component{ x = 0, y = 0, dx = 0, dy = 0 }
@@ -30,9 +31,9 @@ Door = ECS.Component{ closed = true, locked = false }
 
 Position = ECS.Component{ x = 0, y = 0 }
 MoveTo = ECS.Component{ x = 0, y = 0 }
-UpdateDijkstra = ECS.Component()
 
 MakeDungeonRequest = ECS.Component()
 Dungeon = {}
 
 FollowBehaviour = ECS.Component{ distance = 5 }
+ApproachBehaviour = ECS.Component()

@@ -139,7 +139,7 @@ local function Reload()
     Svarog.Instance:ReloadPresenter()
 
     InputStack:ReloadActions()
-    dofile "scripts\\gameplay\\Library.lua"
+    dofile "scripts\\Library.lua"
     Svarog.Instance:RunScriptMain()
     Setup()
 end

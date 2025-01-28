@@ -1,8 +1,7 @@
 ﻿local PlayerLightRenderSystem = Engine.RegisterRenderSystem()
 
 function PlayerLightRenderSystem:Render()
-	local map = Dungeon.map
-	if map ~= nil then
+	if Dungeon.created then
 		for _, e in World:Exec(ECS.Query.All(Player, Position)):Iterator() do
 			local pos = e[Position]
 			local levels = { "back_semi", "back_mid", "back_lit" }
@@ -15,8 +14,8 @@ function PlayerLightRenderSystem:Render()
 							local d = math.floor(Dungeon.playerDistance:Get(x, y).value)
 							if d < 4 and d > 0 then
 								d = 4 - d
-								if map:Has(x, y) then
-									local tile = map:Get(x, y)
+								if Dungeon.floor:Has(x, y) then
+									local tile = Dungeon.floor:Get(x, y)
 									if tile.value.type == Floor then
 										Engine.Glyph(x, y, levels[d])
 									end
