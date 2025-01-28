@@ -2,6 +2,7 @@
 local ApproachBehaviourSystem = Engine.RegisterEnviroSystem()
 
 function ApproachBehaviourSystem:Update()
+	StartMeasure()
 	if Dungeon.created then
 		for _, entity in World:Exec(ECS.Query.All(Creature, ApproachBehaviour, Position)):Iterator() do
 			local follow = entity[ApproachBehaviour]
@@ -40,4 +41,5 @@ function ApproachBehaviourSystem:Update()
 			end
 		end
 	end
+	EndMeasure("Approach")
 end

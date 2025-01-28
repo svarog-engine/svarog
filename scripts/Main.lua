@@ -46,12 +46,24 @@ World:Entity(
 	Glyph{ name = "treasure" }
 )
 
-World:Entity(MakeDungeonRequest)
-Diary.Write("Welcome to Svarog")
-
 PlayerEntity = World:Entity(
 	Player(), 
 	Position{ x = 10, y = 10 },
 	Glyph{ name = "mage" },
 	Inventory{ items = {}}
 )
+
+World:Entity(
+	Item{name = "Magic Sword"},
+	Position{x = 11, y = 10},
+	Glyph{name = "item"}
+)
+
+World:Entity(
+	Item{name = "Magic Wand"},
+	Position{x = 12, y = 10},
+	Glyph{name = "item"}
+)
+
+World:Entity(MakeDungeonRequest)
+Diary.Write("Welcome to Svarog")

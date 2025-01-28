@@ -11,6 +11,7 @@ local function AddEntity(x, y, entity)
 end
 
 function PassabilityUpdateSystem:Update()
+	StartMeasure()
 	if Dungeon.created and PlayerEntity ~= nil then
 		for _, k in Dungeon.floor:Iterate() do
 			local tile = Dungeon.floor.tiles[k]
@@ -36,4 +37,5 @@ function PassabilityUpdateSystem:Update()
 			AddEntity(entity[Position].x, entity[Position].y, entity)
 		end
 	end
+	EndMeasure("Passability")
 end

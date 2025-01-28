@@ -2,6 +2,7 @@
 local FollowBehaviourSystem = Engine.RegisterEnviroSystem()
 
 function FollowBehaviourSystem:Update()
+	StartMeasure()
 	if Dungeon.created then
 		for _, entity in World:Exec(ECS.Query.All(Creature, FollowBehaviour, Position)):Iterator() do
 			local follow = entity[FollowBehaviour]
@@ -46,4 +47,5 @@ function FollowBehaviourSystem:Update()
 			end
 		end
 	end
+	EndMeasure("Follow")
 end

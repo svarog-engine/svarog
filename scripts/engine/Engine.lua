@@ -1,5 +1,7 @@
 ﻿World = ECS.World()
 
+Measurements = false
+
 PlayerDone = true
 Actions = {}
 
@@ -85,7 +87,7 @@ end
 local function UpdateWorld(time)
     if World then
         World:Update(PlayerSystem(), time)
-        
+
         if PlayerDone then
             World:Update(WorldSystem(), time)
             PlayerDone = false
@@ -142,6 +144,20 @@ local function Reload()
     dofile "scripts\\Library.lua"
     Svarog.Instance:RunScriptMain()
     Setup()
+end
+
+function StartMeasure()
+    if Measurements then
+        start_time = os.clock()
+    end
+end
+
+function EndMeasure(name)
+    if Measurements then
+	    end_time = os.clock()
+        elapsed_time = end_time - start_time
+        print(name .. ': ' .. elapsed_time .. 's')
+    end
 end
 
 function PlayerSystem() return "process" end

@@ -72,7 +72,7 @@ function Map:Filter(predicate)
 	return ipairs(filtered)
 end
 
-function Map:DijkstraByClass(query, predicate)
+function Map:DijkstraByClass(query, predicate, limit)
 	local goals = {}
 	for _, v in pairs(query) do
 		for _, e in World:Exec(ECS.Query.All(Position, v[1])):Iterator() do
@@ -80,11 +80,12 @@ function Map:DijkstraByClass(query, predicate)
 		end
 	end
 
-	return self:Dijkstra(goals, predicate)
+	return self:Dijkstra(goals, predicate, limit)
 end
 
-function Map:Dijkstra(goals, predicate)
+function Map:Dijkstra(goals, predicate, limit)
 	if predicate == nil then predicate = function(t) return true end end
+	if limit == nil then limit = 20 end
 
 	local dijkstra = Map:New(self.width, self.height)
 	local queue = Queue:New()
@@ -130,21 +131,25 @@ function Map:Dijkstra(goals, predicate)
 			dijkstra:Set(x, y, min + 1)
 		end
 
-		for i = -1, 1 do
-			if not (i == 0) then
-				local id = self:ID(x + i, y)
-				if self:Has(x + i, y) and not done[id] and not queued[id] then
-					if predicate(self:Get(x + i, y)) then
-						queue:PushRight({ x + i, y })
-						queued[id] = true
-					end
-				end
+		local val = dijkstra:Get(x, y).value or 0
 
-				id = self:ID(x, y + i)
-				if self:Has(x, y + i) and not done[id] and not queued[id] then
-					if predicate(self:Get(x, y + i)) then
-						queue:PushRight({ x, y + i })
-						queued[id] = true
+		if val < limit then
+			for i = -1, 1 do
+				if not (i == 0) then
+					local id = self:ID(x + i, y)
+					if self:Has(x + i, y) and not done[id] and not queued[id] then
+						if predicate(self:Get(x + i, y)) then
+							queue:PushRight({ x + i, y })
+							queued[id] = true
+						end
+					end
+
+					id = self:ID(x, y + i)
+					if self:Has(x, y + i) and not done[id] and not queued[id] then
+						if predicate(self:Get(x, y + i)) then
+							queue:PushRight({ x, y + i })
+							queued[id] = true
+						end
 					end
 				end
 			end

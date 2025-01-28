@@ -2,7 +2,6 @@
 InventoryRender = Engine.RegisterRenderSystem()
 
 function InventoryRender:Render()
-
 	if InventoryOpen then
 		for _, entity in World:Exec(ECS.Query.All(Inventory)):Iterator() do
 			local inv = entity[Inventory]
