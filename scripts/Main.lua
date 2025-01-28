@@ -7,6 +7,7 @@ LoadEnviroSystem "DungeonMaker"
 LoadEnviroSystem "DoorMechanics"
 LoadEnviroSystem "FollowBehaviour"
 LoadEnviroSystem "ApproachBehaviour"
+LoadEnviroSystem "PickUpMechanic"
 LoadEnviroSystem "PassabilityUpdate"
 LoadEnviroSystem "UpdateDistances"
 
@@ -16,6 +17,7 @@ LoadRenderSystem "PlayerLightRender"
 LoadRenderSystem "DebugDijkstraRender"
 LoadRenderSystem "TopLevelRender"
 LoadRenderSystem "LogRender"
+LoadRenderSystem "InventoryRender"
 
 World:Entity(
 	Creature(),
@@ -50,5 +52,6 @@ Diary.Write("Welcome to Svarog")
 PlayerEntity = World:Entity(
 	Player(), 
 	Position{ x = 10, y = 10 },
-	Glyph{ name = "mage" }
+	Glyph{ name = "mage" },
+	Inventory{ items = {}}
 )

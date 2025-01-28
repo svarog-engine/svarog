@@ -26,6 +26,18 @@ local function MakeDoor(x, y, closed, locked)
 	})
 end
 
+
+local function AddItems()
+	Dungeon.floor:Set(11, 10, {type = Item, pass = false, entity = World:Entity(
+															Item{name = "Magic Sword"},
+															Position{x = 11, y = 10},
+															Glyph{name = "item"})})
+
+	Dungeon.floor:Set(12, 10, {type = Item, pass = false, entity = World:Entity(
+															Item{name = "The Magic Sword"},
+															Position{x = 12, y = 10},
+															Glyph{name = "item"})})
+end
 local function MakeDungeon()
 	Dungeon.entities = {}
 	Dungeon.passable = Map:New(Config.Width, Config.Height)
@@ -44,7 +56,8 @@ local function MakeDungeon()
 	for i = 14, 20 do 
 		Dungeon.floor:Set(8, i, { type = Floor })
 	end 
-		
+	
+	AddItems()
 	MakeDoor(9, 20)
 	for i = 10, 33 do
 		for j = 14, 25 do

@@ -21,7 +21,7 @@ end
 Player = ECS.Component()
 Creature = ECS.Component()
 Friendly = ECS.Component()
-Item = ECS.Component()
+Item = ECS.Component{name = ""}
 
 Bump = ECS.Component{ x = 0, y = 0, dx = 0, dy = 0 }
 Bumped = ECS.Component{ by = 0 }
@@ -37,3 +37,15 @@ Dungeon = {}
 
 FollowBehaviour = ECS.Component{ distance = 5 }
 ApproachBehaviour = ECS.Component()
+
+Inventory = ECS.Component{items = {}}
+
+function Inventory.Add(entity, item)
+	local inventory = entity[Inventory]
+	table.insert(inventory.items, item)
+end
+
+-- find new home for this lonely fella
+Widgets = {
+	Inventory = {top = 1, left = 39, width = 20, height = 20}
+}

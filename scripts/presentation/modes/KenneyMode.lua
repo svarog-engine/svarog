@@ -23,6 +23,7 @@ Glossary.Kenney = {
 
 	wall = { x = 11, y = 18, fg = Colors.Gray, bg = Colors.Black },
 	treasure = { x = 32, y = 16, fg = Colors.LightYellow, bg = Colors.Black },
+	item = { x = 32, y = 7, fg = Colors.Yellow, bg = Colors.Black },
 }
 
 InsertSpriteCharRanges(Glossary.Kenney, 0, 0, " ")
