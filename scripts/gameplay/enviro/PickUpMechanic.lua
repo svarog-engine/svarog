@@ -6,8 +6,8 @@ function PickUpMechanic:Update()
 		local pos = entity[Position]
 		local who = World:FetchEntityById(entity[Bumped].by)
 
-		if Dungeon.map ~= nil then
-			Dungeon.map:Set(pos.x, pos.y, { type = Floor, pass = true })
+		if Dungeon.floor ~= nil then
+			Dungeon.floor:Set(pos.x, pos.y, { type = Floor, pass = true })
 		end
 
 		if who[Inventory] ~= nil then
