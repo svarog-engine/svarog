@@ -20,7 +20,7 @@ end
 
 Player = ECS.Component()
 Creature = ECS.Component()
-Item = ECS.Component()
+Item = ECS.Component{name = ""}
 
 Bump = ECS.Component{ x = 0, y = 0, dx = 0, dy = 0 }
 Bumped = ECS.Component{ by = 0 }
@@ -36,3 +36,11 @@ MakeDungeonRequest = ECS.Component()
 Dungeon = {}
 
 FollowBehaviour = ECS.Component{ distance = 5 }
+
+Inventory = ECS.Component{items = {}}
+InventoryEntity = World:Entity(Inventory{items = {}})
+
+function Inventory.Add(item)
+	local inventory = InventoryEntity[Inventory]
+	table.insert(inventory.items, item)
+end

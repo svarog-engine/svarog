@@ -66,3 +66,15 @@ DebugToggle_Dijkstra = false
 Engine.RegisterInputSystem({ Action_Default_DebugDijkstra }, function()
 	DebugToggle_Dijkstra = not DebugToggle_Dijkstra
 end)
+
+InventoryOpen = false
+Engine.RegisterInputSystem({ Action_Default_Inventory}, function()
+	InventoryOpen = true
+	Input.Push("Inventory")
+end)
+
+Engine.RegisterInputSystem({Action_Inventory_Exit}, function()
+	Input.Pop()
+	InventoryOpen = false
+	InventoryRender:Restore()
+end)

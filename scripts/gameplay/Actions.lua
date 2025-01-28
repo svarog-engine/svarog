@@ -11,8 +11,13 @@ Actions.Default = {
 
 	ZoomIn  = { Input.Press("Key: PageUp") },
 	ZoomOut = { Input.Press("Key: PageDown") },
+	Inventory = { Input.Press("Key: I")},
 
 	DebugDijkstra = { Input.Press("Key: F2") },
+}
+
+Actions.Inventory = {
+	Exit = { Input.Press("Key: Escape") },
 }
 
 Input.Push("Default")

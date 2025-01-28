@@ -7,6 +7,7 @@ LoadPlayerSystem "UpdateDijkstra"
 LoadEnviroSystem "DungeonMaker"
 LoadEnviroSystem "DoorMechanics"
 LoadEnviroSystem "FollowBehaviour"
+LoadEnviroSystem "PickUpMechanic"
 
 LoadRenderSystem "DungeonRender"
 LoadRenderSystem "FadeOutRender"
@@ -14,6 +15,7 @@ LoadRenderSystem "PlayerLightRender"
 LoadRenderSystem "DebugDijkstraRender"
 LoadRenderSystem "TopLevelRender"
 LoadRenderSystem "LogRender"
+LoadRenderSystem "InventoryRender"
 
 PlayerEntity = World:Entity(
 	Player, 

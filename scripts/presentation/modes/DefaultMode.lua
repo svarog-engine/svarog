@@ -24,6 +24,8 @@ Glossary.Default = {
 	wall = { char = "#", fg = Colors.DarkGray, bg = Colors.Black },
 	
 	missing = { char = " ", fg = Colors.White, bg = Colors.Black },
+
+	item = {char = "i", fg = Colors.Yellow, bg = Colors.Black},
 }
 
 InsertFontAlphanumerics(Glossary.Default)

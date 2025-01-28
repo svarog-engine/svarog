@@ -98,10 +98,16 @@
     <None Update="scripts\gameplay\enviro\FollowBehaviour.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="scripts\gameplay\enviro\PickUpMechanic.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="scripts\gameplay\player\UpdateDijkstra.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="scripts\gameplay\render\DebugDijkstraRender.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="scripts\gameplay\render\InventoryRender.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="scripts\gameplay\render\PlayerLightRender.lua">
