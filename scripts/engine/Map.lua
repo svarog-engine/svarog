@@ -49,34 +49,6 @@ function Map:Get(x, y)
 	end
 end
 
-function Map:GetNum(x, y)
-	local got = self:Get(x, y)
-	if got ~= nil then
-		if type(got.value) == number then 
-			return got.value
-		else
-			debug.traceback()
-			return nil
-		end
-	end
-end
-
-function Map:MinAround(x, y)
-	local min = 10000
-	for i = -1, 1 do
-		for j = -1, 1 do
-			local id = self:ID(x + i, y + j)
-			if self.tiles[id] ~= nil and type(self.tiles[id].value) == 'number' then
-				if self.tiles[id].value < min then
-					min = self.tiles[id].value
-				end
-			end
-		end
-	end
-
-	return min
-end
-
 function Map:Has(x, y)
 	local id = self:ID(x, y)
 	return self.tiles[id] ~= nil and self.tiles[id].value ~= nil
@@ -182,10 +154,10 @@ function Map:Dijkstra(goals, predicate)
 end
 
 function PassableInDungeon(t) 
-	if Dungeon.passable ~= nil and t ~= nil then
-		local tile = Dungeon.passable:Get(t.x, t.y)
+	if Dungeon.floor ~= nil and t ~= nil then
+		local tile = Dungeon.floor:Get(t.x, t.y)
 		if tile ~= nil then
-			return tile.value
+			return tile.value.type == Floor or tile.value.type == Door and not tile.value.entity[Door].closed
 		end 
 	end
 		

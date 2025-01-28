@@ -10,7 +10,13 @@ function BumpMechanicsSystem:Update()
 			
 			local pass = Dungeon.passable:Has(nx, ny) and Dungeon.passable:Get(nx, ny).value
 
-			if pass then
+			local id = Dungeon.floor:ID(nx, ny)
+			if Dungeon.entities[id] ~= nil then
+				for _, e in ipairs(Dungeon.entities[id]) do
+					print(e)
+					e:Set(Bumped({ by = entity.id }))
+				end
+			elseif pass then
 				entity:Set(MoveTo({ x = nx, y = ny }))
 			elseif Dungeon.floor:Has(nx, ny) and Dungeon.floor:Get(nx, ny).value.entity ~= nil then
 				Dungeon.floor:Get(nx, ny).value.entity:Set(Bumped({ by = entity.id }))

@@ -27,7 +27,9 @@ local function MakeDoor(x, y, closed, locked)
 end
 
 local function MakeDungeon()
+	Dungeon.entities = {}
 	Dungeon.passable = Map:New(Config.Width, Config.Height)
+	Dungeon.passableWithEntities = Map:New(Config.Width, Config.Height)
 	Dungeon.floor = Map:New(Config.Width, Config.Height)
 		
 	for i = 5, 15 do
