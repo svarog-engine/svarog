@@ -22,6 +22,7 @@ Glossary.Goblins = {
 	empty = { x = 5, y = 13, fg = Colors.DarkGray, bg = Colors.Black },
 	
 	wall = { x = 16, y = 17, fg = Colors.DarkGray, bg = Colors.Black },
+	treasure = { x = 16, y = 13, fg = Colors.LightYellow, bg = Colors.Black },
 }
 
 InsertSpriteCharRanges(Glossary.Goblins, 0, 0, " ")

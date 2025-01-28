@@ -90,7 +90,7 @@ namespace svarog.runner
 
         public void RunScriptMain()
         {
-            RunScript(@"dofile ""scripts\\gameplay\\Main.lua""");
+            RunScript(@"dofile ""scripts\\Main.lua""");
         }
 
         public void RunScript(string code)
@@ -254,7 +254,7 @@ namespace svarog.runner
             m_InputManager.ReloadActions();
             commandLine.WithParsed(options => m_PresentationLayer?.Create(options));
 
-            RunScript(@"dofile ""scripts\\gameplay\\Library.lua""");
+            RunScript(@"dofile ""scripts\\Library.lua""");
             RunScriptMain();
             RunScript(@"Engine.Setup()");
 

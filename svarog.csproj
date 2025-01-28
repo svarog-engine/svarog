@@ -47,7 +47,7 @@
     <None Update="scripts\engine\Queue.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="scripts\gameplay\Actions.lua">
+    <None Update="scripts\Actions.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="scripts\engine\Engine.lua">
@@ -89,6 +89,9 @@
     <None Update="scripts\engine\Map.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="scripts\gameplay\enviro\PassabilityUpdate.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="scripts\gameplay\enviro\DoorMechanics.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -98,10 +101,7 @@
     <None Update="scripts\gameplay\enviro\FollowBehaviour.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="scripts\gameplay\enviro\PickUpMechanic.lua">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="scripts\gameplay\player\UpdateDijkstra.lua">
+    <None Update="scripts\gameplay\enviro\UpdateDistances.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="scripts\gameplay\render\DebugDijkstraRender.lua">
@@ -116,10 +116,10 @@
     <None Update="scripts\presentation\Glossary.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="scripts\gameplay\Library.lua">
+    <None Update="scripts\Library.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="scripts\gameplay\Main.lua">
+    <None Update="scripts\Main.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="scripts\gameplay\player\BumpMechanics.lua">

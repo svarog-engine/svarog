@@ -6,7 +6,6 @@ function ResolveMoveSystem:Update()
 		entity[Position].x = entity[MoveTo].x
 		entity[Position].y = entity[MoveTo].y
 		
-		RecalcPlayerPosition()
 		entity:Unset(MoveTo)
 	end
 end
