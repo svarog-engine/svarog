@@ -142,6 +142,7 @@ local function Reload()
 
     InputStack:ReloadActions()
     dofile "scripts\\Library.lua"
+    dofile "scripts\\ItemLibrary.lua"
     Svarog.Instance:RunScriptMain()
     Setup()
 end

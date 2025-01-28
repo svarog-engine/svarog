@@ -35,16 +35,17 @@ World:Entity(
 )
 
 World:Entity(
-	Item(), 
+	Item{name = "treasure"},
 	Position{ x = 7, y = 7 },
 	Glyph{ name = "treasure" }
 )
 
 World:Entity(
-	Item(), 
+	Item{name = "treasure"},
 	Position{ x = 10, y = 11 },
 	Glyph{ name = "treasure" }
 )
+
 
 PlayerEntity = World:Entity(
 	Player(), 

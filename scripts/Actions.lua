@@ -18,6 +18,8 @@ Actions.Default = {
 
 Actions.Inventory = {
 	Exit = { Input.Press("Key: Escape") },
+	SelectNext = {Input.Press("Key: Down") },
+	SelectPrevious = {Input.Press("Key: Up") },
 }
 
 Input.Push("Default")
