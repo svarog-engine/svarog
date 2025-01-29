@@ -25,7 +25,7 @@ end
 Player = ECS.Component()
 Creature = ECS.Component()
 Friendly = ECS.Component()
-Item = ECS.Component{name = ""}
+Item = ECS.Component{id = ""}
 
 Bump = ECS.Component{ x = 0, y = 0, dx = 0, dy = 0 }
 Bumped = ECS.Component{ by = 0 }

@@ -35,13 +35,13 @@ World:Entity(
 )
 
 World:Entity(
-	Item{name = "treasure"},
+	Item{id = "treasure"},
 	Position{ x = 7, y = 7 },
 	Glyph{ name = "treasure" }
 )
 
 World:Entity(
-	Item{name = "treasure"},
+	Item{id = "treasure"},
 	Position{ x = 10, y = 11 },
 	Glyph{ name = "treasure" }
 )
@@ -55,13 +55,13 @@ PlayerEntity = World:Entity(
 )
 
 World:Entity(
-	Item{name = "Magic Sword"},
+	Item{id = "magic_sword"},
 	Position{x = 11, y = 10},
 	Glyph{name = "item"}
 )
 
 World:Entity(
-	Item{name = "Magic Wand"},
+	Item{id = "magic_wand"},
 	Position{x = 12, y = 10},
 	Glyph{name = "item"}
 )

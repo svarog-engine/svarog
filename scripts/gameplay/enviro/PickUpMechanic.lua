@@ -9,8 +9,8 @@ function PickUpMechanic:Update()
 			local who = World:FetchEntityById(entity[Bumped].by)
 
 			if who[Inventory] ~= nil then
-				Inventory.Add(who, item.name)
-				Diary.Write("Picked up " .. item.name .. ".")
+				Inventory.Add(who, item.id)
+				Diary.Write("Picked up " .. ItemLibrary[item.id].name .. ".")
 				World:Remove(entity)
 			else
 				entity:Unset(Bumped)
