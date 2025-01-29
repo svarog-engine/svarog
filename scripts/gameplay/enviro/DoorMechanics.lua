@@ -6,6 +6,7 @@ function DoorMechanicsSystem:Update()
 	for _, entity in World:Exec(ECS.Query.All(Door, Position, Bumped)):Iterator() do
 		local door = entity[Door]
 		local pos = entity[Position]
+		print (entity[Bumped], entity[Bumped].by)
 		local who = World:FetchEntityById(entity[Bumped].by)
 
 		if door.locked then

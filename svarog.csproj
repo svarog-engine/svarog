@@ -98,10 +98,10 @@
     <None Update="scripts\gameplay\enviro\DoorMechanics.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="scripts\gameplay\enviro\DungeonMaker.lua">
+    <None Update="scripts\gameplay\DungeonMaker.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="scripts\gameplay\enviro\FollowBehaviour.lua">
+    <None Update="scripts\gameplay\enviro\HoldDistanceBehaviour.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="scripts\gameplay\enviro\PickUpMechanic.lua">
@@ -110,7 +110,7 @@
     <None Update="scripts\gameplay\enviro\UpdateDistances.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="scripts\ItemLibrary.lua">
+    <None Update="scripts\gameplay\ItemLibrary.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="scripts\gameplay\render\DebugDijkstraRender.lua">
@@ -131,7 +131,7 @@
     <None Update="scripts\Main.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="scripts\gameplay\player\BumpMechanics.lua">
+    <None Update="scripts\gameplay\BumpMechanics.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="scripts\gameplay\player\InputActions.lua">

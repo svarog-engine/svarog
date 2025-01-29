@@ -8,6 +8,9 @@ function Map:New(w, h)
 end
 
 function Map:ID(x, y)
+	if type(x) ~= "number" then
+		print(debug.traceback())
+	end
 	return self.width * y + x
 end
 

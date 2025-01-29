@@ -142,7 +142,6 @@ local function Reload()
 
     InputStack:ReloadActions()
     dofile "scripts\\Library.lua"
-    dofile "scripts\\ItemLibrary.lua"
     Svarog.Instance:RunScriptMain()
     Setup()
 end
@@ -206,6 +205,10 @@ end
 
 function OnStartup(fun) 
     table.insert(Pipeline_Startup, fun)
+end
+
+function IncludeGameplay(name)
+    dofile("scripts\\gameplay\\" .. name .. ".lua")
 end
 
 function LoadPlayerSystem(name)

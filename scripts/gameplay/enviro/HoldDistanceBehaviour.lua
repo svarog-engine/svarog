@@ -1,11 +1,11 @@
 ﻿
-local FollowBehaviourSystem = Engine.RegisterEnviroSystem()
+local HoldDistanceBehaviourSystem = Engine.RegisterEnviroSystem()
 
-function FollowBehaviourSystem:Update()
+function HoldDistanceBehaviourSystem:Update()
 	StartMeasure()
 	if Dungeon.created then
-		for _, entity in World:Exec(ECS.Query.All(Creature, FollowBehaviour, Position)):Iterator() do
-			local follow = entity[FollowBehaviour]
+		for _, entity in World:Exec(ECS.Query.All(Creature, HoldDistanceBehaviour, Position)):Iterator() do
+			local follow = entity[HoldDistanceBehaviour]
 			local pos = entity[Position]
 			local x, y = pos.x, pos.y
 
@@ -41,11 +41,12 @@ function FollowBehaviourSystem:Update()
 			
 				if #goals > 0 then
 					local choice = goals[Rand:Range(1, #goals)]
-					pos.x = choice[1]
-					pos.y = choice[2]
+					local dx = choice[1] - pos.x
+					local dy = choice[2] - pos.y
+					PerformBump(entity, pos.x, pos.y, dx, dy)
 				end
 			end
 		end
 	end
-	EndMeasure("Follow")
+	EndMeasure("HoldDistance")
 end

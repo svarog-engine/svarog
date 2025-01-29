@@ -1,14 +1,16 @@
-﻿
-LoadPlayerSystem "InputActions"
-LoadPlayerSystem "BumpMechanics"
-LoadPlayerSystem "ResolveMove"
+﻿Measurements = true 
 
-LoadEnviroSystem "DungeonMaker"
+IncludeGameplay "DungeonMaker"
+IncludeGameplay "BumpMechanics"
+IncludeGameplay "ItemLibrary"
+
+LoadPlayerSystem "InputActions"
+
 LoadEnviroSystem "DoorMechanics"
-LoadEnviroSystem "FollowBehaviour"
-LoadEnviroSystem "ApproachBehaviour"
 LoadEnviroSystem "PickUpMechanic"
 LoadEnviroSystem "PassabilityUpdate"
+LoadEnviroSystem "HoldDistanceBehaviour"
+LoadEnviroSystem "ApproachBehaviour"
 LoadEnviroSystem "UpdateDistances"
 
 LoadRenderSystem "DungeonRender"
@@ -22,7 +24,7 @@ LoadRenderSystem "InventoryRender"
 World:Entity(
 	Creature(),
 	Friendly(),
-	FollowBehaviour{ distance = 2 },
+	HoldDistanceBehaviour{ distance = 2 },
 	Position{ x = 14, y = 7 },
 	Glyph{ name = "pet" }
 )
@@ -45,7 +47,6 @@ World:Entity(
 	Position{ x = 10, y = 11 },
 	Glyph{ name = "treasure" }
 )
-
 
 PlayerEntity = World:Entity(
 	Player(), 

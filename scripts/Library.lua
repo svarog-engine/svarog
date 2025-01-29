@@ -1,8 +1,4 @@
-﻿-- Add library extensions here
-
-dofile "scripts\\ItemLibrary.lua"
-
--- Define your components here
+﻿-- Define your components here
 
 Diary = ECS.Component{ log = {}, index = 0 }
 DiaryEntity = World:Entity(Diary{ log = {}, index = 0 })
@@ -39,8 +35,8 @@ MoveTo = ECS.Component{ x = 0, y = 0 }
 MakeDungeonRequest = ECS.Component()
 Dungeon = {}
 
-FollowBehaviour = ECS.Component{ distance = 5 }
 ApproachBehaviour = ECS.Component()
+HoldDistanceBehaviour = ECS.Component{ distance = 5 }
 
 Inventory = ECS.Component{items = {}}
 

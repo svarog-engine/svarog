@@ -1,5 +1,32 @@
 ﻿
---local DungeonMakerSystem = Engine.RegisterEnviroSystem()
+function AddEntityToDungeon(x, y, entity)
+	if Dungeon.floor ~= nil then
+		local id = Dungeon.floor:ID(x, y)
+		if Dungeon.entities[id] == nil then
+			Dungeon.entities[id] = {}
+		end
+
+		table.insert(Dungeon.entities[id], entity)
+	end
+end
+
+local function RemoveEntity(x, y, entity)
+	if Dungeon.floor ~= nil then
+		local id = Dungeon.floor:ID(x, y)
+		if Dungeon.entities[id] ~= nil then
+			for i, e in ipairs(Dungeon.entities[id]) do
+				if e == entity then
+					table.remove(Dungeon.entities[id], i)
+					break
+				end
+			end
+		end	
+	end
+end
+
+function RemoveEntityFromDungeon(entity)
+	RemoveEntity(entity[Position].x, entity[Position].y, entity)
+end
 
 local function MakeDoor(x, y, closed, locked)
 	if closed == nil then closed = true end
@@ -52,7 +79,7 @@ local function MakeDungeon()
 		end
 	end
 
-	Dungeon.playerDistance = Dungeon.floor:DijkstraByClass({ { Item, 0 } }, PassableInDungeon)
+	Dungeon.playerDistance = Dungeon.floor:DijkstraByClass({ { Item, 0 } }, PassableInDungeon, 10)
 	Dungeon.created = true	
 end
 

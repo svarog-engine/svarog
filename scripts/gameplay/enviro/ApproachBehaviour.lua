@@ -35,8 +35,9 @@ function ApproachBehaviourSystem:Update()
 			
 				if #goals > 0 then
 					local choice = goals[Rand:Range(1, #goals)]
-					pos.x = choice[1]
-					pos.y = choice[2]
+					local dx = choice[1] - pos.x
+					local dy = choice[2] - pos.y
+					PerformBump(entity, pos.x, pos.y, dx, dy)
 				end
 			end
 		end
