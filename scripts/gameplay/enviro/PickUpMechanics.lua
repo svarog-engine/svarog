@@ -1,6 +1,6 @@
-﻿local PickUpMechanic = Engine.RegisterEnviroSystem()
+﻿local PickUpMechanicsSystem = Engine.RegisterEnviroSystem()
 
-function PickUpMechanic:Update()
+function PickUpMechanicsSystem:Update()
 	StartMeasure()
 	if Dungeon.created then
 		for _, entity in World:Exec(ECS.Query.All(Item, Bumped, Position)):Iterator() do

@@ -77,6 +77,8 @@ end
 
 function Map:DijkstraByClass(query, predicate, limit)
 	local goals = {}
+	if limit == nil then limit = 10 end
+
 	for _, v in pairs(query) do
 		for _, e in World:Exec(ECS.Query.All(Position, v[1])):Iterator() do
 			table.insert(goals, { e[Position].x, e[Position].y, v[2] or 0 })
@@ -88,7 +90,7 @@ end
 
 function Map:Dijkstra(goals, predicate, limit)
 	if predicate == nil then predicate = function(t) return true end end
-	if limit == nil then limit = 20 end
+	if limit == nil then limit = 10 end
 
 	local dijkstra = Map:New(self.width, self.height)
 	local queue = Queue:New()

@@ -89,6 +89,9 @@
     <None Update="scripts\engine\Map.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="scripts\gameplay\enviro\FriendlySwapBehaviour.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="scripts\gameplay\enviro\ApproachBehaviour.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -104,7 +107,7 @@
     <None Update="scripts\gameplay\enviro\HoldDistanceBehaviour.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="scripts\gameplay\enviro\PickUpMechanic.lua">
+    <None Update="scripts\gameplay\enviro\PickUpMechanics.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="scripts\gameplay\enviro\UpdateDistances.lua">
@@ -135,9 +138,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="scripts\gameplay\player\InputActions.lua">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="scripts\gameplay\player\ResolveMove.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="scripts\gameplay\render\FadeOutRender.lua">
