@@ -20,6 +20,7 @@ function FriendlySwapBehaviourSystem:Update()
 				AddEntityToDungeon(x, y, who)
 
 				friend:Unset(Bumped)
+				friend[Creature].actions = -1
 			end
 		end
 	end

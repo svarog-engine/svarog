@@ -5,7 +5,7 @@ function ApproachBehaviourSystem:Update()
 	StartMeasure()
 	if Dungeon.created then
 		for _, entity in World:Exec(ECS.Query.All(Creature, ApproachBehaviour, Position)):Iterator() do
-			local follow = entity[ApproachBehaviour]
+			local approach = entity[ApproachBehaviour]
 			local pos = entity[Position]
 			local x, y = pos.x, pos.y
 
@@ -18,14 +18,14 @@ function ApproachBehaviourSystem:Update()
 				for i = -1, 1 do
 					if not (i == 0) then
 						if Dungeon.playerDistance:Has(x + i, y) then
-							local ndist = math.floor(Dungeon.playerDistance:Get(x + i, y).value)
+							local ndist = Dungeon.playerDistance:Get(x + i, y).value
 							if ndist < dist then
 								table.insert(goals, { x + i, y })
 							end
 						end
 
 						if Dungeon.playerDistance:Has(x, y + i) then
-							local ndist = math.floor(Dungeon.playerDistance:Get(x, y + i).value)
+							local ndist = Dungeon.playerDistance:Get(x, y + i).value
 							if ndist < dist then
 								table.insert(goals, { x, y + i })
 							end
@@ -34,10 +34,11 @@ function ApproachBehaviourSystem:Update()
 				end
 			
 				if #goals > 0 then
+					print (#goals)
 					local choice = goals[Rand:Range(1, #goals)]
 					local dx = choice[1] - pos.x
 					local dy = choice[2] - pos.y
-					PerformBump(entity, pos.x, pos.y, dx, dy)
+					table.insert(entity[Creature].goals, { "Approach", 1, function() PerformBump(entity, pos.x, pos.y, dx, dy) end })
 				end
 			end
 		end

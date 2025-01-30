@@ -12,6 +12,7 @@ LoadEnviroSystem "PickUpMechanics"
 LoadEnviroSystem "PassabilityUpdate"
 LoadEnviroSystem "HoldDistanceBehaviour"
 LoadEnviroSystem "ApproachBehaviour"
+LoadEnviroSystem "TurnOrder"
 LoadEnviroSystem "UpdateDistances"
 
 LoadRenderSystem "DungeonRender"

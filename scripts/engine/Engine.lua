@@ -12,6 +12,7 @@ Pipeline_Render = {}
 
 RenderChangelist = {}
 
+local UpdateCount = 0
 local FrameCount = 0
 
 local function RenderPass()
@@ -89,8 +90,9 @@ local function UpdateWorld(time)
         World:Update(PlayerSystem(), time)
 
         if PlayerDone then
-            World:Update(WorldSystem(), time)
+            UpdateCount = UpdateCount + 1
             PlayerDone = false
+            World:Update(WorldSystem(), time)
         end
 
         if not Options.Headless and Svarog:ShouldRedraw() then
@@ -236,13 +238,16 @@ return {
     Setup = Setup,
     Reload = Reload,
     Frame = function() return FrameCount end,
+    Tick = function() return UpdateCount end,
     Update = NextFrame,
     PlayerSystem = PlayerSystem,
     WorldSystem = WorldSystem,
     RenderSystem = RenderSystem,
+    TaskSystem = TaskSystem,
     OnStartup = OnStartup,
     RegisterPlayerSystem = RegisterPlayerSystem,
     RegisterInputSystem = RegisterInputSystem,
     RegisterEnviroSystem = RegisterEnviroSystem,
+    RegisterEnviroTaskSystem = RegisterEnviroTaskSystem,
     RegisterRenderSystem = RegisterRenderSystem,
 }

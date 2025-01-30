@@ -19,7 +19,15 @@ function Fade(entity, start, target, speed)
 end
 
 Player = ECS.Component()
-Creature = ECS.Component()
+Creature = ECS.Component{ name = "", goals = {}, actions = 0, timestamp = 0 }
+
+function TickCreature(entity)
+	if Engine.Tick() > entity[Creature].timestamp then
+		entity[Creature].timestamp = entity[Creature].timestamp + 1
+		entity[Creature].goals = {}
+	end
+end
+
 Friendly = ECS.Component()
 Item = ECS.Component{id = ""}
 

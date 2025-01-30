@@ -5,7 +5,7 @@ function HoldDistanceBehaviourSystem:Update()
 	StartMeasure()
 	if Dungeon.created then
 		for _, entity in World:Exec(ECS.Query.All(Creature, HoldDistanceBehaviour, Position)):Iterator() do
-			local follow = entity[HoldDistanceBehaviour]
+			local hold = entity[HoldDistanceBehaviour]
 			local pos = entity[Position]
 			local x, y = pos.x, pos.y
 
@@ -14,10 +14,10 @@ function HoldDistanceBehaviourSystem:Update()
 				dist = dist.value
 			
 				local goals = {}
-				local predicate = function(a, b) return a <= b end 
-				if dist < follow.distance then
-					predicate = function(a, b) return a >= b end
-				elseif dist == follow.distance then
+				local predicate = function(a, b) return a < b end 
+				if dist < hold.distance then
+					predicate = function(a, b) return a > b end
+				elseif dist == hold.distance then
 					predicate = function(a, b) return math.abs(a - b) <= 1 end
 				end
 
@@ -43,7 +43,7 @@ function HoldDistanceBehaviourSystem:Update()
 					local choice = goals[Rand:Range(1, #goals)]
 					local dx = choice[1] - pos.x
 					local dy = choice[2] - pos.y
-					PerformBump(entity, pos.x, pos.y, dx, dy)
+					table.insert(entity[Creature].goals, { "Hold", 1, function() PerformBump(entity, pos.x, pos.y, dx, dy) end })
 				end
 			end
 		end
