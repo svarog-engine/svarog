@@ -3,8 +3,7 @@ function PerformBump(entity, x, y, dx, dy)
 	local nx = x + dx
 	local ny = y + dy
 			
-	local pass = Dungeon.passable:Has(nx, ny) and Dungeon.passable:Get(nx, ny).value
-
+	local pass = Dungeon.passable:Has(nx, ny) and Dungeon.passable:Get(nx, ny)
 	local id = Dungeon.floor:ID(nx, ny)
 	local entities = Dungeon.entities[id] or {}
 	if #entities > 0 then
@@ -18,7 +17,7 @@ function PerformBump(entity, x, y, dx, dy)
 			entity[Position].y = ny
 			AddEntityToDungeon(nx, ny, entity)
 		end
-	elseif Dungeon.floor:Has(nx, ny) and Dungeon.floor:Get(nx, ny).value.entity ~= nil then
-		Dungeon.floor:Get(nx, ny).value.entity:Set(Bumped({ by = entity.id }))
+	elseif Dungeon.floor:Has(nx, ny) and Dungeon.floor.tiles[nx][ny].entity ~= nil then
+		Dungeon.floor:Get(nx, ny).entity:Set(Bumped({ by = entity.id }))
 	end
 end

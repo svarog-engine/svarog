@@ -10,22 +10,20 @@ function ApproachBehaviourSystem:Update()
 			local x, y = pos.x, pos.y
 
 			local dist = Dungeon.playerDistance:Get(x, y)
-			if dist ~= nil then 
-				dist = dist.value
-			
+			if dist ~= nil then			
 				local goals = {}
 			
 				for i = -1, 1 do
 					if not (i == 0) then
 						if Dungeon.playerDistance:Has(x + i, y) then
-							local ndist = Dungeon.playerDistance:Get(x + i, y).value
+							local ndist = Dungeon.playerDistance:Get(x + i, y)
 							if ndist < dist then
 								table.insert(goals, { x + i, y })
 							end
 						end
 
 						if Dungeon.playerDistance:Has(x, y + i) then
-							local ndist = Dungeon.playerDistance:Get(x, y + i).value
+							local ndist = Dungeon.playerDistance:Get(x, y + i)
 							if ndist < dist then
 								table.insert(goals, { x, y + i })
 							end

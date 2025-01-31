@@ -1,64 +1,49 @@
 ﻿local Map = {}
+local DijkstraMax = 12321
 
-function Map:New(w, h)
-	o = { width = w, height = h, tiles = {}, keys = {}, entities = {} }
+function Map:New(w, h, defaultValue)
+	o = { width = w, height = h, tiles = {}, keys = {} }
+	for i = 1, w do
+		o.tiles[i] = {}
+		for j = 1, h do
+			o.tiles[i][j] = defaultValue
+		end
+	end
+
 	setmetatable(o, self)
 	self.__index = self
 	return o
 end
 
 function Map:ID(x, y)
-	if type(x) ~= "number" then
-		print(debug.traceback())
-	end
 	return self.width * y + x
 end
 
 function Map:XY(k)
-	return { k % self.width, math.floor(k / self.width + 0.5) }
+	return k % self.width, math.floor(k / self.width + 0.5)
 end
 
 function Map:Set(x, y, value)
-	local key = self:ID(x, y)
-	if self.tiles[key] == nil then
-		table.insert(self.keys, key)
-	end
-	self.tiles[key] = { x = x, y = y, value = value }
+	self.tiles[x][y] = value
 end
 
 function Map:Unset(x, y)
-	local key = self:ID(x, y)
-	self.tiles[key] = nil
-	local index = nil
-	for k, v in pairs(self.keys) do
-		if v == key then
-			index = k
-			break
-		end
-	end
-
-	if index ~= nil then
-		table.remove(self.keys, k)
-	end
+	self.tiles[x][y] = nil
 end
 
 function Map:Get(x, y)
-	local id = self:ID(x, y)
-	if self.tiles[id] == nil then
-		debug.traceback()
-		return nil
-	else
-		return self.tiles[id]
-	end
+	return self.tiles[x][y]
 end
 
 function Map:Has(x, y)
-	local id = self:ID(x, y)
-	return self.tiles[id] ~= nil and self.tiles[id].value ~= nil
+	if x == nil or y == nil then
+		print(debug.traceback())
+	end
+	return self.tiles[x][y] ~= nil
 end
 
-function Map:Iterate()
-	return ipairs(self.keys)
+function Map:Size()
+	return self.width, self.height
 end
 
 function Map:Filter(predicate)
@@ -67,7 +52,7 @@ function Map:Filter(predicate)
 	local filtered = {}
 	for _, k in self:Iterate() do
 		local tile = self.tiles[k]
-		if predicate(tile.value) then
+		if predicate(tile) then
 			table.insert(filtered, k)
 		end
 	end
@@ -75,7 +60,7 @@ function Map:Filter(predicate)
 	return ipairs(filtered)
 end
 
-function Map:DijkstraByClass(query, predicate, limit)
+function Map:DijkstraByClass(target, query, predicate, limit)
 	local goals = {}
 	if limit == nil then limit = 10 end
 
@@ -85,47 +70,43 @@ function Map:DijkstraByClass(query, predicate, limit)
 		end
 	end
 
-	return self:Dijkstra(goals, predicate, limit)
+	return self:Dijkstra(target, goals, predicate, limit)
 end
 
-function Map:Dijkstra(goals, predicate, limit)
+function Map:Dijkstra(target, goals, predicate, limit)
 	if predicate == nil then predicate = function(t) return true end end
-	if limit == nil then limit = 10 end
+	if limit == nil then limit = 40 end
 
-	local dijkstra = Map:New(self.width, self.height)
 	local queue = Queue:New()
 
 	local queued = {}
 
 	for _, g in ipairs(goals) do
-		queue:PushRight(g)
-		dijkstra:Set(g[1], g[2], g[3] or 0)
-		queued[self:ID(g[1], g[2])] = true
+		local id = self:ID(g[1], g[2])
+		queue:PushRight(id)
+		self:Set(g[1], g[2], g[3] or 0)
+		queued[id] = true
 	end
 
 	local done = {}
-	
+	local neighborhood = { -1, 1 }
+
 	while not queue:IsEmpty() do
-		local val = queue:PopLeft()
-
-		local x, y = val[1], val[2]
-		done[self:ID(x, y)] = true
-
-		if not dijkstra:Has(x, y) then
-			local min = 12321
+		local rid = queue:PopLeft()
+		local x, y = self:XY(rid)
+		
+		if not (done[rid] or false) then
+			done[rid] = true
+			local min = DijkstraMax
 			for i = -1, 1 do
 				for j = -1, 1 do
-					if not (i == 0 and j == 0) then
-						local cand = 12321
+					if target:Has(x + i, y + j) then
+						local cand = DijkstraMax
 						local nid = self:ID(x + i, y + j)
-						
-						local t = dijkstra:Get(x + i, y + j)
-						if t ~= nil then
-							cand = t.value
-						end
+						local t = self:Get(x + i, y + j)
 					
-						if not (i == 0 or j == 0) then
-							cand = cand + 0.707
+						if t ~= nil then
+							cand = t
 						end
 
 						if cand < min then min = cand end
@@ -133,41 +114,40 @@ function Map:Dijkstra(goals, predicate, limit)
 				end
 			end
 			
-			dijkstra:Set(x, y, min + 1)
+			self:Set(x, y, min + 1)
 		end
 
-		local val = dijkstra:Get(x, y).value or 0
+		local val = self:Get(x, y) or 0
 
 		if val < limit then
-			for i = -1, 1 do
-				if not (i == 0) then
-					local id = self:ID(x + i, y)
-					if self:Has(x + i, y) and not done[id] and not queued[id] then
-						if predicate(self:Get(x + i, y)) then
-							queue:PushRight({ x + i, y })
-							queued[id] = true
-						end
+			for _, n in ipairs(neighborhood) do
+				local id = self:ID(x + n, y)
+				if target:Has(x + n, y) and not done[id] and not queued[id] then
+					if predicate(x + n, y, target:Get(x + n, y)) then
+						queue:PushRight(id)
+						queued[id] = true
 					end
+				end
 
-					id = self:ID(x, y + i)
-					if self:Has(x, y + i) and not done[id] and not queued[id] then
-						if predicate(self:Get(x, y + i)) then
-							queue:PushRight({ x, y + i })
-							queued[id] = true
-						end
+				id = self:ID(x, y + n)
+				if target:Has(x, y + n) and not done[id] and not queued[id] then
+					if predicate(x, y + n, target:Get(x, y + n)) then
+						queue:PushRight(id)
+						queued[id] = true
 					end
 				end
 			end
 		end
 	end
-	return dijkstra
+
+	return self
 end
 
-function PassableInDungeon(t) 
+function PassableInDungeon(x, y, t) 
 	if Dungeon.floor ~= nil and t ~= nil then
-		local tile = Dungeon.floor:Get(t.x, t.y)
+		local tile = Dungeon.floor:Get(x, y)
 		if tile ~= nil then
-			return tile.value.type == Floor or tile.value.type == Door and not tile.value.entity[Door].closed
+			return tile.type == Floor or tile.type == Door and not tile.entity[Door].closed
 		end 
 	end
 		

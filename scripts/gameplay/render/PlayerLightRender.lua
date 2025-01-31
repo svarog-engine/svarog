@@ -11,12 +11,12 @@ function PlayerLightRenderSystem:Render()
 						local x = pos.x + i
 						local y = pos.y + j
 						if Dungeon.playerDistance:Has(x, y) then
-							local d = math.floor(Dungeon.playerDistance:Get(x, y).value)
+							local d = math.floor(Dungeon.playerDistance:Get(x, y))
 							if d < 4 and d > 0 then
 								d = 4 - d
 								if Dungeon.floor:Has(x, y) then
 									local tile = Dungeon.floor:Get(x, y)
-									if tile.value.type == Floor then
+									if tile.type == Floor then
 										Engine.Glyph(x, y, levels[d])
 									end
 								end

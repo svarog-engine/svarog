@@ -1,4 +1,4 @@
-﻿Measurements = true 
+﻿DoMeasurements = true 
 
 IncludeGameplay "DungeonMaker"
 IncludeGameplay "BumpMechanics"

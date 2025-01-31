@@ -41,7 +41,7 @@ local function MakeDoor(x, y, closed, locked)
 
 	Dungeon.floor:Set(x, y, { 
 		type = Door, 
-		pass = false, 
+		pass = false,
 		entity = World:Entity(
 			Glyph{ name = glyph },
 			Door{ 
@@ -56,9 +56,9 @@ end
 local function MakeDungeon()
 	Dungeon.entities = {}
 	Dungeon.passable = Map:New(Config.Width, Config.Height)
-	Dungeon.passableWithEntities = Map:New(Config.Width, Config.Height)
+	Dungeon.playerDistance = Map:New(Config.Width, Config.Height)
 	Dungeon.floor = Map:New(Config.Width, Config.Height)
-		
+
 	for i = 5, 15 do
 		for j = 6, 12 do
 			Dungeon.floor:Set(i, j, { type = Floor })
@@ -79,8 +79,8 @@ local function MakeDungeon()
 		end
 	end
 
-	Dungeon.playerDistance = Dungeon.floor:DijkstraByClass({ { Item, 0 } }, PassableInDungeon, 10)
-	Dungeon.created = true	
+	Dungeon.playerDistance:DijkstraByClass(Dungeon.floor, { { Item, 0 } }, PassableInDungeon, 10)
+	Dungeon.created = true
 end
 
 OnStartup(function() MakeDungeon() end)

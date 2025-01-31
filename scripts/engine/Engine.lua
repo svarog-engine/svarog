@@ -1,6 +1,6 @@
 ﻿World = ECS.World()
 
-Measurements = false
+DoMeasurements = false
 
 PlayerDone = true
 Actions = {}
@@ -14,6 +14,13 @@ RenderChangelist = {}
 
 local UpdateCount = 0
 local FrameCount = 0
+local Measurements = {
+    last = {},
+    min = {},
+    max = {},
+    average = {},
+    averageCount = {}
+}
 
 local function RenderPass()
     local pres = Config.Presentation or "Default"
@@ -134,6 +141,14 @@ local function Reload()
     Pipeline_Enviro = {}
     Pipeline_Render = {}
 
+    local Measurements = {
+        last = {},
+        min = {},
+        max = {},
+        average = {},
+        averageCount = {}
+    }
+
     FrameCount = 0
     Input.Clear()
     
@@ -149,16 +164,32 @@ local function Reload()
 end
 
 function StartMeasure()
-    if Measurements then
+    if DoMeasurements then
         start_time = os.clock()
     end
 end
 
 function EndMeasure(name)
-    if Measurements then
+    if DoMeasurements then
 	    end_time = os.clock()
         elapsed_time = end_time - start_time
-        print(name .. ': ' .. elapsed_time .. 's')
+        Measurements.last[name] = elapsed_time
+        Measurements.min[name] = math.min(Measurements.min[name] or 10000, elapsed_time)
+        Measurements.max[name] = math.max(Measurements.max[name] or -1, elapsed_time)
+        if Measurements.average[name] == nil then
+            Measurements.average[name] = elapsed_time
+            Measurements.averageCount[name] = 1
+        else
+            local avg = Measurements.average[name]
+            local c = Measurements.averageCount[name]
+            Measurements.average[name] = (elapsed_time + avg * c) / (c + 1)
+            Measurements.averageCount[name] = c + 1
+        end
+
+        local min = Measurements.min[name]
+        local max = Measurements.max[name]
+        local avg = Measurements.average[name]
+        print(string.format("%20s:   %.4f  <: %.4f  >: %.4f  ~: %.4f", name, elapsed_time, min, max, avg))
     end
 end
 
