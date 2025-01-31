@@ -99,6 +99,9 @@ local function UpdateWorld(time)
         if PlayerDone then
             UpdateCount = UpdateCount + 1
             PlayerDone = false
+            if DoMeasurements then
+                print ("       -----[ Frame " .. UpdateCount .. " ]--------------------------------")
+            end
             World:Update(WorldSystem(), time)
         end
 

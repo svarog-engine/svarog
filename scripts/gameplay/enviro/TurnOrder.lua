@@ -11,7 +11,7 @@ function TurnOrderSystem:Update()
 				creature.actions = creature.actions + 1
 				if creature.actions > 0 then
 					local system, cost, action = table.unpack(creature.goals[Rand:Range(1, #creature.goals)])
-					print(creature.name, system, cost)
+					--print(creature.name, system, cost)
 					action()
 					creature.actions = creature.actions - cost
 				end
