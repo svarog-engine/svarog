@@ -1,14 +1,14 @@
 ﻿
-local DebugDijkstraRenderSystem = Engine.RegisterRenderSystem()
+local DebugDistancesRenderSystem = Engine.RegisterRenderSystem()
 
-function DebugDijkstraRenderSystem:Render()
-	if DebugToggle_Dijkstra then
+function DebugDistancesRenderSystem:Render()
+	if DebugToggle_Distances then
 		if Dungeon.created then
 			local w, h = Dungeon.playerDistance:Size()
 			for i = 1, w do
 				for j = 1, h do
 					if Dungeon.playerDistance:Has(i, j) then
-						local tile = Dungeon.playerDistance.tiles[i][j]
+						local tile = Dungeon.playerDistance:Get(i, j)
 						local char = ""
 						local neg = tile < 0
 						local color = Colors.LightBrown

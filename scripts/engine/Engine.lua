@@ -55,8 +55,8 @@ end
 
 local function Glyph(x, y, name, overrides)
     message = {}
-    message.X = x
-    message.Y = y
+    message.X = x - 1
+    message.Y = y - 1
     message.Tile = name
     
     if overrides ~= nil then
@@ -76,7 +76,7 @@ local function Symbol(x, y, glyph, fg, bg)
         if bg ~= nil then overrides.bg = bg end
         Glyph(x, y, glyph, overrides)
     else
-        Engine.Draw({ X = x, Y = y, Presentation = glyph or ".", Foreground = fg or Colors.Yellow, Background = bg or Colors.Red })
+        Engine.Draw({ X = x - 1, Y = y - 1, Presentation = glyph or ".", Foreground = fg or Colors.Yellow, Background = bg or Colors.Red })
     end
 end 
 
@@ -100,9 +100,16 @@ local function UpdateWorld(time)
             UpdateCount = UpdateCount + 1
             PlayerDone = false
             if DoMeasurements then
-                print ("       -----[ Frame " .. UpdateCount .. " ]--------------------------------")
+                print ("+-------------------------------+")
+                print ("|  Frame #" .. string.format("%16i", UpdateCount) .. "      |")
+                print ("+-------------------------------+---------+---------+---------+---------+")
+                print ("|       SYSTEM                  |   NOW   |   MIN   |   MAX   |   AVG   |")
+                print ("+-------------------------------+---------+---------+---------+---------+")
             end
             World:Update(WorldSystem(), time)
+            if DoMeasurements then
+                print ("+-------------------------------+---------+---------+---------+---------+")
+            end
         end
 
         if not Options.Headless and Svarog:ShouldRedraw() then
@@ -192,7 +199,7 @@ function EndMeasure(name)
         local min = Measurements.min[name]
         local max = Measurements.max[name]
         local avg = Measurements.average[name]
-        print(string.format("%20s:   %.4f  <: %.4f  >: %.4f  ~: %.4f", name, elapsed_time, min, max, avg))
+        print(string.format("|%29s  | %.4f  | %.4f  | %.4f  | %.4f  |", name, elapsed_time, min, max, avg))
     end
 end
 

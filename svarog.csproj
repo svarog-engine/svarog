@@ -26,6 +26,9 @@
     <None Update="scripts\engine\DefaultConfig.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="scripts\engine\DistanceMap.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="scripts\engine\ECS.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -95,9 +98,6 @@
     <None Update="scripts\gameplay\enviro\FriendlySwapBehaviour.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="scripts\gameplay\enviro\ApproachBehaviour.lua">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="scripts\gameplay\enviro\PassabilityUpdate.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -105,9 +105,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="scripts\gameplay\DungeonMaker.lua">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="scripts\gameplay\enviro\HoldDistanceBehaviour.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="scripts\gameplay\enviro\PickUpMechanics.lua">
@@ -119,7 +116,7 @@
     <None Update="scripts\gameplay\ItemLibrary.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="scripts\gameplay\render\DebugDijkstraRender.lua">
+    <None Update="scripts\gameplay\render\DebugDistancesRender.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="scripts\gameplay\render\InventoryRender.lua">

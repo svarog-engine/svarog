@@ -56,8 +56,7 @@ end
 local function MakeDungeon()
 	Dungeon.entities = {}
 	Dungeon.passable = Map:New(Config.Width, Config.Height)
-	Dungeon.playerDistance = Map:New(Config.Width, Config.Height)
-	Dungeon.floor = Map:New(Config.Width, Config.Height)
+	Dungeon.floor = Map:New(Config.Width, Config.Height, nil)
 
 	for i = 5, 15 do
 		for j = 6, 12 do
@@ -79,7 +78,10 @@ local function MakeDungeon()
 		end
 	end
 
-	Dungeon.playerDistance:DijkstraByClass(Dungeon.floor, { { Item, 0 } }, PassableInDungeon, 10)
+	Dungeon.playerDistance = DistanceMap:From(Dungeon.floor, { { 10, 10 } }, 0)
+	Dungeon.playerDistance:AddCondition(DistanceMap.IS_FLOOR)
+	Dungeon.playerDistance:AddCondition(DistanceMap.IS_OPEN_DOOR)
+	Dungeon.playerDistance:Flood()
 	Dungeon.created = true
 end
 

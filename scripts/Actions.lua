@@ -13,7 +13,8 @@ Actions.Default = {
 	ZoomOut = { Input.Press("Key: PageDown") },
 	Inventory = { Input.Press("Key: I")},
 
-	DebugDijkstra = { Input.Press("Key: F2") },
+	DebugDistances = { Input.Press("Key: F2") },
+	DebugPrintDistances = { Input.Press("Key: F3") },
 }
 
 Actions.Inventory = {
