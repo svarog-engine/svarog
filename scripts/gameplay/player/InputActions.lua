@@ -23,8 +23,6 @@ Engine.RegisterInputSystem(
 		local dy = dyl + dyr
 		local pos = entity[Position]
 		PerformBump(entity, pos.x, pos.y, dx, dy)
-		print("Moved to " .. pos.x .. ", " .. pos.y)
-		print("IDXY!", Dungeon.floor:ID(pos.x, pos.y), " = ", Dungeon.floor:XY(Dungeon.floor:ID(pos.x, pos.y)))
 		PlayerDone = true
 	end)
 end)

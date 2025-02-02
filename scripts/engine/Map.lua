@@ -35,10 +35,21 @@ function Map:Get(x, y)
 end
 
 function Map:Has(x, y)
-	if x == nil or y == nil then
-		print(debug.traceback())
-	end
+	if self.tiles[x] == nil then return false end
 	return self.tiles[x][y] ~= nil
+end
+
+function Map:Neighbors(x, y)
+	if self:Has(x, y) ~= nil then
+		local results = {}
+		if self:Has(x - 1, y) ~= nil then table.insert(results, { x = x - 1, y = y }) end
+		if self:Has(x + 1, y) ~= nil then table.insert(results, { x = x + 1, y = y }) end
+		if self:Has(x, y - 1) ~= nil then table.insert(results, { x = x, y = y - 1 }) end
+		if self:Has(x, y + 1) ~= nil then table.insert(results, { x = x, y = y + 1 }) end
+		return results
+	end
+
+	return {}
 end
 
 function Map:Size()

@@ -44,6 +44,10 @@ function DistanceMap:Filter(predicate)
 	return self.tiles:Filter(predicate)
 end
 
+function DistanceMap:Neighbors(x, y)
+	return self.tiles:Neighbors(x, y)
+end
+
 function DistanceMap:CheckToAdd(x, y)
 	if DebugToggle_PrintDistances then
 		print("  Checking whether to add position " .. x .. ", " .. y)

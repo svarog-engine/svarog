@@ -92,6 +92,9 @@
     <None Update="scripts\engine\Map.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="scripts\gameplay\enviro\AIBehaviours.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="scripts\gameplay\enviro\TurnOrder.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

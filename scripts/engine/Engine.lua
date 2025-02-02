@@ -199,7 +199,7 @@ function EndMeasure(name)
         local min = Measurements.min[name]
         local max = Measurements.max[name]
         local avg = Measurements.average[name]
-        print(string.format("|%29s  | %.4f  | %.4f  | %.4f  | %.4f  |", name, elapsed_time, min, max, avg))
+        print(string.format("|%29s  | %.4fs | %.4fs | %.4fs | %.4fs |", name, elapsed_time, min, max, avg))
     end
 end
 
