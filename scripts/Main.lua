@@ -1,4 +1,4 @@
-﻿Measurements = true 
+﻿DoMeasurements = true 
 
 IncludeGameplay "DungeonMaker"
 IncludeGameplay "BumpMechanics"
@@ -10,15 +10,14 @@ LoadEnviroSystem "DoorMechanics"
 LoadEnviroSystem "FriendlySwapBehaviour"
 LoadEnviroSystem "PickUpMechanics"
 LoadEnviroSystem "PassabilityUpdate"
-LoadEnviroSystem "HoldDistanceBehaviour"
-LoadEnviroSystem "ApproachBehaviour"
+LoadEnviroSystem "AIBehaviours"
 LoadEnviroSystem "TurnOrder"
 LoadEnviroSystem "UpdateDistances"
 
 LoadRenderSystem "DungeonRender"
 LoadRenderSystem "FadeOutRender"
 LoadRenderSystem "PlayerLightRender"
-LoadRenderSystem "DebugDijkstraRender"
+LoadRenderSystem "DebugDistancesRender"
 LoadRenderSystem "TopLevelRender"
 LoadRenderSystem "LogRender"
 LoadRenderSystem "InventoryRender"
@@ -26,14 +25,15 @@ LoadRenderSystem "InventoryRender"
 World:Entity(
 	Creature(),
 	Friendly(),
-	HoldDistanceBehaviour{ distance = 2 },
+	AIMoveTowardsPlayer{ distance = 2, chance = 80 },
+	KeepDistanceFromPlayer{ distance = 2, chance = 20 },
 	Position{ x = 14, y = 7 },
 	Glyph{ name = "pet" }
 )
 
 World:Entity(
 	Creature(),
-	ApproachBehaviour(),
+	AIMoveTowardsPlayer{ distance = 0, chance = 90 },
 	Position{ x = 22, y = 22 },
 	Glyph{ name = "goblin" }
 )

@@ -1,6 +1,6 @@
 ﻿World = ECS.World()
 
-Measurements = false
+DoMeasurements = false
 
 PlayerDone = true
 Actions = {}
@@ -14,6 +14,13 @@ local RenderChangelist = { Game = {}, UI = {}}
 
 local UpdateCount = 0
 local FrameCount = 0
+local Measurements = {
+    last = {},
+    min = {},
+    max = {},
+    average = {},
+    averageCount = {}
+}
 
 local function ProcessLayer(changelist, matrix, pres)
     local glos = Glossary[pres]
@@ -59,8 +66,8 @@ local function Glyph(x, y, name, overrides, layer)
     local renderlayer = layer or "Game"
 
     message = {}
-    message.X = x
-    message.Y = y
+    message.X = x - 1
+    message.Y = y - 1
     message.Tile = name
 
     if overrides ~= nil then
@@ -84,7 +91,7 @@ local function Symbol(x, y, glyph, fg, bg, layer)
         if bg ~= nil then overrides.bg = bg end
         Glyph(x, y, glyphValue, overrides, renderlayer)
     else
-        Engine.Draw({ X = x, Y = y, Presentation = glyph or ".", Foreground = fg or Colors.Yellow, Background = bg or Colors.Red}, renderlayer)
+        Engine.Draw({ X = x - 1, Y = y - 1, Presentation = glyph or ".", Foreground = fg or Colors.Yellow, Background = bg or Colors.Red })
     end
 end 
 
@@ -110,7 +117,17 @@ local function UpdateWorld(time)
         if PlayerDone then
             UpdateCount = UpdateCount + 1
             PlayerDone = false
+            if DoMeasurements then
+                print ("+-------------------------------+")
+                print ("|  Frame #" .. string.format("%16i", UpdateCount) .. "      |")
+                print ("+-------------------------------+---------+---------+---------+---------+")
+                print ("|       SYSTEM                  |   NOW   |   MIN   |   MAX   |   AVG   |")
+                print ("+-------------------------------+---------+---------+---------+---------+")
+            end
             World:Update(WorldSystem(), time)
+            if DoMeasurements then
+                print ("+-------------------------------+---------+---------+---------+---------+")
+            end
         end
 
         if not Options.Headless and Svarog:ShouldRedraw() then
@@ -152,6 +169,14 @@ local function Reload()
     Pipeline_Enviro = {}
     Pipeline_Render = {}
 
+    local Measurements = {
+        last = {},
+        min = {},
+        max = {},
+        average = {},
+        averageCount = {}
+    }
+
     FrameCount = 0
     Input.Clear()
     
@@ -167,16 +192,32 @@ local function Reload()
 end
 
 function StartMeasure()
-    if Measurements then
+    if DoMeasurements then
         start_time = os.clock()
     end
 end
 
 function EndMeasure(name)
-    if Measurements then
+    if DoMeasurements then
 	    end_time = os.clock()
         elapsed_time = end_time - start_time
-        print(name .. ': ' .. elapsed_time .. 's')
+        Measurements.last[name] = elapsed_time
+        Measurements.min[name] = math.min(Measurements.min[name] or 10000, elapsed_time)
+        Measurements.max[name] = math.max(Measurements.max[name] or -1, elapsed_time)
+        if Measurements.average[name] == nil then
+            Measurements.average[name] = elapsed_time
+            Measurements.averageCount[name] = 1
+        else
+            local avg = Measurements.average[name]
+            local c = Measurements.averageCount[name]
+            Measurements.average[name] = (elapsed_time + avg * c) / (c + 1)
+            Measurements.averageCount[name] = c + 1
+        end
+
+        local min = Measurements.min[name]
+        local max = Measurements.max[name]
+        local avg = Measurements.average[name]
+        print(string.format("|%29s  | %.4fs | %.4fs | %.4fs | %.4fs |", name, elapsed_time, min, max, avg))
     end
 end
 

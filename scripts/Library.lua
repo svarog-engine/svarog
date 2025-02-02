@@ -43,9 +43,6 @@ MoveTo = ECS.Component{ x = 0, y = 0 }
 MakeDungeonRequest = ECS.Component()
 Dungeon = {}
 
-ApproachBehaviour = ECS.Component()
-HoldDistanceBehaviour = ECS.Component{ distance = 5 }
-
 Inventory = ECS.Component{items = {}}
 
 function Inventory.Add(entity, item)
@@ -75,3 +72,14 @@ UI = World:Entity(
 	InventoryWidget{ top = 1, left = 39, width = 20, height = 10, source = {}, selected = 1},
 	ItemDetailsPanelWidget{top = 1, left = 20, width = 15, height = 1}
 )
+
+-- AI
+
+AIMoveTowardsPlayer = ECS.Component{
+	chance = 50
+}
+
+KeepDistanceFromPlayer = ECS.Component{
+	distance = 5, 
+	chance = 50
+}

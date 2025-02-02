@@ -61,9 +61,15 @@ end)
 
 Engine.RegisterInputSystem({ Action_Default_Reload }, function() Svarog.Instance:Reload() end)
 
-DebugToggle_Dijkstra = false
-Engine.RegisterInputSystem({ Action_Default_DebugDijkstra }, function()
-	DebugToggle_Dijkstra = not DebugToggle_Dijkstra
+DebugToggle_Distances = false
+DebugToggle_PrintDistances = false
+
+Engine.RegisterInputSystem({ Action_Default_DebugDistances }, function()
+	DebugToggle_Distances = not DebugToggle_Distances
+end)
+
+Engine.RegisterInputSystem({ Action_Default_DebugPrintDistances }, function()
+	DebugToggle_PrintDistances = not DebugToggle_PrintDistances
 end)
 
 InventoryOpen = false

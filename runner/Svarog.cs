@@ -268,6 +268,7 @@ namespace svarog.runner
             m_Lua["ActionTriggers"] = m_InputManager.Triggered;
 
             RunScript(@"Map = require ""scripts\\engine\\Map""");
+            RunScript(@"DistanceMap = require ""scripts\\engine\\DistanceMap""");
             RunScript(@"Queue = require ""scripts\\engine\\Queue""");
             RunScript(@"ECS = require ""scripts\\engine\\ecs\\ECS""");
             RunScript(@"Engine = require ""scripts\\engine\\Engine""");
