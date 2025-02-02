@@ -18,7 +18,7 @@ function DebugDijkstraRenderSystem:Render()
 				elseif val < 36 then
 					char = string.sub("abcdefghijklmnopqrstuvwxyz", val - 9, val - 9)
 				else 
-					char = "empty"
+					char = "empty_tile"
 				end
 
 				Engine.Glyph(tile.x, tile.y, char, { fg = color })

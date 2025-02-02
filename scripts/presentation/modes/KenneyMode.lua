@@ -19,11 +19,14 @@ Glossary.Kenney = {
 	back_mid = { x = 2, y = 0, fg = Colors.Brown, bg = Colors.Black },
 	back_lit = { x = 4, y = 0, fg = Colors.Brown, bg = Colors.Black },
 
-	empty = { x = 28, y = 22, fg = Colors.DarkGray, bg = Colors.Black },
+	empty_tile = { x = 28, y = 22, fg = Colors.DarkGray, bg = Colors.Black },
 
 	wall = { x = 11, y = 18, fg = Colors.Gray, bg = Colors.Black },
 	treasure = { x = 32, y = 16, fg = Colors.LightYellow, bg = Colors.Black },
 	item = { x = 32, y = 7, fg = Colors.Yellow, bg = Colors.Black },
+
+	empty = { x = 28, y = 22, fg = Colors.DarkGray, bg = Colors.Black },
+	invalid = { x = -1, y = -1, fg = Colors.Transparent, bg = Colors.Transparent},
 }
 
 InsertSpriteCharRanges(Glossary.Kenney, 0, 0, " ")

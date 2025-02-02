@@ -20,12 +20,12 @@ function RenderInventory()
 				if lineIndex == widget.selected then bgColor = Colors.Yellow else bgColor = Colors.Green end
 				local fgColor = Colors.Black
 				local itemName = ItemLibrary[itemList[lineIndex]].name
-				Engine.Write(index, j, itemName,  fgColor,  bgColor )
+				Engine.Write(index, j, itemName,  fgColor,  bgColor, "UI")
 				index = #(itemList[lineIndex]) + widget.left
 			end
 
 			for i= index,  widget.left + widget.width do
-				Engine.Glyph(i, j, " ", { fg = Colors.Red, bg = Colors.Green })
+				Engine.Glyph(i, j, "empty",{ fg = Colors.Red, bg = Colors.Green }, "UI")
 			end
 
 			lineIndex = lineIndex + 1
@@ -43,10 +43,10 @@ function RenderSelection()
 		for j = itemPanel.top, itemPanel.top + itemPanel.height - 1 do
 			local index = itemPanel.left
 			local renderText = string.sub(itemDescription, 1, itemPanel.width)
-			Engine.Write(index, j, renderText ,  Colors.Black, bgColor )
+			Engine.Write(index, j, renderText ,  Colors.Black, bgColor, "UI")
 			index = index + #renderText
 			for i= index,  itemPanel.left + itemPanel.width do
-				Engine.Glyph(i, j, " ", { fg = Colors.Red, bg = bgColor })
+				Engine.Glyph(i, j, "empty", { fg = Colors.Red, bg = bgColor }, "UI")
 			end
 			
 		end
@@ -57,14 +57,14 @@ function InventoryRender:Restore()
 	local inventoryWidget = UI[InventoryWidget]
 	for i = inventoryWidget.left, inventoryWidget.left + inventoryWidget.width do
 		for j = inventoryWidget.top, inventoryWidget.top + inventoryWidget.height do
-			Engine.Glyph(i, j, " ", { fg = Colors.Red })
+			Engine.Glyph(i, j, "invalid",  { fg = Colors.Red, bg = Colors.Black}, "UI")
 		end
 	end
 
 	local itemPanel = UI[ItemDetailsPanelWidget]
 	for i = itemPanel.left, itemPanel.left + itemPanel.width do
 		for j = itemPanel.top, itemPanel.top + itemPanel.height do
-			Engine.Glyph(i, j, " ", { fg = Colors.Red })
+			Engine.Glyph(i, j, "invalid", { fg = Colors.Red, bg = Colors.Black }, "UI")
 		end
 	end
 end

@@ -137,8 +137,10 @@ namespace svarog.runner
         IPresentationLayer? m_PresentationLayer = null;
 
         private Glyph[][] m_Glyphs;
+        private Glyph[][] m_UIGlyphs;
 
         public Glyph[][] Glyphs => m_Glyphs;
+        public Glyph[][] UIGlyphs => m_UIGlyphs;
 
         private Clock m_Clock = new Clock();
         long m_FrameTime = 0;
@@ -174,6 +176,12 @@ namespace svarog.runner
             RunScript(@"dofile ""scripts\\presentation\\Glossary.lua""");
         }
 
+        public void ReloadLayers()
+        {
+            ReloadGlyphs();
+            ReloadUIGlyphs();
+        }
+
         public void ReloadGlyphs()
         {
             var width = (int)((double)m_Lua["Config.Width"]);
@@ -185,10 +193,28 @@ namespace svarog.runner
                 m_Glyphs[i] = new Glyph[height];
                 for (int j = 0; j < height; j++)
                 {
-                    m_Glyphs[i][j] = new Glyph();
+                    m_Glyphs[i][j] = new Glyph(" ", Colors.Black, Colors.Black);
+                    //m_Glyphs[i][j] = new Glyph("a", Colors.Random, Colors.Random);
                 }
             }
             m_Lua["Glyphs"] = m_Glyphs;
+        }
+        
+        public void ReloadUIGlyphs()
+        {
+            var width = (int)((double)m_Lua["Config.Width"]);
+            var height = (int)((double)m_Lua["Config.Height"]);
+            m_UIGlyphs = new Glyph[width][];
+
+            for (int i = 0; i < width; i++)
+            {
+                m_UIGlyphs[i] = new Glyph[height];
+                for (int j = 0; j < height; j++)
+                {
+                    m_UIGlyphs[i][j] = new Glyph();
+                }
+            }
+            m_Lua["UIGlyphs"] = m_UIGlyphs;
         }
 
         public void ReloadPresenter()
@@ -249,7 +275,7 @@ namespace svarog.runner
 
             ReloadConfig();
             ReloadGlossary();
-            ReloadGlyphs();
+            ReloadLayers();
 
             m_InputManager.ReloadActions();
             commandLine.WithParsed(options => m_PresentationLayer?.Create(options));
