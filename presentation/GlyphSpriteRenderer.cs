@@ -50,14 +50,14 @@ namespace svarog.presentation
 
         public uint RowLength { get; set; }
 
-        public void Draw(Glyph[][] matrix, RenderTexture target)
+        public void Draw(Glyph[][] gameGlyphs, Glyph[][] UIGlyphs, RenderTexture target)
         {
             var scale = new SFML.System.Vector2f(m_Scale, m_Scale);
-            for (int i = 0; i < matrix.Length; i++)
+            for (int i = 0; i < gameGlyphs.Length; i++)
             {
-                for (int j = 0; j < matrix[i].Length; j++)
+                for (int j = 0; j < gameGlyphs[i].Length; j++)
                 {
-                    var item = matrix[i][j];
+                    var item = UIGlyphs[i][j].IsValid ? UIGlyphs[i][j] : gameGlyphs[i][j];
                     m_BackgroundRect.Position = new SFML.System.Vector2f(m_FontSize * i * m_Scale, m_FontSize * j * m_Scale);
                     m_BackgroundRect.Scale = scale;
                     m_BackgroundRect.FillColor = item.Background;
@@ -65,11 +65,11 @@ namespace svarog.presentation
                 }
             }
 
-            for (int i = 0; i < matrix.Length; i++)
+            for (int i = 0; i < gameGlyphs.Length; i++)
             {
-                for (int j = 0; j < matrix[i].Length; j++)
+                for (int j = 0; j < gameGlyphs[i].Length; j++)
                 {
-                    var item = matrix[i][j];
+                    var item = UIGlyphs[i][j].IsValid ? UIGlyphs[i][j] : gameGlyphs[i][j];
 
                     m_Sprite.Color = item.Foreground;
                     m_Sprite.Scale = scale;

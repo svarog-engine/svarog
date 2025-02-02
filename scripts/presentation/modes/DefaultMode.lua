@@ -19,7 +19,7 @@ Glossary.Default = {
 	back_mid = { char = ".", fg = Colors.LightGray, bg = Colors.Black },
 	back_lit = { char = ".", fg = Colors.White, bg = Colors.Black },
 
-	empty = { char = ".", fg = Colors.Gray, bg = Colors.Black },
+	empty_tile = { char = ".", fg = Colors.Gray, bg = Colors.Black },
 
 	wall = { char = "#", fg = Colors.DarkGray, bg = Colors.Black },
 	
@@ -27,6 +27,9 @@ Glossary.Default = {
 	treasure = { char = "$", fg = Colors.LightYellow, bg = Colors.Black },
 
 	item = {char = "i", fg = Colors.Yellow, bg = Colors.Black},
+
+	empty =  { char = " ", fg = Colors.White, bg = Colors.Black },
+	invalid = { char = "", fg = Colors.Transparent, bg = Colors.Transparent},
 }
 
 InsertFontAlphanumerics(Glossary.Default)

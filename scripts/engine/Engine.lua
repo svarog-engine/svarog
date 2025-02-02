@@ -10,7 +10,7 @@ Pipeline_Player = {}
 Pipeline_Enviro = {}
 Pipeline_Render = {}
 
-RenderChangelist = {}
+local RenderChangelist = { Game = {}, UI = {}}
 
 local UpdateCount = 0
 local FrameCount = 0
@@ -22,73 +22,92 @@ local Measurements = {
     averageCount = {}
 }
 
-local function RenderPass()
-    local pres = Config.Presentation or "Default"
-    
-	for i, c in ipairs(RenderChangelist) do
-        if Glyphs[c.X] ~= nil and Glyphs[c.X][c.Y] ~= nil then
+local function ProcessLayer(changelist, matrix, pres)
+    local glos = Glossary[pres]
+    local type = Glossary.Meta[pres].Type
+	for i, c in ipairs(changelist) do        
+        if matrix[c.X] ~= nil and matrix[c.X][c.Y] ~= nil then
+            local item = matrix[c.X][c.Y]
             if c.Tile ~= nil then 
-                local tile = Glossary[pres][c.Tile]
+                local tile = glos[c.Tile]
                 if tile ~= nil then
-                    if Glossary.Meta[pres].Type == EPresentationMode.Sprite then
-                        Glyphs[c.X][c.Y].TileX = tile.x
-                        Glyphs[c.X][c.Y].TileY = tile.y
+                    if type == EPresentationMode.Sprite then
+                        item.TileX = tile.x
+                        item.TileY = tile.y
                     else 
-                        Glyphs[c.X][c.Y].Presentation = tile.char
+                        item.Presentation = tile.char
                     end
-                    Glyphs[c.X][c.Y].Foreground = tile.fg
-                    Glyphs[c.X][c.Y].Background = tile.bg
+                    item.Foreground = tile.fg
+                    item.Background = tile.bg
                 end
             end
 
-		    if c.Presentation ~= nil then Glyphs[c.X][c.Y].Presentation = c.Presentation end
-		    if c.Foreground ~= nil then Glyphs[c.X][c.Y].Foreground = c.Foreground end
-		    if c.Background ~= nil then Glyphs[c.X][c.Y].Background = c.Background end
+		    if c.Presentation ~= nil then item.Presentation = c.Presentation end
+		    if c.Foreground ~= nil then item.Foreground = c.Foreground end
+		    if c.Background ~= nil then item.Background = c.Background end
         end
 	end
-	RenderChangelist = {}
 end
 
-local function Draw(change)
-    table.insert(RenderChangelist, change)
+local function RenderPass()
+    local pres = Config.Presentation or "Default"
+    ProcessLayer(RenderChangelist["Game"], Glyphs, pres)
+    ProcessLayer(RenderChangelist["UI"], UIGlyphs, pres)
+
+    RenderChangelist["Game"] = {}
+    RenderChangelist["UI"] = {}
 end
 
-local function Glyph(x, y, name, overrides)
+local function Draw(change, layer)
+    local renderlayer = layer or "Game"
+    table.insert(RenderChangelist[renderlayer], change)
+end
+
+local function Glyph(x, y, name, overrides, layer)
+    local renderlayer = layer or "Game"
+
     message = {}
     message.X = x - 1
     message.Y = y - 1
     message.Tile = name
-    
+
     if overrides ~= nil then
         if overrides.fg ~= nil then message.Foreground = overrides.fg end
         if overrides.bg ~= nil then message.Background = overrides.bg end
     end
     
-    Engine.Draw(message)
+    Engine.Draw(message, renderlayer)
 end 
 
-local function Symbol(x, y, glyph, fg, bg)
+local function Symbol(x, y, glyph, fg, bg, layer)
     local def = Config.Presentation or "Default"
+    local renderlayer = layer or "Game"
+
     if Glossary.Meta[def].Type == EPresentationMode.Sprite then
-        if Glossary[def][glyph] == nil then glyph = " " end
+        local glyphValue = glyph
+        if glyph == " " then  glyphValue = "empty" end
+
         local overrides = {}
         if fg ~= nil then overrides.fg = fg end
         if bg ~= nil then overrides.bg = bg end
-        Glyph(x, y, glyph, overrides)
+        Glyph(x, y, glyphValue, overrides, renderlayer)
     else
-        Engine.Draw({ X = x - 1, Y = y - 1, Presentation = glyph or ".", Foreground = fg or Colors.Yellow, Background = bg or Colors.Red })
+        Engine.Draw({ X = x - 1, Y = y - 1, Presentation = glyph or ".", Foreground = fg or Colors.Yellow, Background = bg or Colors.Red }, renderlayer)
     end
 end 
 
-local function Write(x, y, text, fg, bg)
+local function Write(x, y, text, fg, bg, layer)
+    local renderlayer = layer or "Game"
     for i = 0, #text - 1 do
-        Engine.Symbol(x + i, y, string.sub(text, i + 1, i + 1), fg, bg)
+        Engine.Symbol(x + i, y, string.sub(text, i + 1, i + 1), fg, bg, renderlayer)
     end 
 end
 
-local function Line(row, char, fg, bg)
+local function Line(row, char, fg, bg, layer)
+    local renderlayer = layer or "Game"
+
 	for i = 0, Config.Width - 1 do
-		Engine.Symbol(i, row, " ", fg or Colors.White, bg or Colors.Black)
+		Glyph(i, row, char, { Foreground = fg or Colors.White, Background = bg or Colors.Black}, renderlayer)
 	end
 end
 
@@ -164,7 +183,7 @@ local function Reload()
     
     Svarog.Instance:ReloadConfig()
     Svarog.Instance:ReloadGlossary()
-    Svarog.Instance:ReloadGlyphs()
+    Svarog.Instance:ReloadLayers()
     Svarog.Instance:ReloadPresenter()
 
     InputStack:ReloadActions()
@@ -201,6 +220,12 @@ function EndMeasure(name)
         local avg = Measurements.average[name]
         print(string.format("|%29s  | %.4fs | %.4fs | %.4fs | %.4fs |", name, elapsed_time, min, max, avg))
     end
+end
+
+function TableLenght(table)
+  local count = 0
+  for _ in pairs(table) do count = count + 1 end
+  return count
 end
 
 function PlayerSystem() return "process" end

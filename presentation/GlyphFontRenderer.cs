@@ -30,24 +30,28 @@ namespace svarog.presentation
             }
         }
 
-        public void Draw(Glyph[][] matrix, RenderTexture target)
+        public void Draw(Glyph[][] gameGlyphs, Glyph[][] UIGlyphs, RenderTexture target)
         {
-            for (int i = 0; i < matrix.Length; i++)
+            for (int i = 0; i < gameGlyphs.Length; i++)
             {
-                for (int j = 0; j < matrix[i].Length; j++)
+                var width = m_FontSize * i;
+                for (int j = 0; j < gameGlyphs[i].Length; j++)
                 {
-                    var item = matrix[i][j];
-                    m_BackgroundRect.Position = new SFML.System.Vector2f(m_FontSize * i, m_FontSize * j);
+                    var item = UIGlyphs[i][j].IsValid ? UIGlyphs[i][j] : gameGlyphs[i][j];
+                    m_BackgroundRect.Position = new SFML.System.Vector2f(width, m_FontSize * j);
                     m_BackgroundRect.FillColor = item.Background;
                     m_BackgroundRect.Draw(target, RenderStates.Default);
                 }
             }
 
-            for (int i = 0; i < matrix.Length; i++)
+            for (int i = 0; i < gameGlyphs.Length; i++)
             {
-                for (int j = 0; j < matrix[i].Length; j++)
+                for (int j = 0; j < gameGlyphs[i].Length; j++)
                 {
-                    var item = matrix[i][j];
+                    var item = UIGlyphs[i][j].IsValid ? UIGlyphs[i][j] : gameGlyphs[i][j];
+                    if (item.Presentation == " " || item.Presentation == "")
+                        continue;
+
                     m_Text.DisplayedString = item.Presentation;
                     m_Text.FillColor = item.Foreground;
                     m_Text.Position = new SFML.System.Vector2f(m_FontSize * i + m_FontSize * 0.5f, m_FontSize * j + m_FontSize * 0.5f);

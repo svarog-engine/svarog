@@ -197,8 +197,9 @@ namespace svarog.presentation
         {
             m_Surface.Clear();
             var map = Svarog.Instance.Glyphs;
+            var UI = Svarog.Instance.UIGlyphs;
 
-            m_Renderer.Draw(map, m_Surface);
+            m_Renderer.Draw(map, UI, m_Surface);
 
             m_Surface.Display();
         }

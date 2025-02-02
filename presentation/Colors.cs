@@ -42,6 +42,7 @@ namespace svarog.presentation
 
         public Color Black = Color.Black;
         public Color White = Color.White;
+        public Color Transparent = Color.Transparent;
 
         public Color Random
         {

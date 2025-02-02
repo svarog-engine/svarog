@@ -7,8 +7,8 @@ function LogRenderSystem:Render()
 
 		if diary.index > 0 then
 			local message = diary.log[diary.index]
-			Engine.Line(Config.Height - 2, " ")
-			Engine.Write(1, Config.Height - 2, message, Colors.White, Colors.Black)
+			Engine.Line(Config.Height - 2, "empty", Colors.White, Colors.Black, "UI")
+			Engine.Write(1, Config.Height - 2, message, Colors.White, Colors.Black, "UI")
 		end
 	end
 end
