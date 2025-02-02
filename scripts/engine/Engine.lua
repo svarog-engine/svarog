@@ -59,7 +59,8 @@ local function RenderPass()
 end
 
 local function Draw(change, layer)
-    table.insert(RenderChangelist[layer], change)
+    local renderlayer = layer or "Game"
+    table.insert(RenderChangelist[renderlayer], change)
 end
 
 local function Glyph(x, y, name, overrides, layer)
@@ -91,7 +92,7 @@ local function Symbol(x, y, glyph, fg, bg, layer)
         if bg ~= nil then overrides.bg = bg end
         Glyph(x, y, glyphValue, overrides, renderlayer)
     else
-        Engine.Draw({ X = x - 1, Y = y - 1, Presentation = glyph or ".", Foreground = fg or Colors.Yellow, Background = bg or Colors.Red })
+        Engine.Draw({ X = x - 1, Y = y - 1, Presentation = glyph or ".", Foreground = fg or Colors.Yellow, Background = bg or Colors.Red }, renderlayer)
     end
 end 
 
