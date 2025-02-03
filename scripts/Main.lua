@@ -1,4 +1,4 @@
-﻿DoMeasurements = true 
+﻿DoMeasurements = false 
 
 IncludeGameplay "DungeonMaker"
 IncludeGameplay "BumpMechanics"
@@ -25,8 +25,8 @@ LoadRenderSystem "InventoryRender"
 World:Entity(
 	Creature(),
 	Friendly(),
-	AIMoveTowardsPlayer{ distance = 2, chance = 80 },
-	KeepDistanceFromPlayer{ distance = 2, chance = 20 },
+	AIMoveTowardsPlayer{ distance = 0, chance = 50 },
+	KeepDistanceFromPlayer{ distance = 3, chance = 50 },
 	Position{ x = 14, y = 7 },
 	Glyph{ name = "pet" }
 )
