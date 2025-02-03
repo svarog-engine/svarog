@@ -111,17 +111,57 @@ Engine.RegisterInputSystem({Action_Inventory_Drop}, function()
 		return
 	end
 
-	Inventory.Remove(PlayerEntity, selection)
+	local callback = {
+		callback = function(x, y, data)
+			local selection  = data.item
+			Inventory.Remove(PlayerEntity, selection)
 
-	local widget =UI[InventoryWidget]
-	widget.selected = 0
+			local widget =UI[InventoryWidget]
+			widget.selected = 0
 
-	local coords = PlayerEntity[Position]
+			local target = UI[TargetOverlay]
 
-	World:Entity(
-	Item{id = selection},
-	Position{x = coords.x, y = coords.y},
-	Glyph{name = "item"})
+			local itemMeta = ItemLibrary[selection]
 
-	Diary.Write("Dropped " .. ItemLibrary[selection].name .. ".")
+			World:Entity(
+			Item{id = selection},
+			Position{x = target.x, y = target.y},
+			Glyph{name = itemMeta.glyph})
+
+			Diary.Write("Dropped " .. ItemLibrary[selection].name .. ".")
+		end
+		,
+		data = { item = selection }
+	}
+
+	local playerPosition = PlayerEntity[Position]
+	TargetRenderSystem:Activate(callback, playerPosition.x, playerPosition.y)
+end)
+
+
+Engine.RegisterInputSystem(
+	{
+		Action_TargetOverlay_Left, 
+		Action_TargetOverlay_Right, 
+		Action_TargetOverlay_Up, 
+		Action_TargetOverlay_Down
+	}, function(input)
+		local dxl = input[Action_TargetOverlay_Left] and -1 or 0
+		local dxr = input[Action_TargetOverlay_Right] and 1 or 0
+		local dyl = input[Action_TargetOverlay_Up] and -1 or 0
+		local dyr = input[Action_TargetOverlay_Down] and 1 or 0
+		local dx = dxl + dxr
+		local dy = dyl + dyr
+
+		local widget = UI[TargetOverlay]
+		widget.x = widget.x + dx
+		widget.y = widget.y + dy
+end)
+
+Engine.RegisterInputSystem({Action_TargetOverlay_Exit}, function()
+	TargetRenderSystem:Deactivate(true)
+end)
+
+Engine.RegisterInputSystem({Action_TargetOverlay_Confirm}, function()
+	TargetRenderSystem:Deactivate(false)
 end)

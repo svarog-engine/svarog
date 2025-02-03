@@ -24,4 +24,13 @@ Actions.Inventory = {
 	Drop = { Input.Press("Key: D")},
 }
 
+Actions.TargetOverlay = {
+	Left	= { Input.Press("Key: Left") },
+	Right	= { Input.Press("Key: Right") },
+	Up		= { Input.Press("Key: Up") },
+	Down	= { Input.Press("Key: Down") },
+	Confirm	= { Input.Press("Key: Enter") },
+	Exit	= { Input.Press("Key: Escape") },
+}
+
 Input.Push("Default")
