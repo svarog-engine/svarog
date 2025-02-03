@@ -1,12 +1,16 @@
 ﻿
+(start)
 a[Gen]							:			a[enter] --> _1[#] --> _2[goal];
 
+(prolong-goal)
 a[#] --> b[goal]				:			a[boss] --> b
 								|		    a --> _1[#] --> b
-								|		    a --> _1[#] --> b, _1[#] --> _2[secret];
+								|		    a --> _1 --> b,		_1 --> _2[secret];
 
-a[*] --> b[#] --> c[*]			:			a --> b[task] --> c
-								|			a --> b[lock] --> c, a --> _1[#] --> _2[key], _2 -unlock-> b
-								|			a --> b[lock] --> c, a --> _1[#] --> _2[key] --> b, _2 -unlock-> b;
+(make-tasks)
+a --> b[#] --> c				:			a --> b[task] --> c
+								|			a --> b[lock] --> c,	a --> _1[#] --> _2[key],			_2 -unlock-> b
+								|			a --> b[lock] --> c,	a --> _1[#] --> _2[key] --> b,		_2 -unlock-> b;
 
-a[*] --> b[*] --> c[lock]		:			a --> b, a --> c;
+(split-lock)
+a --> b --> c[lock]				:			a --> b,	a --> c;

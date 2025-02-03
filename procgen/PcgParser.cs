@@ -6,10 +6,11 @@ using static ParsecSharp.Text;
 namespace svarog.procgen
 {
     public record struct AnnotatedId(string Id, string Annotation);
-    public record struct Arrow(AnnotatedId src, string name, AnnotatedId tgt);
-    public record struct Chain(Arrow[] Ids);
+    public record struct Arrow(AnnotatedId Src, string Name, AnnotatedId Tgt);
+    public record struct Chain(Arrow[] Arrows);
     public record struct Transform(Chain[] Lhs, Variant[] Rhs);
-    public record struct Variant(Chain[] Vs);
+    public record struct Variant(Chain[] Variants);
+    public record struct Procedure(string Name, Transform Transform);
     public class PcgParser
     {
         static Arrow[] ConstructChainFromPostConnections(AnnotatedId id, IReadOnlyCollection<(string, AnnotatedId)> conns)
@@ -36,7 +37,7 @@ namespace svarog.procgen
         IParser<char, char> Comma => Char(',').Between(Whitespace);
         IParser<char, char> Turns => Char(':').Between(Whitespace);
         IParser<char, char> Other => Char('|').Between(Whitespace);
-        IParser<char, string> Id => Many(AsciiLetter().AsString().Or(String("#")).Or(String("*"))).Join().Between(Whitespace);
+        IParser<char, string> Id => Many(AsciiLetter().AsString().Or(String("#"))).Join().Between(Whitespace);
         IParser<char, string> Hole =>
             from _1 in Char('_')
             from n in Many1(Digit())
@@ -64,7 +65,7 @@ namespace svarog.procgen
             from conns in Many(PostConnection.Between(Whitespace)).Between(Whitespace)
             select new Chain(ConstructChainFromPostConnections(id, conns));
         IParser<char, Chain[]> AnnotatedIdChains =>
-            from chains in AnnotatedIdChain.SeparatedBy(Comma).Between(Whitespace)
+            from chains in AnnotatedIdChain.SeparatedBy(Comma.Between(Whitespace)).Between(Whitespace)
             select chains.ToArray();
         IParser<char, Variant> RhsVariants =>
             from chains in AnnotatedIdChains.Between(Whitespace)
@@ -73,18 +74,22 @@ namespace svarog.procgen
         IParser<char, Transform> Transform =>
             from lhs in AnnotatedIdChains
             from _ in Turns
-            from rhs in RhsVariants.SeparatedBy(Other).Between(Whitespace)
-            from _2 in Char(';')
+            from rhs in RhsVariants.SeparatedBy(Other.Between(Whitespace)).Between(Whitespace)
             select new Transform(lhs, [.. rhs]);
-
-        IParser<char, Transform[]> Procedure =>
-            from transforms in Many(Transform).Between(Whitespace)
-            select transforms.ToArray();
+        IParser<char, Procedure> Procedure =>
+            from _1 in Char('(').Between(Whitespace)
+            from id in Many(AsciiLetter().Or(Char('-'))).Between(Whitespace)
+            from _2 in Char(')').Between(Whitespace)
+            from transform in Transform.Between(Whitespace)
+            from _3 in Char(';').Between(Whitespace)
+            select new Procedure(string.Join("", id), transform);
+        IParser<char, Procedure[]> Procedures =>
+            from procs in Many(Procedure).Between(Whitespace)
+            select procs.ToArray();
 
         public void Parse(string text)
         {
-            var e = Procedure.Parse(text);
-
+            var e = Procedures.Parse(text);
             Console.WriteLine(e);
         }
     }
