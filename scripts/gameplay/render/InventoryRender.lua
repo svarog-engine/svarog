@@ -50,6 +50,13 @@ function RenderSelection()
 			end
 			
 		end
+	else
+		local itemPanel = UI[ItemDetailsPanelWidget]
+		for i = itemPanel.left, itemPanel.left + itemPanel.width do
+			for j = itemPanel.top, itemPanel.top + itemPanel.height do
+				Engine.Glyph(i, j, "invalid", { fg = Colors.Red, bg = Colors.Black }, "UI")
+			end
+		end
 	end
 end
 

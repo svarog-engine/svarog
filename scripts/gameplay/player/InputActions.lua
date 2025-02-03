@@ -104,3 +104,24 @@ Engine.RegisterInputSystem({Action_Inventory_SelectPrevious}, function()
 		widget.selected = widget.selected - 1
 	end
 end)
+
+Engine.RegisterInputSystem({Action_Inventory_Drop}, function()
+	local selection = InventoryWidget.GetSelected()
+	if selection == nil then
+		return
+	end
+
+	Inventory.Remove(PlayerEntity, selection)
+
+	local widget =UI[InventoryWidget]
+	widget.selected = 0
+
+	local coords = PlayerEntity[Position]
+
+	World:Entity(
+	Item{id = selection},
+	Position{x = coords.x, y = coords.y},
+	Glyph{name = "item"})
+
+	Diary.Write("Dropped " .. ItemLibrary[selection].name .. ".")
+end)

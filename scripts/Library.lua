@@ -50,6 +50,11 @@ function Inventory.Add(entity, item)
 	table.insert(inventory.items, item)
 end
 
+function Inventory.Remove(entity, item)
+	local inventoryList = entity[Inventory].items
+	table.remove(inventoryList, table.find(inventoryList, item))
+end
+
 -- UI
 
 InventoryWidget = ECS.Component{top = 1, left = 39, width = 20, height = 20, selected = 1, source = {}}
