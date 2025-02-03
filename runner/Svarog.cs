@@ -8,6 +8,7 @@ using Serilog.Core;
 using SFML.System;
 using svarog.input;
 using svarog.presentation;
+using svarog.procgen;
 using svarog.utility;
 
 namespace svarog.runner
@@ -157,6 +158,8 @@ namespace svarog.runner
 
         public void ReloadConfig()
         {
+            PcgParser p = new PcgParser();
+            p.Parse(File.ReadAllText("resources\\procgen\\dungeon.pcg"));
             RunScript(@"dofile ""scripts\\engine\\DefaultConfig.lua""");
             RunScript(@"dofile ""scripts\\Config.lua""");
         }
