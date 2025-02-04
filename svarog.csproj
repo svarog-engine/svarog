@@ -18,6 +18,7 @@
     <PackageReference Include="Serilog.Sinks.Debug" Version="3.0.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
     <PackageReference Include="SFML.Net" Version="2.6.0" />
+    <PackageReference Include="Universal.Common.Collections" Version="4.1.0" />
   </ItemGroup>
 
   <ItemGroup>

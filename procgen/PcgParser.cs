@@ -44,9 +44,10 @@ namespace svarog.procgen
             select $"_{string.Join("", n)}";
         IParser<char, string> Annotation =>
             from _1 in Char('[')
-            from n in Id
+            from neg in Optional(String("!").Map(id => id), "")
+            from id in Id
             from _2 in Char(']')
-            select n;
+            select $"{neg}{id}";
         IParser<char, AnnotatedId> AnnotatedId =>
             from id in Hole.Between(Whitespace).Or(Id)
             from ann in Optional(Annotation.Map(id => id), "-").Between(Whitespace)
