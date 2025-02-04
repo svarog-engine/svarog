@@ -156,10 +156,21 @@ namespace svarog.runner
         private bool m_Reload = false;
         public void Reload() { m_Reload = true; }
 
+        private void TestGraphs()
+        {
+            PcgGraphStorage storage = new PcgGraphStorage();
+
+            storage.AddNode("Gen");
+            storage.LoadProcs(File.ReadAllText("resources\\procgen\\dungeon.pcg"));
+
+            PcgInterpreter interp = new(storage);
+            interp.RunProc("make-tasks");
+        }
+
         public void ReloadConfig()
         {
-            PcgParser p = new PcgParser();
-            p.Parse(File.ReadAllText("resources\\procgen\\dungeon.pcg"));
+            TestGraphs();
+
             RunScript(@"dofile ""scripts\\engine\\DefaultConfig.lua""");
             RunScript(@"dofile ""scripts\\Config.lua""");
         }

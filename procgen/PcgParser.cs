@@ -8,9 +8,11 @@ namespace svarog.procgen
     public record struct AnnotatedId(string Id, string Annotation);
     public record struct Arrow(AnnotatedId Src, string Name, AnnotatedId Tgt);
     public record struct Chain(Arrow[] Arrows);
-    public record struct Transform(Chain[] Lhs, Variant[] Rhs);
     public record struct Variant(Chain[] Variants);
-    public record struct Procedure(string Name, Transform Transform);
+    public record struct PcgTransform(Chain[] Lhs, Variant[] Rhs);
+    public record struct PcgProcedure(string Name, PcgTransform Transform);
+    public record struct PcgParseOutput(PcgProcedure[] procs);
+
     public class PcgParser
     {
         static Arrow[] ConstructChainFromPostConnections(AnnotatedId id, IReadOnlyCollection<(string, AnnotatedId)> conns)
@@ -72,26 +74,31 @@ namespace svarog.procgen
             from chains in AnnotatedIdChains.Between(Whitespace)
             select new Variant([.. chains]);
 
-        IParser<char, Transform> Transform =>
+        IParser<char, PcgTransform> Transform =>
             from lhs in AnnotatedIdChains
             from _ in Turns
             from rhs in RhsVariants.SeparatedBy(Other.Between(Whitespace)).Between(Whitespace)
-            select new Transform(lhs, [.. rhs]);
-        IParser<char, Procedure> Procedure =>
+            select new PcgTransform(lhs, [.. rhs]);
+        IParser<char, PcgProcedure> Procedure =>
             from _1 in Char('(').Between(Whitespace)
             from id in Many(AsciiLetter().Or(Char('-'))).Between(Whitespace)
             from _2 in Char(')').Between(Whitespace)
             from transform in Transform.Between(Whitespace)
             from _3 in Char(';').Between(Whitespace)
-            select new Procedure(string.Join("", id), transform);
-        IParser<char, Procedure[]> Procedures =>
+            select new PcgProcedure(string.Join("", id), transform);
+        IParser<char, PcgProcedure[]> Procedures =>
             from procs in Many(Procedure).Between(Whitespace)
             select procs.ToArray();
 
-        public void Parse(string text)
+        public PcgParseOutput? Parse(string text)
         {
             var e = Procedures.Parse(text);
-            Console.WriteLine(e);
+            if (e.Value != null)
+            {
+                return new PcgParseOutput(e.Value);
+            }
+
+            return null;
         }
     }
 }

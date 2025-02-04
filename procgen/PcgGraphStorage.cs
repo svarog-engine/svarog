@@ -14,17 +14,21 @@ namespace svarog.procgen
         MultiDictionary<ulong, uint> m_Arrows = new();
         Dictionary<uint, ulong> m_ArrowEndpoints = new();
         MultiDictionary<uint, string> m_NamedConnections = new();
+        MultiDictionary<string, uint> m_NamedConnectionsByName = new();
+        Dictionary<string, PcgTransform> m_Procedures = new();
+        public HashSet<uint> Nodes => m_Nodes;
 
-        private static ulong CombineNodeIds(uint a, uint b) => (ulong)a << 32 | (ulong)b;
-        private static (uint, uint) ExtractNodeIds(ulong ab) => ((uint)(ab & uint.MaxValue), (uint)(ab >> 32));
+        public static ulong CombineNodeIds(uint a, uint b) => (ulong)a << 32 | (ulong)b;
+        public static (uint, uint) ExtractNodeIds(ulong ab) => ((uint)(ab & uint.MaxValue), (uint)(ab >> 32));
 
+        public bool HasAnnotation(uint n, string annotation) => m_Annotated.ContainsKey(n) && m_Annotated[n].Contains(annotation);
         public uint AddNode(string? annotation)
         {
             m_CurrentId++;
             m_Nodes.Add(m_CurrentId);
             if (annotation != null)
             {
-                m_Annotated[m_CurrentId].Add(annotation);
+                m_Annotated.Add(m_CurrentId, annotation);
             }
             return m_CurrentId;
         }
@@ -40,17 +44,30 @@ namespace svarog.procgen
             m_ArrowTargets.Add(b, m_CurrentId);
             if (name != null)
             {
-                m_NamedConnections[m_CurrentId].Add(name);
+                m_NamedConnections.Add(m_CurrentId, name);
+                m_NamedConnectionsByName.Add(name, m_CurrentId);
             }
 
             return m_CurrentId;
+        }
+
+        public ulong GetEndpoints(uint c)
+        {
+            return m_ArrowEndpoints[c];
         }
 
         public void RemoveConn(uint c)
         {
             if (m_ArrowEndpoints.TryGetValue(c, out ulong connId))
             {
-                m_NamedConnections.Remove(c);
+                if (m_NamedConnections.ContainsKey(c))
+                {
+                    foreach (var n in m_NamedConnections[c])
+                    {
+                        m_NamedConnectionsByName[n].Remove(c);
+                    }
+                    m_NamedConnections.Remove(c);
+                }
                 m_Arrows[connId].Remove(c);
                 var (a, b) = ExtractNodeIds(connId);
                 m_ArrowSources[a].Remove(c);
@@ -77,6 +94,70 @@ namespace svarog.procgen
             m_Nodes.Remove(n);
         }
 
+
+        public int GetInDegree(uint n)
+        {
+            if (m_ArrowSources.ContainsKey(n))
+            {
+                return m_ArrowSources[n].Count;
+            }
+
+            return 0;
+        }
+
+        public int GetOutDegree(uint n)
+        {
+            if (m_ArrowTargets.ContainsKey(n))
+            {
+                return m_ArrowTargets[n].Count;
+            }
+
+            return 0;
+        }
+
+        public int CountArrowsCalled(string name)
+        {
+            if (m_NamedConnectionsByName.ContainsKey(name))
+            {
+                return m_NamedConnectionsByName[name].Count;
+            }
+
+            return 0;
+        }
+
+        public IEnumerable<uint> GetArrowsCalled(string name)
+        {
+            if (m_NamedConnectionsByName.ContainsKey(name))
+            {
+                foreach (var conn in m_NamedConnectionsByName[name])
+                {
+                    yield return conn;
+                }
+            }
+        }
+
+        public IEnumerable<uint> GetArrowsFrom(uint n)
+        {
+            if (m_ArrowSources.ContainsKey(n))
+            {
+                foreach (var arr in m_ArrowSources[n])
+                {
+                    yield return arr;
+                }
+            }
+        }
+
+        public IEnumerable<uint> GetArrowsTo(uint n)
+        {
+            if (m_ArrowTargets.ContainsKey(n))
+            {
+                foreach (var arr in m_ArrowTargets[n])
+                {
+                    yield return arr;
+                }
+            }
+        }
+
         public void AddAnnotation(uint n, string newAnn)
         {
             m_Annotated.Add(n, newAnn);
@@ -86,5 +167,20 @@ namespace svarog.procgen
         {
             m_Annotated.Remove(n);
         }
+
+        public PcgTransform? GetProc(string name) => m_Procedures[name];
+
+        public void LoadProcs(string text)
+        {
+            PcgParseOutput? procs = new PcgParser().Parse(text);
+            if (procs.HasValue)
+            {
+                foreach (var proc in procs.Value.procs)
+                {
+                    m_Procedures[proc.Name] = proc.Transform;
+                }
+            }
+        }
+
     }
 }
