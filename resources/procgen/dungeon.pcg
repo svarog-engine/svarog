@@ -1,4 +1,6 @@
-﻿
+﻿(foo)
+a[Gen] --> b[Gen], a --> b : a[Gen];
+
 (start)
 a[Gen]							:			a[enter] --> _1[#] --> _2[goal];
 

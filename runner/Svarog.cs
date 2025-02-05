@@ -160,11 +160,15 @@ namespace svarog.runner
         {
             PcgGraphStorage storage = new PcgGraphStorage();
 
-            storage.AddNode("Gen");
+            uint a = storage.AddNode("Gen");
+            uint b = storage.AddNode("Gen");
+            uint c = storage.AddNode("Gen");
+            storage.AddConn(a, b, null);
+            storage.AddConn(a, b, null);
             storage.LoadProcs(File.ReadAllText("resources\\procgen\\dungeon.pcg"));
 
             PcgInterpreter interp = new(storage);
-            interp.RunProc("make-tasks");
+            interp.RunProc("foo");
         }
 
         public void ReloadConfig()

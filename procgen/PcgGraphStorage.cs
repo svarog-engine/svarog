@@ -19,7 +19,7 @@ namespace svarog.procgen
         public HashSet<uint> Nodes => m_Nodes;
 
         public static ulong CombineNodeIds(uint a, uint b) => (ulong)a << 32 | (ulong)b;
-        public static (uint, uint) ExtractNodeIds(ulong ab) => ((uint)(ab & uint.MaxValue), (uint)(ab >> 32));
+        public static (uint, uint) ExtractNodeIds(ulong ab) => ((uint)(ab >> 32), (uint)ab);
 
         public bool HasAnnotation(uint n, string annotation) => m_Annotated.ContainsKey(n) && m_Annotated[n].Contains(annotation);
         public uint AddNode(string? annotation)
@@ -115,6 +115,11 @@ namespace svarog.procgen
             return 0;
         }
 
+        public List<uint> GetArrowIdFromConnectionId(ulong connId)
+        {
+            return m_Arrows[connId];
+        }
+
         public int CountArrowsCalled(string name)
         {
             if (m_NamedConnectionsByName.ContainsKey(name))
@@ -134,6 +139,16 @@ namespace svarog.procgen
                     yield return conn;
                 }
             }
+        }
+
+        public uint GetSource(uint arrow)
+        {
+            return ExtractNodeIds(m_ArrowEndpoints[arrow]).Item1;
+        }
+
+        public uint GetTarget(uint arrow)
+        {
+            return ExtractNodeIds(m_ArrowEndpoints[arrow]).Item2;
         }
 
         public IEnumerable<uint> GetArrowsFrom(uint n)
