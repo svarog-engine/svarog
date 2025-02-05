@@ -1,4 +1,6 @@
-﻿using Universal.Common;
+﻿using System.Reflection;
+
+using Universal.Common;
 using Universal.Common.Collections;
 
 namespace svarog.procgen
@@ -128,7 +130,7 @@ namespace svarog.procgen
 
             // name reuse doesn't work! a, when mentioned again, shouldn't be reintroduction but reusal, and is okay!
             RecurseSolveArrows(ref solutions, ref storage, ref nodeCandidates, ref arrowCandidates, ref revArrowCandidates, ref arrowKeys, ref usedArrows, ref usedNodes, ref arrowTempBindings, ref tempBindings, 0);
-            RecurseSolve(ref solutions, ref storage, ref nodeCandidates, ref nodeKeys, ref usedNodes, ref tempBindings, 0);
+            //RecurseSolve(ref solutions, ref storage, ref nodeCandidates, ref nodeKeys, ref usedNodes, ref tempBindings, 0);
 
             return [.. solutions];
         }
@@ -148,47 +150,103 @@ namespace svarog.procgen
         {
             if (index < keys.Length)
             {
-                var key = keys[index];
-                foreach (var cand in arrowCandidates[key])
+                var (srcName, tgtName, id) = keys[index];
+                foreach (var cand in arrowCandidates[keys[index]])
                 {
                     if (!usedArrows.Contains(cand))
                     {
-                        foreach (var (src, tgt, id) in revArrowCandidates[cand])
+                        var (src, tgt) = PcgGraphStorage.ExtractNodeIds(storage.GetEndpoints(cand));
+
+                        usedArrows.Add(cand);
+                        arrowTempBindings.Add(keys[index], cand);
+
+                        bool goOn = true;
+                        if (!usedNodes.Contains(src))
                         {
-                            foreach (var candSrc in nodeCandidates[src])
+                            if (tempBindings.ContainsKey(srcName) && tempBindings[srcName] != src)
                             {
-                                if (!usedNodes.Contains(candSrc))
-                                {
-                                    tempBindings[src] = candSrc;
-                                    usedNodes.Add(candSrc);
-
-                                    foreach (var candTgt in nodeCandidates[tgt])
-                                    {
-                                        if (!usedNodes.Contains(candTgt))
-                                        {
-                                            tempBindings[tgt] = candTgt;
-                                            usedNodes.Add(candTgt);
-
-                                            usedArrows.Add(cand);
-                                            arrowTempBindings[(src, tgt, id)] = cand;
-
-                                            RecurseSolveArrows(ref solutions, ref storage, ref nodeCandidates, ref arrowCandidates, ref revArrowCandidates, ref keys, ref usedArrows, ref usedNodes, ref arrowTempBindings, ref tempBindings, index + 1);
-                                        }
-                                    }
-                                }
+                                goOn = false;
+                            }
+                            else
+                            {
+                                tempBindings.Add(srcName, src);
+                                usedNodes.Add(src);
                             }
                         }
+                        else if (tempBindings.ContainsKey(srcName) && tempBindings[srcName] != src)
+                        {
+                            goOn = false;
+                        }
+
+                        if (!usedNodes.Contains(tgt) && goOn)
+                        {
+                            if (tempBindings.ContainsKey(tgtName) && tempBindings[tgtName] != tgt)
+                            {
+                                goOn = false;
+                            }
+                            else
+                            {
+                                tempBindings.Add(tgtName, tgt);
+                                usedNodes.Add(tgt);
+                            }
+                        }
+                        else if (tempBindings.ContainsKey(tgtName) && tempBindings[tgtName] != tgt)
+                        {
+                            goOn = false;
+                        }
+
+                        if (goOn)
+                            RecurseSolveArrows(ref solutions, ref storage, ref nodeCandidates, ref arrowCandidates, ref revArrowCandidates, ref keys, ref usedArrows, ref usedNodes, ref arrowTempBindings, ref tempBindings, index + 1);
+
+                        tempBindings.Remove(srcName);
+                        tempBindings.Remove(tgtName);
+                        usedNodes.Remove(src);
+                        usedNodes.Remove(tgt);
+
+                        arrowTempBindings.Remove(keys[index]);
+                        usedArrows.Remove(cand);
                     }
                 }
             }
             else
             {
-                var list = new List<PcgBinding>();
-                foreach (var bind in tempBindings)
+                if (tempBindings.Count < nodeCandidates.Keys.Count)
                 {
-                    list.Add(new PcgBinding(bind.Key, bind.Value));
+                    Queue<string> missing = new();
+                    foreach (var key in nodeCandidates.Keys)
+                    {
+                        if (!tempBindings.ContainsKey(key))
+                        {
+                            missing.Enqueue(key);
+                        }
+                    }
+                    RecurseSolve(ref solutions, ref storage, ref nodeCandidates, ref missing, ref usedNodes, ref tempBindings, ref arrowTempBindings);
                 }
-                solutions.Add(new PcgSolution([.. list]));
+                else
+                {
+                    bool invalid = false;
+                    var list = new List<PcgBinding>();
+
+                    foreach (var bind in arrowTempBindings)
+                    {
+                        var (src, tgt, id) = bind.Key;
+                        var key = $"{src}_{tgt}_{id}";
+                        var (a, b) = PcgGraphStorage.ExtractNodeIds(storage.GetEndpoints(bind.Value));
+                        if (tempBindings[src] != a || tempBindings[tgt] != b)
+                        {
+                            invalid = true;
+                        }
+                        list.Add(new PcgBinding(key, bind.Value));
+                    }
+                    foreach (var bind in tempBindings)
+                    {
+                        list.Add(new PcgBinding(bind.Key, bind.Value));
+                    }
+                    if (!invalid)
+                    {
+                        solutions.Add(new PcgSolution([.. list]));
+                    }
+                }
             }
         }
 
@@ -196,33 +254,50 @@ namespace svarog.procgen
             ref List<PcgSolution> solutions,
             ref PcgGraphStorage storage, 
             ref Dictionary<string, List<uint>> nodeCandidates, 
-            ref string[] keys,
+            ref Queue<string> missing,
             ref HashSet<uint> usedNodes,
             ref Dictionary<string, uint> tempBindings,
-            int index)
+            ref Dictionary<(string, string, int), uint> arrowTempBindings)
         {
-            if (index < keys.Length)
+            if (missing.Count > 0)
             {
-                var key = keys[index];
+                var key = missing.Dequeue();
                 foreach (var cand in nodeCandidates[key])
                 {
                     if (!usedNodes.Contains(cand))
                     {
                         tempBindings[key] = cand;
                         usedNodes.Add(cand);
-                        RecurseSolve(ref solutions, ref storage, ref nodeCandidates, ref keys, ref usedNodes, ref tempBindings, index + 1);
+                        RecurseSolve(ref solutions, ref storage, ref nodeCandidates, ref missing, ref usedNodes, ref tempBindings, ref arrowTempBindings);
                         usedNodes.Remove(cand);
+                        tempBindings.Remove(key);
                     }
                 }
             }
             else
             {
+                bool invalid = false;
                 var list = new List<PcgBinding>();
                 foreach (var bind in tempBindings)
                 {
                     list.Add(new PcgBinding(bind.Key, bind.Value));
                 }
-                solutions.Add(new PcgSolution([.. list]));
+
+                foreach (var bind in arrowTempBindings)
+                {
+                    var (src, tgt, id) = bind.Key;
+                    var key = $"{src}_{tgt}_{id}";
+                    var (a, b) = PcgGraphStorage.ExtractNodeIds(storage.GetEndpoints(bind.Value));
+                    if (tempBindings[src] != a || tempBindings[tgt] != b)
+                    {
+                        invalid = true;
+                    }
+                    list.Add(new PcgBinding(key, bind.Value));
+                }
+                if (!invalid)
+                {
+                    solutions.Add(new PcgSolution([.. list]));
+                }
             }
         }
     }

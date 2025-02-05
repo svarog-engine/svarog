@@ -164,7 +164,9 @@ namespace svarog.runner
             uint b = storage.AddNode("Gen");
             uint c = storage.AddNode("Gen");
             storage.AddConn(a, b, null);
-            storage.AddConn(a, b, null);
+            storage.AddConn(b, c, null);
+            storage.AddConn(a, c, null);
+            storage.AddConn(c, b, null);
             storage.LoadProcs(File.ReadAllText("resources\\procgen\\dungeon.pcg"));
 
             PcgInterpreter interp = new(storage);

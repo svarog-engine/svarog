@@ -1,4 +1,6 @@
-﻿namespace svarog.procgen
+﻿using Universal.Common;
+
+namespace svarog.procgen
 {
     public class PcgInterpreter(PcgGraphStorage storage)
     {
@@ -92,7 +94,20 @@
                     constraints.Add(new PcgConstraint_NodeHasOutDegreeAtLeast(outDeg.Key, outDeg.Value));
                 }
 
-                m_Solver.Solve(m_Storage, constraints);
+                var solutions = m_Solver.Solve(m_Storage, constraints);
+                int count = 0;
+                foreach (var solution in solutions)
+                {
+                    count++;
+                    Console.WriteLine("---------------------");
+                    Console.WriteLine(count);
+                    Console.WriteLine("---------------------");
+                    foreach (var bind in solution.Bindings.OrderBy(o => o.Name.Length))
+                    {
+                        Console.WriteLine($" {bind.Name} = {bind.StoredId}");
+                    }
+                    Console.WriteLine("=====================");
+                }
             }
         }
     }
