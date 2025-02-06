@@ -64,9 +64,9 @@ World:Entity(
 )
 
 World:Entity(
-	Item{id = "magic_wand"},
+	Item{id = "key"},
 	Position{x = 12, y = 10},
-	Glyph{name = "item"}
+	Glyph{name = "key"}
 )
 
 World:Entity(MakeDungeonRequest)
