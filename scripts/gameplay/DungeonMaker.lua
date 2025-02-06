@@ -28,7 +28,7 @@ function RemoveEntityFromDungeon(entity)
 	RemoveEntity(entity[Position].x, entity[Position].y, entity)
 end
 
-local function MakeDoor(x, y, closed, locked)
+local function MakeDoor(x, y, closed, locked, key)
 	if closed == nil then closed = true end
 	if locked == nil then locked = false end
 
@@ -48,7 +48,8 @@ local function MakeDoor(x, y, closed, locked)
 				closed = closed, 
 				locked = locked
 			}, 
-			Position{ x = x, y = y }
+			Position{ x = x, y = y },
+			Key { item = key }
 		)
 	})
 end
@@ -65,7 +66,7 @@ local function MakeDungeon()
 	end
 
 	MakeDoor(8, 13)
-	MakeDoor(13, 13, true, true)
+	MakeDoor(13, 13, true, true, "key")
 
 	for i = 14, 20 do 
 		Dungeon.floor:Set(8, i, { type = Floor })
