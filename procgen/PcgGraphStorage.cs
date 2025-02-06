@@ -1,4 +1,7 @@
-﻿using Universal.Common.Collections;
+﻿using System.Xml.Linq;
+
+using Universal.Common;
+using Universal.Common.Collections;
 
 namespace svarog.procgen
 {
@@ -49,6 +52,25 @@ namespace svarog.procgen
             }
 
             return m_CurrentId;
+        }
+
+        public void DeleteConn(uint c)
+        {
+            var connId = GetEndpoints(c);
+            var (a, b) = ExtractNodeIds(connId);
+            m_Connected.Remove(connId);
+            m_Arrows.Remove(connId);
+            m_ArrowEndpoints.Remove(c);
+            m_ArrowSources[a].Remove(c);
+            m_ArrowTargets[b].Remove(c);
+            if (m_NamedConnections.ContainsKey(c))
+            {
+                foreach (var name in m_NamedConnections[c])
+                {
+                    m_NamedConnectionsByName.Remove(name);
+                }
+                m_NamedConnections.Remove(c);
+            }
         }
 
         public ulong GetEndpoints(uint c)
@@ -173,8 +195,27 @@ namespace svarog.procgen
             }
         }
 
+        public void ChangeArrowName(uint n, string newName)
+        {
+            if (m_NamedConnections.ContainsKey(n))
+            {
+                m_NamedConnections.Remove(n);
+            }
+
+            if (newName != null)
+            {
+                m_NamedConnections.Add(n, newName);
+            }
+        }
+
         public void AddAnnotation(uint n, string newAnn)
         {
+            m_Annotated.Add(n, newAnn);
+        }
+
+        public void ChangeAnnotation(uint n, string newAnn)
+        {
+            m_Annotated.Remove(n);
             m_Annotated.Add(n, newAnn);
         }
 

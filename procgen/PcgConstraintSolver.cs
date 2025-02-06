@@ -9,7 +9,7 @@ namespace svarog.procgen
     public record struct PcgSolution(PcgBinding[] Bindings);
     public class PcgConstraintSolver
     {
-        public PcgSolution[] Solve(PcgGraphStorage storage, IReadOnlyCollection<IPcgConstraints> constraints)
+        public PcgSolution[] Solve(PcgGraphStorage storage, IReadOnlyCollection<IPcgConstraint> constraints)
         {
             List<PcgSolution> solutions = [];
 
@@ -30,9 +30,9 @@ namespace svarog.procgen
                     {
                         nodeCandidates[nc.Name].Add(i);
                     }
-
-                    if (nodeCandidates[nc.Name].Count == 0) return [];
                 }
+
+                if (nodeCandidates[nc.Name].Count == 0) return [];
             }
 
             foreach (var constraint in constraints.Where(c => c is PcgConstraint_NodeHasInDegreeAtLeast))
@@ -128,9 +128,7 @@ namespace svarog.procgen
                 candidateMax[nodeKeys[i]] = nodeCandidates[nodeKeys[i]].Count;
             }
 
-            // name reuse doesn't work! a, when mentioned again, shouldn't be reintroduction but reusal, and is okay!
             RecurseSolveArrows(ref solutions, ref storage, ref nodeCandidates, ref arrowCandidates, ref revArrowCandidates, ref arrowKeys, ref usedArrows, ref usedNodes, ref arrowTempBindings, ref tempBindings, 0);
-            //RecurseSolve(ref solutions, ref storage, ref nodeCandidates, ref nodeKeys, ref usedNodes, ref tempBindings, 0);
 
             return [.. solutions];
         }
@@ -212,40 +210,19 @@ namespace svarog.procgen
             {
                 if (tempBindings.Count < nodeCandidates.Keys.Count)
                 {
-                    Queue<string> missing = new();
+                    List<string> missing = new();
                     foreach (var key in nodeCandidates.Keys)
                     {
                         if (!tempBindings.ContainsKey(key))
                         {
-                            missing.Enqueue(key);
+                            missing.Add(key);
                         }
                     }
-                    RecurseSolve(ref solutions, ref storage, ref nodeCandidates, ref missing, ref usedNodes, ref tempBindings, ref arrowTempBindings);
+                    RecurseSolve(ref solutions, ref storage, ref nodeCandidates, missing, ref usedNodes, ref tempBindings, ref arrowTempBindings, 0);
                 }
                 else
                 {
-                    bool invalid = false;
-                    var list = new List<PcgBinding>();
-
-                    foreach (var bind in arrowTempBindings)
-                    {
-                        var (src, tgt, id) = bind.Key;
-                        var key = $"{src}_{tgt}_{id}";
-                        var (a, b) = PcgGraphStorage.ExtractNodeIds(storage.GetEndpoints(bind.Value));
-                        if (tempBindings[src] != a || tempBindings[tgt] != b)
-                        {
-                            invalid = true;
-                        }
-                        list.Add(new PcgBinding(key, bind.Value));
-                    }
-                    foreach (var bind in tempBindings)
-                    {
-                        list.Add(new PcgBinding(bind.Key, bind.Value));
-                    }
-                    if (!invalid)
-                    {
-                        solutions.Add(new PcgSolution([.. list]));
-                    }
+                    ValidateSolutions(storage, tempBindings, arrowTempBindings, ref solutions);
                 }
             }
         }
@@ -254,21 +231,22 @@ namespace svarog.procgen
             ref List<PcgSolution> solutions,
             ref PcgGraphStorage storage, 
             ref Dictionary<string, List<uint>> nodeCandidates, 
-            ref Queue<string> missing,
+            List<string> missing,
             ref HashSet<uint> usedNodes,
             ref Dictionary<string, uint> tempBindings,
-            ref Dictionary<(string, string, int), uint> arrowTempBindings)
+            ref Dictionary<(string, string, int), uint> arrowTempBindings,
+            int index)
         {
-            if (missing.Count > 0)
+            if (index < missing.Count)
             {
-                var key = missing.Dequeue();
+                var key = missing[index];
                 foreach (var cand in nodeCandidates[key])
                 {
                     if (!usedNodes.Contains(cand))
                     {
                         tempBindings[key] = cand;
                         usedNodes.Add(cand);
-                        RecurseSolve(ref solutions, ref storage, ref nodeCandidates, ref missing, ref usedNodes, ref tempBindings, ref arrowTempBindings);
+                        RecurseSolve(ref solutions, ref storage, ref nodeCandidates, missing, ref usedNodes, ref tempBindings, ref arrowTempBindings, index + 1);
                         usedNodes.Remove(cand);
                         tempBindings.Remove(key);
                     }
@@ -276,28 +254,37 @@ namespace svarog.procgen
             }
             else
             {
-                bool invalid = false;
-                var list = new List<PcgBinding>();
-                foreach (var bind in tempBindings)
-                {
-                    list.Add(new PcgBinding(bind.Key, bind.Value));
-                }
+                ValidateSolutions(storage, tempBindings, arrowTempBindings, ref solutions);
+            }
+        }
 
-                foreach (var bind in arrowTempBindings)
+        public void ValidateSolutions(
+            PcgGraphStorage storage,
+            Dictionary<string, uint> tempBindings,
+            Dictionary<(string, string, int), uint> arrowTempBindings,
+            ref List<PcgSolution> solutions)
+        {
+            bool invalid = false;
+            var list = new List<PcgBinding>();
+            foreach (var bind in tempBindings)
+            {
+                list.Add(new PcgBinding(bind.Key, bind.Value));
+            }
+
+            foreach (var bind in arrowTempBindings)
+            {
+                var (src, tgt, id) = bind.Key;
+                var key = $"{src}_{tgt}_{id}";
+                var (a, b) = PcgGraphStorage.ExtractNodeIds(storage.GetEndpoints(bind.Value));
+                if (tempBindings[src] != a || tempBindings[tgt] != b)
                 {
-                    var (src, tgt, id) = bind.Key;
-                    var key = $"{src}_{tgt}_{id}";
-                    var (a, b) = PcgGraphStorage.ExtractNodeIds(storage.GetEndpoints(bind.Value));
-                    if (tempBindings[src] != a || tempBindings[tgt] != b)
-                    {
-                        invalid = true;
-                    }
-                    list.Add(new PcgBinding(key, bind.Value));
+                    invalid = true;
                 }
-                if (!invalid)
-                {
-                    solutions.Add(new PcgSolution([.. list]));
-                }
+                list.Add(new PcgBinding(key, bind.Value));
+            }
+            if (!invalid)
+            {
+                solutions.Add(new PcgSolution([.. list]));
             }
         }
     }

@@ -8,7 +8,7 @@ namespace svarog.procgen
     public record struct AnnotatedId(string Id, string Annotation);
     public record struct Arrow(AnnotatedId Src, string Name, AnnotatedId Tgt);
     public record struct Chain(Arrow[] Arrows);
-    public record struct Variant(Chain[] Variants);
+    public record struct Variant(Chain[] Graph);
     public record struct PcgTransform(Chain[] Lhs, Variant[] Rhs);
     public record struct PcgProcedure(string Name, PcgTransform Transform);
     public record struct PcgParseOutput(PcgProcedure[] procs);
