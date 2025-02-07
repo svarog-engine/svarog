@@ -168,12 +168,11 @@ Engine.RegisterInputSystem(
 		local dxr = input[Action_TargetOverlay_Right] and 1 or 0
 		local dyl = input[Action_TargetOverlay_Up] and -1 or 0
 		local dyr = input[Action_TargetOverlay_Down] and 1 or 0
-		local dx = dxl + dxr
-		local dy = dyl + dyr
 
-		local widget = UI[TargetOverlay]
-		widget.x = widget.x + dx
-		widget.y = widget.y + dy
+
+
+
+		TargetRenderSystem:UpdatePosition(dxl + dxr, dyl + dyr)
 end)
 
 Engine.RegisterInputSystem({Action_TargetOverlay_Exit}, function()

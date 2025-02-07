@@ -5,6 +5,13 @@ local OnTargetSelected = nil
 local SourceX = 0
 local SourceY = 0
 
+local function CanTarget(x, y)
+	local ignoreFOV = not DebugToggle_FOV
+	local visit = Dungeon.visibility:Has(x,y) and Dungeon.visibility:Get(x,y) == 1
+	local pass = Dungeon.passable:Has(x, y) and Dungeon.passable:Get(x, y)
+	return (visit or ignoreFOV) and pass
+end
+
 local function PlotLineHigh(startX, startY, endX, endY, color)
 	local dx = endX - startX
 	local dy = endY - startY
@@ -19,7 +26,11 @@ local function PlotLineHigh(startX, startY, endX, endY, color)
 	local x = startX
 
 	for y = startY, endY do
-		Engine.Glyph(x, y, nil, { bg = color })
+		
+		if CanTarget(x, y) == true then
+			Engine.Glyph(x, y, nil, { bg = color })
+		end
+
 		if D > 0 then
 			x = x + xi
 			D = D + (2 * (dx - dy))
@@ -43,7 +54,11 @@ local function PlotLineLow(startX, startY, endX, endY, color)
 	local y = startY
 
 	for x = startX, endX do
-		Engine.Glyph(x, y, nil, { bg = color })
+
+		if CanTarget(x, y) == true then
+			Engine.Glyph(x, y, nil, { bg = color })
+		end
+
 		if D > 0 then
 			y = y + yi
 			D = D + (2 * (dy - dx))
@@ -105,7 +120,21 @@ function TargetRenderSystem:Deactivate(isCanceled)
 			callback(widget.x, widget.y, data)
 		end
 	end
-
+	self.UpdatePosition()
 	widget.x = 0
 	widget.y = 0
+end
+
+function TargetRenderSystem:UpdatePosition(dx, dy)
+	local widget = UI[TargetOverlay]
+
+	local deltaX = dx or 0
+	local deltaY = dy or 0
+
+	if not Dungeon.floor:Has(x, y) then
+		Engine.Glyph(widget.x, widget.y, nil, { bg = Colors.Black })
+	end
+
+	widget.x = widget.x + deltaX
+	widget.y = widget.y + deltaY
 end
