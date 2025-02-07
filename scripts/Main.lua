@@ -3,6 +3,7 @@
 IncludeGameplay "DungeonMaker"
 IncludeGameplay "BumpMechanics"
 IncludeGameplay "ItemLibrary"
+IncludeGameplay "algorithms//RecursiveShadowcast"
 
 LoadPlayerSystem "InputActions"
 
@@ -13,6 +14,7 @@ LoadEnviroSystem "PassabilityUpdate"
 LoadEnviroSystem "AIBehaviours"
 LoadEnviroSystem "TurnOrder"
 LoadEnviroSystem "UpdateDistances"
+LoadEnviroSystem "ShadowCastMechanics"
 
 LoadRenderSystem "DungeonRender"
 LoadRenderSystem "FadeOutRender"

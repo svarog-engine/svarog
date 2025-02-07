@@ -70,4 +70,12 @@ function Map:Filter(predicate)
 	return ipairs(filtered)
 end
 
+function Map:Reset(defaultValue)
+	for i = 1, self.width do
+		for j = 1, self.height do
+			self:Set(i, j, defaultValue)
+		end
+	end
+end
+
 return Map

@@ -15,6 +15,8 @@ Actions.Default = {
 
 	DebugDistances = { Input.Press("Key: F2") },
 	DebugPrintDistances = { Input.Press("Key: F3") },
+
+	DebugFOV = { Input.Press("Key: F1") },
 }
 
 Actions.Inventory = {

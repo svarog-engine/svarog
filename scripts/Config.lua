@@ -19,3 +19,6 @@
 
 -- Render configuration:
 --		Config.RenderTime = 66
+
+-- FOV configuration:
+--		Config.FOVRadius = 10
