@@ -129,6 +129,27 @@ Engine.RegisterInputSystem({Action_Inventory_Drop}, function()
 		return
 	end
 
+	Inventory.Remove(PlayerEntity, selection)
+
+	local widget =UI[InventoryWidget]
+	widget.selected = 0
+
+	local dropPosition = PlayerEntity[Position]
+
+	local itemMeta = ItemLibrary[selection]
+
+	World:Entity(
+	Item{id = selection},
+	Position{x = dropPosition.x, y = dropPosition.y},
+	Glyph{name = itemMeta.glyph})
+end)
+
+Engine.RegisterInputSystem({Action_Inventory_Throw}, function()
+	local selection = InventoryWidget.GetSelected()
+	if selection == nil then
+		return
+	end
+
 	local callback = {
 		callback = function(x, y, data)
 			local selection  = data.item
@@ -156,7 +177,6 @@ Engine.RegisterInputSystem({Action_Inventory_Drop}, function()
 	TargetRenderSystem:Activate(callback, playerPosition.x, playerPosition.y)
 end)
 
-
 Engine.RegisterInputSystem(
 	{
 		Action_TargetOverlay_Left, 
@@ -168,9 +188,6 @@ Engine.RegisterInputSystem(
 		local dxr = input[Action_TargetOverlay_Right] and 1 or 0
 		local dyl = input[Action_TargetOverlay_Up] and -1 or 0
 		local dyr = input[Action_TargetOverlay_Down] and 1 or 0
-
-
-
 
 		TargetRenderSystem:UpdatePosition(dxl + dxr, dyl + dyr)
 end)
