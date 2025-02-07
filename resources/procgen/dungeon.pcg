@@ -1,17 +1,9 @@
-﻿(start)
-a[Gen]							:			a[enter] --> _1[#] --> _2[goal];
+﻿
+(start)
+	   : _1[Gen]
+	   ;
 
-(add-boss)
-a[#] --> b[goal]				:			a[boss] --> b;
-
-(add-task)
-a[#] --> b[goal]				:		    a --> _1[#] --> b
-								|		    a --> _1 --> b,		_1 --> _2[secret];
-
-(make-tasks)
-a --> b[#] --> c				:			a --> b[task] --> c
-								|			a --> b[lock] --> c,	a --> _1[#] --> _2[key],			_2 -unlock-> b
-								|			a --> b[lock] --> c,	a --> _1[#] --> _2[key] --> b,		_2 -unlock-> b;
-
-(split-lock)
-a --> b --> c[lock]				:			a --> b,	a --> c;
+(connect)
+a -!-> b, b -!-> a			 : a --> b 
+							 | b --> a
+	;

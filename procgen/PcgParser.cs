@@ -46,8 +46,8 @@ namespace svarog.procgen
             select $"_{string.Join("", n)}";
         IParser<char, string> Annotation =>
             from _1 in Char('[')
-            from neg in Optional(String("!").Map(id => id), "")
-            from id in Id
+            from neg in Optional(Char('!').Map(id => $"{id}"), "")
+            from id in Optional(Id.Map(id => id), "")
             from _2 in Char(']')
             select $"{neg}{id}";
         IParser<char, AnnotatedId> AnnotatedId =>
@@ -56,7 +56,7 @@ namespace svarog.procgen
             select new AnnotatedId(id, ann);
         IParser<char, string> Arrow =>
             from _1 in Char('-')
-            from name in Optional(Id.Map(id => id), "-").Between(Whitespace)
+            from name in Optional(String("!").Or(Id.Map(id => id)), "-").Between(Whitespace)
             from _2 in String("->").Between(Whitespace)
             select name;
         IParser<char, (string, AnnotatedId)> PostConnection =>

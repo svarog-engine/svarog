@@ -11,6 +11,10 @@ using svarog.presentation;
 using svarog.procgen;
 using svarog.utility;
 
+using System.Diagnostics;
+using System;
+using System.Web;
+
 namespace svarog.runner
 {
     public class Svarog
@@ -160,12 +164,23 @@ namespace svarog.runner
         {
             PcgGraphStorage storage = new PcgGraphStorage();
 
-            uint a = storage.AddNode("Gen");
             storage.LoadProcs(File.ReadAllText("resources\\procgen\\dungeon.pcg"));
 
             PcgInterpreter<PcgResolution_RandomPick> interp = new(storage);
-            interp.RunProc("start");
-            interp.RunProc("add-task");
+
+            interp.RunProc("start", 2);
+            if (interp.RunProc("connect", 3))
+                Dot(storage.ToDot());
+        }
+
+        private void Dot(string s)
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = "https://dreampuf.github.io/GraphvizOnline/?engine=dot#" + Uri.EscapeDataString("digraph G\n{\n\n\t" + string.Join("\n\t", s.Split("\n")) + "\n}"),
+                UseShellExecute = true
+            };
+            Process.Start(psi);
         }
 
         public void ReloadConfig()

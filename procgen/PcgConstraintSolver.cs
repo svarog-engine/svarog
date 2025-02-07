@@ -15,6 +15,22 @@ namespace svarog.procgen
 
             List<PcgBinding> bindings = [];
             Dictionary<string, List<uint>> nodeCandidates = new();
+            Dictionary<(string, string), HashSet<string>> noArrowsBetween = [];
+
+            foreach (var constraint in constraints.Where(c => c is PcgConstraint_ConnectionDoesntExist))
+            {
+                var de = (PcgConstraint_ConnectionDoesntExist)constraint;
+                var key = (de.Src, de.Tgt);
+                if (!noArrowsBetween.ContainsKey(key))
+                {
+                    noArrowsBetween[key] = [];
+                }
+
+                if (de.Name != "" && de.Name != null)
+                {
+                    noArrowsBetween[key].Add(de.Name);
+                }
+            }
 
             foreach (var constraint in constraints.Where(c => c is PcgConstraint_NodeExists))
             {
@@ -68,7 +84,7 @@ namespace svarog.procgen
                     var allPossibleTargets = nodeCandidates[ce.Src]
                         .SelectMany(src => storage.GetArrowsFrom(src)
                             .Select(arr => storage.GetTarget(arr))).Distinct();
-                        
+                    
                     if (allPossibleTargets.Intersect(nodeCandidates[ce.Tgt]).Count() == 0)
                     {
                         return [];
@@ -81,7 +97,7 @@ namespace svarog.procgen
 
             foreach (var constraint in constraints.Where(c => c is PcgConstraint_ConnectionExists))
             {
-                var ce = ((PcgConstraint_ConnectionExists)constraint);
+                var ce = (PcgConstraint_ConnectionExists)constraint;
                 var key = (ce.Src, ce.Tgt, ce.Index);
                 arrowCandidates[key] = [];
 
@@ -90,6 +106,7 @@ namespace svarog.procgen
                     foreach (uint arr in storage.GetArrowsFrom(src))
                     {
                         var tgt = storage.GetTarget(arr);
+
                         if (nodeCandidates[ce.Tgt].Contains(tgt))
                         {
                             arrowCandidates[key].Add(arr);
@@ -128,7 +145,7 @@ namespace svarog.procgen
                 candidateMax[nodeKeys[i]] = nodeCandidates[nodeKeys[i]].Count;
             }
 
-            RecurseSolveArrows(ref solutions, ref storage, ref nodeCandidates, ref arrowCandidates, ref revArrowCandidates, ref arrowKeys, ref usedArrows, ref usedNodes, ref arrowTempBindings, ref tempBindings, 0);
+            RecurseSolveArrows(ref solutions, ref storage, ref nodeCandidates, ref arrowCandidates, ref revArrowCandidates, ref arrowKeys, ref usedArrows, ref usedNodes, ref arrowTempBindings, ref tempBindings, ref noArrowsBetween, 0);
 
             return [.. solutions];
         }
@@ -144,6 +161,7 @@ namespace svarog.procgen
             ref HashSet<uint> usedNodes,
             ref Dictionary<(string, string, int), uint> arrowTempBindings,
             ref Dictionary<string, uint> tempBindings,
+            ref Dictionary<(string, string), HashSet<string>> noArrowsBetween,
             int index)
         {
             if (index < keys.Length)
@@ -154,6 +172,14 @@ namespace svarog.procgen
                     if (!usedArrows.Contains(cand))
                     {
                         var (src, tgt) = PcgGraphStorage.ExtractNodeIds(storage.GetEndpoints(cand));
+                        if (noArrowsBetween.TryGetValue((srcName, tgtName), out var set))
+                        {
+                            var name = storage.GetArrowName(cand);
+                            if (set.Count == 0 || (name != null && set.Contains(name)))
+                            {
+                                continue;
+                            }
+                        }
 
                         usedArrows.Add(cand);
                         arrowTempBindings.Add(keys[index], cand);
@@ -194,7 +220,7 @@ namespace svarog.procgen
                         }
 
                         if (goOn)
-                            RecurseSolveArrows(ref solutions, ref storage, ref nodeCandidates, ref arrowCandidates, ref revArrowCandidates, ref keys, ref usedArrows, ref usedNodes, ref arrowTempBindings, ref tempBindings, index + 1);
+                            RecurseSolveArrows(ref solutions, ref storage, ref nodeCandidates, ref arrowCandidates, ref revArrowCandidates, ref keys, ref usedArrows, ref usedNodes, ref arrowTempBindings, ref tempBindings, ref noArrowsBetween, index + 1);
 
                         tempBindings.Remove(srcName);
                         tempBindings.Remove(tgtName);
@@ -218,11 +244,11 @@ namespace svarog.procgen
                             missing.Add(key);
                         }
                     }
-                    RecurseSolve(ref solutions, ref storage, ref nodeCandidates, missing, ref usedNodes, ref tempBindings, ref arrowTempBindings, 0);
+                    RecurseSolve(ref solutions, ref storage, ref nodeCandidates, missing, ref usedNodes, ref tempBindings, ref arrowTempBindings, ref noArrowsBetween, 0);
                 }
                 else
                 {
-                    ValidateSolutions(storage, tempBindings, arrowTempBindings, ref solutions);
+                    ValidateSolutions(storage, tempBindings, arrowTempBindings, ref solutions, ref noArrowsBetween);
                 }
             }
         }
@@ -235,6 +261,7 @@ namespace svarog.procgen
             ref HashSet<uint> usedNodes,
             ref Dictionary<string, uint> tempBindings,
             ref Dictionary<(string, string, int), uint> arrowTempBindings,
+            ref Dictionary<(string, string), HashSet<string>> noArrowsBetween,
             int index)
         {
             if (index < missing.Count)
@@ -246,7 +273,7 @@ namespace svarog.procgen
                     {
                         tempBindings[key] = cand;
                         usedNodes.Add(cand);
-                        RecurseSolve(ref solutions, ref storage, ref nodeCandidates, missing, ref usedNodes, ref tempBindings, ref arrowTempBindings, index + 1);
+                        RecurseSolve(ref solutions, ref storage, ref nodeCandidates, missing, ref usedNodes, ref tempBindings, ref arrowTempBindings, ref noArrowsBetween, index + 1);
                         usedNodes.Remove(cand);
                         tempBindings.Remove(key);
                     }
@@ -254,7 +281,7 @@ namespace svarog.procgen
             }
             else
             {
-                ValidateSolutions(storage, tempBindings, arrowTempBindings, ref solutions);
+                ValidateSolutions(storage, tempBindings, arrowTempBindings, ref solutions, ref noArrowsBetween);
             }
         }
 
@@ -262,9 +289,29 @@ namespace svarog.procgen
             PcgGraphStorage storage,
             Dictionary<string, uint> tempBindings,
             Dictionary<(string, string, int), uint> arrowTempBindings,
-            ref List<PcgSolution> solutions)
+            ref List<PcgSolution> solutions,
+            ref Dictionary<(string, string), HashSet<string>> noArrowsBetween)
         {
             bool invalid = false;
+
+            foreach (var key in noArrowsBetween.Keys)
+            {
+                var (src, tgt) = key;
+                if (storage.HasConnBetween(tempBindings[src], tempBindings[tgt]))
+                {
+                    if (noArrowsBetween[key].Count == 0)
+                    {
+                        invalid = true;
+                        break;
+                    }
+                    else if (noArrowsBetween[key].Intersect(storage.GetNamesBetween(tempBindings[src], tempBindings[tgt])).ToList().Count > 0)
+                    {
+                        invalid = true;
+                        break;
+                    }
+                }
+            }
+
             var list = new List<PcgBinding>();
             foreach (var bind in tempBindings)
             {
@@ -274,6 +321,10 @@ namespace svarog.procgen
             foreach (var bind in arrowTempBindings)
             {
                 var (src, tgt, id) = bind.Key;
+                if (noArrowsBetween.ContainsKey((src, tgt)))
+                {
+                    invalid = true;
+                }
                 var key = $"{src}_{tgt}_{id}";
                 var (a, b) = PcgGraphStorage.ExtractNodeIds(storage.GetEndpoints(bind.Value));
                 if (tempBindings[src] != a || tempBindings[tgt] != b)

@@ -175,15 +175,32 @@ namespace svarog.procgen
             return branches;
         }
 
+        public bool RunProc(string name, int reps)
+        {
+            var res = true;
+            for (int i = 0; i < reps; i++)
+            {
+                res |= RunProc(name);
+            }
+            return res;
+        }
+
         public bool RunProc(string name)
         {
             var proc = m_Storage.GetProc(name);
             if (proc.HasValue)
             {
+                Console.WriteLine($"Running {name}");
                 var constraints = BuildConstraints(proc.Value.Lhs);
                 var branches = BuildVariantActions(proc.Value.Rhs);
 
-                new TResolve().Resolve(storage, constraints, branches);
+                var result = new TResolve().Resolve(storage, constraints, branches);
+                Console.WriteLine($"Ended {name}");
+                return result;
+            }
+            else
+            {
+                Console.WriteLine($"Couldn't find proc {name}");
             }
 
             return false;

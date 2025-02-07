@@ -36,6 +36,21 @@ namespace svarog.procgen
             return m_CurrentId;
         }
 
+        public string? GetArrowName(uint arrow) {
+            if (m_NamedConnections.ContainsKey(arrow))
+            {
+                if (m_NamedConnections[arrow].Count == 0)
+                {
+                    return null;
+                }
+                else
+                {
+                    return m_NamedConnections[arrow][0];
+                }
+            }
+            return null;
+        }
+
         public uint AddConn(uint a, uint b, string? name)
         {
             m_CurrentId++;
@@ -52,6 +67,20 @@ namespace svarog.procgen
             }
 
             return m_CurrentId;
+        }
+
+        public bool HasConnBetween(uint a, uint b) =>
+            m_Arrows.ContainsKey(CombineNodeIds(a, b));
+
+        public HashSet<uint> GetConnsBetween(uint a, uint b)
+        {
+            var arrs = m_Arrows[CombineNodeIds(a, b)];
+            return new HashSet<uint>(arrs);
+        }
+
+        public IEnumerable<string> GetNamesBetween(uint a, uint b)
+        {
+            return GetConnsBetween(a, b).Where(c => m_NamedConnections.ContainsKey(c)).SelectMany(c => m_NamedConnections[c]);
         }
 
         public void DeleteConn(uint c)
@@ -238,5 +267,33 @@ namespace svarog.procgen
             }
         }
 
+        public string ToDot()
+        {
+            string Node(uint n) => $"v{n}";
+
+            var s = "";
+            foreach (var arr in m_Arrows)
+            {
+                var (a, b) = ExtractNodeIds(arr.Key);
+                s += $"{Node(a)} -> {Node(b)}";
+                if (m_NamedConnections.ContainsKey(arr.Value))
+                {
+                    s += $" [ label = \"{string.Join(", ", m_NamedConnections[arr.Value])}\" ]";
+                }
+                s += "\n";
+            }
+
+            foreach (var node in m_Nodes)
+            {
+                var ann = "-";
+                if (m_Annotated.ContainsKey(node))
+                {
+                    ann = string.Join("", m_Annotated[node]);
+                }
+                s += $"{Node(node)} [ label = \"{node} : {ann}\" ]\n";
+            }
+
+            return s;
+        }
     }
 }
