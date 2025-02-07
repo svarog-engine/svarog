@@ -1,8 +1,9 @@
-﻿DoMeasurements = true 
+﻿DoMeasurements = false 
 
 IncludeGameplay "DungeonMaker"
 IncludeGameplay "BumpMechanics"
 IncludeGameplay "ItemLibrary"
+IncludeGameplay "algorithms//RecursiveShadowcast"
 
 LoadPlayerSystem "InputActions"
 
@@ -13,6 +14,7 @@ LoadEnviroSystem "PassabilityUpdate"
 LoadEnviroSystem "AIBehaviours"
 LoadEnviroSystem "TurnOrder"
 LoadEnviroSystem "UpdateDistances"
+LoadEnviroSystem "ShadowCastMechanics"
 
 LoadRenderSystem "DungeonRender"
 LoadRenderSystem "FadeOutRender"
@@ -26,8 +28,8 @@ LoadRenderSystem "InventoryRender"
 World:Entity(
 	Creature(),
 	Friendly(),
-	AIMoveTowardsPlayer{ distance = 2, chance = 80 },
-	KeepDistanceFromPlayer{ distance = 2, chance = 20 },
+	AIMoveTowardsPlayer{ distance = 0, chance = 50 },
+	KeepDistanceFromPlayer{ distance = 3, chance = 50 },
 	Position{ x = 14, y = 7 },
 	Glyph{ name = "pet" }
 )
@@ -65,9 +67,9 @@ World:Entity(
 )
 
 World:Entity(
-	Item{id = "magic_wand"},
+	Item{id = "key"},
 	Position{x = 12, y = 10},
-	Glyph{name = "item"}
+	Glyph{name = "key"}
 )
 
 World:Entity(MakeDungeonRequest)

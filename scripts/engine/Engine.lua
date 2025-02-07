@@ -2,6 +2,8 @@
 
 DoMeasurements = false
 
+Algorithms = {}
+
 PlayerDone = true
 Actions = {}
 

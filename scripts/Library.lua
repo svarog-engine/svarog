@@ -36,6 +36,7 @@ Bumped = ECS.Component{ by = 0 }
 
 Floor = ECS.Component()
 Door = ECS.Component{ closed = true, locked = false }
+Key = ECS.Component { item = nil }
 
 Position = ECS.Component{ x = 0, y = 0 }
 MoveTo = ECS.Component{ x = 0, y = 0 }
@@ -53,6 +54,19 @@ end
 function Inventory.Remove(entity, item)
 	local inventoryList = entity[Inventory].items
 	table.remove(inventoryList, table.find(inventoryList, item))
+end
+
+function Inventory.HasItem(entity, item)
+	local inventoryList = entity[Inventory].items
+	if inventoryList ~= nil then
+		for _, value in ipairs(inventoryList) do 
+			if value == item then
+				return true
+			end
+		end
+	end
+
+	return false
 end
 
 -- UI

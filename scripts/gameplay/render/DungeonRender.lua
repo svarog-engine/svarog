@@ -9,7 +9,13 @@ function DungeonRenderSystem:Render()
 				if Dungeon.floor:Has(x, y) then
 					local tile = Dungeon.floor:Get(x, y)
 					if tile.type == Floor then
-						Engine.Glyph(x, y, "back_dark")
+						if Dungeon.visited:Get(x,y) == 0 then
+							Engine.Glyph(x, y, nil, { fg = Colors.Black, bg = Colors.Black} )
+						elseif  Dungeon.visibility:Get(x,y) == 0 then
+							Engine.Glyph(x, y, "back_dark")
+						else
+							Engine.Glyph(x, y, "back_lit")
+						end
 					else
 						local glyph = tile.entity[Glyph]
 						Engine.Glyph(x, y, glyph.name)

@@ -1,7 +1,7 @@
 ﻿local PlayerLightRenderSystem = Engine.RegisterRenderSystem()
 
 function PlayerLightRenderSystem:Render()
-	if Dungeon.created then
+	if Dungeon.created and not DebugToggle_FOV then
 		for _, e in World:Exec(ECS.Query.All(Player, Position)):Iterator() do
 			local pos = e[Position]
 			local levels = { "back_semi", "back_mid", "back_lit" }

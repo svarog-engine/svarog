@@ -27,6 +27,7 @@ Glossary.Default = {
 	treasure = { char = "$", fg = Colors.LightYellow, bg = Colors.Black },
 
 	item = {char = "i", fg = Colors.Yellow, bg = Colors.Black},
+	key = {char = "-", fg = Colors.Yellow, bg = Colors.Black},
 
 	empty =  { char = " ", fg = Colors.White, bg = Colors.Black },
 	invalid = { char = "", fg = Colors.Transparent, bg = Colors.Transparent},
