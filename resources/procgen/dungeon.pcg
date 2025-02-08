@@ -1,9 +1,68 @@
 ﻿
 (start)
-	   : _1[Gen]
-	   ;
+		: _1[Gen]
+		;
 
 (connect)
-a -!-> b, b -!-> a			 : a --> b 
-							 | b --> a
-	;
+a -!-> b, b -!-> a			 : a --> b | b --> a
+		;
+
+(entry)
+a[Gen] --> b[Gen]
+		: a[ENTRY] --> b
+		;
+
+(zone)
+a[Gen] --> b[Gen] 
+		: a[intro] --> _1[major] --> _2[reward]
+		| a[intro] --> _1[major] --> _2[reward] --> b[Gen], _1 --> _3[Secret]
+		| a[intro] --> _1[lock'] -L-> _2[Gen] --> b, a --> _3[major] --> _4[reward], _3 --> _5[key']
+		| a[intro] --> _1[lock'] -L-> _2[Gen] --> b, a --> _3[major] --> _4[reward] --> _5[key']
+		;
+
+(branch)
+a[Gen] --> b[Gen]
+		: a[minor] --> _1[lock'] -L-> b[treasure], a --> _2[Gen] --> _3[key']
+		| a[minor] --> _1[lock'] -L-> b[Gen], a --> _2[Gen] --> _3[key']
+		| a[minor] --> b[Gen], a --> _1[Gen]
+		;
+
+(hard)
+a --> b, l[lock'] --> b
+		: l[lock'] --> b --> _1[Secret]
+		;
+
+(template)
+a[Gen]
+		: a[treasure]
+		| a[minor]
+		| a[merchant]
+		| a[vault]
+		| a[trap]
+		;
+
+(secrets)
+a[Secret]
+		: a[treasure]
+		| a[vault]
+		| a[gaol]
+		;
+
+(cleanup)
+a --> a 
+		: a;
+
+(exit)
+a[ENTRY] --> b
+		: a --> b --> _1[boss] --> _2[EXIT]
+		;
+
+(intro)
+a --> b[ENTRY]
+		: b --> a
+		;
+
+(intronope)
+a[ENTRY] --> b, c[lock'] --> b
+		: c --> b
+		;

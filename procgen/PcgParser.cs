@@ -39,7 +39,8 @@ namespace svarog.procgen
         IParser<char, char> Comma => Char(',').Between(Whitespace);
         IParser<char, char> Turns => Char(':').Between(Whitespace);
         IParser<char, char> Other => Char('|').Between(Whitespace);
-        IParser<char, string> Id => Many(AsciiLetter().AsString().Or(String("#"))).Join().Between(Whitespace);
+        IParser<char, char> IdChar => AsciiLetter().Or(Char('_')).Or(Char('_')).Or(Char('\''));
+        IParser<char, string> Id => (Many(IdChar.AsString()).Join()).Or(String("#")).Between(Whitespace);
         IParser<char, string> Hole =>
             from _1 in Char('_')
             from n in Many1(Digit())

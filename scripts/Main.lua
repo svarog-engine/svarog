@@ -22,6 +22,8 @@ LoadRenderSystem "TopLevelRender"
 LoadRenderSystem "LogRender"
 LoadRenderSystem "InventoryRender"
 
+IncludeGameplay "procgen\\PCGDungeon"
+
 World:Entity(
 	Creature(),
 	Friendly(),

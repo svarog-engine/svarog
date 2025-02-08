@@ -121,6 +121,9 @@
     <None Update="scripts\gameplay\ItemLibrary.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="scripts\gameplay\procgen\PCGDungeon.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="scripts\gameplay\render\DebugDistancesRender.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

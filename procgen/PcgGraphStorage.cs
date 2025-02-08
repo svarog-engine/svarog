@@ -9,6 +9,13 @@ namespace svarog.procgen
     {
         uint m_CurrentId = 0;
 
+        private static int m_LastIncreased = 0;
+        private static int m_Cycle = 0;
+        public static int Cycle => m_Cycle;
+        public static void ResetCycle() { m_Cycle = 0; }
+        public static void ResetCycleLock() { m_LastIncreased = m_Cycle + 1; }
+        public static void IncrCycle() { if (m_Cycle < m_LastIncreased) m_Cycle++; }
+
         HashSet<uint> m_Nodes = new();
         MultiDictionary<uint, string> m_Annotated = new();
         HashSet<ulong> m_Connected = new();
@@ -19,18 +26,43 @@ namespace svarog.procgen
         MultiDictionary<uint, string> m_NamedConnections = new();
         MultiDictionary<string, uint> m_NamedConnectionsByName = new();
         Dictionary<string, PcgTransform> m_Procedures = new();
+        Dictionary<uint, int> m_Generations = new();
+
         public HashSet<uint> Nodes => m_Nodes;
 
         public static ulong CombineNodeIds(uint a, uint b) => (ulong)a << 32 | (ulong)b;
         public static (uint, uint) ExtractNodeIds(ulong ab) => ((uint)(ab >> 32), (uint)ab);
+
+        public void Clear()
+        {
+            PcgGraphStorage.ResetCycle();
+            m_Nodes.Clear();
+            m_Annotated.Clear();
+            m_Connected.Clear();
+            m_ArrowSources.Clear(); 
+            m_ArrowTargets.Clear();
+            m_Arrows.Clear();
+            m_ArrowEndpoints.Clear();
+            m_NamedConnections.Clear();
+            m_NamedConnectionsByName.Clear();
+            m_Procedures.Clear();
+            m_Generations.Clear();
+        }
 
         public bool HasAnnotation(uint n, string annotation) => m_Annotated.ContainsKey(n) && m_Annotated[n].Contains(annotation);
         public uint AddNode(string? annotation)
         {
             m_CurrentId++;
             m_Nodes.Add(m_CurrentId);
+
             if (annotation != null)
             {
+                if (annotation.Contains("'"))
+                {
+                    IncrCycle();
+                }
+                
+                if (!m_Generations.ContainsKey(m_CurrentId)) m_Generations.Add(m_CurrentId, PcgGraphStorage.Cycle);
                 m_Annotated.Add(m_CurrentId, annotation);
             }
             return m_CurrentId;
@@ -60,6 +92,7 @@ namespace svarog.procgen
             m_ArrowEndpoints.Add(m_CurrentId, connId);
             m_ArrowSources.Add(a, m_CurrentId);
             m_ArrowTargets.Add(b, m_CurrentId);
+
             if (name != null)
             {
                 m_NamedConnections.Add(m_CurrentId, name);
@@ -233,6 +266,7 @@ namespace svarog.procgen
 
             if (newName != null)
             {
+                m_Generations.Add(m_CurrentId, PcgGraphStorage.Cycle);
                 m_NamedConnections.Add(n, newName);
             }
         }
@@ -240,6 +274,18 @@ namespace svarog.procgen
         public void AddAnnotation(uint n, string newAnn)
         {
             m_Annotated.Add(n, newAnn);
+        }
+
+        public string GetAnnotation(uint n)
+        {
+            if (m_Annotated.ContainsKey(n))
+            {
+                return $"{string.Join(" ", m_Annotated[n]).Replace("'", $"{m_Generations[n]}")}";
+            }
+            else
+            {
+                return "";
+            }
         }
 
         public void ChangeAnnotation(uint n, string newAnn)
@@ -285,12 +331,8 @@ namespace svarog.procgen
 
             foreach (var node in m_Nodes)
             {
-                var ann = "-";
-                if (m_Annotated.ContainsKey(node))
-                {
-                    ann = string.Join("", m_Annotated[node]);
-                }
-                s += $"{Node(node)} [ label = \"{node} : {ann}\" ]\n";
+                var ann = GetAnnotation(node);
+                s += $"{Node(node)} [ label = \"{ann}\" ]\n";
             }
 
             return s;

@@ -160,33 +160,16 @@ namespace svarog.runner
         private bool m_Reload = false;
         public void Reload() { m_Reload = true; }
 
-        private void TestGraphs()
+        private PcgInterpreter<PcgResolution_RandomPick> m_PCG = new(new PcgGraphStorage());
+        public PcgInterpreter<PcgResolution_RandomPick> PCG => m_PCG;
+
+        public void ReloadPCG()
         {
-            PcgGraphStorage storage = new PcgGraphStorage();
-
-            storage.LoadProcs(File.ReadAllText("resources\\procgen\\dungeon.pcg"));
-
-            PcgInterpreter<PcgResolution_RandomPick> interp = new(storage);
-
-            interp.RunProc("start", 2);
-            if (interp.RunProc("connect", 3))
-                Dot(storage.ToDot());
-        }
-
-        private void Dot(string s)
-        {
-            var psi = new ProcessStartInfo
-            {
-                FileName = "https://dreampuf.github.io/GraphvizOnline/?engine=dot#" + Uri.EscapeDataString("digraph G\n{\n\n\t" + string.Join("\n\t", s.Split("\n")) + "\n}"),
-                UseShellExecute = true
-            };
-            Process.Start(psi);
+            m_PCG.Clear();
         }
 
         public void ReloadConfig()
         {
-            TestGraphs();
-
             RunScript(@"dofile ""scripts\\engine\\DefaultConfig.lua""");
             RunScript(@"dofile ""scripts\\Config.lua""");
         }
@@ -296,7 +279,7 @@ namespace svarog.runner
             m_Lua["Rand"] = new Randomness();
             m_Lua["InputStack"] = m_InputManager;
             m_Lua["ActionTriggers"] = m_InputManager.Triggered;
-
+            m_Lua["PCG"] = m_PCG;
             RunScript(@"Map = require ""scripts\\engine\\Map""");
             RunScript(@"DistanceMap = require ""scripts\\engine\\DistanceMap""");
             RunScript(@"Queue = require ""scripts\\engine\\Queue""");
@@ -304,6 +287,7 @@ namespace svarog.runner
             RunScript(@"Engine = require ""scripts\\engine\\Engine""");
             RunScript(@"Input = require ""scripts\\engine\\Input""");
 
+            ReloadPCG();
             ReloadConfig();
             ReloadGlossary();
             ReloadLayers();

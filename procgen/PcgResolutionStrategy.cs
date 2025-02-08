@@ -77,7 +77,7 @@ namespace svarog.procgen
                 var cn = (PcgAction_CreateNode)c;
                 bindings[cn.Name] = storage.AddNode(cn.Annotation);
                 changes = true;
-                Console.WriteLine($"Creating node {cn.Name} ({bindings[cn.Name]})");
+                Console.WriteLine($"Creating node {cn.Name} ({bindings[cn.Name]}) with annotation {cn.Annotation ?? "-"}");
             }
 
             foreach (var c in change.Where(c => c is PcgAction_CreateArrow))
