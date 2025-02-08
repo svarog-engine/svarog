@@ -36,7 +36,7 @@ Bumped = ECS.Component{ by = 0 }
 
 Floor = ECS.Component()
 Door = ECS.Component{ closed = true, locked = false }
-Key = ECS.Component {key = nil}
+Key = ECS.Component { item = nil }
 
 Position = ECS.Component{ x = 0, y = 0 }
 MoveTo = ECS.Component{ x = 0, y = 0 }

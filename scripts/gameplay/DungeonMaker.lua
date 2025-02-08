@@ -59,6 +59,13 @@ local function MakeDungeon()
 	Dungeon.passable = Map:New(Config.Width, Config.Height)
 	Dungeon.floor = Map:New(Config.Width, Config.Height, nil)
 
+	Dungeon.visibility = Map:New(Config.Width, Config.Height, 0)
+	if DebugToggle_FOV then 
+		Dungeon.visited = Map:New(Config.Width, Config.Height, 0)
+	else
+		Dungeon.visited = Map:New(Config.Width, Config.Height, 1)
+	end
+
 	for i = 5, 15 do
 		for j = 6, 12 do
 			Dungeon.floor:Set(i, j, { type = Floor })
