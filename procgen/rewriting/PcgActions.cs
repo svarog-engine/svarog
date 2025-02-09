@@ -1,4 +1,4 @@
-﻿namespace svarog.procgen
+﻿namespace svarog.procgen.rewriting
 {
     public interface IPcgAction
     { }

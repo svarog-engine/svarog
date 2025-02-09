@@ -31,6 +31,10 @@ function Map:Unset(x, y)
 end
 
 function Map:Get(x, y)
+	if self.tiles[x] == nil then 
+		print("MAP GET FAILED: ", x) 
+		print(debug.traceback())
+	end
 	return self.tiles[x][y]
 end
 

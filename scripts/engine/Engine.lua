@@ -12,6 +12,26 @@ Pipeline_Player = {}
 Pipeline_Enviro = {}
 Pipeline_Render = {}
 
+function FromList(sharp_list)
+	local list = {}
+	local it = sharp_list:GetEnumerator()
+    while it:MoveNext() do
+		table.insert(list, it.Current)
+	end
+
+	return list
+end
+
+function FromDict(sharp_dict)
+	local dict = {}
+	local it = sharp_dict:GetEnumerator()
+    while it:MoveNext() do
+		dict[it.Current.Key] = it.Current.Value
+	end
+
+	return dict
+end
+
 local RenderChangelist = { Game = {}, UI = {}}
 
 local UpdateCount = 0

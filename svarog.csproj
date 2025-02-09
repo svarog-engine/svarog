@@ -12,6 +12,7 @@
     <PackageReference Include="NLua" Version="1.7.3" />
     <PackageReference Include="ParsecSharp" Version="4.0.0" />
     <PackageReference Include="randomColorSharped.NetStandard" Version="1.0.2" />
+    <PackageReference Include="Rubjerg.Graphviz" Version="2.0.2" />
 	<PackageReference Include="Sayers.SDL2.Core" Version="1.0.11" />
     <PackageReference Include="Serilog" Version="4.2.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
@@ -127,9 +128,6 @@
     <None Update="scripts\gameplay\ItemLibrary.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="scripts\gameplay\procgen\PCGDungeon.lua">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="scripts\gameplay\render\DebugDistancesRender.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -195,8 +193,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="procgen\roomgen\" />
     <Folder Include="resources\fonts\licensed\" />
     <Folder Include="resources\sprites\" />
+    <Folder Include="scripts\gameplay\procgen\" />
   </ItemGroup>
 
 </Project>

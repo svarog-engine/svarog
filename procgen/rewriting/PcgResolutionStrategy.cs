@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 using Universal.Common.Collections;
 
-namespace svarog.procgen
+namespace svarog.procgen.rewriting
 {
     public interface IPcgResolutionStrategy
     {

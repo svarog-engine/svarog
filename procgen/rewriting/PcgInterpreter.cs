@@ -1,11 +1,12 @@
-﻿using System.Diagnostics;
+﻿using Rubjerg.Graphviz;
+using System.Diagnostics;
 
 using Universal.Common;
 
-namespace svarog.procgen
+namespace svarog.procgen.rewriting
 {
     public class PcgInterpreter<TResolve>(PcgGraphStorage m_Storage) where TResolve : IPcgResolutionStrategy, new()
-    {        
+    {
         private void Incr(ref Dictionary<string, int> dict, string key)
         {
             if (!dict.ContainsKey(key))
@@ -229,12 +230,55 @@ namespace svarog.procgen
                 Process.Start(psi);
             }
 
-            Dot(m_Storage.ToDot());
+            var dot = m_Storage.ToDot();
+            Dot(dot);
+
+            RootGraph root = RootGraph.FromDotString("digraph G {\n\n" + dot + "\n\n}");
+            RootGraph layout = root.CreateLayout("patchwork", CoordinateSystem.BottomLeft);
+            
+            foreach (var n in layout.Nodes())
+            {
+                var p = n.GetPosition();
+                m_Storage.Positions[uint.Parse(n.GetName())] = new SFML.System.Vector2f((float)p.X, (float)p.Y);
+            }
         }
 
         public void Clear()
         {
             m_Storage.Clear();
+        }
+
+        public PcgGraphStorage Storage() => m_Storage;
+
+        /*
+            local pos = {}
+            local list = PCG:Storage().m_Nodes
+            local it = list:GetEnumerator()
+            while it:MoveNext() do
+	            pos[it.Current] = PCG:Storage():GetPosition(it.Current)
+            end
+
+            for id, p in pairs(pos) do
+	            print(id, p)
+
+	            local neighbors = PCG:Storage():ListArrowsFrom(id)
+	            local itt = neighbors:GetEnumerator()
+	            while itt:MoveNext() do
+		            print(" ", itt.Current, pos[itt.Current])
+	            end
+            end
+         */
+        public void Test()
+        {
+            foreach (var node in m_Storage.Nodes)
+            {
+                Console.WriteLine(node + " " + m_Storage.GetPosition(node));
+                foreach (var arr in m_Storage.GetArrowsFrom(node))
+                {
+                    var neighbor = m_Storage.GetTarget(arr);
+                    Console.WriteLine($"\t{neighbor} {m_Storage.GetPosition(neighbor)}");
+                }
+            }
         }
     }
 }

@@ -1,9 +1,8 @@
 ﻿using System.Reflection;
-
 using Universal.Common;
 using Universal.Common.Collections;
 
-namespace svarog.procgen
+namespace svarog.procgen.rewriting
 {
     public record struct PcgBinding(string Name, uint StoredId);
     public record struct PcgSolution(PcgBinding[] Bindings);
@@ -34,7 +33,7 @@ namespace svarog.procgen
 
             foreach (var constraint in constraints.Where(c => c is PcgConstraint_NodeExists))
             {
-                var nc = ((PcgConstraint_NodeExists)constraint);
+                var nc = (PcgConstraint_NodeExists)constraint;
                 if (!nodeCandidates.ContainsKey(nc.Name))
                 {
                     nodeCandidates.Add(nc.Name, []);
@@ -42,7 +41,7 @@ namespace svarog.procgen
 
                 foreach (var i in storage.Nodes)
                 {
-                    if ((nc.Annotation != null && storage.HasAnnotation(i, nc.Annotation)) || nc.Annotation == null)
+                    if (nc.Annotation != null && storage.HasAnnotation(i, nc.Annotation) || nc.Annotation == null)
                     {
                         nodeCandidates[nc.Name].Add(i);
                     }
@@ -53,21 +52,21 @@ namespace svarog.procgen
 
             foreach (var constraint in constraints.Where(c => c is PcgConstraint_NodeHasInDegreeAtLeast))
             {
-                var ci = ((PcgConstraint_NodeHasInDegreeAtLeast)constraint);
+                var ci = (PcgConstraint_NodeHasInDegreeAtLeast)constraint;
                 nodeCandidates[ci.Name].RemoveWhere(id => storage.GetInDegree(id) < ci.Degree);
                 if (nodeCandidates[ci.Name].Count == 0) return [];
             }
 
             foreach (var constraint in constraints.Where(c => c is PcgConstraint_NodeHasOutDegreeAtLeast))
             {
-                var ci = ((PcgConstraint_NodeHasOutDegreeAtLeast)constraint);
+                var ci = (PcgConstraint_NodeHasOutDegreeAtLeast)constraint;
                 nodeCandidates[ci.Name].RemoveWhere(id => storage.GetOutDegree(id) < ci.Degree);
                 if (nodeCandidates[ci.Name].Count == 0) return [];
             }
 
             foreach (var constraint in constraints.Where(c => c is PcgConstraint_ConnectionExists))
             {
-                var ce = ((PcgConstraint_ConnectionExists)constraint);
+                var ce = (PcgConstraint_ConnectionExists)constraint;
                 if (ce.Name != null)
                 {
                     if (storage.CountArrowsCalled(ce.Name) == 0) return [];
@@ -84,7 +83,7 @@ namespace svarog.procgen
                     var allPossibleTargets = nodeCandidates[ce.Src]
                         .SelectMany(src => storage.GetArrowsFrom(src)
                             .Select(arr => storage.GetTarget(arr))).Distinct();
-                    
+
                     if (allPossibleTargets.Intersect(nodeCandidates[ce.Tgt]).Count() == 0)
                     {
                         return [];
@@ -175,7 +174,7 @@ namespace svarog.procgen
                         if (noArrowsBetween.TryGetValue((srcName, tgtName), out var set))
                         {
                             var name = storage.GetArrowName(cand);
-                            if (set.Count == 0 || (name != null && set.Contains(name)))
+                            if (set.Count == 0 || name != null && set.Contains(name))
                             {
                                 continue;
                             }
@@ -255,8 +254,8 @@ namespace svarog.procgen
 
         public void RecurseSolve(
             ref List<PcgSolution> solutions,
-            ref PcgGraphStorage storage, 
-            ref Dictionary<string, List<uint>> nodeCandidates, 
+            ref PcgGraphStorage storage,
+            ref Dictionary<string, List<uint>> nodeCandidates,
             List<string> missing,
             ref HashSet<uint> usedNodes,
             ref Dictionary<string, uint> tempBindings,

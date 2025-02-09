@@ -8,12 +8,12 @@ using Serilog.Core;
 using SFML.System;
 using svarog.input;
 using svarog.presentation;
-using svarog.procgen;
 using svarog.utility;
 
 using System.Diagnostics;
 using System;
 using System.Web;
+using svarog.procgen.rewriting;
 
 namespace svarog.runner
 {

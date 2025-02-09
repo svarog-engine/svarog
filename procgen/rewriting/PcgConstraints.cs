@@ -1,7 +1,7 @@
-﻿namespace svarog.procgen
+﻿namespace svarog.procgen.rewriting
 {
     public interface IPcgConstraint
-    {}
+    { }
 
     public record struct PcgConstraint_NodeExists(string Name, string? Annotation) : IPcgConstraint;
     public record struct PcgConstraint_ConnectionExists(string Src, string Tgt, int Index, string? Name) : IPcgConstraint;

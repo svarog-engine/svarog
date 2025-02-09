@@ -28,7 +28,7 @@ a[Gen] --> b[Gen]
 		;
 
 (hard)
-a --> b, l[lock'] --> b
+a[ENTRY] --> b, l[lock'] --> b
 		: l[lock'] --> b --> _1[Secret]
 		;
 
@@ -45,7 +45,6 @@ a[Gen]
 a[Secret]
 		: a[treasure]
 		| a[vault]
-		| a[gaol]
 		;
 
 (cleanup)
@@ -53,8 +52,8 @@ a --> a
 		: a;
 
 (exit)
-a[ENTRY] --> b
-		: a --> b --> _1[boss] --> _2[EXIT]
+a --> b
+		: a --> b --> _0[lock'] --> _1[boss] --> _2[EXIT], a --> _3[minor] --> _4[Secret] --> _5[key']
 		;
 
 (intro)
@@ -62,7 +61,22 @@ a --> b[ENTRY]
 		: b --> a
 		;
 
-(intronope)
+(intronopelock)
 a[ENTRY] --> b, c[lock'] --> b
 		: c --> b
+		;
+
+(badlock)
+o --> a --> b --> c, o --> d[lock'] --> c
+		: o --> a --> b, o --> d --> c
+		;
+
+(tempconn)
+a[Gen] -!-> b[Gen], b -!-> a
+		: a --> b
+		;
+
+(tempsecret)
+a[Secret] -!-> b[Gen], b -!-> a
+		: a --> b
 		;

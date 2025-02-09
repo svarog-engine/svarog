@@ -1,9 +1,15 @@
-﻿using System.Xml.Linq;
+﻿using NLua;
+
+using SFML.System;
+
+using svarog.runner;
+
+using System.Xml.Linq;
 
 using Universal.Common;
 using Universal.Common.Collections;
 
-namespace svarog.procgen
+namespace svarog.procgen.rewriting
 {
     public class PcgGraphStorage
     {
@@ -16,7 +22,7 @@ namespace svarog.procgen
         public static void ResetCycleLock() { m_LastIncreased = m_Cycle + 1; }
         public static void IncrCycle() { if (m_Cycle < m_LastIncreased) m_Cycle++; }
 
-        HashSet<uint> m_Nodes = new();
+        public HashSet<uint> m_Nodes = new();
         MultiDictionary<uint, string> m_Annotated = new();
         HashSet<ulong> m_Connected = new();
         MultiDictionary<uint, uint> m_ArrowSources = new();
@@ -28,18 +34,25 @@ namespace svarog.procgen
         Dictionary<string, PcgTransform> m_Procedures = new();
         Dictionary<uint, int> m_Generations = new();
 
+        public Dictionary<uint, Vector2f> Positions { get; private set; } = new();
+
+        public Vector2f GetPosition(uint n)
+        {
+            return Positions[n];
+        }
+
         public HashSet<uint> Nodes => m_Nodes;
 
-        public static ulong CombineNodeIds(uint a, uint b) => (ulong)a << 32 | (ulong)b;
+        public static ulong CombineNodeIds(uint a, uint b) => (ulong)a << 32 | b;
         public static (uint, uint) ExtractNodeIds(ulong ab) => ((uint)(ab >> 32), (uint)ab);
 
         public void Clear()
         {
-            PcgGraphStorage.ResetCycle();
+            ResetCycle();
             m_Nodes.Clear();
             m_Annotated.Clear();
             m_Connected.Clear();
-            m_ArrowSources.Clear(); 
+            m_ArrowSources.Clear();
             m_ArrowTargets.Clear();
             m_Arrows.Clear();
             m_ArrowEndpoints.Clear();
@@ -61,14 +74,15 @@ namespace svarog.procgen
                 {
                     IncrCycle();
                 }
-                
-                if (!m_Generations.ContainsKey(m_CurrentId)) m_Generations.Add(m_CurrentId, PcgGraphStorage.Cycle);
+
+                if (!m_Generations.ContainsKey(m_CurrentId)) m_Generations.Add(m_CurrentId, Cycle);
                 m_Annotated.Add(m_CurrentId, annotation);
             }
             return m_CurrentId;
         }
 
-        public string? GetArrowName(uint arrow) {
+        public string? GetArrowName(uint arrow)
+        {
             if (m_NamedConnections.ContainsKey(arrow))
             {
                 if (m_NamedConnections[arrow].Count == 0)
@@ -167,7 +181,7 @@ namespace svarog.procgen
             {
                 connections.Add(c);
             }
-            
+
             foreach (uint c in m_ArrowTargets[n])
             {
                 connections.Add(c);
@@ -246,6 +260,8 @@ namespace svarog.procgen
             }
         }
 
+        public List<uint> ListArrowsFrom(uint n) => GetArrowsFrom(n).ToList();
+
         public IEnumerable<uint> GetArrowsTo(uint n)
         {
             if (m_ArrowTargets.ContainsKey(n))
@@ -256,6 +272,18 @@ namespace svarog.procgen
                 }
             }
         }
+        
+        public List<uint> ListArrowsTo(uint n) => GetArrowsTo(n).ToList();
+
+        public IEnumerable<uint> GetNeighbors(uint n)
+        {
+            foreach (var arr in GetArrowsFrom(n))
+            {
+                yield return GetTarget(arr);
+            }
+        }
+
+        public List<uint> ListNeighbors(uint n) => GetNeighbors(n).ToList();
 
         public void ChangeArrowName(uint n, string newName)
         {
@@ -266,7 +294,7 @@ namespace svarog.procgen
 
             if (newName != null)
             {
-                m_Generations.Add(m_CurrentId, PcgGraphStorage.Cycle);
+                m_Generations.Add(m_CurrentId, Cycle);
                 m_NamedConnections.Add(n, newName);
             }
         }
@@ -315,7 +343,7 @@ namespace svarog.procgen
 
         public string ToDot()
         {
-            string Node(uint n) => $"v{n}";
+            string Node(uint n) => $"{n}";
 
             var s = "";
             foreach (var arr in m_Arrows)
