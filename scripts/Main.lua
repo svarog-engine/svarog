@@ -21,6 +21,7 @@ LoadRenderSystem "FadeOutRender"
 LoadRenderSystem "PlayerLightRender"
 LoadRenderSystem "DebugDistancesRender"
 LoadRenderSystem "TopLevelRender"
+LoadRenderSystem "TargetRender"
 LoadRenderSystem "LogRender"
 LoadRenderSystem "InventoryRender"
 
