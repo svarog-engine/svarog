@@ -106,7 +106,7 @@ Engine.RegisterInputSystem({Action_Inventory_Exit}, function()
 end)
 
 Engine.RegisterInputSystem({Action_Inventory_SelectNext}, function()
-	local widget =UI[InventoryWidget]
+	local widget = UI[InventoryWidget]
 	local newSeleced = widget.selected + 1
 
 	if newSeleced <= #widget.source.items then
@@ -115,7 +115,7 @@ Engine.RegisterInputSystem({Action_Inventory_SelectNext}, function()
 end)
 
 Engine.RegisterInputSystem({Action_Inventory_SelectPrevious}, function()
-	local widget =UI[InventoryWidget]
+	local widget = UI[InventoryWidget]
 	local newSeleced = widget.selected - 1
 
 	if newSeleced > 0 then
@@ -131,7 +131,7 @@ Engine.RegisterInputSystem({Action_Inventory_Drop}, function()
 
 	Inventory.Remove(PlayerEntity, selection)
 
-	local widget =UI[InventoryWidget]
+	local widget = UI[InventoryWidget]
 	widget.selected = 0
 
 	local dropPosition = PlayerEntity[Position]
@@ -155,7 +155,7 @@ Engine.RegisterInputSystem({Action_Inventory_Throw}, function()
 			local selection  = data.item
 			Inventory.Remove(PlayerEntity, selection)
 
-			local widget =UI[InventoryWidget]
+			local widget = UI[InventoryWidget]
 			widget.selected = 0
 
 			local target = UI[TargetOverlay]

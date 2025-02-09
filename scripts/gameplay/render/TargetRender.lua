@@ -68,7 +68,6 @@ local function PlotLineLow(startX, startY, endX, endY, color)
 	end
 end
 
-
 local function PlotLine(startX, startY, endX, endY, color)
 	if math.abs(endY - startY) < math.abs(endX - startX) then
 		if startX > endX then
@@ -88,7 +87,7 @@ end
 function TargetRenderSystem:Render()
 	if TargetOverlayActive then
 		local widget = UI[TargetOverlay]
-		PlotLine(SourceX, SourceY, widget.x, widget.y, widget.trailColor)
+		PlotLine(widget.startX, widget.startY, widget.x, widget.y, widget.trailColor)
 		Engine.Glyph(widget.x, widget.y, nil, { bg = widget.targetColor })
 	end
 end
@@ -102,8 +101,8 @@ function TargetRenderSystem:Activate(onTargetSelectedCallback, startX, startY)
 	TargetOverlayActive = true
 	OnTargetSelected = onTargetSelectedCallback
 	local widget = UI[TargetOverlay]
-	SourceX = startX
-	SourceY = startY
+	widget.startX = startX
+	widget.startY = startY
 	widget.x = startX
 	widget.y = startY
 end

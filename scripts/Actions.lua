@@ -20,11 +20,11 @@ Actions.Default = {
 }
 
 Actions.Inventory = {
-	Exit = { Input.Press("Key: Escape") },
-	SelectNext = {Input.Press("Key: Down") },
-	SelectPrevious = {Input.Press("Key: Up") },
-	Drop = { Input.Press("Key: D") },
-	Throw = { Input.Press("Key: T") },
+	Exit			= { Input.Press("Key: Escape") },
+	SelectNext		= {Input.Press("Key: Down") },
+	SelectPrevious  = {Input.Press("Key: Up") },
+	Drop			= { Input.Press("Key: D") },
+	Throw			= { Input.Press("Key: T") },
 }
 
 Actions.TargetOverlay = {
