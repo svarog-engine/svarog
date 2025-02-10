@@ -137,6 +137,9 @@
     <None Update="scripts\gameplay\render\PlayerLightRender.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="scripts\gameplay\render\TargetRender.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="scripts\presentation\Glossary.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

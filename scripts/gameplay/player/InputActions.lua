@@ -106,7 +106,7 @@ Engine.RegisterInputSystem({Action_Inventory_Exit}, function()
 end)
 
 Engine.RegisterInputSystem({Action_Inventory_SelectNext}, function()
-	local widget =UI[InventoryWidget]
+	local widget = UI[InventoryWidget]
 	local newSeleced = widget.selected + 1
 
 	if newSeleced <= #widget.source.items then
@@ -115,7 +115,7 @@ Engine.RegisterInputSystem({Action_Inventory_SelectNext}, function()
 end)
 
 Engine.RegisterInputSystem({Action_Inventory_SelectPrevious}, function()
-	local widget =UI[InventoryWidget]
+	local widget = UI[InventoryWidget]
 	local newSeleced = widget.selected - 1
 
 	if newSeleced > 0 then
@@ -131,15 +131,71 @@ Engine.RegisterInputSystem({Action_Inventory_Drop}, function()
 
 	Inventory.Remove(PlayerEntity, selection)
 
-	local widget =UI[InventoryWidget]
+	local widget = UI[InventoryWidget]
 	widget.selected = 0
 
-	local coords = PlayerEntity[Position]
+	local dropPosition = PlayerEntity[Position]
+
+	local itemMeta = ItemLibrary[selection]
 
 	World:Entity(
 	Item{id = selection},
-	Position{x = coords.x, y = coords.y},
-	Glyph{name = "item"})
+	Position{x = dropPosition.x, y = dropPosition.y},
+	Glyph{name = itemMeta.glyph})
+end)
 
-	Diary.Write("Dropped " .. ItemLibrary[selection].name .. ".")
+Engine.RegisterInputSystem({Action_Inventory_Throw}, function()
+	local selection = InventoryWidget.GetSelected()
+	if selection == nil then
+		return
+	end
+
+	local callback = {
+		callback = function(x, y, data)
+			local selection  = data.item
+			Inventory.Remove(PlayerEntity, selection)
+
+			local widget = UI[InventoryWidget]
+			widget.selected = 0
+
+			local target = UI[TargetOverlay]
+
+			local itemMeta = ItemLibrary[selection]
+
+			World:Entity(
+			Item{id = selection},
+			Position{x = target.x, y = target.y},
+			Glyph{name = itemMeta.glyph})
+
+			Diary.Write("Dropped " .. ItemLibrary[selection].name .. ".")
+		end
+		,
+		data = { item = selection }
+	}
+
+	local playerPosition = PlayerEntity[Position]
+	TargetRenderSystem:Activate(callback, playerPosition.x, playerPosition.y)
+end)
+
+Engine.RegisterInputSystem(
+	{
+		Action_TargetOverlay_Left, 
+		Action_TargetOverlay_Right, 
+		Action_TargetOverlay_Up, 
+		Action_TargetOverlay_Down
+	}, function(input)
+		local dxl = input[Action_TargetOverlay_Left] and -1 or 0
+		local dxr = input[Action_TargetOverlay_Right] and 1 or 0
+		local dyl = input[Action_TargetOverlay_Up] and -1 or 0
+		local dyr = input[Action_TargetOverlay_Down] and 1 or 0
+
+		TargetRenderSystem:UpdatePosition(dxl + dxr, dyl + dyr)
+end)
+
+Engine.RegisterInputSystem({Action_TargetOverlay_Exit}, function()
+	TargetRenderSystem:Deactivate(true)
+end)
+
+Engine.RegisterInputSystem({Action_TargetOverlay_Confirm}, function()
+	TargetRenderSystem:Deactivate(false)
 end)
