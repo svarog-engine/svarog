@@ -1,4 +1,7 @@
 ﻿using Rubjerg.Graphviz;
+
+using svarog.runner;
+
 using System.Diagnostics;
 
 using Universal.Common;
@@ -187,6 +190,12 @@ namespace svarog.procgen.rewriting
         }
 
         public bool RunProc(string name)
+        {
+            PcgGraphStorage.ResetCycleLock();
+            return InternalRun(name);
+        }
+
+        public bool RunBadProc(string name)
         {
             PcgGraphStorage.ResetCycleLock();
             return InternalRun(name);

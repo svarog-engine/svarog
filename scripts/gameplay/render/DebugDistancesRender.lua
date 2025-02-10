@@ -3,12 +3,12 @@ local DebugDistancesRenderSystem = Engine.RegisterRenderSystem()
 
 function DebugDistancesRenderSystem:Render()
 	if DebugToggle_Distances then
-		if Dungeon.created then
-			local w, h = Dungeon.playerDistance:Size()
+		if Dungeons.created then
+			local w, h = Dungeons.playerDistance:Size()
 			for i = 1, w do
 				for j = 1, h do
-					if Dungeon.playerDistance:Has(i, j) then
-						local tile = Dungeon.playerDistance:Get(i, j)
+					if Dungeons.playerDistance:Has(i, j) then
+						local tile = Dungeons.playerDistance:Get(i, j)
 						local char = ""
 						local neg = tile < 0
 						local color = Colors.LightBrown

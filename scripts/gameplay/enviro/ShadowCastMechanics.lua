@@ -21,7 +21,7 @@ end
 
 function ShadowcastSystem:Update()
 	StartMeasure()
-	if Dungeon.created and DebugToggle_FOV then
+	if Dungeons.created and DebugToggle_FOV then
 		local radius = Config.FOVRadius
 		local playerPosition = PlayerEntity[Position]
 		Dungeon.visibility:Reset(0)

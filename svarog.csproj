@@ -193,10 +193,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="procgen\roomgen\" />
     <Folder Include="resources\fonts\licensed\" />
     <Folder Include="resources\sprites\" />
-    <Folder Include="scripts\gameplay\procgen\" />
   </ItemGroup>
 
 </Project>

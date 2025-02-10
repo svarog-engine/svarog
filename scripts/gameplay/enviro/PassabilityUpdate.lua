@@ -3,7 +3,7 @@ local PassabilityUpdateSystem = Engine.RegisterEnviroSystem()
 
 function PassabilityUpdateSystem:Update()
 	StartMeasure()
-	if Dungeon.created and PlayerEntity ~= nil then
+	if Dungeons.created and PlayerEntity ~= nil then
 		local w, h = Dungeon.floor:Size()
 		for x = 1, w do 
 			for y = 1, h do

@@ -55,13 +55,13 @@ local function MakeDoor(x, y, closed, locked, key)
 end
 
 local function MakeSingleDungeon(name)
-	Dungeon = Dungeon.maps[name]
-
-	Dungeon.playerDistance = DistanceMap:From(Dungeon.floor, { { Config.Width / 2, Config.Height / 2 } }, 0)
-	Dungeon.playerDistance:AddCondition(DistanceMap.IS_FLOOR)
-	Dungeon.playerDistance:AddCondition(DistanceMap.IS_OPEN_DOOR)
-	Dungeon.playerDistance:Flood()
-	Dungeon.created = true
+	Dungeon = Dungeons.maps[name]
+	print("DUNGEON: ", Dungeon.floor:Has(math.floor(Config.Width / 2), math.floor(Config.Height / 2)))
+	Dungeons.playerDistance = DistanceMap:From(Dungeon.floor, { { math.floor(Config.Width / 2), math.floor(Config.Height / 2) } }, 0)
+	Dungeons.playerDistance:AddCondition(DistanceMap.IS_FLOOR)
+	Dungeons.playerDistance:AddCondition(DistanceMap.IS_OPEN_DOOR)
+	Dungeons.playerDistance:Flood()
+	Dungeons.created = true
 end
 
 local function MakeDungeon()
@@ -84,11 +84,13 @@ local function MakeDungeon()
 	PCG:RunProc("secrets", 1)
 	PCG:RunProc("intro", 5)
 	PCG:RunProc("intronopelock", 5)
-	PCG:RunProc("badlock", 5)
+	PCG:RunProc("badlock", 5)	
 	PCG:EmitDot()
 
 	local store = PCG:Storage()
-	Dungeon.maps = {}
+
+	Dungeons = {}
+	Dungeons.maps = {}
 
 	local entry = nil
 
@@ -99,24 +101,24 @@ local function MakeDungeon()
 		end
 
 		local w, h = Config.Width, Config.Height
-		Dungeon.maps[n] = {}
-		Dungeon.maps[n].name = store:GetAnnotation(n)
-		Dungeon.maps[n].entities = {}
-		Dungeon.maps[n].passable = Map:New(Config.Width, Config.Height)
-		Dungeon.maps[n].floor = Map:New(Config.Width, Config.Height, nil)
+		Dungeons.maps[n] = {}
+		Dungeons.maps[n].name = store:GetAnnotation(n)
+		Dungeons.maps[n].entities = {}
+		Dungeons.maps[n].passable = Map:New(Config.Width, Config.Height)
+		Dungeons.maps[n].floor = Map:New(Config.Width, Config.Height, nil)
 
-		Dungeon.maps[n].visibility = Map:New(Config.Width, Config.Height, 0)
+		Dungeons.maps[n].visibility = Map:New(Config.Width, Config.Height, 0)
 		if DebugToggle_FOV then 
-			Dungeon.maps[n].visited = Map:New(Config.Width, Config.Height, 0)
+			Dungeons.maps[n].visited = Map:New(Config.Width, Config.Height, 0)
 		else
-			Dungeon.maps[n].visited = Map:New(Config.Width, Config.Height, 1)
+			Dungeons.maps[n].visited = Map:New(Config.Width, Config.Height, 1)
 		end
 
 		for i = math.floor(w / 4), math.floor(3 * w / 4) do
 			for j = math.floor(h / 4), math.floor(3 * h / 4) do
-				if Dungeon.maps[n].floor:Has(i, j) then
-					Dungeon.maps[n].floor:Set(i, j, { type = Floor })
-				end
+				Dungeons.maps[n].floor:Set(i, j, { type = Floor })
+				Dungeons.maps[n].passable:Set(i, j, true)
+				Dungeons.maps[n].visibility:Set(i, j, 1)
 			end
 		end
 

@@ -192,7 +192,7 @@ namespace svarog.procgen.rewriting
                             }
                             else
                             {
-                                tempBindings.Add(srcName, src);
+                                tempBindings[srcName] = src;
                                 usedNodes.Add(src);
                             }
                         }
@@ -209,7 +209,7 @@ namespace svarog.procgen.rewriting
                             }
                             else
                             {
-                                tempBindings.Add(tgtName, tgt);
+                                tempBindings[tgtName] = tgt;
                                 usedNodes.Add(tgt);
                             }
                         }
