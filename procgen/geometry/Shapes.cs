@@ -42,11 +42,11 @@ namespace svarog.procgen.geometry
 
             var dx = a.B.X - a.A.X;
             var dy = a.B.Y - a.B.X;
-            float dr = (float)Math.Sqrt(dx * dx + dy * dy);
+            float dr = MathF.Sqrt(dx * dx + dy * dy);
             var d = a.A.X * a.B.Y - a.B.X * a.A.Y;
             var dis = b.Radius * b.Radius * dr * dr - d * d;
 
-            var sdis = (float)Math.Sqrt(dis);
+            var sdis = MathF.Sqrt(dis);
             var x1 = d * dy - sgn(dy) * dx * sdis;
             var x2 = d * dy + sgn(dy) * dx * sdis;
             var y1 = -d * dx - Math.Abs(dy) * sdis;
@@ -58,9 +58,9 @@ namespace svarog.procgen.geometry
 
         public static IShape LineAndRectangle(Line a, Rectangle r)
         {
-            var tl = new Vector2f((float)Math.Min(r.A.X, r.B.X), (float)Math.Min(r.A.Y, r.B.Y));
-            var br = new Vector2f((float)Math.Max(r.A.X, r.B.X), (float)Math.Max(r.A.Y, r.B.Y));
-            var wh = new Vector2f((float)Math.Abs(r.A.X - r.B.X), (float)Math.Abs(r.A.Y - r.B.Y));
+            var tl = new Vector2f(MathF.Min(r.A.X, r.B.X), MathF.Min(r.A.Y, r.B.Y));
+            var br = new Vector2f(MathF.Max(r.A.X, r.B.X), MathF.Max(r.A.Y, r.B.Y));
+            var wh = new Vector2f(MathF.Abs(r.A.X - r.B.X), MathF.Abs(r.A.Y - r.B.Y));
             var l1 = new Line(tl, tl + new Vector2f(wh.X, 0));
             var l2 = new Line(tl, tl + new Vector2f(0, wh.Y));
             var l3 = new Line(br, br - new Vector2f(wh.X, 0));
@@ -85,43 +85,74 @@ namespace svarog.procgen.geometry
             }
         }
 
-        public static IShape LineAndSurface(Line a, Surface b)
-        {
-            return null;
-        }
-
         public static IShape CircleAndCircle(Circle a, Circle b)
         {
-            throw new NotImplementedException();
+            void IntersectionTwoCircles(float c1x, float c1y, float r1, float c2x, float c2y, float r2,
+                out int count, out List<Vector2f> solutions)
+            {
+                solutions = new List<Vector2f>();
+                float dx = c1x - c2x;
+                float dy = c1y - c2y;
+                float d = MathF.Sqrt(dx * dx + dy * dy);
+                if (Math.Abs(r1 - r2) <= d && d <= r1 + r2)
+                {
+                    count = 0;
+                    return;
+                }
+
+                float gamma1 = MathF.Acos((r2 * r2 + d * d - r1 * r1) / (2 * r2 * d));
+                float d1 = r1 * MathF.Cos(gamma1);
+                float h = r1 * MathF.Sin(gamma1);
+                float px = c1x + (c2x - c1x) / d * d1;
+                float py = c1y + (c2y - c1y) / d * d1;
+
+                var p1 = new Vector2f(px + (-dy) / d * h, py + (+dx) / d * h);
+                var p2 = new Vector2f(px - (-dy) / d * h, py - (+dx) / d * h);
+                if (p1 == p2)
+                {
+                    count = 1;
+                    solutions.Add(p1);
+                }
+                else
+                {
+                    count = 2;
+                    solutions.Add(p1);
+                    solutions.Add(p2);
+                }
+            }
+
+            IntersectionTwoCircles(a.Center.X, a.Center.Y, a.Radius, b.Center.X, b.Center.Y, b.Radius, out int count, out var solutions);
+            HashSet<Vector2f> points = [];
+            foreach (var s in solutions)
+            {
+                points.Add(s);
+            }
+            return new PointSet(points);
         }
 
-        public static IShape RectangleAndRectangle(Rectangle a, Rectangle b)
+        public static IShape RectangleAndRectangle(Rectangle ra, Rectangle rb)
         {
-            throw new NotImplementedException();
+            static bool Intersect(Rectangle a, Rectangle b)
+            {
+                return (a.MinX <= b.MaxX && a.MaxX >= b.MinX) &&
+                       (a.MinY <= b.MaxY && a.MaxY >= b.MinY);
+            }
+
+            if (Intersect(ra, rb))
+            {
+                return new Rectangle(
+                    new Vector2f(MathF.Max(ra.MinX, rb.MinX), MathF.Max(ra.MinY, rb.MinY)),
+                    new Vector2f(MathF.Min(ra.MaxX, rb.MaxX), MathF.Min(ra.MaxY, rb.MaxY)));
+            }
+            else
+            {
+                return new PointSet([]);
+            }
         }
 
         public static IShape RectangleAndCircle(Rectangle a, Circle b)
         {
-            throw new NotImplementedException();
-        }
-
-        public static IShape CircleAndRectangle(Circle a, Rectangle b)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static IShape RectangeAndSurface(Rectangle a, Surface b)
-        {
-            throw new NotImplementedException();
-        }
-        public static IShape SurfaceAndSurface(Surface a, Surface b)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static IShape CircleAndSurface(Circle a, Surface b)
-        {
-            throw new NotImplementedException();
+            return new PointSet(a.Discretize().Intersect(b.Discretize()).ToHashSet());
         }
     }
 
@@ -138,6 +169,7 @@ namespace svarog.procgen.geometry
                 (all, h) => { all.UnionWith(h); return all; });
         }
     }
+
     public record struct PointSet(HashSet<Vector2f> Points) : IShape
     {
         public readonly IShape Intersect(IShape other)
@@ -165,17 +197,51 @@ namespace svarog.procgen.geometry
             if (other is Line line) return ShapeIntersections.LineAndLine(this, line);
             else if (other is Circle circle) return ShapeIntersections.LineAndCircle(this, circle);
             else if (other is Rectangle rect) return ShapeIntersections.LineAndRectangle(this, rect);
-            else if (other is Surface surface) return ShapeIntersections.LineAndSurface(this, surface);
             else if (other is PointSet points) return new PointSet(this.Discretize().Intersect(points.Points).ToHashSet());
             else if (other is And conj) return conj.Intersect(this);
 
             return new PointSet([]);
         }
 
-        public HashSet<Vector2f> Discretize()
+        internal static HashSet<Vector2f> Bresenham(int x, int y, int x2, int y2)
         {
-            return [];
+            HashSet<Vector2f> points = [];
+            int w = x2 - x;
+            int h = y2 - y;
+            int dx1 = 0, dy1 = 0, dx2 = 0, dy2 = 0;
+            if (w < 0) dx1 = -1; else if (w > 0) dx1 = 1;
+            if (h < 0) dy1 = -1; else if (h > 0) dy1 = 1;
+            if (w < 0) dx2 = -1; else if (w > 0) dx2 = 1;
+            int longest = Math.Abs(w);
+            int shortest = Math.Abs(h);
+            if (!(longest > shortest))
+            {
+                longest = Math.Abs(h);
+                shortest = Math.Abs(w);
+                if (h < 0) dy2 = -1; else if (h > 0) dy2 = 1;
+                dx2 = 0;
+            }
+            int numerator = longest >> 1;
+            for (int i = 0; i <= longest; i++)
+            {
+                points.Add(new Vector2f(x, y));
+                numerator += shortest;
+                if (!(numerator < longest))
+                {
+                    numerator -= longest;
+                    x += dx1;
+                    y += dy1;
+                }
+                else
+                {
+                    x += dx2;
+                    y += dy2;
+                }
+            }
+
+            return points;
         }
+        public readonly HashSet<Vector2f> Discretize() => Bresenham((int)A.X, (int)A.Y, (int)B.X, (int)B.Y);
     }
 
     public record struct Circle(Vector2f Center, float Radius) : IShape
@@ -184,56 +250,171 @@ namespace svarog.procgen.geometry
         {
             if (other is Line line) return ShapeIntersections.LineAndCircle(line, this);
             else if (other is Circle circle) return ShapeIntersections.CircleAndCircle(this, circle);
-            else if (other is Rectangle rect) return ShapeIntersections.CircleAndRectangle(this, rect);
-            else if (other is Surface surface) return ShapeIntersections.CircleAndSurface(this, surface);
+            else if (other is Rectangle rect) return ShapeIntersections.RectangleAndCircle(rect, this);
             else if (other is PointSet points) return new PointSet(this.Discretize().Intersect(points.Points).ToHashSet());
             else if (other is And conj) return conj.Intersect(this);
 
             return new PointSet([]);
         }
 
+        internal static HashSet<Vector2f> CircleQuadLine(int xc, int yc, int x, int y)
+        {
+            return [
+                new Vector2f(xc + x, yc + y),
+                new Vector2f(xc - x, yc + y),
+                new Vector2f(xc + x, yc - y),
+                new Vector2f(xc - x, yc - y),
+                new Vector2f(xc + y, yc + x),
+                new Vector2f(xc - y, yc + x),
+                new Vector2f(xc + y, yc - x),
+                new Vector2f(xc - y, yc - x)
+            ];
+        }
+
+        internal static HashSet<Vector2f> CircleQuadFill(int xc, int yc, int x, int y)
+        {
+            HashSet<Vector2f> points = [];
+            for (int i = xc - x; i < xc + x; i++)
+            {
+                points.Add(new Vector2f(i, yc + y));
+                points.Add(new Vector2f(i, yc - y));
+            }
+            for (int j = xc - y; j < xc + y; j++)
+            {
+                points.Add(new Vector2f(xc + x, j));
+                points.Add(new Vector2f(xc - x, j));
+            }
+            return points;
+        }
+
+        static HashSet<Vector2f> CircleLine(int xc, int yc, int r)
+        {
+            int x = 0, y = r;
+            int d = 3 - 2 * r;
+            HashSet<Vector2f> points = [];
+            points.UnionWith(CircleQuadLine(xc, yc, x, y));
+            while (y >= x)
+            {
+                if (d > 0)
+                {
+                    y--;
+                    d = d + 4 * (x - y) + 10;
+                }
+                else
+                {
+                    d = d + 4 * x + 6;
+                }
+
+                x++;
+                points.UnionWith(CircleQuadLine(xc, yc, x, y));
+            }
+
+            return points;
+        }
+
+        internal static HashSet<Vector2f> CircleFill(int xc, int yc, int r)
+        {
+            int x = 0, y = r;
+            int d = 3 - 2 * r;
+            HashSet<Vector2f> points = [];
+            points.UnionWith(CircleQuadFill(xc, yc, x, y));
+            while (y >= x)
+            {
+                if (d > 0)
+                {
+                    y--;
+                    d = d + 4 * (x - y) + 10;
+                }
+                else
+                {
+                    d = d + 4 * x + 6;
+                }
+
+                x++;
+                points.UnionWith(CircleQuadFill(xc, yc, x, y));
+            }
+
+            return points;
+        }
+
         public HashSet<Vector2f> Discretize()
         {
-            return [];
+            return CircleLine((int)Center.X, (int)Center.Y, (int)Radius);
         }
     }
 
     public record struct Rectangle(Vector2f A, Vector2f B) : IShape
     {
+        public float MinX => MathF.Min(A.X, B.X);
+        public float MaxX => MathF.Max(A.X, B.X);
+        public float MinY => MathF.Min(A.Y, B.Y);
+        public float MaxY => MathF.Max(A.Y, B.Y);
+
         public IShape Intersect(IShape other)
         {
             if (other is Line line) return ShapeIntersections.LineAndRectangle(line, this);
             else if (other is Circle circle) return ShapeIntersections.RectangleAndCircle(this, circle);
             else if (other is Rectangle rect) return ShapeIntersections.RectangleAndRectangle(this, rect);
-            else if (other is Surface surface) return ShapeIntersections.RectangeAndSurface(this, surface);
             else if (other is PointSet points) return new PointSet(this.Discretize().Intersect(points.Points).ToHashSet());
             else if (other is And conj) return conj.Intersect(this);
 
             return new PointSet([]);
         }
+
         public HashSet<Vector2f> Discretize()
         {
-            return [];
+            var tl = new Vector2f(MathF.Min(A.X, B.X), MathF.Min(A.Y, B.Y));
+            var br = new Vector2f(MathF.Max(A.X, B.X), MathF.Max(A.Y, B.Y));
+            var wh = new Vector2f(MathF.Abs(A.X - B.X), MathF.Abs(A.Y - B.Y));
+            var l1 = new Line(tl, tl + new Vector2f(wh.X, 0));
+            var l2 = new Line(tl, tl + new Vector2f(0, wh.Y));
+            var l3 = new Line(br, br - new Vector2f(wh.X, 0));
+            var l4 = new Line(br, br - new Vector2f(0, wh.Y));
+            var points = new HashSet<Vector2f>();
+            points.UnionWith(l1.Discretize());
+            points.UnionWith(l2.Discretize());
+            points.UnionWith(l3.Discretize());
+            points.UnionWith(l4.Discretize());
+            return points;
         }
     }
 
-    public record struct Surface(IShape Bound) : IShape
+    public static class Geometry
     {
-        public IShape Intersect(IShape other)
+        public static PointSet Surface(IShape shape)
         {
-            if (other is Line line) return ShapeIntersections.LineAndSurface(line, this);
-            else if (other is Circle circle) return ShapeIntersections.CircleAndSurface(circle, this);
-            else if (other is Rectangle rect) return ShapeIntersections.RectangeAndSurface(rect, this);
-            else if (other is Surface surface) return ShapeIntersections.SurfaceAndSurface(this, surface);
-            else if (other is PointSet points) return new PointSet(this.Discretize().Intersect(points.Points).ToHashSet());
-            else if (other is And conj) return conj.Intersect(this);
-
-            return new PointSet([]);
+            var p = new PointSet([]);
+            if (shape is And and)
+            {
+                foreach (var item in and.Shapes)
+                {
+                    p.Points.UnionWith(Surface(item).Points);
+                }
+            }
+            else if (shape is Line line)
+            {
+                p.Points.UnionWith(line.Discretize());
+            }
+            else if (shape is Circle circle)
+            {
+                p.Points.UnionWith(Circle.CircleFill((int)circle.Center.X, (int)circle.Center.Y, (int)circle.Radius));
+            }
+            else if (shape is Rectangle rect)
+            {
+                for (int i = (int)rect.MinX; i <= (int)rect.MaxX; i++)
+                {
+                    for (int j = (int)rect.MinY; i <= (int)rect.MaxY; j++)
+                    {
+                        p.Points.Add(new Vector2f(i, j));
+                    }
+                }
+            }
+            return p;
         }
-        public HashSet<Vector2f> Discretize()
+    
+        public static And Union(params IShape[] shapes)
         {
-            return [];
+            return new And(shapes);
         }
     }
-
 }
