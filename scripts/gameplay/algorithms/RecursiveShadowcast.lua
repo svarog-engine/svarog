@@ -43,8 +43,12 @@ local tau         = 2*math.pi
 local octant_angle= math.pi / 4
 local epsilon     = 1e-5
 
+local function Distance(x1, y1, x2, y2)
+	local dx, dy = x1 - x2, y1 - y2
+	return math.sqrt(dx * dx + dy * dy)
+end
 
- Algorithms.RecursiveShadowcast = function(x0,y0,radius,isTransparent,onVisible,start_angle,last_angle)
+Algorithms.RecursiveShadowcast = function(x0,y0,radius,isTransparent,onVisible,start_angle,last_angle)
 	-- **NOTE** Assumed orientation in notes is x+ right, y+ up
 	
 	--[[
@@ -150,7 +154,9 @@ local epsilon     = 1e-5
 					
 					-- The tile is visible if it is within the cone field of view
 					if arc_angle >= tau or arc_angle >= (math.atan2(ty,tx)-start_angle) % tau then
-						onVisible( x0+tx,y0+ty )
+						if (Distance(x0, y0, x0+tx, y0+ty) <= radius) then
+							onVisible( x0+tx,y0+ty )
+						end
 					end
 					-- Found a blocking cell
 					if not isTransparent( x0+tx,y0+ty ) then

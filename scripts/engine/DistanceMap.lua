@@ -113,6 +113,8 @@ function DistanceMap:Flood()
 		toVisit:PushRight(self.origin:ID(xy[1], xy[2]))
 		self.tiles:Set(xy[1], xy[2], self.low)
 		if DebugToggle_PrintDistances then
+			xy[1] = math.floor(xy[1])
+			xy[2] = math.floor(xy[2])
 			print("Setting goal to 0 at " .. xy[1] .. ", " .. xy[2])
 		end
 	end	
@@ -122,12 +124,13 @@ function DistanceMap:Flood()
 		if not visited[next] then
 			visited[next] = true
 			local x, y = self.origin:XY(next)
-
+			x = math.floor(x)
+			y = math.floor(y)
 			if DebugToggle_PrintDistances then
 				print(" === VALUE ASSIGN ===")
 				print("Unqueued: " .. x .. ", " .. y)
 			end
-			if self.tiles:Get(x, y) == MAX then
+			if self.tiles:Has(x, y) and self.tiles:Get(x, y) == MAX then
 				local min = MAX
 				for _, n in ipairs(self.neighbors) do
 					local neighbor = self.tiles:Get(x + n[1], y + n[2]) or MAX

@@ -2,7 +2,7 @@
 
 function PickUpMechanicsSystem:Update()
 	StartMeasure()
-	if Dungeon.created then
+	if Dungeons.created then
 		for _, entity in World:Exec(ECS.Query.All(Item, Bumped, Position)):Iterator() do
 			local item = entity[Item]
 			local pos = entity[Position]

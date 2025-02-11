@@ -3,7 +3,7 @@ local PassabilityUpdateSystem = Engine.RegisterEnviroSystem()
 
 function PassabilityUpdateSystem:Update()
 	StartMeasure()
-	if Dungeon.created and PlayerEntity ~= nil then
+	if Dungeons.created and PlayerEntity ~= nil then
 		local w, h = Dungeon.floor:Size()
 		for x = 1, w do 
 			for y = 1, h do
@@ -12,7 +12,11 @@ function PassabilityUpdateSystem:Update()
 					if tile.type == Floor then
 						Dungeon.passable:Set(x, y, true)
 					elseif tile.type == Door then
-						Dungeon.passable:Set(x, y, not tile.entity[Door].closed)
+						if tile.entity[Door].hidden then
+							Dungeon.passable:Set(x, y, false)
+						else
+							Dungeon.passable:Set(x, y, not tile.entity[Door].closed and tile.entity[Door].travelTo == nil)
+						end
 					end
 				end
 			end

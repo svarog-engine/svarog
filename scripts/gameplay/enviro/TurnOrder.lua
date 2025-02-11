@@ -3,7 +3,7 @@ local TurnOrderSystem = Engine.RegisterEnviroSystem()
 
 function TurnOrderSystem:Update()
 	StartMeasure()
-	if Dungeon.created then
+	if Dungeons.created then
 		for _, entity in World:Exec(ECS.Query.All(Creature)):Iterator() do
 			local creature = entity[Creature]
 			

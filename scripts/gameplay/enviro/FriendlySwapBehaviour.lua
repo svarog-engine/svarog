@@ -3,7 +3,7 @@ local FriendlySwapBehaviourSystem = Engine.RegisterEnviroSystem()
 
 function FriendlySwapBehaviourSystem:Update()
 	StartMeasure()
-	if Dungeon.created then
+	if Dungeons.created then
 		for _, friend in World:Exec(ECS.Query.All(Creature, Friendly, Bumped, Position)):Iterator() do
 			local x, y = friend[Position].x, friend[Position].y
 			local who = World:FetchEntityById(friend[Bumped].by)

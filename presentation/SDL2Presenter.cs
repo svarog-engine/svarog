@@ -20,13 +20,13 @@ namespace svarog.presentation
                 }
                 else
                 {
-                    Console.WriteLine("Window could not be created! SDL_Error: {0}", SDL.SDL_GetError());
+                    Svarog.Instance.LogVerbose($"Window could not be created! SDL_Error: {SDL.SDL_GetError()}");
                 }
 
             }
             else
             {
-                Console.WriteLine("SDL could not initialize! SDL_Error: {0}", SDL.SDL_GetError());
+                Svarog.Instance.LogVerbose($"SDL could not initialize! SDL_Error: {SDL.SDL_GetError()}");
             }
         }
 
