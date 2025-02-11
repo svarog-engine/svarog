@@ -4,6 +4,7 @@ namespace svarog.procgen.geometry
 {
     public interface IShape
     {
+        bool Contains(Vector2f point);
         IShape Intersect(IShape other);
         HashSet<Vector2f> Discretize();
     }
@@ -158,6 +159,8 @@ namespace svarog.procgen.geometry
 
     public record struct And(IEnumerable<IShape> Shapes) : IShape
     {
+        public bool Contains(Vector2f point) => Shapes.Any(s => s.Contains(point));
+
         public readonly IShape Intersect(IShape other)
         {
             return new And(Shapes: Shapes.Select(s => s.Intersect(other)));
@@ -172,6 +175,8 @@ namespace svarog.procgen.geometry
 
     public record struct PointSet(HashSet<Vector2f> Points) : IShape
     {
+        public bool Contains(Vector2f point) => Points.Contains(point);
+
         public readonly IShape Intersect(IShape other)
         {
             if (other is PointSet ps)
@@ -184,6 +189,11 @@ namespace svarog.procgen.geometry
             }
         }
 
+        public readonly PointSet Diff(IShape other)
+        {
+            return new PointSet(this.Points.Except(other.Discretize()).ToHashSet());
+        }
+
         public HashSet<Vector2f> Discretize()
         {
             return Points;
@@ -192,6 +202,8 @@ namespace svarog.procgen.geometry
 
     public record struct Line(Vector2f A, Vector2f B) : IShape
     {
+        public bool Contains(Vector2f point) => Discretize().Contains(point);
+
         public IShape Intersect(IShape other)
         {
             if (other is Line line) return ShapeIntersections.LineAndLine(this, line);
@@ -246,6 +258,13 @@ namespace svarog.procgen.geometry
 
     public record struct Circle(Vector2f Center, float Radius) : IShape
     {
+        public bool Contains(Vector2f point)
+        {
+            var dc = point - Center;
+            var d = (dc.X * dc.X + dc.Y * dc.Y);
+            return d <= Radius * Radius;
+        }
+
         public IShape Intersect(IShape other)
         {
             if (other is Line line) return ShapeIntersections.LineAndCircle(line, this);
@@ -277,12 +296,18 @@ namespace svarog.procgen.geometry
             for (int i = xc - x; i < xc + x; i++)
             {
                 points.Add(new Vector2f(i, yc + y));
+            }
+            for (int i = xc - y; i < xc + y; i++)
+            {
+                points.Add(new Vector2f(i, yc + x));
+            }
+            for (int i = xc - x; i < xc + x; i++)
+            {
                 points.Add(new Vector2f(i, yc - y));
             }
-            for (int j = xc - y; j < xc + y; j++)
+            for (int i = xc - y; i < xc + y; i++)
             {
-                points.Add(new Vector2f(xc + x, j));
-                points.Add(new Vector2f(xc - x, j));
+                points.Add(new Vector2f(i, yc - x));
             }
             return points;
         }
@@ -350,6 +375,8 @@ namespace svarog.procgen.geometry
         public float MinY => MathF.Min(A.Y, B.Y);
         public float MaxY => MathF.Max(A.Y, B.Y);
 
+        public bool Contains(Vector2f point) => point.X >= A.X && point.X <= B.X && point.Y >= A.Y && point.Y <= B.Y;
+
         public IShape Intersect(IShape other)
         {
             if (other is Line line) return ShapeIntersections.LineAndRectangle(line, this);
@@ -381,6 +408,93 @@ namespace svarog.procgen.geometry
 
     public static class Geometry
     {
+        public static PointSet Inner(IShape shape)
+            => Surface(shape).Diff(shape);
+
+        private static readonly Vector2f[] DXYs =
+        [
+            new Vector2f(0, -1),
+
+            new Vector2f(-1, 0),
+            new Vector2f(1, 0),
+
+            new Vector2f(0, 1),
+        ];
+
+        public static PointSet Boundary(IShape shape)
+        {
+            if (shape is And and)
+            {
+                var pts = new PointSet([]);
+                var surface = Surface(shape);
+                for (int i = (int)MinX(shape) - 1; i <= (int)MaxX(shape) + 1; i++)
+                {
+                    for (int j = (int)MinY(shape) - 1; j <= (int)MaxY(shape) + 1; j++)
+                    {
+                        bool edge = false;
+                        var ij = new Vector2f(i, j);
+                        if (surface.Points.Contains(ij))
+                        {
+                            foreach (var dxy in DXYs)
+                            {
+                                if (!surface.Points.Contains(ij + dxy))
+                                {
+                                    edge = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (edge)
+                        {
+                            pts.Points.Add(ij);
+                        }
+                    }
+                }
+                return pts;
+            }
+            else return Discrete(shape);
+        }
+
+        public static float MinX(IShape shape)
+        {
+            if (shape is And and) return and.Shapes.Select(s => MinX(s)).Min();
+            else if (shape is Line line) return MathF.Min(line.A.X, line.B.X);
+            else if (shape is Circle circle) return circle.Center.X - circle.Radius;
+            else if (shape is Rectangle rect) return rect.MinX;
+            else if (shape is PointSet pts) return pts.Points.Select(p => p.X).Min();
+            else throw new Exception($"MINX called on: {shape}");
+        }
+
+        public static float MaxX(IShape shape)
+        {
+            if (shape is And and) return and.Shapes.Select(s => MaxX(s)).Max();
+            else if (shape is Line line) return MathF.Max(line.A.X, line.B.X);
+            else if (shape is Circle circle) return circle.Center.X + circle.Radius;
+            else if (shape is Rectangle rect) return rect.MaxX;
+            else if (shape is PointSet pts) return pts.Points.Select(p => p.X).Max();
+            else throw new Exception($"MAXX called on: {shape}");
+        }
+
+        public static float MinY(IShape shape)
+        {
+            if (shape is And and) return and.Shapes.Select(s => MinY(s)).Min();
+            else if (shape is Line line) return MathF.Min(line.A.Y, line.B.Y);
+            else if (shape is Circle circle) return circle.Center.Y - circle.Radius;
+            else if (shape is Rectangle rect) return rect.MinY;
+            else if (shape is PointSet pts) return pts.Points.Select(p => p.Y).Min();
+            else throw new Exception($"MINY called on: {shape}");
+        }
+
+        public static float MaxY(IShape shape)
+        {
+            if (shape is And and) return and.Shapes.Select(s => MaxY(s)).Max();
+            else if (shape is Line line) return MathF.Max(line.A.X, line.B.X);
+            else if (shape is Circle circle) return circle.Center.Y + circle.Radius;
+            else if (shape is Rectangle rect) return rect.MaxY;
+            else if (shape is PointSet pts) return pts.Points.Select(p => p.Y).Max();
+            else throw new Exception($"MAXY called on: {shape}");
+        }
+
         public static PointSet Surface(IShape shape)
         {
             var p = new PointSet([]);
@@ -403,7 +517,7 @@ namespace svarog.procgen.geometry
             {
                 for (int i = (int)rect.MinX; i <= (int)rect.MaxX; i++)
                 {
-                    for (int j = (int)rect.MinY; i <= (int)rect.MaxY; j++)
+                    for (int j = (int)rect.MinY; j <= (int)rect.MaxY; j++)
                     {
                         p.Points.Add(new Vector2f(i, j));
                     }
@@ -413,8 +527,25 @@ namespace svarog.procgen.geometry
         }
     
         public static And Union(params IShape[] shapes)
-        {
-            return new And(shapes);
-        }
+            => new (shapes);
+
+        public static IShape Intersect(IShape a, IShape b)
+            => a.Intersect(b);
+
+        public static Line MakeLine(float x1, float y1, float x2, float y2)
+            => new (new Vector2f(x1, y1), new Vector2f(x2, y2));
+
+        public static Circle MakeCircle(float x, float y, float radius)
+            => new (new Vector2f(x, y), radius);
+
+        public static Rectangle MakeRect(float x, float y, float w, float h)
+            => new (new Vector2f(x, y), new Vector2f(x + w, y + h));
+
+        public static PointSet Discrete(IShape shape)
+            => new (shape.Discretize());
+
+        public static PointSet Diff(IShape shape, IShape other)
+            => new PointSet(shape.Discretize()).Diff(other);
+
     }
 }

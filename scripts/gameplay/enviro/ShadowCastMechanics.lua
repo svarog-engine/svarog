@@ -6,7 +6,7 @@ local FOV_algorithm = Algorithms.RecursiveShadowcast
 local arc = 2 * math.pi -- full circle
 
 function OnVisible(x, y)
-	Dungeon.visibility:Set(x,y,1)
+	Dungeon.visibility:Set(x,y, 1)
 	Dungeon.visited:Set(x,y, 1)
 end
 

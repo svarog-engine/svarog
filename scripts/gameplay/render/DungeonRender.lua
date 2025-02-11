@@ -14,8 +14,10 @@ function DungeonRenderSystem:Render()
 						elseif  Dungeon.visibility:Get(x,y) == 0 then
 							Engine.Glyph(x, y, "back_dark")
 						else
-							Engine.Glyph(x, y, "back_lit")
+							Engine.Glyph(x, y, "back_dark")
 						end
+					elseif tile.type == Wall or (tile.type == Door and tile.entity[Door].hidden) then
+						Engine.Glyph(x, y, "wall", { fg = Colors.White, bg = Colors.DarkGray } )
 					else
 						local glyph = tile.entity[Glyph]
 						Engine.Glyph(x, y, glyph.name)

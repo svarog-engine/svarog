@@ -1,6 +1,7 @@
 ﻿using Rubjerg.Graphviz;
 
 using svarog.runner;
+using svarog.utility;
 
 using System.Diagnostics;
 
@@ -207,7 +208,7 @@ namespace svarog.procgen.rewriting
             var proc = m_Storage.GetProc(name);
             if (proc.HasValue)
             {
-                Console.WriteLine($"== {name} ===============");
+                //Svarog.Instance.LogVerbose($"== {name} ===============");
                 var constraints = BuildConstraints(proc.Value.Lhs);
                 var branches = BuildVariantActions(proc.Value.Rhs);
 
@@ -216,7 +217,7 @@ namespace svarog.procgen.rewriting
             }
             else
             {
-                Console.WriteLine($"Couldn't find proc {name}");
+                Svarog.Instance.LogVerbose($"Couldn't find proc {name}");
             }
 
             return false;
@@ -227,7 +228,7 @@ namespace svarog.procgen.rewriting
             m_Storage.LoadProcs(File.ReadAllText($"resources\\procgen\\{name}.pcg"));
         }
 
-        public void EmitDot()
+        public void EmitDot(bool show = false)
         {
             void Dot(string s)
             {
@@ -240,15 +241,23 @@ namespace svarog.procgen.rewriting
             }
 
             var dot = m_Storage.ToDot();
-            Dot(dot);
+            if (show) Dot(dot);
 
-            RootGraph root = RootGraph.FromDotString("digraph G {\n\n" + dot + "\n\n}");
-            RootGraph layout = root.CreateLayout("patchwork", CoordinateSystem.BottomLeft);
-            
-            foreach (var n in layout.Nodes())
+            try
             {
-                var p = n.GetPosition();
-                m_Storage.Positions[uint.Parse(n.GetName())] = new SFML.System.Vector2f((float)p.X, (float)p.Y);
+                RootGraph root = RootGraph.FromDotString("digraph G {\n\n" + dot + "\n\n}");
+                RootGraph layout = root.CreateLayout("dot", Randomness.Instance.Coin() ? CoordinateSystem.BottomLeft : CoordinateSystem.TopLeft);
+
+                foreach (var n in layout.Nodes())
+                {
+                    var p = n.GetPosition();
+                    m_Storage.Positions[uint.Parse(n.GetName())] = new SFML.System.Vector2f((float)p.X + Randomness.Instance.Range(-10, 10), (float)p.Y + Randomness.Instance.Range(-10, 10));
+                }
+            } 
+            catch (Exception e)
+            {
+                Svarog.Instance.LogError(e.Message);
+                Svarog.Instance.LogError(e.StackTrace ?? "");
             }
         }
 
@@ -258,36 +267,5 @@ namespace svarog.procgen.rewriting
         }
 
         public PcgGraphStorage Storage() => m_Storage;
-
-        /*
-            local pos = {}
-            local list = PCG:Storage().m_Nodes
-            local it = list:GetEnumerator()
-            while it:MoveNext() do
-	            pos[it.Current] = PCG:Storage():GetPosition(it.Current)
-            end
-
-            for id, p in pairs(pos) do
-	            print(id, p)
-
-	            local neighbors = PCG:Storage():ListArrowsFrom(id)
-	            local itt = neighbors:GetEnumerator()
-	            while itt:MoveNext() do
-		            print(" ", itt.Current, pos[itt.Current])
-	            end
-            end
-         */
-        public void Test()
-        {
-            foreach (var node in m_Storage.Nodes)
-            {
-                Console.WriteLine(node + " " + m_Storage.GetPosition(node));
-                foreach (var arr in m_Storage.GetArrowsFrom(node))
-                {
-                    var neighbor = m_Storage.GetTarget(arr);
-                    Console.WriteLine($"\t{neighbor} {m_Storage.GetPosition(neighbor)}");
-                }
-            }
-        }
     }
 }

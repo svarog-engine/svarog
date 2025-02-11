@@ -11,7 +11,8 @@ Glossary.Default = {
 	mage = { char = "@", fg = Colors.LightBlue, bg = Colors.Black },
 	monk = { char = "@", fg = Colors.LightBlue, bg = Colors.Black },
 
-	door_closed = { char = "+", fg = Colors.White, bg = Colors.Black },
+	door_locked = { char = "+", fg = Colors.White, bg = Colors.Red },
+	door_closed = { char = "+", fg = Colors.Black, bg = Colors.LightGray },
 	door_open = { char = "_", fg = Colors.White, bg = Colors.Black },
 
 	back_dark = { char = ".", fg = Colors.Gray, bg = Colors.Black },

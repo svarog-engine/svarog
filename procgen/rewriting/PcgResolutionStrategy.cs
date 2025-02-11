@@ -65,7 +65,7 @@ namespace svarog.procgen.rewriting
                 {
                     if (un.Annotation != null)
                     {
-                        Console.WriteLine($"Changing node {un.Name} ({bindings[un.Name]})'s annotation to: {un.Annotation}");
+                        Svarog.Instance.LogVerbose($"Changing node {un.Name} ({bindings[un.Name]})'s annotation to: {un.Annotation}");
                         changes = true;
                         storage.ChangeAnnotation(bindings[un.Name], un.Annotation);
                     }
@@ -77,7 +77,7 @@ namespace svarog.procgen.rewriting
                 var cn = (PcgAction_CreateNode)c;
                 bindings[cn.Name] = storage.AddNode(cn.Annotation);
                 changes = true;
-                Console.WriteLine($"Creating node {cn.Name} ({bindings[cn.Name]}) with annotation {cn.Annotation ?? "-"}");
+                Svarog.Instance.LogVerbose($"Creating node {cn.Name} ({bindings[cn.Name]}) with annotation {cn.Annotation ?? "-"}");
             }
 
             foreach (var c in change.Where(c => c is PcgAction_CreateArrow))
@@ -89,7 +89,7 @@ namespace svarog.procgen.rewriting
                 if (availableUnnamedArrows.ContainsKey((src, tgt)))
                 {
                     var first = availableUnnamedArrows[(src, tgt)].First();
-                    Console.WriteLine($"Found candidate arrow for {src}_{tgt}_{cn.Index} in {first}");
+                    Svarog.Instance.LogVerbose($"Found candidate arrow for {src}_{tgt}_{cn.Index} in {first}");
                     availableUnnamedArrows[(src, tgt)].RemoveAt(0);
                     if (availableUnnamedArrows[(src, tgt)].Count == 0)
                     {
@@ -100,7 +100,7 @@ namespace svarog.procgen.rewriting
 
                     if (cn.Name != null)
                     {
-                        Console.WriteLine($"Changing arrow {first} (#{bindings[first]})'s name to {cn.Name}");
+                        Svarog.Instance.LogVerbose($"Changing arrow {first} (#{bindings[first]})'s name to {cn.Name}");
                         changes = true;
                         storage.ChangeArrowName(bindings[first], cn.Name);
                     }
@@ -108,7 +108,7 @@ namespace svarog.procgen.rewriting
                 else
                 {
                     var newArrow = storage.AddConn(bindings[src], bindings[tgt], cn.Name);
-                    Console.WriteLine($"Adding arrow {src}_{tgt}_{cn.Index} (#{newArrow})");
+                    Svarog.Instance.LogVerbose($"Adding arrow {src}_{tgt}_{cn.Index} (#{newArrow})");
                     changes = true;
                     bindings.Add($"{src}_{tgt}_{cn.Index}", newArrow);
                 }
@@ -116,7 +116,7 @@ namespace svarog.procgen.rewriting
 
             foreach (var arr in unusedArrows)
             {
-                Console.WriteLine($"Removing unused arrow {arr} (#{bindings[arr]})");
+                Svarog.Instance.LogVerbose($"Removing unused arrow {arr} (#{bindings[arr]})");
                 changes = true;
                 storage.DeleteConn(bindings[arr]);
             }

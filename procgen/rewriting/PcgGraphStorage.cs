@@ -277,13 +277,42 @@ namespace svarog.procgen.rewriting
 
         public IEnumerable<uint> GetNeighbors(uint n)
         {
+            HashSet<uint> hashset = [];
+            foreach (var arr in GetArrowsFrom(n))
+            {
+                hashset.Add(GetTarget(arr));
+            }
+
+            foreach (var arr in GetArrowsTo(n))
+            {
+                hashset.Add(GetSource(arr));
+            }
+
+            foreach (var arr in hashset)
+            {
+                yield return arr;
+            }
+        }
+
+        public IEnumerable<uint> GetInNeighbors(uint n)
+        {
             foreach (var arr in GetArrowsFrom(n))
             {
                 yield return GetTarget(arr);
             }
         }
 
+        public IEnumerable<uint> GetOutNeighbors(uint n)
+        {
+            foreach (var arr in GetArrowsTo(n))
+            {
+                yield return GetSource(arr);
+            }
+        }
+
         public List<uint> ListNeighbors(uint n) => GetNeighbors(n).ToList();
+        public List<uint> ListInNeighbors(uint n) => GetInNeighbors(n).ToList();
+        public List<uint> ListOutNeighbors(uint n) => GetOutNeighbors(n).ToList();
 
         public void ChangeArrowName(uint n, string newName)
         {

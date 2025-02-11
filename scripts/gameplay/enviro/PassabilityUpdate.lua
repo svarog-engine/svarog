@@ -12,7 +12,11 @@ function PassabilityUpdateSystem:Update()
 					if tile.type == Floor then
 						Dungeon.passable:Set(x, y, true)
 					elseif tile.type == Door then
-						Dungeon.passable:Set(x, y, not tile.entity[Door].closed)
+						if tile.entity[Door].hidden then
+							Dungeon.passable:Set(x, y, false)
+						else
+							Dungeon.passable:Set(x, y, not tile.entity[Door].closed and tile.entity[Door].travelTo == nil)
+						end
 					end
 				end
 			end
