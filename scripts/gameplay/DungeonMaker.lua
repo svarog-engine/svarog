@@ -90,7 +90,7 @@ function FindDoorTo(index)
 	return nil
 end
 
-function MakeDungeonRoom(index)
+function SelectDungeonLevel(index)
 	Dungeon = Dungeons.maps[index]
 	Dungeons.playerDistance = DistanceMap:From(Dungeon.floor, { { math.floor(Config.Width / 2), math.floor(Config.Height / 2) } }, 0)
 	Dungeons.playerDistance:AddCondition(DistanceMap.IS_FLOOR)
@@ -145,7 +145,7 @@ local function FindPick(used, w, h, store, n, ne, bound, doors, hidden)
 	end
 end
 
-local function MakeDungeon()
+local function MakeDungeonX()
 	PCG:Clear()
 	PCG:LoadProcs("dungeon")
 	PCG:RunProc("start", 4)
@@ -247,8 +247,90 @@ local function MakeDungeon()
 	end
 
 	if entry ~= nil then
-		MakeDungeonRoom(entry)
+		SelectDungeonLevel(entry)
 	end
+end
+
+function InitDungeonLevel(id, width, height, revert)
+	if width == nil then width = Config.Width end
+	if height == nil then height = Config.Height end
+	if revert == nil then revert = false end
+	local oldDungeon = Dungeon
+	Dungeons.maps[id] = {}
+	Dungeon = Dungeons.maps[id]
+	Dungeon.index = id
+	Dungeon.width = width
+	Dungeon.height = height
+	Dungeon.name = "Level"
+	Dungeon.entities = {}
+	Dungeon.entitiesList = {}
+	Dungeon.passable = Map:New(width, height)
+	Dungeon.floor = Map:New(width, height, nil)
+	Dungeon.visibility = Map:New(width, height, 0)
+	Dungeon.visited = Map:New(width, height, 0)
+	
+	SelectDungeonLevel(id)
+
+	if revert then 
+		Dungeon = oldDungeon
+	end
+end
+
+local function InitDungeonLevels()
+	Dungeons = {}
+	Dungeons.maps = {}
+
+	InitDungeonLevel(1)
+end
+
+local function FinishDungeons()
+	Dungeons.created = true
+end
+
+
+local function DungeonSize()
+	return Dungeon.width, Dungeon.height
+end
+
+local function Rasterize(what)
+	local bound = Geometry.Boundary(what)
+	local pts = Geometry.Surface(what).Points:GetEnumerator()
+	while pts:MoveNext() do
+		local pt = pts.Current
+		if bound.Points:Contains(pt) then
+			Dungeon.floor:Set(pt.X, pt.Y, { type = Wall })
+			Dungeon.passable:Set(pt.X, pt.Y, false)
+		else
+			Dungeon.floor:Set(pt.X, pt.Y, { type = Floor })
+			Dungeon.passable:Set(pt.X, pt.Y, true)
+		end
+		Dungeon.visibility:Set(pt.X, pt.Y, true)
+	end
+end
+
+local function MakeDungeon()
+	InitDungeonLevels()
+	
+	local w, h = DungeonSize()
+	local level = nil
+	for i = 1, 100 do
+		local roomWidth, roomHeight = Rand:Range(4, 10), Rand:Range(4, 8)
+		local room = Geometry.MakeRect(Rand:Range(2, w - roomWidth - 2), Rand:Range(2, h - roomHeight - 7), roomWidth, roomHeight)
+		if level == nil then
+			level = room
+		else
+			if Geometry.Intersect(Geometry.Discrete(level), room).Points.Count == 0 then
+				level = Geometry.Union(level, room)
+			end
+		end
+	end
+	Rasterize(level)
+	
+	local invertLevel = Map:Invert(Dungeon.floor)
+	Dungeons.playerDistance = DistanceMap:From(invertLevel, { { math.floor(Config.Width / 2), math.floor(Config.Height / 2) } }, 0)
+	Dungeons.playerDistance:AddCondition(DistanceMap.IS_FLOOR)
+	Dungeons.playerDistance:Flood()
+	FinishDungeons()
 end
 
 OnStartup(function() MakeDungeon() end)

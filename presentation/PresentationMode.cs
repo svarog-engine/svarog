@@ -1,4 +1,6 @@
-﻿namespace svarog.presentation
+﻿using System.Security.Cryptography;
+
+namespace svarog.presentation
 {
     public enum EPresentationMode
     {
@@ -31,13 +33,18 @@
         public string Font { get; set; }
         public int Size { get; set; }
         public int Row { get; set; }
+
+        public int PaddingX { get; set; } = 0;
+        public int PaddingY { get; set; } = 0;
         public EPresentationMode Type { get; } = EPresentationMode.Sprite;
 
-        public SpritePresentationMode(string font, int size, int row)
+        public SpritePresentationMode(string font, int size, int row, int padx = 0, int pady = 0)
         {
             Font = font;
             Size = size;
             Row = row;
+            PaddingX = padx;
+            PaddingY = pady;
         }
     }
 }
