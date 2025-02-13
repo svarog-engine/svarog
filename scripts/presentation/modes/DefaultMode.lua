@@ -1,5 +1,5 @@
 ﻿
-Glossary.Meta.Default = FontPresentationMode("whitrabt", 14, true)
+Glossary.Meta.Default = FontPresentationMode("whitrabt", 16, true)
 
 Glossary.Default = {
 	goblin = { char = "g", fg = Colors.LightGreen, bg = Colors.Black },
