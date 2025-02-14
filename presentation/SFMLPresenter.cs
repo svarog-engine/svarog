@@ -1,7 +1,7 @@
 ﻿using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
-
+using svarog.core;
 using svarog.input;
 using svarog.runner;
 using svarog.utility;

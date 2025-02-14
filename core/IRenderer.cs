@@ -1,6 +1,6 @@
 ﻿using SFML.Graphics;
 
-namespace svarog
+namespace svarog.core
 {
     public interface IRenderer
     {

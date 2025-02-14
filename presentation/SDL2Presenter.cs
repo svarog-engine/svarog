@@ -1,6 +1,7 @@
 ﻿using svarog.runner;
 using SDL2;
 using svarog.input;
+using svarog.core;
 
 namespace svarog.presentation
 {

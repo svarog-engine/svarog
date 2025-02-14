@@ -1,4 +1,4 @@
-﻿namespace svarog
+﻿namespace svarog.core
 {
     public interface ISimulationLayer
     {

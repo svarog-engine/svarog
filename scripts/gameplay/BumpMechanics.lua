@@ -2,7 +2,7 @@
 function PerformBump(entity, x, y, dx, dy)
 	local nx = x + dx
 	local ny = y + dy
-			
+
 	local pass = Dungeon.passable:Has(nx, ny) and Dungeon.passable:Get(nx, ny)
 	local id = Dungeon.floor:ID(nx, ny)
 	local entities = Dungeon.entities[id] or {}

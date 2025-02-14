@@ -12,11 +12,7 @@ end
 
 function IsTransparent(x, y)
 -- Should discuss more about this condition, for now its going to do the job
-	if Dungeon.passable:Has(x,y) then
-		return Dungeon.passable:Get(x,y)
-	else
-		return false
-	end
+	return Dungeon.passable:Get(x, y) or false
 end
 
 function ShadowcastSystem:Update()

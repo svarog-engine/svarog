@@ -1,6 +1,6 @@
 ﻿using svarog.runner;
 
-namespace svarog
+namespace svarog.core
 {
     public interface IPresentationLayer
     {
