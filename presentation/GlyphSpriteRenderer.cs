@@ -1,5 +1,4 @@
 ﻿using SFML.Graphics;
-using SFML.System;
 
 using svarog.runner;
 
@@ -50,7 +49,6 @@ namespace svarog.presentation
         }
 
         public uint RowLength { get; set; }
-        public Vector2i Padding { get; set; }
 
         public void Draw(Glyph[][] gameGlyphs, Glyph[][] UIGlyphs, RenderTexture target)
         {
@@ -60,7 +58,7 @@ namespace svarog.presentation
                 for (int j = 0; j < gameGlyphs[i].Length; j++)
                 {
                     var item = UIGlyphs[i][j].IsValid ? UIGlyphs[i][j] : gameGlyphs[i][j];
-                    m_BackgroundRect.Position = new Vector2f(m_FontSize * i * m_Scale, m_FontSize * j * m_Scale);
+                    m_BackgroundRect.Position = new SFML.System.Vector2f(m_FontSize * i * m_Scale, m_FontSize * j * m_Scale);
                     m_BackgroundRect.Scale = scale;
                     m_BackgroundRect.FillColor = item.Background;
                     m_BackgroundRect.Draw(target, RenderStates.Default);
@@ -75,7 +73,7 @@ namespace svarog.presentation
 
                     m_Sprite.Color = item.Foreground;
                     m_Sprite.Scale = scale;
-                    m_Sprite.Position = new Vector2f(m_FontSize * i * m_Scale, m_FontSize * j * m_Scale);
+                    m_Sprite.Position = new SFML.System.Vector2f(m_FontSize * i * m_Scale, m_FontSize * j * m_Scale);
                     m_Sprite.TextureRect = new((int)(item.TileX * m_FontSize), (int)(item.TileY * m_FontSize), (int)m_FontSize, (int)m_FontSize);
                     m_Sprite.Draw(target, RenderStates.Default);                    
                 }

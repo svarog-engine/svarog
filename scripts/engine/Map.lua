@@ -14,21 +14,6 @@ function Map:New(w, h, defaultValue)
 	return o
 end
 
-function Map:Invert(map, value)
-	if value == nil then value = true end
-	o = { width = map.width, height = map.height, tiles = {}, keys = {} }
-	for i = 1, map.width do
-		o.tiles[i] = {}
-		for j = 1, map.height do
-			o.tiles[i][j] = { type = Floor }
-		end
-	end
-
-	setmetatable(o, self)
-	self.__index = self
-	return o
-end
-
 function Map:ID(x, y)
 	return self.width * y + x
 end
