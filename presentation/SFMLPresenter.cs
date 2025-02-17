@@ -1,5 +1,4 @@
 ﻿using SFML.Graphics;
-using SFML.System;
 using SFML.Window;
 
 using svarog.input;
@@ -50,10 +49,6 @@ namespace svarog.presentation
                         Svarog.Instance.LogWarning($"Font [{fontFamily}] was not found. No default font set!");
                     }
                 }
-                else
-                {
-                    fontRenderer.CurrentFont = m_Fonts[fontMode.Font];
-                }
 
                 if (Svarog.Instance.Scripting["Config.Width"] is double worldWidthValue)
                 {
@@ -71,7 +66,6 @@ namespace svarog.presentation
                 m_Renderer = spriteRenderer;
                 spriteRenderer.FontSize = (uint)spriteMode.Size;
                 spriteRenderer.RowLength = (uint)spriteMode.Row;
-                spriteRenderer.Padding = new Vector2i(spriteMode.PaddingX, spriteMode.PaddingY);
                 spriteRenderer.Texture = m_Sprites[spriteMode.Font];
 
                 if (Svarog.Instance.Scripting["Config.FontSize"] is double fontSizeValue)
@@ -204,7 +198,9 @@ namespace svarog.presentation
             m_Surface.Clear();
             var map = Svarog.Instance.Glyphs;
             var UI = Svarog.Instance.UIGlyphs;
+
             m_Renderer.Draw(map, UI, m_Surface);
+
             m_Surface.Display();
         }
 

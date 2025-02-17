@@ -197,6 +197,7 @@
 
   <ItemGroup>
     <Folder Include="resources\fonts\licensed\" />
+    <Folder Include="resources\sprites\" />
   </ItemGroup>
 
 </Project>
