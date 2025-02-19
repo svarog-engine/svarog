@@ -4,6 +4,7 @@ using SFML.Window;
 using svarog.input;
 using svarog.runner;
 using svarog.utility;
+using svarog.utility.filesystem;
 
 namespace svarog.presentation
 {
@@ -128,6 +129,48 @@ namespace svarog.presentation
                 m_Fonts.Clear();
             }
 
+            // Unfortunate hack, leaving raw loading fonts as it is... Will investigate more in future
+            var fileSystem = Svarog.Instance.FileSystem;
+            if (fileSystem is RawFileSystem)
+            {
+                LoadFontsRaw();
+            }
+            else
+            {
+                LoadFontsBin();
+            }
+        }
+        void LoadFontsBin()
+        {
+            var fileSystem = Svarog.Instance.FileSystem;
+            if (fileSystem != null)
+            {
+                foreach (var fontFile in fileSystem.GetFiles(@"resources\fonts", ".ttf"))
+                {
+                    var startIndex = fontFile.LastIndexOf("\\") + 1;
+                    var endIndex = fontFile.LastIndexOf(".ttf");
+                    var name = fontFile.Substring(startIndex, endIndex - startIndex);
+
+                    byte[] content = fileSystem.GetAsset(fontFile);
+
+                    m_Fonts[name] = new Font(content);
+                }
+
+                foreach (var fontFile in fileSystem.GetFiles(@"resources\fonts\licensed", ".ttf"))
+                {
+                    var startIndex = fontFile.LastIndexOf("\\") + 1;
+                    var endIndex = fontFile.LastIndexOf(".ttf");
+                    var name = fontFile.Substring(startIndex, endIndex - startIndex);
+
+                    byte[] content = fileSystem.GetAsset(fontFile);
+
+                    m_Fonts[name] = new Font(content);
+                }
+            }
+        }
+
+        void LoadFontsRaw()
+        {
             DirectoryInfo d = new DirectoryInfo(@"resources/fonts");
             if (d.Exists)
             {
@@ -148,7 +191,7 @@ namespace svarog.presentation
                         var name = file.Name.Substring(0, file.Name.LastIndexOf(".ttf"));
                         m_Fonts[name] = new SFML.Graphics.Font(file.FullName);
                     }
-                } 
+                }
                 else
                 {
                     Svarog.Instance.LogInfo("Licensed font folder not present.");
@@ -159,37 +202,32 @@ namespace svarog.presentation
                 Svarog.Instance.LogInfo("Font folder not present.");
             }
         }
-
         void LoadSpritesheets()
         {
-            DirectoryInfo d = new DirectoryInfo(@"resources/sprites");
-            if (d.Exists)
+            var fileSystem = Svarog.Instance.FileSystem;
+            if (fileSystem != null)
             {
-
-
-                FileInfo[] files = d.GetFiles("*.png");
-                foreach (var file in files)
+                foreach (var spriteFile in fileSystem.GetFiles(@"resources\sprites", ".png"))
                 {
-                    m_Sprites[file.Name] = new SFML.Graphics.Texture(file.FullName);
+                    var startIndex = spriteFile.LastIndexOf("\\") + 1;
+                    var endIndex = spriteFile.LastIndexOf(".png");
+                    var name = spriteFile.Substring(startIndex, endIndex - startIndex) + ".png";
+
+                    byte[] content = fileSystem.GetAsset(spriteFile);
+
+                    m_Sprites[name] = new SFML.Graphics.Texture(content);
                 }
 
-                d = new DirectoryInfo(@"resources/sprites/licensed");
-                if (d.Exists)
+                foreach (var spriteFile in fileSystem.GetFiles(@"resources\fonts\licensed", ".ttf"))
                 {
-                    files = d.GetFiles("*.png");
-                    foreach (var file in files)
-                    {
-                        m_Sprites[file.Name] = new SFML.Graphics.Texture(file.FullName);
-                    }
+                    var startIndex = spriteFile.LastIndexOf("\\") + 1;
+                    var endIndex = spriteFile.LastIndexOf(".png");
+                    var name = spriteFile.Substring(startIndex, endIndex - startIndex) + ".png";
+
+                    byte[] content = fileSystem.GetAsset(spriteFile);
+
+                    m_Sprites[name] = new SFML.Graphics.Texture(content);
                 }
-                else
-                {
-                    Svarog.Instance.LogInfo("Licensed sprite folder not present.");
-                }
-            }
-            else
-            {
-                Svarog.Instance.LogInfo("Sprite folder not present.");
             }
         }
 

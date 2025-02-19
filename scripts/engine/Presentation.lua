@@ -80,9 +80,9 @@ function InsertFontAlphanumerics(pres)
 end
 
 function LoadPresentation(name)
-    dofile("scripts\\presentation\\modes\\" .. name .. ".lua")
+   Svarog:RunScriptFile("scripts\\presentation\\modes\\" .. name)
 end
 
 function LoadPalette(name)
-    dofile("scripts\\presentation\\palettes\\" .. name .. ".lua")
+    Svarog:RunScriptFile("scripts\\presentation\\palettes\\" .. name)
 end

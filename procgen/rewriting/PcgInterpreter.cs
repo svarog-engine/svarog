@@ -1,5 +1,4 @@
 ﻿using Rubjerg.Graphviz;
-
 using svarog.runner;
 using svarog.utility;
 
@@ -225,7 +224,15 @@ namespace svarog.procgen.rewriting
 
         public void LoadProcs(string name)
         {
-            m_Storage.LoadProcs(File.ReadAllText($"resources\\procgen\\{name}.pcg"));
+            var fileSystem = Svarog.Instance.FileSystem;
+            if(fileSystem != null)
+            {
+                m_Storage.LoadProcs(fileSystem.GetFileContent($"resources\\procgen\\{name}.pcg"));
+            }
+            else
+            {
+                Svarog.Instance.LogError($"Couldn't load file: resources\\procgen\\{name}.pcg");
+            }
         }
 
         public void EmitDot(bool show = false)

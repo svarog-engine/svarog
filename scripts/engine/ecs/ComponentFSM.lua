@@ -35,8 +35,9 @@
       end
 ]]
 
+Svarog:RequireModule( "scripts\\engine\\ecs\\Query", "Query")
 
-local Query = require("scripts\\engine\\ecs\\Query")
+local Query = require "Query"
 
 --[[
    Filter used in Query and QueryResult
