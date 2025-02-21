@@ -151,9 +151,7 @@ namespace svarog.presentation
                     var endIndex = fontFile.LastIndexOf(".ttf");
                     var name = fontFile.Substring(startIndex, endIndex - startIndex);
 
-                    byte[] content = fileSystem.GetAsset(fontFile);
-
-                    m_Fonts[name] = new Font(content);
+                    m_Fonts[name] = new Font(fileSystem.GetAsset(fontFile));
                 }
 
                 foreach (var fontFile in fileSystem.GetFiles(@"resources\fonts\licensed", ".ttf"))
@@ -162,9 +160,7 @@ namespace svarog.presentation
                     var endIndex = fontFile.LastIndexOf(".ttf");
                     var name = fontFile.Substring(startIndex, endIndex - startIndex);
 
-                    byte[] content = fileSystem.GetAsset(fontFile);
-
-                    m_Fonts[name] = new Font(content);
+                    m_Fonts[name] = new Font(fileSystem.GetAsset(fontFile));
                 }
             }
         }
@@ -213,20 +209,16 @@ namespace svarog.presentation
                     var endIndex = spriteFile.LastIndexOf(".png");
                     var name = spriteFile.Substring(startIndex, endIndex - startIndex) + ".png";
 
-                    byte[] content = fileSystem.GetAsset(spriteFile);
-
-                    m_Sprites[name] = new SFML.Graphics.Texture(content);
+                    m_Sprites[name] = new SFML.Graphics.Texture(fileSystem.GetAsset(spriteFile));
                 }
 
-                foreach (var spriteFile in fileSystem.GetFiles(@"resources\fonts\licensed", ".ttf"))
+                foreach (var spriteFile in fileSystem.GetFiles(@"resources\fonts\licensed", ".png"))
                 {
                     var startIndex = spriteFile.LastIndexOf("\\") + 1;
                     var endIndex = spriteFile.LastIndexOf(".png");
                     var name = spriteFile.Substring(startIndex, endIndex - startIndex) + ".png";
 
-                    byte[] content = fileSystem.GetAsset(spriteFile);
-
-                    m_Sprites[name] = new SFML.Graphics.Texture(content);
+                    m_Sprites[name] = new SFML.Graphics.Texture(fileSystem.GetAsset(spriteFile));
                 }
             }
         }
