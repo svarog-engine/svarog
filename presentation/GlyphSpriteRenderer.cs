@@ -1,19 +1,16 @@
-﻿using SFML.Graphics;
-using SFML.System;
-
-using svarog.runner;
+﻿using svarog.core;
 
 namespace svarog.presentation
 {
     public class GlyphSpriteRenderer : IRenderer
     {
         SFML.Graphics.Sprite m_Sprite = new();
-        private RectangleShape m_BackgroundRect = new();
+        private SFML.Graphics.RectangleShape m_BackgroundRect = new();
         private uint m_FontSize;
         private float m_Scale = 1.0f;
 
-        private Texture m_Texture;
-        public Texture Texture
+        private SFML.Graphics.Texture m_Texture;
+        public SFML.Graphics.Texture Texture
         {
             get
             {
@@ -36,7 +33,7 @@ namespace svarog.presentation
             set
             {
                 m_FontSize = value;
-                m_BackgroundRect = new RectangleShape(new SFML.System.Vector2f(m_FontSize, m_FontSize));
+                m_BackgroundRect = new SFML.Graphics.RectangleShape(new SFML.System.Vector2f(m_FontSize, m_FontSize));
             }
         }
 
@@ -51,7 +48,7 @@ namespace svarog.presentation
 
         public uint RowLength { get; set; }
 
-        public void Draw(Glyph[][] gameGlyphs, Glyph[][] UIGlyphs, RenderTexture target)
+        public void Draw(Glyph[][] gameGlyphs, Glyph[][] UIGlyphs, SFML.Graphics.RenderTexture target)
         {
             var scale = new SFML.System.Vector2f(m_Scale, m_Scale);
             for (int i = 0; i < gameGlyphs.Length; i++)
@@ -62,7 +59,7 @@ namespace svarog.presentation
                     m_BackgroundRect.Position = new SFML.System.Vector2f(m_FontSize * i * m_Scale, m_FontSize * j * m_Scale);
                     m_BackgroundRect.Scale = scale;
                     m_BackgroundRect.FillColor = item.Background;
-                    m_BackgroundRect.Draw(target, RenderStates.Default);
+                    m_BackgroundRect.Draw(target, SFML.Graphics.RenderStates.Default);
                 }
             }
 
@@ -76,7 +73,7 @@ namespace svarog.presentation
                     m_Sprite.Scale = scale;
                     m_Sprite.Position = new SFML.System.Vector2f(m_FontSize * i * m_Scale, m_FontSize * j * m_Scale);
                     m_Sprite.TextureRect = new((int)(item.TileX * m_FontSize), (int)(item.TileY * m_FontSize), (int)m_FontSize, (int)m_FontSize);
-                    m_Sprite.Draw(target, RenderStates.Default);                    
+                    m_Sprite.Draw(target, SFML.Graphics.RenderStates.Default);                    
                 }
             }
         }
