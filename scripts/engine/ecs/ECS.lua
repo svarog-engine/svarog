@@ -31,12 +31,17 @@
    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
    SOFTWARE.
 ]]
+Svarog:RequireModule( "scripts\\engine\\ecs\\Query", "Query")
+Svarog:RequireModule( "scripts\\engine\\ecs\\World", "World")
+Svarog:RequireModule( "scripts\\engine\\ecs\\System", "System")
+Svarog:RequireModule( "scripts\\engine\\ecs\\Archetype", "Archetype")
+Svarog:RequireModule( "scripts\\engine\\ecs\\Component", "Component")
 
-local Query = require("scripts\\engine\\ecs\\Query")
-local World = require("scripts\\engine\\ecs\\World")
-local System = require("scripts\\engine\\ecs\\System")
-local Archetype = require("scripts\\engine\\ecs\\Archetype")
-local Component = require("scripts\\engine\\ecs\\Component")
+local Query = require "Query"
+local World = require "World"
+local System = require "System"
+local Archetype = require "Archetype"
+local Component = require "Component"
 
 local function setLoopManager(manager)
    World.LoopManager = manager

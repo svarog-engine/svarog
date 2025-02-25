@@ -42,7 +42,7 @@ namespace svarog.input
             m_RegisteredContexts.Clear();
 
             svarog.RunScript("Actions = {}");
-            svarog.RunScript(@"dofile ""scripts\\Actions.lua""");
+            svarog.RunScriptFile("scripts\\Actions");
 
             if (svarog.Scripting["Actions"] is LuaTable table)
             {

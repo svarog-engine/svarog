@@ -209,7 +209,7 @@ local function Reload()
     Svarog.Instance:ReloadPresenter()
 
     InputStack:ReloadActions()
-    dofile "scripts\\Library.lua"
+    Svarog:RunScriptFile("scripts\\Library")
     Svarog.Instance:RunScriptMain()
     Setup()
 end
@@ -298,19 +298,19 @@ function OnStartup(fun)
 end
 
 function IncludeGameplay(name)
-    dofile("scripts\\gameplay\\" .. name .. ".lua")
+    Svarog:RunScriptFile("scripts\\gameplay\\" .. name)
 end
 
 function LoadPlayerSystem(name)
-    dofile("scripts\\gameplay\\player\\" .. name .. ".lua")
+    Svarog:RunScriptFile("scripts\\gameplay\\player\\" .. name)
 end
 
 function LoadEnviroSystem(name)
-    dofile("scripts\\gameplay\\enviro\\" .. name .. ".lua")
+    Svarog:RunScriptFile("scripts\\gameplay\\enviro\\" .. name)
 end
 
 function LoadRenderSystem(name)
-    dofile("scripts\\gameplay\\render\\" .. name .. ".lua")
+    Svarog:RunScriptFile("scripts\\gameplay\\render\\" .. name)
 end
 
 function Hex(rgb)
