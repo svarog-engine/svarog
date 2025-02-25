@@ -1,7 +1,7 @@
 ﻿Config = {
     Presentation = "Default",
 
-    Font = nil,
+    Font = "whitrabt",
     FontSize = 14,
     FontChangeStep = 1,
     FontMaxSize = 36,

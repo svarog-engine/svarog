@@ -5,7 +5,7 @@
 --		Config.Presentation = "Kenney"
 
 --	licensed (change to default if you don't have it):
---		Config.Presentation = "Reff"
+--		Config.Presentation = "Goblins"
 
 		Config.Palette = "alpha6-cc29"
 
@@ -14,8 +14,8 @@
 		Config.FontSize = 14
 
 -- World configuration:
-		Config.Width = 80
-		Config.Height = 60
+--		Config.Width = 80
+--		Config.Height = 60
 
 -- Render configuration:
 --		Config.RenderTime = 66

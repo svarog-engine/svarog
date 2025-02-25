@@ -6,15 +6,6 @@ function DistanceMap.IS_FLOOR(map, x, y)
 	return map.origin:Get(x, y).type == Floor
 end
 
-function DistanceMap.ISNT_FLOOR(map, x, y)
-	local got = map.origin:Get(x, y)
-	if got == nil then 
-		return true
-	else
-		return got.type ~= Floor
-	end
-end
-
 function DistanceMap.IS_OPEN_DOOR(map, x, y)
 	local tile = map.origin:Get(x, y)
 	return tile.type == Door and not tile.entity[Door].closed
