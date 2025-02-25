@@ -10,7 +10,7 @@ namespace svarog.utility
         public static readonly Randomness Instance = new Randomness();
 
         private static readonly string ALPHABET = "thequickbrownfoxjumpsoverthelazydog.,;[]()";
-        private System.Random Internal = new();
+        private System.Random Internal = new(0);
 
         public bool Coin() => Internal.Next(100) >= 50;
         public int Range(int min, int max) => min + Internal.Next(max);

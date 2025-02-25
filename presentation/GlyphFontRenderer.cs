@@ -1,5 +1,4 @@
-﻿using SFML.Graphics;
-using svarog.core;
+﻿using svarog.core;
 
 namespace svarog.presentation
 {
@@ -9,7 +8,7 @@ namespace svarog.presentation
         uint m_FontSize = 12;
 
         SFML.Graphics.Text m_Text = new();
-        private RectangleShape m_BackgroundRect = new();
+        private SFML.Graphics.RectangleShape m_BackgroundRect = new();
 
         public SFML.Graphics.Font? CurrentFont
         {
@@ -27,11 +26,11 @@ namespace svarog.presentation
             {
                 m_FontSize = value;
                 m_Text.CharacterSize = m_FontSize;
-                m_BackgroundRect = new RectangleShape(new SFML.System.Vector2f(m_FontSize, m_FontSize));
+                m_BackgroundRect = new SFML.Graphics.RectangleShape(new SFML.System.Vector2f(m_FontSize, m_FontSize));
             }
         }
 
-        public void Draw(Glyph[][] gameGlyphs, Glyph[][] UIGlyphs, RenderTexture target)
+        public void Draw(Glyph[][] gameGlyphs, Glyph[][] UIGlyphs, SFML.Graphics.RenderTexture target)
         {
             for (int i = 0; i < gameGlyphs.Length; i++)
             {
@@ -41,7 +40,7 @@ namespace svarog.presentation
                     var item = UIGlyphs[i][j].IsValid ? UIGlyphs[i][j] : gameGlyphs[i][j];
                     m_BackgroundRect.Position = new SFML.System.Vector2f(width, m_FontSize * j);
                     m_BackgroundRect.FillColor = item.Background;
-                    m_BackgroundRect.Draw(target, RenderStates.Default);
+                    m_BackgroundRect.Draw(target, SFML.Graphics.RenderStates.Default);
                 }
             }
 
@@ -57,7 +56,7 @@ namespace svarog.presentation
                     m_Text.FillColor = item.Foreground;
                     m_Text.Position = new SFML.System.Vector2f(m_FontSize * i + m_FontSize * 0.5f, m_FontSize * j + m_FontSize * 0.5f);
                     m_Text.Origin = m_Text.GetLocalBounds().Size / 2.0f + m_Text.GetLocalBounds().Position;
-                    m_Text.Draw(target, RenderStates.Default);
+                    m_Text.Draw(target, SFML.Graphics.RenderStates.Default);
                 }
             }
         }
