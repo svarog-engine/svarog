@@ -10,11 +10,9 @@ using svarog.input;
 using svarog.presentation;
 using svarog.utility;
 
-using System.Diagnostics;
-using System;
-using System.Web;
 using svarog.procgen.rewriting;
 using svarog.core;
+using svarog.utility.filesystem;
 
 namespace svarog.runner
 {
@@ -96,7 +94,7 @@ namespace svarog.runner
 
         public void RunScriptMain()
         {
-            RunScript(@"dofile ""scripts\\Main.lua""");
+            RunScriptFile("scripts\\Main");
         }
 
         public void RunScript(string code)
@@ -107,28 +105,30 @@ namespace svarog.runner
             }
             catch (LuaScriptException scriptingException)
             {
-                LogError(scriptingException.ToString());
+                var cs = m_Lua["CurrentSystem"] as SystemTracker;
+                LogError("[ in " + cs?.Name + " ] " + scriptingException.ToString());
             }
             catch (LuaException luaException)
             {
-                LogError(luaException.ToString());
+                var cs = m_Lua["CurrentSystem"] as SystemTracker;
+                LogError("[ in " + cs?.Name + " ] " + luaException.ToString());
             }
         }
 
         public void RunScriptFile(string filename)
         {
-            try
+            var code = "";
+            if (m_FileSystem != null)
             {
-                m_Lua.DoFile(filename);
+                code = m_FileSystem.GetFileContent(filename + ".lua");
             }
-            catch (LuaScriptException scriptingException)
-            {
-                LogError(scriptingException.ToString());
-            }
-            catch (LuaException luaException)
-            {
-                LogError(luaException.ToString());
-            }
+
+            RunScript(code);
+        }
+
+        public void RequireModule(string modulePath, string moduleName)
+        {
+            RunScript($"package.preload[\"{moduleName}\"] = function () {m_FileSystem?.GetFileContent(modulePath + ".lua")} end");
         }
 
         #endregion Scripting
@@ -141,6 +141,9 @@ namespace svarog.runner
 
         readonly InputManager m_InputManager;
         IPresentationLayer? m_PresentationLayer = null;
+
+        IFileSystem? m_FileSystem = null;
+        public IFileSystem? FileSystem => m_FileSystem;
 
         private Glyph[][] m_Glyphs;
         private Glyph[][] m_UIGlyphs;
@@ -171,23 +174,23 @@ namespace svarog.runner
 
         public void ReloadConfig()
         {
-            RunScript(@"dofile ""scripts\\engine\\DefaultConfig.lua""");
-            RunScript(@"dofile ""scripts\\Config.lua""");
+            RunScriptFile("scripts\\engine\\DefaultConfig");
+            RunScriptFile("scripts\\Config");
         }
 
         public void ReloadGlossary()
         {
             Svarog.Instance.LogInfo("Loading glossary");
-            RunScript(@"dofile ""scripts\\engine\\Presentation.lua""");
+            RunScriptFile("scripts\\engine\\Presentation");
             RunScript("Glossary = {}");
             RunScript("Glossary.Meta = {}");
             m_Colors = new();
             m_Lua["Colors"] = m_Colors;
             if (m_Lua["Config.Palette"] is string palette)
             {
-                RunScript($@"dofile ""scripts\\presentation\\palettes\\{palette}.lua""");
+                RunScriptFile($"scripts\\presentation\\palettes\\{palette}");
             }
-            RunScript(@"dofile ""scripts\\presentation\\Glossary.lua""");
+            RunScriptFile("scripts\\presentation\\Glossary");
         }
 
         public void ReloadLayers()
@@ -213,7 +216,7 @@ namespace svarog.runner
             }
             m_Lua["Glyphs"] = m_Glyphs;
         }
-        
+
         public void ReloadUIGlyphs()
         {
             var width = (int)((double)m_Lua["Config.Width"]);
@@ -273,6 +276,18 @@ namespace svarog.runner
                 Svarog.Instance.LogInfo("Starting up Svarog!");
 
                 SetupDisplayMode(options);
+
+                if (Path.Exists("data.bin"))
+                {
+                    Svarog.Instance.LogInfo("Running binarized data");
+                    m_FileSystem = new BinFileSystem();
+                }
+                else
+                {
+                    Svarog.Instance.LogInfo("Running non-binarized data");
+                    m_FileSystem = new RawFileSystem();
+                }
+
             });
 
             m_Lua.LoadCLRPackage();
@@ -281,12 +296,31 @@ namespace svarog.runner
             m_Lua["InputStack"] = m_InputManager;
             m_Lua["ActionTriggers"] = m_InputManager.Triggered;
             m_Lua["PCG"] = m_PCG;
-            RunScript(@"Map = require ""scripts\\engine\\Map""");
-            RunScript(@"DistanceMap = require ""scripts\\engine\\DistanceMap""");
-            RunScript(@"Queue = require ""scripts\\engine\\Queue""");
-            RunScript(@"ECS = require ""scripts\\engine\\ecs\\ECS""");
-            RunScript(@"Engine = require ""scripts\\engine\\Engine""");
-            RunScript(@"Input = require ""scripts\\engine\\Input""");
+            m_Lua["CurrentSystem"] = new SystemTracker();
+
+            RequireModule("scripts\\engine\\Map", "Map");
+            //RunScript($"package.preload[\"Map\"] = function () {m_FileSystem?.GetFileContent(".lua")} end");
+            RunScript(@"Map = require 'Map'");
+
+            RequireModule("scripts\\engine\\DistanceMap", "DistanceMap");
+            //RunScript($"package.preload[\"DistanceMap\"] = function () {m_FileSystem?.GetFileContent("scripts\\engine\\DistanceMap.lua")} end");
+            RunScript(@"DistanceMap = require 'DistanceMap'");
+
+            RequireModule("scripts\\engine\\Queue", "Queue");
+            //RunScript($"package.preload[\"Queue\"] = function () {m_FileSystem?.GetFileContent("scripts\\engine\\Queue.lua")} end");
+            RunScript(@"Queue = require 'Queue'");
+
+            RequireModule("scripts\\engine\\ecs\\ECS", "ECS");
+            //RunScript($"package.preload[\"ECS\"] = function () {m_FileSystem?.GetFileContent("scripts\\engine\\ecs\\ECS.lua")} end");
+            RunScript(@"ECS = require 'ECS'");
+
+            RequireModule("scripts\\engine\\Engine", "Engine");
+            //RunScript($"package.preload[\"Engine\"] = function () {m_FileSystem?.GetFileContent("scripts\\engine\\Engine.lua")} end");
+            RunScript(@"Engine = require 'Engine'");
+
+            RequireModule("scripts\\engine\\Input", "Input");
+            //RunScript($"package.preload[\"Input\"] = function () {m_FileSystem?.GetFileContent(".lua")} end");
+            RunScript(@"Input = require 'Input'");
 
             ReloadPCG();
             ReloadConfig();
@@ -296,7 +330,7 @@ namespace svarog.runner
             m_InputManager.ReloadActions();
             commandLine.WithParsed(options => m_PresentationLayer?.Create(options));
 
-            RunScript(@"dofile ""scripts\\Library.lua""");
+            RunScriptFile("scripts\\Library");
             RunScriptMain();
             RunScript(@"Engine.Setup()");
 

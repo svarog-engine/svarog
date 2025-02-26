@@ -1,5 +1,5 @@
 ﻿
-local AIBehavioursSystem = Engine.RegisterEnviroSystem()
+local AIBehavioursSystem = Engine.RegisterEnviroSystem("AI Behaviours")
 
 local function CheckMoveTowardsPlayer(entity)
 	local ai = entity[AIMoveTowardsPlayer]
@@ -35,12 +35,14 @@ local function CheckKeepDistanceFromPlayer(entity)
 	end
 end
 
-function AIBehavioursSystem:Update()
-	StartMeasure()
+function AIBehavioursSystem:ShouldTick()
+	return Dungeons.playerDistance ~= nil
+end
+
+function AIBehavioursSystem:Tick()
 	for _, entity in World:Exec(ECS.Query.All(Creature, Position)):Iterator() do
 		entity[Creature].goals = {}
 		CheckMoveTowardsPlayer(entity)
 		CheckKeepDistanceFromPlayer(entity)
 	end
-	EndMeasure("AI Behaviours")
 end

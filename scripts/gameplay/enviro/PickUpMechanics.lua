@@ -1,7 +1,10 @@
-﻿local PickUpMechanicsSystem = Engine.RegisterEnviroSystem()
+﻿local PickUpMechanicsSystem = Engine.RegisterEnviroSystem("Pickup")
 
-function PickUpMechanicsSystem:Update()
-	StartMeasure()
+function PickUpMechanicsSystem:ShouldTick()
+	return Dungeons.created
+end
+
+function PickUpMechanicsSystem:Tick()
 	for _, entity in World:Exec(ECS.Query.All(Item, Bumped, Position)):Iterator() do
 		local item = entity[Item]
 		local pos = entity[Position]
@@ -15,5 +18,4 @@ function PickUpMechanicsSystem:Update()
 			entity:Unset(Bumped)
 		end
 	end
-	EndMeasure("PickUp")
 end

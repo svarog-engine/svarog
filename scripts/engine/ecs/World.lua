@@ -1,9 +1,16 @@
-local Timer = require("scripts\\engine\\ecs\\Timer")
-local Event = require("scripts\\engine\\ecs\\Event")
-local Entity = require("scripts\\engine\\ecs\\Entity")
-local Archetype = require("scripts\\engine\\ecs\\Archetype")
-local SystemExecutor = require("scripts\\engine\\ecs\\SystemExecutor")
-local EntityRepository = require("scripts\\engine\\ecs\\EntityRepository")
+Svarog:RequireModule( "scripts\\engine\\ecs\\Timer", "Timer")
+Svarog:RequireModule( "scripts\\engine\\ecs\\Event", "Event")
+Svarog:RequireModule( "scripts\\engine\\ecs\\Entity", "Entity")
+Svarog:RequireModule( "scripts\\engine\\ecs\\Archetype", "Archetype")
+Svarog:RequireModule( "scripts\\engine\\ecs\\SystemExecutor", "SystemExecutor")
+Svarog:RequireModule( "scripts\\engine\\ecs\\EntityRepository", "EntityRepository")
+
+local Timer = require "Timer"
+local Event = require "Event"
+local Entity = require "Entity"
+local Archetype = require "Archetype"
+local SystemExecutor = require "SystemExecutor"
+local EntityRepository = require "EntityRepository"
 
 local World = {}
 World.__index = World

@@ -1,8 +1,11 @@
 ﻿
-local DoorMechanicsSystem = Engine.RegisterEnviroSystem()
+local DoorMechanicsSystem = Engine.RegisterEnviroSystem("Doors")
 
-function DoorMechanicsSystem:Update()
-	StartMeasure()
+function DoorMechanicsSystem:ShouldTick()
+	return true
+end
+
+function DoorMechanicsSystem:Tick()
 	for _, entity in World:Exec(ECS.Query.All(Door, Position, Bumped)):Iterator() do
 		local door = entity[Door]
 		local key = entity[Key]
@@ -55,5 +58,4 @@ function DoorMechanicsSystem:Update()
 		end
 		entity:Unset(Bumped)
 	end
-	EndMeasure("Doors")
 end

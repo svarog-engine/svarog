@@ -1,5 +1,6 @@
+Svarog:RequireModule("scripts\\engine\\ecs\\QueryResult", "QueryResult")
 
-local QueryResult = require("scripts\\engine\\ecs\\QueryResult")
+local QueryResult = require "QueryResult"
 
 --[[
    Global cache result.

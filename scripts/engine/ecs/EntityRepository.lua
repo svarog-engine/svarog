@@ -1,4 +1,6 @@
-local Event = require("scripts\\engine\\ecs\\Event")
+Svarog:RequireModule( "scripts\\engine\\ecs\\Event", "Event")
+
+local Event = require "Event"
 
 --[[
    The repository (database) of entities in a world.

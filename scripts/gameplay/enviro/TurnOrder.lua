@@ -1,8 +1,11 @@
 ﻿
-local TurnOrderSystem = Engine.RegisterEnviroSystem()
+local TurnOrderSystem = Engine.RegisterEnviroSystem("Turn Order")
 
-function TurnOrderSystem:Update()
-	StartMeasure()
+function TurnOrderSystem:ShouldTick()
+	return Dungeons.created
+end
+
+function TurnOrderSystem:Tick()
 	for _, entity in World:Exec(ECS.Query.All(Creature)):Iterator() do
 		local creature = entity[Creature]
 			
@@ -15,5 +18,4 @@ function TurnOrderSystem:Update()
 			end
 		end
 	end
-	EndMeasure("TurnOrder")
 end

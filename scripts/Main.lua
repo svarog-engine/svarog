@@ -3,7 +3,7 @@
 IncludeGameplay "DungeonMaker"
 IncludeGameplay "BumpMechanics"
 IncludeGameplay "ItemLibrary"
-IncludeGameplay "algorithms//RecursiveShadowcast"
+IncludeGameplay "algorithms\\RecursiveShadowcast"
 
 LoadPlayerSystem "InputActions"
 

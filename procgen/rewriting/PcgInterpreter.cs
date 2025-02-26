@@ -1,6 +1,4 @@
-﻿using Rubjerg.Graphviz;
-
-using svarog.runner;
+﻿using svarog.runner;
 using svarog.utility;
 
 using System.Diagnostics;
@@ -225,7 +223,15 @@ namespace svarog.procgen.rewriting
 
         public void LoadProcs(string name)
         {
-            m_Storage.LoadProcs(File.ReadAllText($"resources\\procgen\\{name}.pcg"));
+            var fileSystem = Svarog.Instance.FileSystem;
+            if(fileSystem != null)
+            {
+                m_Storage.LoadProcs(fileSystem.GetFileContent($"resources\\procgen\\{name}.pcg"));
+            }
+            else
+            {
+                Svarog.Instance.LogError($"Couldn't load file: resources\\procgen\\{name}.pcg");
+            }
         }
 
         public void EmitDot(bool show = false)
@@ -243,22 +249,22 @@ namespace svarog.procgen.rewriting
             var dot = m_Storage.ToDot();
             if (show) Dot(dot);
 
-            try
-            {
-                RootGraph root = RootGraph.FromDotString("digraph G {\n\n" + dot + "\n\n}");
-                RootGraph layout = root.CreateLayout("dot", Randomness.Instance.Coin() ? CoordinateSystem.BottomLeft : CoordinateSystem.TopLeft);
+            //try
+            //{
+            //    RootGraph root = RootGraph.FromDotString("digraph G {\n\n" + dot + "\n\n}");
+            //    RootGraph layout = root.CreateLayout("dot", Randomness.Instance.Coin() ? CoordinateSystem.BottomLeft : CoordinateSystem.TopLeft);
 
-                foreach (var n in layout.Nodes())
-                {
-                    var p = n.GetPosition();
-                    m_Storage.Positions[uint.Parse(n.GetName())] = new SFML.System.Vector2f((float)p.X + Randomness.Instance.Range(-10, 10), (float)p.Y + Randomness.Instance.Range(-10, 10));
-                }
-            } 
-            catch (Exception e)
-            {
-                Svarog.Instance.LogError(e.Message);
-                Svarog.Instance.LogError(e.StackTrace ?? "");
-            }
+            //    foreach (var n in layout.Nodes())
+            //    {
+            //        var p = n.GetPosition();
+            //        m_Storage.Positions[uint.Parse(n.GetName())] = new SFML.System.Vector2f((float)p.X + Randomness.Instance.Range(-10, 10), (float)p.Y + Randomness.Instance.Range(-10, 10));
+            //    }
+            //} 
+            //catch (Exception e)
+            //{
+            //    Svarog.Instance.LogError(e.Message);
+            //    Svarog.Instance.LogError(e.StackTrace ?? "");
+            //}
         }
 
         public void Clear()

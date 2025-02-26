@@ -209,7 +209,7 @@ local function Reload()
     Svarog.Instance:ReloadPresenter()
 
     InputStack:ReloadActions()
-    dofile "scripts\\Library.lua"
+    Svarog:RunScriptFile("scripts\\Library")
     Svarog.Instance:RunScriptMain()
     Setup()
 end
@@ -261,9 +261,33 @@ function RegisterPlayerSystem()
     return system
 end
 
-function RegisterEnviroSystem()
+function RegisterEnviroSystem(name)
     local system = ECS.System(Engine.WorldSystem())
     system.Order = #Pipeline_Enviro
+    system.Name = name or ""
+    
+    system.ShouldUpdate = function(time)
+        CurrentSystem:Set(name)
+        local value = false
+        if system.ShouldTick ~= nil then
+            value = system:ShouldTick(time)
+        else
+            Svarog.LogWarning("ShouldTick not implemented for " .. name)
+        end
+        CurrentSystem:Reset()
+        return value
+    end
+
+    system.Update = function(self)
+        CurrentSystem:Set(name)
+        StartMeasure()
+        if self.Tick ~= nil then
+            self:Tick()
+        end
+        EndMeasure(name)
+        CurrentSystem:Reset()
+    end
+
     table.insert(Pipeline_Enviro, system)
     return system
 end
@@ -291,6 +315,7 @@ function RegisterInputSystem(inputs, fn)
     end)
 
     table.insert(Pipeline_Player, system)
+    return system
 end
 
 function OnStartup(fun) 
@@ -298,19 +323,19 @@ function OnStartup(fun)
 end
 
 function IncludeGameplay(name)
-    dofile("scripts\\gameplay\\" .. name .. ".lua")
+    Svarog:RunScriptFile("scripts\\gameplay\\" .. name)
 end
 
 function LoadPlayerSystem(name)
-    dofile("scripts\\gameplay\\player\\" .. name .. ".lua")
+    Svarog:RunScriptFile("scripts\\gameplay\\player\\" .. name)
 end
 
 function LoadEnviroSystem(name)
-    dofile("scripts\\gameplay\\enviro\\" .. name .. ".lua")
+    Svarog:RunScriptFile("scripts\\gameplay\\enviro\\" .. name)
 end
 
 function LoadRenderSystem(name)
-    dofile("scripts\\gameplay\\render\\" .. name .. ".lua")
+    Svarog:RunScriptFile("scripts\\gameplay\\render\\" .. name)
 end
 
 function Hex(rgb)

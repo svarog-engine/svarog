@@ -109,80 +109,16 @@ local function signum(number)
    end
 end
 
-local function FindPick(used, w, h, store, n, ne, bound, doors, hidden)
-	if hidden == nil then hidden = false end
-
-	local d = store:GetPosition(n) - store:GetPosition(ne)
-
-	local dx = 0
-	local dy = 0
-	local dtx = 0
-	local dty = 0
-	local di = 0
-	while true do
-		local line = Geometry.MakeLine(math.floor(w / 2) + dx, math.floor(h / 2) + dy, math.floor(w / 2 + d.X + dtx), math.floor(h / 2 + d.Y + dty))
-		local candidates = Geometry.Intersect(bound, line).Points
-		local count = candidates.Count
-		local picks = FromList(candidates)
-		if count == 0 then 
-			di = di + 1
-			dx = dx + Rand:Range(-1, 2)
-			dy = dy + Rand:Range(-1, 2)
-			dtx = dtx + Rand:Range(-1, 2)
-			dty = dty + Rand:Range(-1, 2)
-		else
-			for _, pick in ipairs(picks) do
-				local index = pick.Y * Config.Width + pick.X
-				if used[index] == nil then
-					used[index] = true
-					local door = { X = pick.X, Y = pick.Y, Neighbor = ne, Hidden = hidden }
-					table.insert(doors, door)
-					break
-				end
-			end
-			break
-		end
-	end
-end
-
 local function MakeDungeon()
-	PCG:Clear()
-	PCG:LoadProcs("dungeon")
-	PCG:RunProc("start", 4)
-	PCG:RunProc("connect", 7)
-	PCG:RunProc("entry", 1)
-	PCG:RunProc("zone", 1)
-	PCG:RunProc("branch", 2)
-	PCG:RunProc("zone", 2)
-	PCG:RunProc("hard", 5)
-	PCG:RunProc("cleanup", 10)
-	PCG:RunProc("tempconn", 5)
-	PCG:RunProc("tempsecret", 3)
-	PCG:RunProc("template", 10)
-	PCG:RunProc("secrets", 10)
-	PCG:RunProc("exit", 1)
-	PCG:RunProc("secrets", 1)
-	PCG:RunProc("intro", 5)
-	PCG:RunProc("intronopelock", 5)
-	PCG:RunProc("badlock", 5)	
-	PCG:EmitDot()
-
-	local store = PCG:Storage()
-
 	Dungeons = {}
 	Dungeons.maps = {}
+	Dungeons.created = true
 
-	local entry = nil
-
-	for _, n in pairs(FromList(store.Nodes)) do
-		if store:GetAnnotation(n) == "ENTRY" then
-			entry = n
-		end
-
+	for n = 1, 10 do
 		local w, h = Config.Width, Config.Height
 		Dungeons.maps[n] = {}
 		Dungeons.maps[n].index = n
-		Dungeons.maps[n].name = store:GetAnnotation(n)
+		Dungeons.maps[n].name = "Room" .. n
 		Dungeons.maps[n].entities = {}
 		Dungeons.maps[n].entitiesList = {}
 		Dungeons.maps[n].passable = Map:New(Config.Width, Config.Height)
@@ -217,14 +153,6 @@ local function MakeDungeon()
 		local doors = {}
 		local used = {}
 
-		for _, ne in pairs(FromList(store:ListOutNeighbors(n))) do
-			FindPick(used, w, h, store, n, ne, bound, doors)
-		end
-
-		for _, ne in pairs(FromList(store:ListInNeighbors(n))) do
-			FindPick(used, w, h, store, n, ne, bound, doors, true)
-		end
-
 		local pts = Geometry.Surface(union).Points:GetEnumerator()
 		while pts:MoveNext() do
 			local pt = pts.Current
@@ -244,10 +172,6 @@ local function MakeDungeon()
 				doorEntity.hidden = true
 			end
 		end
-	end
-
-	if entry ~= nil then
-		MakeDungeonRoom(entry)
 	end
 end
 
