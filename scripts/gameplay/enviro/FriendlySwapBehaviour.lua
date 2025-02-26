@@ -1,7 +1,7 @@
 ﻿
 local FriendlySwapBehaviourSystem = Engine.RegisterEnviroSystem("Friendly Swap")
 
-function FriendlySwapBehaviourSystem:ShouldUpdate()
+function FriendlySwapBehaviourSystem:ShouldTick()
 	return Dungeons.created
 end
 

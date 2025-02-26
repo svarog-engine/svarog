@@ -1,6 +1,6 @@
 ﻿local PickUpMechanicsSystem = Engine.RegisterEnviroSystem("Pickup")
 
-function PickUpMechanicsSystem:ShouldUpdate()
+function PickUpMechanicsSystem:ShouldTick()
 	return Dungeons.created
 end
 

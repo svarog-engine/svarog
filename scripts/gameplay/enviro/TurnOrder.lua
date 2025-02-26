@@ -1,7 +1,7 @@
 ﻿
 local TurnOrderSystem = Engine.RegisterEnviroSystem("Turn Order")
 
-function TurnOrderSystem:ShouldUpdate()
+function TurnOrderSystem:ShouldTick()
 	return Dungeons.created
 end
 

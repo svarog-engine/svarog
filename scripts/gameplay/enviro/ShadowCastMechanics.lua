@@ -17,7 +17,7 @@ function IsTransparent(x, y)
 	end
 end
 
-function ShadowcastSystem:ShouldUpdate()
+function ShadowcastSystem:ShouldTick()
 	return Dungeons.created and DebugToggle_FOV
 end
 

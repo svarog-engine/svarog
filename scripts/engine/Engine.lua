@@ -264,12 +264,30 @@ end
 function RegisterEnviroSystem(name)
     local system = ECS.System(Engine.WorldSystem())
     system.Order = #Pipeline_Enviro
-    system.Name = name
+    system.Name = name or ""
+    
+    system.ShouldUpdate = function(time)
+        CurrentSystem:Set(name)
+        local value = false
+        if system.ShouldTick ~= nil then
+            value = system:ShouldTick(time)
+        else
+            Svarog.LogWarning("ShouldTick not implemented for " .. name)
+        end
+        CurrentSystem:Reset()
+        return value
+    end
+
     system.Update = function(self)
+        CurrentSystem:Set(name)
         StartMeasure()
-        self:Tick()
-        EndMeasure(self.Name)
-    end 
+        if self.Tick ~= nil then
+            self:Tick()
+        end
+        EndMeasure(name)
+        CurrentSystem:Reset()
+    end
+
     table.insert(Pipeline_Enviro, system)
     return system
 end

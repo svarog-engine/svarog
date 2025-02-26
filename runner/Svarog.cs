@@ -101,7 +101,7 @@ namespace svarog.runner
             RunScriptFile("scripts\\Main");
         }
 
-        public void RunScript(string code, string filename = "")
+        public void RunScript(string code)
         {
             try
             {
@@ -109,11 +109,13 @@ namespace svarog.runner
             }
             catch (LuaScriptException scriptingException)
             {
-                LogError(filename + "\n" + scriptingException.ToString());
+                var cs = m_Lua["CurrentSystem"] as SystemTracker;
+                LogError("[ in " + cs?.Name + " ] " + scriptingException.ToString());
             }
             catch (LuaException luaException)
             {
-                LogError(filename + "\n" + luaException.ToString());
+                var cs = m_Lua["CurrentSystem"] as SystemTracker;
+                LogError("[ in " + cs?.Name + " ] " + luaException.ToString());
             }
         }
 
@@ -125,7 +127,7 @@ namespace svarog.runner
                 code = m_FileSystem.GetFileContent(filename + ".lua");
             }
 
-            RunScript(code, filename);
+            RunScript(code);
         }
 
         public void RequireModule(string modulePath, string moduleName)
@@ -298,6 +300,7 @@ namespace svarog.runner
             m_Lua["InputStack"] = m_InputManager;
             m_Lua["ActionTriggers"] = m_InputManager.Triggered;
             m_Lua["PCG"] = m_PCG;
+            m_Lua["CurrentSystem"] = new SystemTracker();
 
             RequireModule("scripts\\engine\\Map", "Map");
             //RunScript($"package.preload[\"Map\"] = function () {m_FileSystem?.GetFileContent(".lua")} end");
@@ -351,7 +354,7 @@ namespace svarog.runner
                 m_InputManager.Update();
                 m_PresentationLayer?.Update();
 
-                RunScript(@"Engine.Update()", "Engine");
+                RunScript(@"Engine.Update()");
                 m_Counter++;
                 m_Delta = m_Clock.ElapsedTime.AsMilliseconds();
 

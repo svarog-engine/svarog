@@ -1,7 +1,7 @@
 ﻿
 local PassabilityUpdateSystem = Engine.RegisterEnviroSystem("Passability")
 
-function PassabilityUpdateSystem:ShouldUpdate()
+function PassabilityUpdateSystem:ShouldTick()
 	return Dungeons.created and PlayerEntity ~= nil
 end
 

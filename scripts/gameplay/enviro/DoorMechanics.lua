@@ -1,6 +1,10 @@
 ﻿
 local DoorMechanicsSystem = Engine.RegisterEnviroSystem("Doors")
 
+function DoorMechanicsSystem:ShouldTick()
+	return true
+end
+
 function DoorMechanicsSystem:Tick()
 	for _, entity in World:Exec(ECS.Query.All(Door, Position, Bumped)):Iterator() do
 		local door = entity[Door]
