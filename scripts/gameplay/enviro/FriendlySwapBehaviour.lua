@@ -1,29 +1,28 @@
 ﻿
-local FriendlySwapBehaviourSystem = Engine.RegisterEnviroSystem()
+local FriendlySwapBehaviourSystem = Engine.RegisterEnviroSystem("Friendly Swap")
 
-function FriendlySwapBehaviourSystem:Update()
-	StartMeasure()
-	if Dungeons.created then
-		for _, friend in World:Exec(ECS.Query.All(Creature, Friendly, Bumped, Position)):Iterator() do
-			local x, y = friend[Position].x, friend[Position].y
-			local who = World:FetchEntityById(friend[Bumped].by)
+function FriendlySwapBehaviourSystem:ShouldUpdate()
+	return Dungeons.created
+end
 
-			if who[Player] ~= nil then
-				RemoveEntityFromDungeon(friend)
-				friend[Position].x = who[Position].x
-				friend[Position].y = who[Position].y
-				AddEntityToDungeon(friend[Position].x, friend[Position].y, friend)
+function FriendlySwapBehaviourSystem:Tick()
+	for _, friend in World:Exec(ECS.Query.All(Creature, Friendly, Bumped, Position)):Iterator() do
+		local x, y = friend[Position].x, friend[Position].y
+		local who = World:FetchEntityById(friend[Bumped].by)
 
-				RemoveEntityFromDungeon(who)
-				who[Position].x = x
-				who[Position].y = y
-				AddEntityToDungeon(x, y, who)
+		if who[Player] ~= nil then
+			RemoveEntityFromDungeon(friend)
+			friend[Position].x = who[Position].x
+			friend[Position].y = who[Position].y
+			AddEntityToDungeon(friend[Position].x, friend[Position].y, friend)
 
-				friend:Unset(Bumped)
-				friend[Creature].actions = -1
-			end
+			RemoveEntityFromDungeon(who)
+			who[Position].x = x
+			who[Position].y = y
+			AddEntityToDungeon(x, y, who)
+
+			friend:Unset(Bumped)
+			friend[Creature].actions = -1
 		end
 	end
-
-	EndMeasure("FriendlySwap")
 end

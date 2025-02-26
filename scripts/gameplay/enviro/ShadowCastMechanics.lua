@@ -1,6 +1,4 @@
-
-
-local ShadowcastSystem = Engine.RegisterEnviroSystem()
+local ShadowcastSystem = Engine.RegisterEnviroSystem("Shadowcast")
 
 local FOV_algorithm = Algorithms.RecursiveShadowcast
 local arc = 2 * math.pi -- full circle
@@ -19,14 +17,14 @@ function IsTransparent(x, y)
 	end
 end
 
-function ShadowcastSystem:Update()
-	StartMeasure()
-	if Dungeons.created and DebugToggle_FOV then
-		local radius = Config.FOVRadius
-		local playerPosition = PlayerEntity[Position]
-		Dungeon.visibility:Reset(0)
+function ShadowcastSystem:ShouldUpdate()
+	return Dungeons.created and DebugToggle_FOV
+end
 
-		FOV_algorithm(playerPosition.x, playerPosition.y, radius, IsTransparent, OnVisible, 0, arc)
-	end
-	EndMeasure("Shadowcast")
+function ShadowcastSystem:Tick()
+	local radius = Config.FOVRadius
+	local playerPosition = PlayerEntity[Position]
+	Dungeon.visibility:Reset(0)
+
+	FOV_algorithm(playerPosition.x, playerPosition.y, radius, IsTransparent, OnVisible, 0, arc)
 end

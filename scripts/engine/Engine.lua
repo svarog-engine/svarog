@@ -261,9 +261,15 @@ function RegisterPlayerSystem()
     return system
 end
 
-function RegisterEnviroSystem()
+function RegisterEnviroSystem(name)
     local system = ECS.System(Engine.WorldSystem())
     system.Order = #Pipeline_Enviro
+    system.Name = name
+    system.Update = function(self)
+        StartMeasure()
+        self:Tick()
+        EndMeasure(self.Name)
+    end 
     table.insert(Pipeline_Enviro, system)
     return system
 end
@@ -291,6 +297,7 @@ function RegisterInputSystem(inputs, fn)
     end)
 
     table.insert(Pipeline_Player, system)
+    return system
 end
 
 function OnStartup(fun) 

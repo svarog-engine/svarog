@@ -15,6 +15,8 @@ using System;
 using System.Web;
 using svarog.procgen.rewriting;
 using svarog.utility.filesystem;
+using System.Reflection;
+using System.Reflection.PortableExecutable;
 
 namespace svarog.runner
 {
@@ -99,7 +101,7 @@ namespace svarog.runner
             RunScriptFile("scripts\\Main");
         }
 
-        public void RunScript(string code)
+        public void RunScript(string code, string filename = "")
         {
             try
             {
@@ -107,34 +109,23 @@ namespace svarog.runner
             }
             catch (LuaScriptException scriptingException)
             {
-                LogError(scriptingException.ToString());
+                LogError(filename + "\n" + scriptingException.ToString());
             }
             catch (LuaException luaException)
             {
-                LogError(luaException.ToString());
+                LogError(filename + "\n" + luaException.ToString());
             }
         }
 
         public void RunScriptFile(string filename)
         {
-            try
+            var code = "";
+            if (m_FileSystem != null)
             {
-                var code = "";
-                if (m_FileSystem != null)
-                {
-                    code = m_FileSystem.GetFileContent(filename + ".lua");
-                }
+                code = m_FileSystem.GetFileContent(filename + ".lua");
+            }
 
-                RunScript(code);
-            }
-            catch (LuaScriptException scriptingException)
-            {
-                LogError(scriptingException.ToString());
-            }
-            catch (LuaException luaException)
-            {
-                LogError(luaException.ToString());
-            }
+            RunScript(code, filename);
         }
 
         public void RequireModule(string modulePath, string moduleName)
@@ -288,11 +279,16 @@ namespace svarog.runner
 
                 SetupDisplayMode(options);
 
-#if DEBUGBIN || RELEASEBIN
-                m_FileSystem = new BinFileSystem();
-#else
-                m_FileSystem = new RawFileSystem();
-#endif
+                if (Path.Exists("data.bin"))
+                {
+                    Svarog.Instance.LogInfo("Running binarized data");
+                    m_FileSystem = new BinFileSystem();
+                }
+                else
+                {
+                    Svarog.Instance.LogInfo("Running non-binarized data");
+                    m_FileSystem = new RawFileSystem();
+                }
 
             });
 
@@ -355,7 +351,7 @@ namespace svarog.runner
                 m_InputManager.Update();
                 m_PresentationLayer?.Update();
 
-                RunScript(@"Engine.Update()");
+                RunScript(@"Engine.Update()", "Engine");
                 m_Counter++;
                 m_Delta = m_Clock.ElapsedTime.AsMilliseconds();
 
