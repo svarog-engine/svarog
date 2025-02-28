@@ -74,11 +74,10 @@ namespace svarog.utility
             return conv;
         }
 
-        //public N CreateDistanceField<N, Neighborhood>(ICollection<Vector2i> sources, Func<IMap<T, M>, int> proc)
-        //    where N: IMap<int, N>
-        //    where Neighborhood : INeighborhood, new()
-        //{
-
-        //}
+        public IntMap CreateDistanceField<Neighborhood>(ICollection<Vector2i> sources, Func<M, int> proc)
+            where Neighborhood : INeighborhood, new()
+        {
+            return new IntMap(10, 10);
+        }
     }
 }
