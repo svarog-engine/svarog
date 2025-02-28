@@ -28,46 +28,16 @@ namespace svarog.presentation
         void ReloadPresentationMode(IPresentationMode mode)
         {
             m_Mode = mode;
-            if (mode is FontPresentationMode fontMode)
-            {
-                var fontRenderer = new GlyphFontRenderer();
-                m_Renderer = fontRenderer;
-                m_Renderer.FontSize = (uint)fontMode.Size;
-
-                if (Svarog.Instance.Scripting["Config.FontSize"] is double fontSize)
-                {
-                    m_Renderer.FontSize = (uint)fontSize;
-                }
-
-                if (Svarog.Instance.Scripting["Config.Font"] is string fontFamily)
-                {
-                    if (m_Fonts.ContainsKey(fontFamily))
-                    {
-                        fontRenderer.CurrentFont = m_Fonts[fontFamily];
-                    }
-                    else
-                    {
-                        Svarog.Instance.LogWarning($"Font [{fontFamily}] was not found. No default font set!");
-                    }
-                }
-
-                if (Svarog.Instance.Scripting["Config.Width"] is double worldWidthValue)
-                {
-                    m_WindowWidth = (uint)(worldWidthValue * m_Renderer.FontSize);
-                }
-
-                if (Svarog.Instance.Scripting["Config.Height"] is double worldHeightValue)
-                {
-                    m_WindowHeight = (uint)(worldHeightValue * m_Renderer.FontSize);
-                }
-            }
-            else if (mode is SpritePresentationMode spriteMode)
+            if (mode is SpritePresentationMode spriteMode)
             {
                 var spriteRenderer = new GlyphSpriteRenderer();
                 m_Renderer = spriteRenderer;
                 spriteRenderer.FontSize = (uint)spriteMode.Size;
-                spriteRenderer.RowLength = (uint)spriteMode.Row;
                 spriteRenderer.Texture = m_Sprites[spriteMode.Font];
+                spriteRenderer.OffsetX = spriteMode.OffsetX;
+                spriteRenderer.OffsetY = spriteMode.OffsetY;
+                spriteRenderer.PaddingX = spriteMode.PaddingX;
+                spriteRenderer.PaddingY = spriteMode.PaddingY;
 
                 if (Svarog.Instance.Scripting["Config.FontSize"] is double fontSizeValue)
                 {
@@ -83,6 +53,10 @@ namespace svarog.presentation
                 {
                     m_WindowHeight = (uint)(worldHeightValue * m_Renderer.FontSize * spriteRenderer.Scale);
                 }
+            }
+            else
+            {
+                Svarog.Instance.LogInfo("[Presentation] Unsoported presentation mode! Please, use SpritePresentationMode!");
             }
         }
 
@@ -122,82 +96,6 @@ namespace svarog.presentation
             };
         }
 
-        void LoadFonts()
-        {
-            if (m_Fonts.Count > 0)
-            {
-                m_Fonts.Clear();
-            }
-
-            // Unfortunate hack, leaving raw loading fonts as it is... Will investigate more in future
-            var fileSystem = Svarog.Instance.FileSystem;
-            if (fileSystem is RawFileSystem)
-            {
-                LoadFontsRaw();
-            }
-            else
-            {
-                LoadFontsBin();
-            }
-        }
-        void LoadFontsBin()
-        {
-            var fileSystem = Svarog.Instance.FileSystem;
-            if (fileSystem != null)
-            {
-                foreach (var fontFile in fileSystem.GetFiles(@"resources\fonts", ".ttf"))
-                {
-                    var startIndex = fontFile.LastIndexOf("\\") + 1;
-                    var endIndex = fontFile.LastIndexOf(".ttf");
-                    var name = fontFile.Substring(startIndex, endIndex - startIndex);
-
-                    m_Fonts[name] = new Font(fileSystem.GetAsset(fontFile));
-                }
-
-                foreach (var fontFile in fileSystem.GetFiles(@"resources\fonts\licensed", ".ttf"))
-                {
-                    var startIndex = fontFile.LastIndexOf("\\") + 1;
-                    var endIndex = fontFile.LastIndexOf(".ttf");
-                    var name = fontFile.Substring(startIndex, endIndex - startIndex);
-
-                    m_Fonts[name] = new Font(fileSystem.GetAsset(fontFile));
-                }
-            }
-        }
-
-        void LoadFontsRaw()
-        {
-            DirectoryInfo d = new DirectoryInfo(@"resources/fonts");
-            if (d.Exists)
-            {
-                FileInfo[] files = d.GetFiles("*.ttf");
-                foreach (var file in files)
-                {
-                    var name = file.Name.Substring(0, file.Name.LastIndexOf(".ttf"));
-                    m_Fonts[name] = new SFML.Graphics.Font(file.FullName);
-                }
-
-                d = new DirectoryInfo(@"resources/fonts/licensed");
-                if (d.Exists)
-                {
-                    files = d.GetFiles("*.ttf");
-
-                    foreach (var file in files)
-                    {
-                        var name = file.Name.Substring(0, file.Name.LastIndexOf(".ttf"));
-                        m_Fonts[name] = new SFML.Graphics.Font(file.FullName);
-                    }
-                }
-                else
-                {
-                    Svarog.Instance.LogInfo("Licensed font folder not present.");
-                }
-            }
-            else
-            {
-                Svarog.Instance.LogInfo("Font folder not present.");
-            }
-        }
         void LoadSpritesheets()
         {
             var fileSystem = Svarog.Instance.FileSystem;
@@ -249,7 +147,6 @@ namespace svarog.presentation
 
         private void LoadContent()
         {
-            LoadFonts();
             LoadSpritesheets();
 
             var lua = Svarog.Instance.Scripting;

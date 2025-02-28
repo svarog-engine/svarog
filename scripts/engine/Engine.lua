@@ -47,24 +47,19 @@ local Measurements = {
 local function ProcessLayer(changelist, matrix, pres)
     local glos = Glossary[pres]
     local type = Glossary.Meta[pres].Type
-	for i, c in ipairs(changelist) do        
+	for i, c in ipairs(changelist) do
         if matrix[c.X] ~= nil and matrix[c.X][c.Y] ~= nil then
             local item = matrix[c.X][c.Y]
             if c.Tile ~= nil then 
                 local tile = glos[c.Tile]
                 if tile ~= nil then
-                    if type == EPresentationMode.Sprite then
-                        item.TileX = tile.x
-                        item.TileY = tile.y
-                    else 
-                        item.Presentation = tile.char
-                    end
+                    item.TileX = tile.x
+                    item.TileY = tile.y
                     item.Foreground = tile.fg
                     item.Background = tile.bg
                 end
             end
 
-		    if c.Presentation ~= nil then item.Presentation = c.Presentation end
 		    if c.Foreground ~= nil then item.Foreground = c.Foreground end
 		    if c.Background ~= nil then item.Background = c.Background end
         end
@@ -105,17 +100,13 @@ local function Symbol(x, y, glyph, fg, bg, layer)
     local def = Config.Presentation or "Default"
     local renderlayer = layer or "Game"
 
-    if Glossary.Meta[def].Type == EPresentationMode.Sprite then
-        local glyphValue = glyph
-        if glyph == " " then  glyphValue = "empty" end
+    local glyphValue = glyph
+    if glyph == " " then  glyphValue = "empty" end
 
-        local overrides = {}
-        if fg ~= nil then overrides.fg = fg end
-        if bg ~= nil then overrides.bg = bg end
-        Glyph(x, y, glyphValue, overrides, renderlayer)
-    else
-        Engine.Draw({ X = x - 1, Y = y - 1, Presentation = glyph or ".", Foreground = fg or Colors.Yellow, Background = bg or Colors.Red }, renderlayer)
-    end
+    local overrides = {}
+    if fg ~= nil then overrides.fg = fg end
+    if bg ~= nil then overrides.bg = bg end
+    Glyph(x, y, glyphValue, overrides, renderlayer)
 end 
 
 local function Write(x, y, text, fg, bg, layer)

@@ -48,7 +48,13 @@ namespace svarog.presentation
             }
         }
 
-        public uint RowLength { get; set; }
+        public int PaddingX { get; set; } = 0;
+        public int PaddingY { get; set; } = 0;
+
+        public int OffsetX { get; set; } = 0;
+        public int OffsetY { get; set; } = 0;
+
+
 
         public void Draw(Glyph[][] gameGlyphs, Glyph[][] UIGlyphs, RenderTexture target)
         {
@@ -74,7 +80,7 @@ namespace svarog.presentation
                     m_Sprite.Color = item.Foreground;
                     m_Sprite.Scale = scale;
                     m_Sprite.Position = new SFML.System.Vector2f(m_FontSize * i * m_Scale, m_FontSize * j * m_Scale);
-                    m_Sprite.TextureRect = new((int)(item.TileX * m_FontSize), (int)(item.TileY * m_FontSize), (int)m_FontSize, (int)m_FontSize);
+                    m_Sprite.TextureRect = new((int)(item.TileX * (m_FontSize + PaddingX)) + OffsetX, (int)(item.TileY * (m_FontSize + PaddingY)) + OffsetY, (int)m_FontSize, (int)m_FontSize);
                     m_Sprite.Draw(target, RenderStates.Default);                    
                 }
             }

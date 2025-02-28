@@ -214,8 +214,7 @@ namespace svarog.runner
                 m_Glyphs[i] = new Glyph[height];
                 for (int j = 0; j < height; j++)
                 {
-                    m_Glyphs[i][j] = new Glyph(" ", Colors.Black, Colors.Black);
-                    //m_Glyphs[i][j] = new Glyph("a", Colors.Random, Colors.Random);
+                    m_Glyphs[i][j] = new Glyph(Colors.Black, Colors.Black);
                 }
             }
             m_Lua["Glyphs"] = m_Glyphs;
