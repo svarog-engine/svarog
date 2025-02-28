@@ -2,6 +2,11 @@
 {
     public class RawFileSystem : IFileSystem
     {
+        public bool FileExists(string path)
+        {
+            return Path.Exists(path);
+        }
+
         public byte[] GetAsset(string name)
         {
             return File.ReadAllBytes(name);

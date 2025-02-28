@@ -329,6 +329,10 @@ function LoadRenderSystem(name)
     Svarog:RunScriptFile("scripts\\gameplay\\render\\" .. name)
 end
 
+function LoadScriptIfExists(name)
+    Svarog:RunScriptFileIfExists("scripts\\" .. name)
+end
+
 function Hex(rgb)
     return Colors:Hex(rgb)
 end

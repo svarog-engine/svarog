@@ -3,7 +3,7 @@ DebugEnitySpawnRenderSystem = Engine.RegisterRenderSystem()
 function DebugEnitySpawnRenderSystem:Render()
 	if DebugToggle_EntitySpawn then
 		local itemList = DebugSpawnLibrary
-		local widget = UI[DebugSpawnerWidget]
+		local widget = DebugUI[DebugSpawnerWidget]
 
 		widget.size = TableLength(itemList)
 
@@ -26,7 +26,7 @@ function DebugEnitySpawnRenderSystem:Render()
 end
 
 function DebugEnitySpawnRenderSystem:Restore()
-	local widget = UI[DebugSpawnerWidget]
+	local widget = DebugUI[DebugSpawnerWidget]
 	for i = widget.left, widget.left + widget.width do
 		for j = widget.top, widget.top + widget.height do
 			Engine.Glyph(i, j, "invalid",  { fg = Colors.Red, bg = Colors.Black}, "UI")
