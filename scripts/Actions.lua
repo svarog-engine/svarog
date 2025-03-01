@@ -27,6 +27,8 @@ Actions.TargetOverlay = {
 	Right	= { Input.Press("Key: Right") },
 	Up		= { Input.Press("Key: Up") },
 	Down	= { Input.Press("Key: Down") },
+	MouseMove	= { Input.MouseMove("Mouse: Move") },
+	MouseCofirm = { Input.Press("Mouse: Left")},
 	Confirm	= { Input.Press("Key: Enter") },
 	Exit	= { Input.Press("Key: Escape") },
 }

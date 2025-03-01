@@ -4,7 +4,6 @@ using SFML.Window;
 using svarog.input;
 using svarog.runner;
 using svarog.utility;
-using svarog.utility.filesystem;
 
 namespace svarog.presentation
 {
@@ -92,7 +91,8 @@ namespace svarog.presentation
 
             m_Window.MouseMoved += (object? _, MouseMoveEventArgs args) =>
             {
-                Svarog.Instance.EnqueueInput(new InputAction(EInputActionType.Hold, "Mouse: Move", 0, args.X, args.Y));
+                var relative = GetRelativeMousePosition(args.X, args.Y);
+                Svarog.Instance.EnqueueInput(new InputAction(EInputActionType.MouseMove, "Mouse: Move", 0, relative.Item1 + 1, relative.Item2 + 1));
             };
         }
 
@@ -177,6 +177,19 @@ namespace svarog.presentation
 
             m_Window?.SetWindowSize(m_WindowWidth, m_WindowHeight);
             m_Window?.SetView(new View(new FloatRect(0, 0, m_WindowWidth, m_WindowHeight)));
+        }
+
+        public (int, int) GetRelativeMousePosition(int x, int y)
+        {
+            if (m_Renderer is GlyphSpriteRenderer renderer)
+            {
+                var mouseScale = (int)(renderer.FontSize * renderer.Scale);
+                int relativeX = x / mouseScale;
+                int relativeY = y / mouseScale;
+                return (relativeX, relativeY);
+            }
+
+            return (0,0);
         }
     }
 }

@@ -174,3 +174,13 @@ end)
 Engine.RegisterInputSystem({Action_TargetOverlay_Confirm}, function()
 	TargetRenderSystem:Deactivate(false)
 end)
+
+Engine.RegisterInputSystem({Action_TargetOverlay_MouseMove}, function()
+	local x = InputStack.MouseX
+	local y = InputStack.MouseY
+	TargetRenderSystem:SetPosition(x, y)
+end)
+
+Engine.RegisterInputSystem({Action_TargetOverlay_MouseCofirm}, function()
+	TargetRenderSystem:Deactivate(false)
+end)

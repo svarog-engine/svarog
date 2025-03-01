@@ -7,13 +7,14 @@ namespace svarog.input
     {
         Press,
         Hold,
-        Release
+        Release,
+        MouseMove,
     }
 
-    public record struct InputAction(EInputActionType Action, string Input, float? Length, int? X, int? Y)
+    public record struct InputAction(EInputActionType Action, string Input, float? Length, int X = 0, int Y = 0)
     {
-        public InputAction(EInputActionType action, string input) : this(action, input, null, null, null) { }
-        public InputAction(EInputActionType action, string input, float length) : this(action, input, length, null, null) { }
+        public InputAction(EInputActionType action, string input) : this(action, input, null) { }
+        public InputAction(EInputActionType action, string input, float length) : this(action, input, length, 0, 0) { }
     }
 
     public record struct InputContext(Dictionary<string, List<InputAction>> Actions);
@@ -28,6 +29,9 @@ namespace svarog.input
 
         private List<string> m_Triggered = [];
         public List<string> Triggered => m_Triggered;
+
+        public int MouseX { get; set; } = 0;
+        public int MouseY { get; set; } = 0;
 
         public InputManager()
         {
@@ -76,6 +80,7 @@ namespace svarog.input
                                         "press" => EInputActionType.Press,
                                         "hold" => EInputActionType.Hold,
                                         "release" => EInputActionType.Release,
+                                        "mousemove" => EInputActionType.MouseMove,
                                         _ => EInputActionType.Press,
                                     };
 
@@ -188,6 +193,14 @@ namespace svarog.input
                             if ((input.Action == EInputActionType.Press && !m_HeldLengths.ContainsKey(inputAction.Input))
                                 || input.Action == EInputActionType.Release)
                             {
+                                foundActionTrigger = true;
+                                break;
+                            }
+                            else if (input.Action == EInputActionType.MouseMove)
+                            {
+                                MouseX = inputAction.X;
+                                MouseY = inputAction.Y;
+
                                 foundActionTrigger = true;
                                 break;
                             }

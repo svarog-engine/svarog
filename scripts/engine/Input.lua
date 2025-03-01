@@ -13,6 +13,10 @@ Input.Release = function(input)
 	return { action = "release", input = input, length = 0.0 }
 end
 
+Input.MouseMove = function(input)
+	return { action = "mousemove", input = input, length = 0.0 }
+end
+
 Input.Push = function(ctx)
 	Svarog:LogInfo("Pushed input context: " .. ctx)
 	InputStack:Push(ctx)

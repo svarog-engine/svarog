@@ -137,3 +137,14 @@ function TargetRenderSystem:UpdatePosition(dx, dy)
 	widget.x = widget.x + deltaX
 	widget.y = widget.y + deltaY
 end
+
+function TargetRenderSystem:SetPosition(x, y)
+	local widget = UI[TargetOverlay]
+
+	if not Dungeon.floor:Has(x, y) then
+		Engine.Glyph(widget.x, widget.y, nil, { bg = Colors.Black })
+	end
+
+	widget.x = x
+	widget.y = y
+end
