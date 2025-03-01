@@ -28,6 +28,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="scripts\components\ai.lua" />
+    <None Remove="scripts\components\Diary.lua" />
+    <None Remove="scripts\components\Gameplay.lua" />
+    <None Remove="scripts\components\Inventory.lua" />
+    <None Remove="scripts\components\Render.lua" />
+    <None Remove="scripts\components\Status.lua" />
+    <None Remove="scripts\components\UI.lua" />
+    <None Remove="scripts\components\World.lua" />
     <None Remove="scripts\gameplay\algorithms\Bresenham.lua" />
     <None Remove="scripts\gameplay\render\UIRender.lua" />
   </ItemGroup>
@@ -58,5 +66,32 @@
   <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(Configuration)' == 'DebugBin' Or '$(Configuration)' == 'ReleaseBin'">
     <Exec Command="powershell .\buildscripts\binarize.ps1 $(ProjectDir) $(TargetDir)" />
   </Target>
+
+  <ItemGroup>
+    <Content Update="scripts\components\AI.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="scripts\components\Diary.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="scripts\components\Gameplay.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="scripts\components\Inventory.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="scripts\components\Render.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="scripts\components\Status.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="scripts\components\UI.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="scripts\components\World.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 
 </Project>
