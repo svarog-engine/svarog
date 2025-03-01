@@ -130,7 +130,7 @@ function TargetRenderSystem:UpdatePosition(dx, dy)
 	local deltaX = dx or 0
 	local deltaY = dy or 0
 
-	if not Dungeon.floor:Has(x, y) then
+	if not Dungeon.floor:Has(widget.x, widget.y) then
 		Engine.Glyph(widget.x, widget.y, nil, { bg = Colors.Black })
 	end
 
