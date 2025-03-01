@@ -143,6 +143,9 @@ namespace svarog.runner
 
         public Lua Scripting => m_Lua;
 
+        readonly Randomness m_Randomness = new();
+        public Randomness Random => m_Randomness;
+
         readonly InputManager m_InputManager;
         IPresentationLayer? m_PresentationLayer = null;
 
@@ -296,10 +299,11 @@ namespace svarog.runner
 
             m_Lua.LoadCLRPackage();
             m_Lua["Svarog"] = this;
-            m_Lua["Rand"] = new Randomness();
+            m_Lua["Rand"] = m_Randomness;
             m_Lua["InputStack"] = m_InputManager;
             m_Lua["ActionTriggers"] = m_InputManager.Triggered;
             m_Lua["PCG"] = m_PCG;
+            m_Lua["Markov"] = new Markov();
             m_Lua["CurrentSystem"] = new SystemTracker();
 
             RequireModule("scripts\\engine\\Map", "Map");

@@ -2,7 +2,7 @@
 local UpdateDistancesSystem = Engine.RegisterEnviroSystem("Update Distances")
 
 function UpdateDistancesSystem:ShouldTick()
-	return Dungeons.created and Dungeons.playerDistance ~= nil
+	return Dungeons.created and Dungeons.playerDistance ~= nil and PlayerEntity ~= nil
 end
 
 function UpdateDistancesSystem:Tick()

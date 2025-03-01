@@ -18,7 +18,11 @@ function DistanceMap:From(map, goals, low)
 	local w, h = map:Size()
 	o.origin = map
 	o.tiles = Map:New(w, h, nil)
-	o.goals = goals
+	o.goals = {}
+	for _, g in ipairs(goals) do
+		table.insert(o.goals, { math.floor(g[1]), math.floor(g[2]) })
+	end
+
 	o.low = low
 	o.conditions = {}
 	o.neighbors = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } }
