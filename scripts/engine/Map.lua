@@ -14,6 +14,21 @@ function Map:New(w, h, defaultValue)
 	return o
 end
 
+function Map:From(arr, width)
+	local height = arr.Length / width
+	o = { width = width, height = height, tiles = {}, keys = {} }
+	for i = 1, width do
+		o.tiles[i] = {}
+		for j = 1, height do
+			o.tiles[i][j] = arr[width * (j - 1) + (i - 1)]
+		end
+	end
+
+	setmetatable(o, self)
+	self.__index = self
+	return o
+end
+
 function Map:ID(x, y)
 	return self.width * y + x
 end
@@ -23,14 +38,16 @@ function Map:XY(k)
 end
 
 function Map:Set(x, y, value)
-	self.tiles[x][y] = value
+	self.tiles[math.floor(x)][math.floor(y)] = value
 end
 
 function Map:Unset(x, y)
-	self.tiles[x][y] = nil
+	self.tiles[math.floor(x)][math.floor(y)] = nil
 end
 
 function Map:Get(x, y)
+	x = math.floor(x)
+	y = math.floor(y)
 	if self.tiles[x] == nil then 
 		print("MAP GET FAILED: ", x) 
 		print(debug.traceback())
@@ -39,11 +56,15 @@ function Map:Get(x, y)
 end
 
 function Map:Has(x, y)
+	x = math.floor(x)
+	y = math.floor(y)
 	if self.tiles[x] == nil then return false end
 	return self.tiles[x][y] ~= nil
 end
 
 function Map:Neighbors(x, y)
+	x = math.floor(x)
+	y = math.floor(y)
 	if self:Has(x, y) ~= nil then
 		local results = {}
 		if self:Has(x - 1, y) ~= nil then table.insert(results, { x = x - 1, y = y }) end

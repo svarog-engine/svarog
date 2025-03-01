@@ -5,7 +5,7 @@ using svarog.runner;
 
 namespace svarog.utility
 {
-    internal class Randomness
+    public class Randomness
     {
         public static readonly Randomness Instance = new Randomness();
 

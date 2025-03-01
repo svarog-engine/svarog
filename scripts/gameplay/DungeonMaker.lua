@@ -92,7 +92,7 @@ end
 
 function MakeDungeonRoom(index)
 	Dungeon = Dungeons.maps[index]
-	Dungeons.playerDistance = DistanceMap:From(Dungeon.floor, { { math.floor(Config.Width / 2), math.floor(Config.Height / 2) } }, 0)
+	Dungeons.playerDistance = DistanceMap:From(Dungeon.floor, { { PlayerEntity[Position].x, PlayerEntity[Position].y } }, 0)
 	Dungeons.playerDistance:AddCondition(DistanceMap.IS_FLOOR)
 	Dungeons.playerDistance:AddCondition(DistanceMap.IS_OPEN_DOOR)
 	Dungeons.playerDistance:Flood()
@@ -109,70 +109,62 @@ local function signum(number)
    end
 end
 
-local function MakeDungeon()
+local function MakeDungeon()	
 	Dungeons = {}
 	Dungeons.maps = {}
 	Dungeons.created = true
 
-	for n = 1, 10 do
-		local w, h = Config.Width, Config.Height
-		Dungeons.maps[n] = {}
-		Dungeons.maps[n].index = n
-		Dungeons.maps[n].name = "Room" .. n
-		Dungeons.maps[n].entities = {}
-		Dungeons.maps[n].entitiesList = {}
-		Dungeons.maps[n].passable = Map:New(Config.Width, Config.Height)
-		Dungeons.maps[n].floor = Map:New(Config.Width, Config.Height, nil)
-		Dungeons.maps[n].visibility = Map:New(Config.Width, Config.Height, 0)
-		if DebugToggle_FOV then 
-			Dungeons.maps[n].visited = Map:New(Config.Width, Config.Height, 0)
-		else
-			Dungeons.maps[n].visited = Map:New(Config.Width, Config.Height, 1)
-		end
+	local w, h = Config.Width, Config.Height
+	Dungeons.maps[1] = {}
+	Dungeons.maps[1].index = 1
+	Dungeons.maps[1].name = "Room" .. 1
+	Dungeons.maps[1].entities = {}
+	Dungeons.maps[1].entitiesList = {}
+	Dungeons.maps[1].passable = Map:New(Config.Width, Config.Height)
+	Dungeons.maps[1].floor = Map:New(Config.Width, Config.Height, nil)
+	Dungeons.maps[1].visibility = Map:New(Config.Width, Config.Height, 0)
+	if DebugToggle_FOV then 
+		Dungeons.maps[1].visited = Map:New(Config.Width, Config.Height, 0)
+	else
+		Dungeons.maps[1].visited = Map:New(Config.Width, Config.Height, 1)
+	end
 		
-		Dungeon = Dungeons.maps[n]
-
-		local shapes = {}
-
-		if entry ~= n then
-			for i = 1, Rand:Range(2, 5) do
-				local x = Rand:Range(0, 3)
-				local y = Rand:Range(0, 3)
-				local wr = Rand:Range(5, 16)
-				local hr = Rand:Range(4, 14)
-				table.insert(shapes, Geometry.MakeRect(math.floor(x + w / 2 - wr), math.floor(y + h / 2 - hr), wr, hr))
-			end
-		else
-			local r = Rand:Range(4, 7)
-			table.insert(shapes, Geometry.MakeCircle(math.floor(w / 2), math.floor(h / 2), r))
-			table.insert(shapes, Geometry.MakeRect(math.floor(w / 2), math.floor(h / 2), Rand:Range(4, 6), Rand:Range(3, 6)))
-		end
-
-		local union = Geometry.Union(table.unpack(shapes))
-		local bound = Geometry.Boundary(union)
-		local doors = {}
-		local used = {}
-
-		local pts = Geometry.Surface(union).Points:GetEnumerator()
-		while pts:MoveNext() do
-			local pt = pts.Current
-			if bound.Points:Contains(pt) then
-				Dungeon.floor:Set(pt.X, pt.Y, { type = Wall })
-				Dungeon.passable:Set(pt.X, pt.Y, false)
+	Dungeon = Dungeons.maps[1]
+	local m1 = Markov:Run("DijkstraDungeon", Config.Width, Config.Height - 4)
+	local m2 = Markov:Or(m1, "SmarterDigger", Config.Width, Config.Height - 4, 250)
+	local m3 = Markov:Or(m2, "SmarterDigger", Config.Width, Config.Height - 4, 250)
+	local m = Map:From(m3, Config.Width)
+	local ok = {}
+	local values = {}
+	for i = 1, Config.Width do
+		for j = 1, Config.Height - 4 do 
+			local v = m:Get(i, j)
+			if values[v] == nil then values[v] = 1 end
+			local ij = { i, j }
+			
+			if v == 1 or v == 2 then
+				Dungeon.floor:Set(i, j, { type = Floor })
+				table.insert(ok, ij)
 			else
-				Dungeon.floor:Set(pt.X, pt.Y, { type = Floor })
-				Dungeon.passable:Set(pt.X, pt.Y, true)
-			end
-			Dungeon.visibility:Set(pt.X, pt.Y, true)
-		end
-
-		for _, door in ipairs(doors) do
-			local doorEntity = MakeDoor(door.X, door.Y, true, false, nil, door.Neighbor)
-			if door.Hidden then
-				doorEntity.hidden = true
+				Dungeon.floor:Set(i, j, { type = Wall })
 			end
 		end
 	end
+	for k, _ in pairs(values) do print(k) end
+	local xy = ok[Rand:Range(1, #ok)]
+		
+	PlayerEntity = World:Entity(
+		Player(),
+		Position{ x = xy[1], y = xy[2] },
+		Glyph{ name = "mage" },
+		Inventory{ items = {}}
+	)
+	
+	Dungeons.playerDistance = DistanceMap:From(Dungeon.floor, { { PlayerEntity[Position].x, PlayerEntity[Position].y } }, 0)
+	Dungeons.playerDistance:AddCondition(DistanceMap.IS_FLOOR)
+	Dungeons.playerDistance:AddCondition(DistanceMap.IS_OPEN_DOOR)
+	Dungeons.playerDistance:Flood()
+	Dungeons.created = true
 end
 
 OnStartup(function() MakeDungeon() end)

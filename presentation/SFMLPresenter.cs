@@ -14,7 +14,7 @@ namespace svarog.presentation
         private Dictionary<string, SFML.Graphics.Font> m_Fonts = [];
         private Dictionary<string, SFML.Graphics.Texture> m_Sprites = [];
 
-        private Sprite m_DrawSprite = new();
+        private SFML.Graphics.Sprite m_DrawSprite = new();
         private RenderTexture m_Surface = new(800, 600);
         private IRenderer m_Renderer;
         private IPresentationMode m_Mode;
