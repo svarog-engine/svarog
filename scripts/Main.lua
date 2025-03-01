@@ -28,4 +28,4 @@ LoadRenderSystem "LogRender"
 LoadRenderSystem "InventoryRender"
 
 World:Entity(MakeDungeonRequest)
-Diary.Write("Welcome to Svarog")
+Diary.Write("7DRL PANIC")
