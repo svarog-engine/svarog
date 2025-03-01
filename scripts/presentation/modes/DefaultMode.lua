@@ -27,7 +27,7 @@ Glossary.Default = {
 	back_mid = { x = 23, y = 4, fg = Colors.Brown, bg = Colors.Black },
 	back_lit = { x = 23, y = 4, fg = Colors.Brown, bg = Colors.Black },
 
-	empty_tile = { x = 0, y = 1, fg = Colors.DarkGray, bg = Colors.Black },
+	empty_tile = { x = 0, y = 0, fg = Colors.DarkGray, bg = Colors.Black },
 	
 	wall = { x = 3, y = 0, fg = Colors.DarkGray, bg = Colors.Black },
 	treasure = { x = 4, y =0, fg = Colors.LightYellow, bg = Colors.Black },

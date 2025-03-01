@@ -11,8 +11,7 @@ Engine.RegisterInputSystem({ Action_Default_DebugPrintDistances }, function()
 	DebugToggle_PrintDistances = not DebugToggle_PrintDistances
 end)
 
--- true or false by default?
-DebugToggle_FOV = false
+DebugToggle_FOV = true
 Engine.RegisterInputSystem({ Action_Default_DebugFOV }, function()
 	DebugToggle_FOV = not DebugToggle_FOV
 

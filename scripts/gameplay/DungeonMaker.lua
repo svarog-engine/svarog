@@ -122,17 +122,14 @@ local function MakeDungeon()
 	Dungeons.maps[1].entitiesList = {}
 	Dungeons.maps[1].passable = Map:New(Config.Width, Config.Height)
 	Dungeons.maps[1].floor = Map:New(Config.Width, Config.Height, nil)
-	Dungeons.maps[1].visibility = Map:New(Config.Width, Config.Height, 0)
-	if DebugToggle_FOV then 
-		Dungeons.maps[1].visited = Map:New(Config.Width, Config.Height, 0)
-	else
-		Dungeons.maps[1].visited = Map:New(Config.Width, Config.Height, 1)
-	end
+	Dungeons.maps[1].visibility = Map:New(Config.Width, Config.Height, false)
+	Dungeons.maps[1].visited = Map:New(Config.Width, Config.Height, false)
 		
 	Dungeon = Dungeons.maps[1]
-	local m1 = Markov:Run("DijkstraDungeon", Config.Width, Config.Height - 4)
-	local m2 = Markov:Or(m1, "SmarterDigger", Config.Width, Config.Height - 4, 250)
-	local m3 = Markov:Or(m2, "SmarterDigger", Config.Width, Config.Height - 4, 250)
+	--local m1 = Markov:Run("StrangeGrowth", Config.Width, Config.Height - 4, 500)
+	
+	local m3 = Markov:Run("NystromDungeon", Config.Width, Config.Height - 4)
+	
 	local m = Map:From(m3, Config.Width)
 	local ok = {}
 	local values = {}
@@ -142,10 +139,12 @@ local function MakeDungeon()
 			if values[v] == nil then values[v] = 1 end
 			local ij = { i, j }
 			
-			if v == 1 or v == 2 then
+			if v == 1 or v == 2 or v == 3 then
+				Dungeon.passable:Set(i, j, true)
 				Dungeon.floor:Set(i, j, { type = Floor })
 				table.insert(ok, ij)
 			else
+				Dungeon.passable:Set(i, j, false)
 				Dungeon.floor:Set(i, j, { type = Wall })
 			end
 		end
@@ -160,6 +159,8 @@ local function MakeDungeon()
 		Inventory{ items = {}}
 	)
 	
+	Dungeon.visited:Set(xy[1], xy[2], true)
+	print(PlayerEntity[Position].x, PlayerEntity[Position].y)
 	Dungeons.playerDistance = DistanceMap:From(Dungeon.floor, { { PlayerEntity[Position].x, PlayerEntity[Position].y } }, 0)
 	Dungeons.playerDistance:AddCondition(DistanceMap.IS_FLOOR)
 	Dungeons.playerDistance:AddCondition(DistanceMap.IS_OPEN_DOOR)

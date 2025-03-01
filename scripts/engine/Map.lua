@@ -49,8 +49,7 @@ function Map:Get(x, y)
 	x = math.floor(x)
 	y = math.floor(y)
 	if self.tiles[x] == nil then 
-		print("MAP GET FAILED: ", x) 
-		print(debug.traceback())
+		return nil
 	end
 	return self.tiles[x][y]
 end
