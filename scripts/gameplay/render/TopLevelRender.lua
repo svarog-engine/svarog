@@ -1,10 +1,12 @@
-﻿local TopLevelRenderSystem = Engine.RegisterRenderSystem()
+﻿local TopLevelRenderSystem = Engine.RegisterRenderSystem("Top Level Render")
 
 local function Draw(query)
 	for _, e in World:Exec(query):Iterator() do
 		local pos = e[Position]
-		local glyph = e[Glyph]
-		Engine.Glyph(pos.x, pos.y, glyph.name)
+		if Dungeon.visibility:Get(pos.x, pos.y) or PlayerEntity[Telepathic] then
+			local glyph = e[Glyph]
+			Engine.Glyph(pos.x, pos.y, glyph.name)
+		end
 	end
 end
 

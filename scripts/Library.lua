@@ -18,6 +18,11 @@ function Fade(entity, start, target, speed)
 	entity:Set(FadeOut{ start = start, target = target, time = 0, speed = speed })
 end
 
+-- Statuses
+Telepathic = ECS.Component(duration = 1)
+
+-- General
+
 Player = ECS.Component()
 Creature = ECS.Component{ name = "", goals = {}, actions = 0, timestamp = 0 }
 

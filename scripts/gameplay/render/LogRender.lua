@@ -1,5 +1,5 @@
 ﻿
-local LogRenderSystem = Engine.RegisterRenderSystem();
+local LogRenderSystem = Engine.RegisterRenderSystem("Log Render");
 
 function LogRenderSystem:Render()
 	for _, entity in World:Exec(ECS.Query.All(Diary)):Iterator() do

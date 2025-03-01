@@ -28,6 +28,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="scripts\gameplay\algorithms\Bresenham.lua" />
+    <None Remove="scripts\gameplay\render\UIRender.lua" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
     <PackageReference Include="NLua" Version="1.7.4" />
     <PackageReference Include="ParsecSharp" Version="4.0.0" />

@@ -1,5 +1,5 @@
 ﻿
-local FadeOutRenderSystem = Engine.RegisterRenderSystem()
+local FadeOutRenderSystem = Engine.RegisterRenderSystem("Fadeout Render")
 
 function FadeOutRenderSystem:Render()
 	for _, entity in World:Exec(ECS.Query.All(FadeOut, Glyph, Position)):Iterator() do

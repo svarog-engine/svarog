@@ -245,9 +245,32 @@ function PlayerSystem() return "process" end
 function WorldSystem() return "transform" end
 function RenderSystem() return "render" end
 
-function RegisterPlayerSystem()
+function RegisterPlayerSystem(name)
     local system = ECS.System(Engine.PlayerSystem())
     system.Order = #Pipeline_Player
+
+    system.ShouldUpdate = function(time)
+        CurrentSystem:Set(name)
+        local value = false
+        if system.ShouldTick ~= nil then
+            value = system:ShouldTick(time)
+        else
+            Svarog.LogWarning("ShouldTick not implemented for " .. name)
+        end
+        CurrentSystem:Reset()
+        return value
+    end
+
+    system.Update = function(self)
+        CurrentSystem:Set(name)
+        StartMeasure()
+        if self.Tick ~= nil then
+            self:Tick()
+        end
+        EndMeasure(name)
+        CurrentSystem:Reset()
+    end
+
     table.insert(Pipeline_Player, system)
     return system
 end
@@ -283,14 +306,35 @@ function RegisterEnviroSystem(name)
     return system
 end
 
-function RegisterRenderSystem(q)
+function RegisterRenderSystem(name, q)
     if q == nil then q = function(id) return id end end
-    local system = ECS.System(Engine.RenderSystem(), q(ECS.Query.All(Redraw)), function(self)
-        if next(self:Result():ToArray()) ~= nil then
-            self:Render()
-        end
-    end)
+    local system = ECS.System(Engine.RenderSystem(), q(ECS.Query.All(Redraw)))
+
     system.Order = #Pipeline_Render
+    system.ShouldUpdate = function(time)
+        CurrentSystem:Set(name)
+        local value = false
+        if system.ShouldRender ~= nil then
+            value = system:ShouldRender(time)
+        else
+            value = true
+        end
+        CurrentSystem:Reset()
+        return value
+    end
+
+    system.Update = function(self)
+        CurrentSystem:Set(name)
+        StartMeasure()
+        if next(self:Result():ToArray()) ~= nil then
+            if self.Render~= nil then
+                self:Render()
+            end
+        end
+        EndMeasure(name)
+        CurrentSystem:Reset()
+    end
+
     table.insert(Pipeline_Render, system)
     return system
 end

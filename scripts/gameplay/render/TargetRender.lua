@@ -1,4 +1,4 @@
-TargetRenderSystem = Engine.RegisterRenderSystem()
+TargetRenderSystem = Engine.RegisterRenderSystem("Target Render")
 
 local TargetOverlayActive = false
 local OnTargetSelected = nil
@@ -12,84 +12,14 @@ local function CanTarget(x, y)
 	return (visit or ignoreFOV) and pass
 end
 
-local function PlotLineHigh(startX, startY, endX, endY, color)
-	local dx = endX - startX
-	local dy = endY - startY
-
-	local xi = 1
-	if dx < 0 then
-		xi = -1
-		dx = -dx
-	end
-
-	local D = (2 * dx) - dy
-	local x = startX
-
-	for y = startY, endY do
-		
-		if CanTarget(x, y) == true then
-			Engine.Glyph(x, y, nil, { bg = color })
-		end
-
-		if D > 0 then
-			x = x + xi
-			D = D + (2 * (dx - dy))
-		else
-			D = D + 2*dx
-		end
-	end
-end
-
-local function PlotLineLow(startX, startY, endX, endY, color)
-	local dx = endX - startX
-	local dy = endY - startY
-
-	local yi = 1
-	if dy < 0 then
-		yi = -1
-		dy = -dy
-	end
-
-	local D = (2 * dy) - dx
-	local y = startY
-
-	for x = startX, endX do
-
-		if CanTarget(x, y) == true then
-			Engine.Glyph(x, y, nil, { bg = color })
-		end
-
-		if D > 0 then
-			y = y + yi
-			D = D + (2 * (dy - dx))
-		else
-			D = D + 2*dy
-		end
-	end
-end
-
-local function PlotLine(startX, startY, endX, endY, color)
-	if math.abs(endY - startY) < math.abs(endX - startX) then
-		if startX > endX then
-			PlotLineLow(endX, endY, startX, startY, color)
-		else
-			PlotLineLow(startX, startY, endX, endY, color)
-		end
-	else
-		if startY > endY then
-			PlotLineHigh(endX, endY, startX, startY, color)
-		else
-			PlotLineHigh(startX, startY, endX, endY, color)
-		end
-	end
+function TargetRenderSystem:ShouldRender()
+	return TargetOverlayActive
 end
 
 function TargetRenderSystem:Render()
-	if TargetOverlayActive then
-		local widget = UI[TargetOverlay]
-		PlotLine(widget.startX, widget.startY, widget.x, widget.y, widget.trailColor)
-		Engine.Glyph(widget.x, widget.y, nil, { bg = widget.targetColor })
-	end
+	local widget = UI[TargetOverlay]
+	PlotLine(widget.startX, widget.startY, widget.x, widget.y, widget.trailColor, CanTarget)
+	Engine.Glyph(widget.x, widget.y, nil, { bg = widget.targetColor })
 end
 
 -- OnTargetSelectedCallback can have fields: callback and data

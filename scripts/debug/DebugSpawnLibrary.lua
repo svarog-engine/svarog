@@ -8,7 +8,7 @@
 		)
     end,
 
-	tresure = function(x, y)
+	treasure = function(x, y)
 		World:Entity(
 			Item{id = "treasure"},
 			Position{ x = x, y = y },

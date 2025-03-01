@@ -6,6 +6,6 @@ function UpdateDistancesSystem:ShouldTick()
 end
 
 function UpdateDistancesSystem:Tick()
-	--Dungeons.playerDistance.goals = { { PlayerEntity[Position].x, PlayerEntity[Position].y } }
-	--Dungeons.playerDistance:Flood()
+	Dungeons.playerDistance.goals = { { PlayerEntity[Position].x, PlayerEntity[Position].y } }
+	Dungeons.playerDistance:Flood()
 end

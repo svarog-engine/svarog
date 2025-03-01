@@ -1,5 +1,5 @@
 
-InventoryRender = Engine.RegisterRenderSystem()
+InventoryRender = Engine.RegisterRenderSystem("Inventory Render")
 
 function InventoryRender:Render()
 	if InventoryOpen then

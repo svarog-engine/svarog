@@ -3,6 +3,7 @@
 IncludeGameplay "DungeonMaker"
 IncludeGameplay "BumpMechanics"
 IncludeGameplay "ItemLibrary"
+IncludeGameplay "algorithms\\Bresenham"
 IncludeGameplay "algorithms\\RecursiveShadowcast"
 LoadScriptIfExists "debug\\DebugSpawnLibrary"
 
