@@ -19,7 +19,7 @@ function Fade(entity, start, target, speed)
 end
 
 -- Statuses
-Telepathic = ECS.Component(duration = 1)
+Telepathic = ECS.Component{duration = 1}
 
 -- General
 
