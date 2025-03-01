@@ -3,7 +3,7 @@
 local function Draw(query)
 	for _, e in World:Exec(query):Iterator() do
 		local pos = e[Position]
-		if Dungeon.visibility:Get(pos.x, pos.y) or PlayerEntity[Telepathic] then
+		if (Dungeon.visibility:Get(pos.x, pos.y) or PlayerEntity[Telepathic]) and not e[Invisible] then
 			local glyph = e[Glyph]
 			Engine.Glyph(pos.x, pos.y, glyph.name)
 		end
