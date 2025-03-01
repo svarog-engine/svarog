@@ -131,8 +131,8 @@ local function MakeDungeon()
 		
 	Dungeon = Dungeons.maps[1]
 	local m1 = Markov:Run("DijkstraDungeon", Config.Width, Config.Height - 4)
-	local m2 = Markov:Or(m1, "ConnectedCaves", Config.Width, Config.Height - 4)
-	local m3 = Markov:Or(m2, "SmarterDigger", Config.Width, Config.Height - 4, 500)
+	local m2 = Markov:Or(m1, "SmarterDigger", Config.Width, Config.Height - 4, 250)
+	local m3 = Markov:Or(m2, "SmarterDigger", Config.Width, Config.Height - 4, 250)
 	local m = Map:From(m3, Config.Width)
 	local ok = {}
 	local values = {}
@@ -141,7 +141,7 @@ local function MakeDungeon()
 			local v = m:Get(i, j)
 			if values[v] == nil then values[v] = 1 end
 			local ij = { i, j }
-			--if v > 1 then
+			
 			if v == 1 or v == 2 then
 				Dungeon.floor:Set(i, j, { type = Floor })
 				table.insert(ok, ij)
