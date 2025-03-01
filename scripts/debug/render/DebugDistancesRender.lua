@@ -1,18 +1,38 @@
 ﻿
 local DebugDistancesRenderSystem = Engine.RegisterRenderSystem()
 
+local Palette = {}
+Palette[0] = Colors.Gray
+Palette[1] = Colors.DarkBlue
+Palette[2] = Colors.Blue
+Palette[3] = Colors.LightBlue
+Palette[4] = Colors.Cyan
+Palette[5] = Colors.Green
+Palette[6] = Colors.LightGreen
+Palette[7] = Colors.Yellow
+Palette[-1] = Colors.DarkRed
+Palette[-2] = Colors.Red
+Palette[-3] = Colors.LightRed
+Palette[-4] = Colors.DarkBrown
+Palette[-5] = Colors.Brown
+Palette[-6] = Colors.LightBrown
+
 function DebugDistancesRenderSystem:Render()
-	if DebugToggle_Distances then
+	if DebugToggle_DistanceIndex > 0 then
+		local map = Dungeons.playerDistance
+		if DebugToggle_DistanceIndex == 2 then
+			map = Dungeons.wallDistances
+		end
+
 		if Dungeons.created then
-			local w, h = Dungeons.playerDistance:Size()
+			local w, h = map:Size()
 			for i = 1, w do
 				for j = 1, h do
-					if Dungeons.playerDistance:Has(i, j) then
-						local tile = Dungeons.playerDistance:Get(i, j)
+					if map:Has(i, j) then
+						local tile = map:Get(i, j)
 						local char = ""
 						local neg = tile < 0
-						local color = Colors.LightBrown
-						if neg then color = Colors.Brown end
+						local color = Palette[tile] or Colors.White
 
 						local val = math.abs(math.floor(tile + 0.5))
 			

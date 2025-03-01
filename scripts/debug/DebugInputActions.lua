@@ -1,10 +1,13 @@
 -- Debug
 
-DebugToggle_Distances = false
+DebugToggle_Distances = { "player", "walls" }
+DebugToggle_Distances[0] = nil
+
+DebugToggle_DistanceIndex = 0
 DebugToggle_PrintDistances = false
 
 Engine.RegisterInputSystem({ Action_Default_DebugDistances }, function()
-	DebugToggle_Distances = not DebugToggle_Distances
+	DebugToggle_DistanceIndex = (DebugToggle_DistanceIndex + 1) % 3
 end)
 
 Engine.RegisterInputSystem({ Action_Default_DebugPrintDistances }, function()

@@ -126,13 +126,13 @@ local function MakeDungeon()
 	Dungeons.maps[1].visited = Map:New(Config.Width, Config.Height, false)
 		
 	Dungeon = Dungeons.maps[1]
-	--local m1 = Markov:Run("StrangeGrowth", Config.Width, Config.Height - 4, 500)
+	local m1 = Markov:Run("SelectLargeCaves", Config.Width, Config.Height - 4, 2500)
+	local m2 = Markov:Or(m1, "BasicDijkstraFill", Config.Width, Config.Height - 4)
 	
-	local m3 = Markov:Run("NystromDungeon", Config.Width, Config.Height - 4)
-	
-	local m = Map:From(m3, Config.Width)
+	local m = Map:From(m2, Config.Width)
 	local ok = {}
 	local values = {}
+	local walls = {}
 	for i = 1, Config.Width do
 		for j = 1, Config.Height - 4 do 
 			local v = m:Get(i, j)
@@ -146,6 +146,7 @@ local function MakeDungeon()
 			else
 				Dungeon.passable:Set(i, j, false)
 				Dungeon.floor:Set(i, j, { type = Wall })
+				table.insert(walls, { i, j })
 			end
 		end
 	end
@@ -161,6 +162,12 @@ local function MakeDungeon()
 	
 	Dungeon.visited:Set(xy[1], xy[2], true)
 	print(PlayerEntity[Position].x, PlayerEntity[Position].y)
+	
+	Dungeons.wallDistances = DistanceMap:From(Dungeon.floor, walls, 0)
+	Dungeons.wallDistances:AddCondition(DistanceMap.IS_FLOOR)
+	Dungeons.wallDistances:AddCondition(DistanceMap.IS_OPEN_DOOR)
+	Dungeons.wallDistances:Flood()
+
 	Dungeons.playerDistance = DistanceMap:From(Dungeon.floor, { { PlayerEntity[Position].x, PlayerEntity[Position].y } }, 0)
 	Dungeons.playerDistance:AddCondition(DistanceMap.IS_FLOOR)
 	Dungeons.playerDistance:AddCondition(DistanceMap.IS_OPEN_DOOR)

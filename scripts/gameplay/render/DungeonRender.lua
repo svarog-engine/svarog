@@ -10,7 +10,7 @@ function DungeonRenderSystem:Render()
 					local tile = Dungeon.floor:Get(x, y)
 					if tile.type == Floor then
 						if not Dungeon.visited:Get(x, y) then
-							Engine.Glyph(x, y, nil, { fg = Colors.Black, bg = Colors.Black} )
+							Engine.Glyph(x, y, nil, { fg = Colors.Black, bg = Colors.Black } )
 						else
 							Engine.Glyph(x, y, "back_dark")
 						end

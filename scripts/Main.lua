@@ -19,7 +19,6 @@ LoadEnviroSystem "ShadowCastMechanics"
 
 LoadRenderSystem "DungeonRender"
 LoadRenderSystem "FadeOutRender"
-LoadRenderSystem "PlayerLightRender"
 LoadScriptIfExists "debug\\render\\DebugDistancesRender"
 LoadScriptIfExists "debug\\render\\DebugEnitySpawnRender"
 LoadRenderSystem "TopLevelRender"
