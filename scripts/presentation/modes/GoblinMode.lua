@@ -1,5 +1,13 @@
-﻿
-Glossary.Meta.Goblins = SpritePresentationMode("goblins-12x12.png", 12, 40)
+﻿local fontMeta = {
+	name = "goblins-12x12.png",
+	size = 12,
+	paddingX  = 0,
+	paddingY = 0,
+	offsetX = 0,
+	offsetY = 0,
+}
+
+Glossary.Meta.Goblins = SpritePresentationMode(fontMeta.name, fontMeta.size, fontMeta.paddingX, fontMeta.paddingY, fontMeta.offsetX, fontMeta.offsetY)
 
 Glossary.Goblins = {
 	goblin = { x = 15, y = 8, fg = Colors.LightGreen, bg = Colors.Black },

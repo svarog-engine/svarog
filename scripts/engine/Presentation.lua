@@ -12,6 +12,13 @@ function InsertSpriteCharRanges(pres, x, y, chars)
 	end
 end
 
+function InsertSpriteCharRangesVertical(pres, x, y, chars)
+	for i = 0, #chars - 1 do 
+		local char = string.sub(chars, i + 1, i + 1)
+		pres[char] = { x = x , y = y + i, fg = Colors.White, bg = Colors.Black }
+	end
+end
+
 function InsertFontAlphanumerics(pres)
 	pres["a"] = { char = "a", fg = Colors.White, bg = Colors.Black }
 	pres["b"] = { char = "b", fg = Colors.White, bg = Colors.Black }

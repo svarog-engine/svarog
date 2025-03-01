@@ -1,5 +1,7 @@
 ﻿-- DEFAULT
 
+LoadScriptIfExists "debug\\DebugInputActions"
+
 Engine.RegisterInputSystem({ Action_Default_Wait }, function(input)
 	World:Exec(ECS.Query.All(Player)):ForEach(function(entity)
 		PlayerDone = true
@@ -60,33 +62,6 @@ Engine.RegisterInputSystem({ Action_Default_ZoomOut }, function()
 end)
 
 Engine.RegisterInputSystem({ Action_Default_Reload }, function() Svarog.Instance:Reload() end)
-
--- Debug
-
-DebugToggle_Distances = false
-DebugToggle_PrintDistances = false
-
-Engine.RegisterInputSystem({ Action_Default_DebugDistances }, function()
-	DebugToggle_Distances = not DebugToggle_Distances
-end)
-
-Engine.RegisterInputSystem({ Action_Default_DebugPrintDistances }, function()
-	DebugToggle_PrintDistances = not DebugToggle_PrintDistances
-end)
-
--- true or false by default?
-DebugToggle_FOV = false
-Engine.RegisterInputSystem({ Action_Default_DebugFOV }, function()
-	DebugToggle_FOV = not DebugToggle_FOV
-
-	if DebugToggle_FOV then
-		Dungeon.visibility:Reset(0)
-		Dungeon.visited:Reset(0)
-	else
-		Dungeon.visibility:Reset(0)
-		Dungeon.visited:Reset(1)
-	end
-end)
 
 -- Inventory
 

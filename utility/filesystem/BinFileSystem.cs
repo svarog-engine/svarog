@@ -11,6 +11,12 @@ namespace svarog.utility.filesystem
         {
             Archive = new ZipArchive(new FileStream("data.bin", FileMode.Open), ZipArchiveMode.Read);
         }
+
+        public bool FileExists(string path)
+        {
+            return Archive.GetEntry(path) != null;
+        }
+
         public byte[] GetAsset(string name)
         {
             var entry = Archive.GetEntry(name);

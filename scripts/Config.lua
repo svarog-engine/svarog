@@ -1,7 +1,7 @@
 ﻿-- Uncomment any of the following lines to apply these settings without changing the engine code.
 
 -- Presentation configuration:
-		Config.Presentation = "Kenney"
+		Config.Presentation = "Default"
 --		Config.Presentation = "Kenney"
 
 --	licensed (change to default if you don't have it):
@@ -11,7 +11,7 @@
 
 -- Font configuration:
 --		Config.FontSize = 12
-		Config.FontSize = 14
+		Config.FontSize = 16
 
 -- World configuration:
 --		Config.Width = 80

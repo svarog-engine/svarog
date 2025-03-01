@@ -12,11 +12,6 @@ Actions.Default = {
 	ZoomIn  = { Input.Press("Key: PageUp") },
 	ZoomOut = { Input.Press("Key: PageDown") },
 	Inventory = { Input.Press("Key: I")},
-
-	DebugDistances = { Input.Press("Key: F2") },
-	DebugPrintDistances = { Input.Press("Key: F3") },
-
-	DebugFOV = { Input.Press("Key: F1") },
 }
 
 Actions.Inventory = {
@@ -35,5 +30,7 @@ Actions.TargetOverlay = {
 	Confirm	= { Input.Press("Key: Enter") },
 	Exit	= { Input.Press("Key: Escape") },
 }
+
+LoadScriptIfExists("debug\\DebugActions")
 
 Input.Push("Default")

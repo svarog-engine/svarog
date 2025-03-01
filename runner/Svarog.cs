@@ -130,6 +130,20 @@ namespace svarog.runner
             RunScript(code);
         }
 
+        public void RunScriptFileIfExists(string filename)
+        {
+            if (m_FileSystem == null || !m_FileSystem.FileExists(filename + ".lua"))
+                return;
+
+            var code = "";
+            if (m_FileSystem != null)
+            {
+                code = m_FileSystem.GetFileContent(filename + ".lua");
+            }
+
+            RunScript(code);
+        }
+
         public void RequireModule(string modulePath, string moduleName)
         {
             RunScript($"package.preload[\"{moduleName}\"] = function () {m_FileSystem?.GetFileContent(modulePath + ".lua")} end");
@@ -217,8 +231,7 @@ namespace svarog.runner
                 m_Glyphs[i] = new Glyph[height];
                 for (int j = 0; j < height; j++)
                 {
-                    m_Glyphs[i][j] = new Glyph(" ", Colors.Black, Colors.Black);
-                    //m_Glyphs[i][j] = new Glyph("a", Colors.Random, Colors.Random);
+                    m_Glyphs[i][j] = new Glyph(Colors.Black, Colors.Black);
                 }
             }
             m_Lua["Glyphs"] = m_Glyphs;
@@ -307,27 +320,21 @@ namespace svarog.runner
             m_Lua["CurrentSystem"] = new SystemTracker();
 
             RequireModule("scripts\\engine\\Map", "Map");
-            //RunScript($"package.preload[\"Map\"] = function () {m_FileSystem?.GetFileContent(".lua")} end");
             RunScript(@"Map = require 'Map'");
 
             RequireModule("scripts\\engine\\DistanceMap", "DistanceMap");
-            //RunScript($"package.preload[\"DistanceMap\"] = function () {m_FileSystem?.GetFileContent("scripts\\engine\\DistanceMap.lua")} end");
             RunScript(@"DistanceMap = require 'DistanceMap'");
 
             RequireModule("scripts\\engine\\Queue", "Queue");
-            //RunScript($"package.preload[\"Queue\"] = function () {m_FileSystem?.GetFileContent("scripts\\engine\\Queue.lua")} end");
             RunScript(@"Queue = require 'Queue'");
 
             RequireModule("scripts\\engine\\ecs\\ECS", "ECS");
-            //RunScript($"package.preload[\"ECS\"] = function () {m_FileSystem?.GetFileContent("scripts\\engine\\ecs\\ECS.lua")} end");
             RunScript(@"ECS = require 'ECS'");
 
             RequireModule("scripts\\engine\\Engine", "Engine");
-            //RunScript($"package.preload[\"Engine\"] = function () {m_FileSystem?.GetFileContent("scripts\\engine\\Engine.lua")} end");
             RunScript(@"Engine = require 'Engine'");
 
             RequireModule("scripts\\engine\\Input", "Input");
-            //RunScript($"package.preload[\"Input\"] = function () {m_FileSystem?.GetFileContent(".lua")} end");
             RunScript(@"Input = require 'Input'");
 
             ReloadPCG();

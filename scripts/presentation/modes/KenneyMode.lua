@@ -1,5 +1,13 @@
-﻿
-Glossary.Meta.Kenney = SpritePresentationMode("kenney-16x16.png", 16, 49)
+﻿local fontMeta = {
+	name = "kenney-16x16.png",
+	size = 16,
+	paddingX  = 0,
+	paddingY = 0,
+	offsetX = 0,
+	offsetY = 0,
+}
+
+Glossary.Meta.Kenney = SpritePresentationMode(fontMeta.name, fontMeta.size, fontMeta.paddingX, fontMeta.paddingY, fontMeta.offsetX, fontMeta.offsetY)
 
 Glossary.Kenney = {
 	goblin = { x = 30, y = 3, fg = Colors.LightGreen, bg = Colors.Black },
@@ -27,7 +35,7 @@ Glossary.Kenney = {
 	key = { x = 32, y = 11, fg = Colors.Yellow, bg = Colors.Black },
 
 	empty = { x = 28, y = 22, fg = Colors.DarkGray, bg = Colors.Black },
-	invalid = { x = -1, y = -1, fg = Colors.Transparent, bg = Colors.Transparent},
+	invalid = { x = -1, y = -1, fg = Colors.Transparent, bg = Colors.Transparent },
 }
 
 InsertSpriteCharRanges(Glossary.Kenney, 0, 0, " ")
