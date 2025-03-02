@@ -17,6 +17,14 @@ local FH = function(dx, dy) UISettings.x = UISettings.x + dx end
 local FV = function(dx, dy) UISettings.y = UISettings.y + dy end
 
 UIRenderer = {
+	Clear = function()
+		for i = 0, Config.Width do
+			for j = 0, Config.Height do
+				Engine.Glyph(i, j, "invalid", { fg = Colors.Red, bg = Colors.Black }, "UI")
+			end
+		end
+	end,
+
 	Line = function(x1, y1, x2, y2, color, isVisibleFn)
 		if color == nil then color = Colors.White end
 		PlotLine(x1, y1, x2, y2, color, isVisibleFn)

@@ -28,7 +28,7 @@ function TargetingToggleSystem:Tick()
 	end
 end
 
-local TargetRenderSystem, TargetUIEntity = Engine.RegisterUIRenderSystem("Target Render")
+local TargetRenderSystem = Engine.RegisterUIRenderSystem("Target Render")
 
 local function CanTarget(x, y)
 	local visit = Dungeon.visibility:Has(x, y) and Dungeon.visibility:Get(x, y)

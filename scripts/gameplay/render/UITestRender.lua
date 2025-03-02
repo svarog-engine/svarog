@@ -1,4 +1,4 @@
-﻿local UITestRender, UIEntity = Engine.RegisterUIRenderSystem("UI Test Render")
+﻿local UITestRender = Engine.RegisterUIRenderSystem("UI Test Render")
 
 local elements = { "one", "two", "three", "four" }
 local fruits = { { "carrots", 1 }, { "bananas", 2 }, { "oranges", 10 } }

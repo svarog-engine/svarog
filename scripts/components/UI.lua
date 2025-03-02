@@ -1,25 +1,43 @@
 ﻿
---InventoryWidget = ECS.Component{top = 1, left = 39, width = 20, height = 20, selected = 1, source = {}}
---ItemDetailsPanelWidget = ECS.Component {top = 0, left = 20, width = 15, height = 20}
---TargetOverlay = ECS.Component {x = 0, y = 0, targetColor = Colors.Red, trailColor = Colors.Yellow}
+UI = ECS.Component{}
 
---function InventoryWidget.GetSelected()
---	local widget = UI[InventoryWidget]
---	if widget.selected <= #(widget.source.items) then
-		--for i, s in ipairs(widget.source.items) do
---			if i == widget.selected then
-				--return s
-			--end
-		--end
-	--end
+-- Statefulness 
 
-	--return nil
---end
+Open = ECS.Component()
+Selection = ECS.Component(1)
 
---UI = World:Entity(
---	InventoryWidget{ top = 1, left = 39, width = 20, height = 10, source = {}, selected = 1},
---	ItemDetailsPanelWidget{top = 1, left = 20, width = 15, height = 1},
---	TargetOverlay {startX = 0, starty = 0, endX = 0, endY = 0, targetColor = Colors.Red, trailColor = Colors.Yellow}
---)
+SelectPrev = function(entity, max)
+	local selection = entity[Selection].value
+	selection = selection - 1
+	if selection < 1 then
+		selection = max
+	end
 
-UI = ECS.Component{ work = nil }
+	entity[Selection].value = selection
+end
+
+SelectNext = function(entity, max)
+	local selection = entity[Selection].value
+	selection = selection + 1
+	if selection > max then
+		selection = 1
+	end
+
+	entity[Selection].value = selection
+end
+
+-- Targeting 
+
+ActivateTargetOverlay = ECS.Component{ callback = nil }
+DeactivateTargetOverlay = ECS.Component{ success = false }
+
+TargetOverlayEntity = World:Entity(Position{ x = 0, y = 0 })
+
+-- Inventory
+
+ActivateInventoryOverlay = ECS.Component()
+DeactivateInventoryOverlay = ECS.Component()
+Contents = ECS.Component{ items = {} }
+DoInventoryAction = ECS.Component{ action = nil, details = {} }
+
+InventoryEntity = World:Entity(Selection(0))

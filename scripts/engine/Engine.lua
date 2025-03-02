@@ -358,6 +358,7 @@ function RegisterUIRenderSystem(name, q)
     end
 
     local widget = World:Entity(UI(function() return system.Render end))
+    system.Widget = widget
 
     system.Update = function(self)
         CurrentSystem:Set(name)
@@ -366,7 +367,7 @@ function RegisterUIRenderSystem(name, q)
     end
 
     table.insert(Pipeline_Render, system)
-    return system, widget
+    return system
 end
 
 function RegisterInputSystem(inputs, fn)

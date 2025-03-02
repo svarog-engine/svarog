@@ -25,48 +25,25 @@ Engine.RegisterInputSystem({ Action_Default_DebugFOV }, function()
 	end
 end)
 
-DebugToggle_EntitySpawn = false
-
 Engine.RegisterInputSystem({ Action_Default_DebugSpawn }, function()
 	DebugToggle_EntitySpawn = true
 	Input.Push("DebugSpawn")
 end)
 
 Engine.RegisterInputSystem({ Action_DebugSpawn_Select }, function()
-	local selection = DebugUI[DebugSpawnerWidget].selected
-
-	local i = 1
-	local entry = nil
-	for _, e in pairs(DebugSpawnLibrary) do
-		if i == selection then
-			entry = e
-		end
-		i = i + 1
+	local selection = DebugSpawnUI[Selection].value	
+	local entry = DebugSpawnUI[Contents].items[selection]
+	if entry ~= nil then
+		TargetOverlayEntity:Set(ActivateTargetOverlay{ callback = entry.callback })
 	end
-
-	if entry == nil then
-		return
-	end
-
-	TargetOverlayEntity:Set(ActivateTargetOverlay{ callback = entry })
 end)
 
 Engine.RegisterInputSystem({ Action_DebugSpawn_Up }, function()
-	local widget = DebugUI[DebugSpawnerWidget]
-	local newSeleced = widget.selected - 1
-
-	if newSeleced > 0 then
-		widget.selected = widget.selected - 1
-	end
+	SelectPrev(DebugSpawnUI, #DebugSpawnUI[Contents].items)
 end)
 
 Engine.RegisterInputSystem({ Action_DebugSpawn_Down }, function()
-	local widget = DebugUI[DebugSpawnerWidget]
-	local newSeleced = widget.selected + 1
-
-	if newSeleced <= widget.size then
-		widget.selected = widget.selected + 1
-	end
+	SelectNext(DebugSpawnUI, #DebugSpawnUI[Contents].items)
 end)
 
 Engine.RegisterInputSystem({ Action_DebugSpawn_Reload }, function()
@@ -75,6 +52,6 @@ end)
 
 Engine.RegisterInputSystem({ Action_DebugSpawn_Exit }, function()
 	DebugToggle_EntitySpawn = false
-	DebugEnitySpawnRenderSystem:Restore()
+	UIRenderer.Clear()
 	Input.Pop()
 end)
