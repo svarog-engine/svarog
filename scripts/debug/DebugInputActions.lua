@@ -34,7 +34,6 @@ Engine.RegisterInputSystem({ Action_Default_DebugSpawn }, function()
 end)
 
 Engine.RegisterInputSystem({ Action_DebugSpawn_Select }, function()
-
 	local selection = DebugUI[DebugSpawnerWidget].selected
 
 	local i = 1
@@ -50,17 +49,16 @@ Engine.RegisterInputSystem({ Action_DebugSpawn_Select }, function()
 		return
 	end
 
-	local callback = {
+	local state = {
 		callback = function(x, y, data)
 			local selectedEntity  = data.entity
 			selectedEntity(x,y)
-		end
-		,
+		end, 
 		data = { entity = entry }
 	}
 
 	local playerPosition = PlayerEntity[Position]
-	TargetRenderSystem:Activate(callback, playerPosition.x, playerPosition.y)
+	TargetRenderSystem:Activate(state, playerPosition.x, playerPosition.y)
 end)
 
 Engine.RegisterInputSystem({ Action_DebugSpawn_Up }, function()

@@ -55,7 +55,10 @@ local function PlotLineLow(startX, startY, endX, endY, color, isVisibleFn)
 	end
 end
 
+local FT = function(x, y) return true end
+
 function PlotLine(startX, startY, endX, endY, color, isVisibleFn)
+	if isVisibleFn == nil then isVisibleFn = FT end
 	if math.abs(endY - startY) < math.abs(endX - startX) then
 		if startX > endX then
 			PlotLineLow(endX, endY, startX, startY, color, isVisibleFn)

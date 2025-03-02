@@ -82,7 +82,7 @@ end
 
 local function Glyph(x, y, name, overrides, layer)
     local renderlayer = layer or "Game"
-
+    if x < 0 or y < 0 or x >= Config.Width or y >= Config.Height then return end
     message = {}
     message.X = x - 1
     message.Y = y - 1

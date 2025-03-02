@@ -37,6 +37,7 @@
     <None Remove="scripts\components\UI.lua" />
     <None Remove="scripts\components\World.lua" />
     <None Remove="scripts\gameplay\algorithms\Bresenham.lua" />
+    <None Remove="scripts\gameplay\algorithms\Stack.lua" />
     <None Remove="scripts\gameplay\render\UIRender.lua" />
   </ItemGroup>
 
