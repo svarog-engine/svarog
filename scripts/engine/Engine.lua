@@ -357,7 +357,7 @@ function RegisterUIRenderSystem(name, q)
         return value
     end
 
-    local widget = World:Entity(UI(function() return system.UIRender end))
+    local widget = World:Entity(UI(function() return system.Render end))
 
     system.Update = function(self)
         CurrentSystem:Set(name)

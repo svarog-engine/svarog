@@ -38,9 +38,9 @@ Glossary.Default = {
 	invalid = { x = -1, y = -1, fg = Colors.Transparent, bg = Colors.Transparent },
 }
 
+InsertSpriteCharRanges(Glossary.Default, 1, 1, "ABCDEFGHIJKLMNOPQRSTUVWXYZ[ ]^_")
+InsertSpriteCharRanges(Glossary.Default, 1, 2, "abcdefghijklmnopqrstuvwxyz{|}~")
 InsertSpriteCharRanges(Glossary.Default, 0, 0, " ")
-InsertSpriteCharRanges(Glossary.Default, 1, 1, "ABCDEFGHIJKLMNOPQRSTUVWXYZ")
-InsertSpriteCharRanges(Glossary.Default, 1, 2, "abcdefghijklmnopqrstuvwxyz")
 
-InsertSpriteCharRanges(Glossary.Default, 11, 0, "+,-./0123456789:;")
+InsertSpriteCharRanges(Glossary.Default, 11, 0, "+,-./0123456789:;<=>?")
 InsertSpriteCharRanges(Glossary.Default, 1, 0, "!@#$%&")

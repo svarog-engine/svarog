@@ -1,5 +1,3 @@
--- Debug
-
 DebugToggle_Distances = { "player", "walls" }
 DebugToggle_Distances[0] = nil
 
@@ -28,6 +26,7 @@ Engine.RegisterInputSystem({ Action_Default_DebugFOV }, function()
 end)
 
 DebugToggle_EntitySpawn = false
+
 Engine.RegisterInputSystem({ Action_Default_DebugSpawn }, function()
 	DebugToggle_EntitySpawn = true
 	Input.Push("DebugSpawn")
@@ -49,15 +48,7 @@ Engine.RegisterInputSystem({ Action_DebugSpawn_Select }, function()
 		return
 	end
 
-	local state = {
-		callback = function(x, y, data)
-			local selectedEntity  = data.entity
-			selectedEntity(x,y)
-		end, 
-		data = { entity = entry }
-	}
-
-	TargetRenderSystem:Activate(state)
+	TargetOverlayEntity:Set(ActivateTargetOverlay{ callback = entry })
 end)
 
 Engine.RegisterInputSystem({ Action_DebugSpawn_Up }, function()

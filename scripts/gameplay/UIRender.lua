@@ -1,13 +1,18 @@
-﻿local UISettings = {
+﻿local FID = function(dx, dy) end
+
+local UISettings = {
 	x = 1, 
 	y = 1,
 	width = Config.Width,
 	height = Config.Height,
+	order = FID,
+	fg = Colors.White,
+	bg = Colors.Black,
 	boxes = Stack(),
 	orders = Stack(),
+	styles = Stack(),
 }
 
-local FID = function(dx, dy) end
 local FH = function(dx, dy) UISettings.x = UISettings.x + dx end
 local FV = function(dx, dy) UISettings.y = UISettings.y + dy end
 
@@ -24,16 +29,16 @@ UIRenderer = {
 		UIRenderer.Line(x1, y2, x2, y2, color, isVisibleFn)
 	end,
 
-	Label = function(text, config)
-		if config == nil then config = {} end
+	Label = function(text)
+		if not (type(text) == 'string') then text = tostring(text) end
 		local dx, dy = 0, 0 
-		local order = UISettings.orders:top()
+		local order = UISettings.order or FID
 		for index = 1, #text do
 			local str = string.sub(text, index, index)
-
-			Engine.Write(UISettings.x + dx, UISettings.y + dy, str, 
-				config["fg"] or Colors.White,
-				config["bg"] or Colors.Black,
+			Engine.Write(
+				UISettings.x + dx, UISettings.y + dy, str, 
+				UISettings.fg or Colors.White,
+				UISettings.bg or Colors.Black,
 				"UI")
 
 			dx = dx + 1
@@ -42,14 +47,13 @@ UIRenderer = {
 				dy = dy + 1
 			end
 		end
+		dy = dy + 1
 
-		if order ~= nil then
-			order(dx, dy)
-		end
+		if order ~= nil then order(dx, dy) end
 	end,
 
 	Space = function(size)
-		local order = UISettings.orders:top()
+		local order = UISettings.order or FID
 		if order ~= nil then
 			order(size, size)
 		end
@@ -81,15 +85,68 @@ UIRenderer = {
 	end,
 
 	PushOrder = function(order)
+		UISettings.orders:push(UISettings.order)
 		if order == "-" then
-			UISettings.orders:push(FH)
+			UISettings.order = FH
 		elseif order == "|" then
-			UISettings.orders:push(FV)
+			UISettings.order = FV
+		else
+			UISettings.order = FID
 		end
 	end,
 
 	PopOrder = function()
-		UISettings.orders:pop()
+		UISettings.order = UISettings.orders:pop()
+	end,
+
+	PushStyle = function(fg, bg)
+		UISettings.styles:push({ UISettings.fg, UISettings.bg })
+		UISettings.fg = fg
+		UISettings.bg = bg
+	end,
+
+	PopStyle = function()
+		local f, b = table.unpack(UISettings.styles:pop())
+		UISettings.fg = f
+		UISettings.bg = b
+	end,
+
+	List = function(elements, selected, innerFn)
+		if innerFn == nil then innerFn = UIRenderer.Label end
+		local order = UISettings.order or FID
+		local fg = UISettings.fg or Colors.White
+		local bg = UISettings.bg or Colors.Black
+		
+		for i, v in ipairs(elements) do
+			if i == selected then
+				UIRenderer.PushStyle(bg, fg)
+				innerFn(v)
+				UIRenderer.PopStyle()
+			else
+				UIRenderer.PushStyle(fg, bg)
+				innerFn(v)
+				UIRenderer.PopStyle()
+			end
+		end
+	end,
+
+	Bar = function(title, value, max, config)
+		if config == nil then config = {} end
+		local width = config.width or UISettings.width - 2
+		local start = config.start or "["
+		local stop = config.stop or "]"
+		local full = config.full or "="
+		local empty = config.empty or " "
+		
+		local s = ""
+		s = s .. start
+		local fullCells = math.ceil(value / max * width)
+		for i = 0, fullCells do s = s .. full end
+		for i = 1, width - fullCells do s = s .. empty end
+		s = s .. stop
+		UIRenderer.Label(title)
+		UIRenderer.Label(s)
+		UIRenderer.Space(1)
 	end,
 }
 
