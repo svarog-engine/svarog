@@ -57,8 +57,7 @@ Engine.RegisterInputSystem({ Action_DebugSpawn_Select }, function()
 		data = { entity = entry }
 	}
 
-	local playerPosition = PlayerEntity[Position]
-	TargetRenderSystem:Activate(state, playerPosition.x, playerPosition.y)
+	TargetRenderSystem:Activate(state)
 end)
 
 Engine.RegisterInputSystem({ Action_DebugSpawn_Up }, function()

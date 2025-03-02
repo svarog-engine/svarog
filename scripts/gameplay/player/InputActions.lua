@@ -66,7 +66,7 @@ Engine.RegisterInputSystem({ Action_Default_Reload }, function() Svarog.Instance
 -- Inventory
 
 InventoryOpen = false
-Engine.RegisterInputSystem({ Action_Default_Inventory}, function()
+Engine.RegisterInputSystem({ Action_Default_Inventory }, function()
 	InventoryOpen = true
 	local widget = UI[InventoryWidget]
 	widget.source = PlayerEntity[Inventory]
@@ -74,31 +74,31 @@ Engine.RegisterInputSystem({ Action_Default_Inventory}, function()
 	Input.Push("Inventory")
 end)
 
-Engine.RegisterInputSystem({Action_Inventory_Exit}, function()
+Engine.RegisterInputSystem({ Action_Inventory_Exit }, function()
 	Input.Pop()
 	InventoryOpen = false
 	InventoryRender:Restore()
 end)
 
-Engine.RegisterInputSystem({Action_Inventory_SelectNext}, function()
+Engine.RegisterInputSystem({ Action_Inventory_SelectNext }, function()
 	local widget = UI[InventoryWidget]
-	local newSeleced = widget.selected + 1
+	local newSelected = widget.selected + 1
 
-	if newSeleced <= #widget.source.items then
+	if newSelected <= #widget.source.items then
 		widget.selected = widget.selected + 1
 	end
 end)
 
-Engine.RegisterInputSystem({Action_Inventory_SelectPrevious}, function()
+Engine.RegisterInputSystem({ Action_Inventory_SelectPrevious }, function()
 	local widget = UI[InventoryWidget]
-	local newSeleced = widget.selected - 1
+	local newSelected = widget.selected - 1
 
-	if newSeleced > 0 then
+	if newSelected > 0 then
 		widget.selected = widget.selected - 1
 	end
 end)
 
-Engine.RegisterInputSystem({Action_Inventory_Drop}, function()
+Engine.RegisterInputSystem({ Action_Inventory_Drop }, function()
 	local selection = InventoryWidget.GetSelected()
 	if selection == nil then
 		return
@@ -119,7 +119,7 @@ Engine.RegisterInputSystem({Action_Inventory_Drop}, function()
 	Glyph{name = itemMeta.glyph})
 end)
 
-Engine.RegisterInputSystem({Action_Inventory_Throw}, function()
+Engine.RegisterInputSystem({ Action_Inventory_Throw }, function()
 	local selection = InventoryWidget.GetSelected()
 	if selection == nil then
 		return
@@ -138,9 +138,9 @@ Engine.RegisterInputSystem({Action_Inventory_Throw}, function()
 			local itemMeta = ItemLibrary[selection]
 
 			World:Entity(
-			Item{id = selection},
-			Position{x = target.x, y = target.y},
-			Glyph{name = itemMeta.glyph})
+				Item{id = selection},
+				Position{x = target.x, y = target.y},
+				Glyph{name = itemMeta.glyph})
 
 			Diary.Write("Dropped " .. ItemLibrary[selection].name .. ".")
 		end
@@ -172,7 +172,7 @@ Engine.RegisterInputSystem({Action_TargetOverlay_Exit}, function()
 end)
 
 Engine.RegisterInputSystem({Action_TargetOverlay_Confirm}, function()
-	TargetRenderSystem:Deactivate(false)
+	TargetRenderSystem:Activate(false)
 end)
 
 Engine.RegisterInputSystem({Action_TargetOverlay_MouseMove}, function()

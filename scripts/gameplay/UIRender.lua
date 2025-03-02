@@ -1,8 +1,6 @@
-﻿local UIRenderSystem = Engine.RegisterRenderSystem("UI Render")
-
-local UISettings = {
-	x = 0, 
-	y = 0,
+﻿local UISettings = {
+	x = 1, 
+	y = 1,
 	width = Config.Width,
 	height = Config.Height,
 	boxes = Stack(),
@@ -28,14 +26,25 @@ UIRenderer = {
 
 	Label = function(text, config)
 		if config == nil then config = {} end
-		Engine.Write(UISettings.x, UISettings.y, text, 
-			config["fg"] or Colors.White,
-			config["bg"] or Colors.Black,
-			"UI")
-		
+		local dx, dy = 0, 0 
 		local order = UISettings.orders:top()
+		for index = 1, #text do
+			local str = string.sub(text, index, index)
+
+			Engine.Write(UISettings.x + dx, UISettings.y + dy, str, 
+				config["fg"] or Colors.White,
+				config["bg"] or Colors.Black,
+				"UI")
+
+			dx = dx + 1
+			if dx > UISettings.width then
+				dx = 0
+				dy = dy + 1
+			end
+		end
+
 		if order ~= nil then
-			order(#text, 1)
+			order(dx, dy)
 		end
 	end,
 
@@ -59,6 +68,10 @@ UIRenderer = {
 		UISettings.height = height
 	end,
 
+	PushRel = function(dx, dy)
+		PushBox(UISettings.x + dx, UISettings.y + dy, UISettings.width, UISettings.height)
+	end,
+
 	PopBox = function()
 		local ox, oy, ow, oh = table.unpack(UISettings.boxes:pop())
 		UISettings.x = ox
@@ -80,8 +93,6 @@ UIRenderer = {
 	end,
 }
 
-function UIRenderSystem:Render()
-	for _, entity in World:Exec(ECS.Query.All(UI)):Iterator() do
-		entity[UI].work(UIRenderer)
-	end
+function RenderUI(entity)
+	entity[UI].value()(UIRenderer)
 end

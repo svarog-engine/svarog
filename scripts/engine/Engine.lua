@@ -339,6 +339,36 @@ function RegisterRenderSystem(name, q)
     return system
 end
 
+function RegisterUIRenderSystem(name, q)
+    if q == nil then q = function(id) return id end end
+    local system = ECS.System(Engine.RenderSystem(), q(ECS.Query.All(Redraw)))
+
+    system.Order = #Pipeline_Render
+
+    system.ShouldUpdate = function(time)
+        CurrentSystem:Set(name)
+        local value = false
+        if system.ShouldRender ~= nil then
+            value = system:ShouldRender(time)
+        else
+            value = true
+        end
+        CurrentSystem:Reset()
+        return value
+    end
+
+    local widget = World:Entity(UI(function() return system.UIRender end))
+
+    system.Update = function(self)
+        CurrentSystem:Set(name)
+    	RenderUI(widget)
+        CurrentSystem:Reset()
+    end
+
+    table.insert(Pipeline_Render, system)
+    return system, widget
+end
+
 function RegisterInputSystem(inputs, fn)
     local system = ECS.System(Engine.PlayerSystem(), ECS.Query.Any(table.unpack(inputs)), function(self) 
         for _, e in self:Result(self.queryAction):Iterator() do
@@ -402,4 +432,5 @@ return {
     RegisterEnviroSystem = RegisterEnviroSystem,
     RegisterEnviroTaskSystem = RegisterEnviroTaskSystem,
     RegisterRenderSystem = RegisterRenderSystem,
+    RegisterUIRenderSystem = RegisterUIRenderSystem,
 }
