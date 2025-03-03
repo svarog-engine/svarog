@@ -11,18 +11,23 @@ function DistanceMap.IS_OPEN_DOOR(map, x, y)
 	return tile.type == Door and not tile.entity[Door].closed
 end
 
-function DistanceMap:From(map, goals, low)
+function DistanceMap:From(map, goals, low, limit)
 	local o = {}
 	if low == nil then low = 0 end
+	if limit == nil then limit = 1000 end
 
 	local w, h = map:Size()
 	o.origin = map
 	o.tiles = Map:New(w, h, nil)
 	o.goals = {}
+	o.limit = limit
+
 	for _, g in ipairs(goals) do
 		table.insert(o.goals, { math.floor(g[1]), math.floor(g[2]) })
 	end
 
+	o.counts = {}
+	o.highestBucket = 0
 	o.low = low
 	o.conditions = {}
 	o.neighbors = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } }
@@ -100,6 +105,25 @@ function DistanceMap:Get(x, y)
 	return self.tiles:Get(x, y)
 end
 
+function DistanceMap:Count(n, x, y)
+	if self.counts[n] == nil then
+		self.counts[n] = {}
+	end
+
+	table.insert(self.counts[n], { x = x, y = y })
+	if n > self.highestBucket then
+		self.highestBucket = n
+	end
+end
+
+function DistanceMap:GetHighestBucket()
+	return self.highestBucket
+end
+
+function DistanceMap:GetAt(n)
+	return self.counts[n] or {}
+end
+
 function DistanceMap:Flood()
 	local toVisit = Queue:New()
 	local visited = {}
@@ -116,6 +140,7 @@ function DistanceMap:Flood()
 	for _, xy in ipairs(self.goals) do
 		toVisit:PushRight(self.origin:ID(xy[1], xy[2]))
 		self.tiles:Set(xy[1], xy[2], self.low)
+		self:Count(self.low, { xy[1], xy[2] })
 		if DebugToggle_PrintDistances then
 			xy[1] = math.floor(xy[1])
 			xy[2] = math.floor(xy[2])
@@ -130,10 +155,12 @@ function DistanceMap:Flood()
 			local x, y = self.origin:XY(next)
 			x = math.floor(x)
 			y = math.floor(y)
+
 			if DebugToggle_PrintDistances then
 				print(" === VALUE ASSIGN ===")
 				print("Unqueued: " .. x .. ", " .. y)
 			end
+
 			if self.tiles:Has(x, y) and self.tiles:Get(x, y) == MAX then
 				local min = MAX
 				for _, n in ipairs(self.neighbors) do
@@ -141,6 +168,7 @@ function DistanceMap:Flood()
 					min = math.min(min, neighbor)
 				end
 				self.tiles:Set(x, y, min + 1)
+				self:Count(min + 1, x, y)
 
 				if DebugToggle_PrintDistances then
 					print("  Setting new value at " .. x .. ", " .. y .. " to " .. (min + 1))
@@ -151,12 +179,14 @@ function DistanceMap:Flood()
 				print(" === NEIGHBOR CHECK ===")
 			end
 
-			for _, n in ipairs(self.neighbors) do
-				if self:CheckToAdd(x + n[1], y + n[2]) then
-					if DebugToggle_PrintDistances then
-						print("  Position " .. (x + n[1]) .. ", " .. (y + n[2]) .. " is unset, adding to queue")
+			if (self.tiles:Get(x, y) or self.limit) < self.limit then
+				for _, n in ipairs(self.neighbors) do
+					if self:CheckToAdd(x + n[1], y + n[2]) then
+						if DebugToggle_PrintDistances then
+							print("  Position " .. (x + n[1]) .. ", " .. (y + n[2]) .. " is unset, adding to queue")
+						end
+						toVisit:PushRight(self.origin:ID(x + n[1], y + n[2]))
 					end
-					toVisit:PushRight(self.origin:ID(x + n[1], y + n[2]))
 				end
 			end
 		end

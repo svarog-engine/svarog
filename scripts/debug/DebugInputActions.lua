@@ -5,7 +5,7 @@ DebugToggle_DistanceIndex = 0
 DebugToggle_PrintDistances = false
 
 Engine.RegisterInputSystem({ Action_Default_DebugDistances }, function()
-	DebugToggle_DistanceIndex = (DebugToggle_DistanceIndex + 1) % 3
+	DebugToggle_DistanceIndex = (DebugToggle_DistanceIndex + 1) % 5
 end)
 
 Engine.RegisterInputSystem({ Action_Default_DebugPrintDistances }, function()

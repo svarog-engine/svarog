@@ -17,11 +17,19 @@ Palette[-4] = Colors.DarkBrown
 Palette[-5] = Colors.Brown
 Palette[-6] = Colors.LightBrown
 
+function DebugDistancesRenderSystem:ShouldRender()
+	return Dungeons.created and DebugToggle_DistanceIndex > 0
+end
+
 function DebugDistancesRenderSystem:Render()
 	if DebugToggle_DistanceIndex > 0 then
-		local map = Dungeons.playerDistance
+		local map = Dungeon.playerDistance
 		if DebugToggle_DistanceIndex == 2 then
-			map = Dungeons.wallDistances
+			map = Dungeon.wallDistances
+		elseif DebugToggle_DistanceIndex == 3 then
+			map = Dungeon.zones
+		elseif DebugToggle_DistanceIndex == 4 then
+			map = Dungeon.quiet
 		end
 
 		if Dungeons.created then
@@ -44,7 +52,15 @@ function DebugDistancesRenderSystem:Render()
 							char = "empty_tile"
 						end
 
-						Engine.Glyph(i, j, char, { fg = color })
+						if DebugToggle_DistanceIndex >= 3 then
+							local bgc = Colors.DarkGray
+							if Dungeon.wallDistances:Get(i, j) > 0 then
+								bgc = Colors.Gray
+							end
+							Engine.Glyph(i, j, char, { fg = color, bg = bgc })
+						else
+							Engine.Glyph(i, j, char, { fg = color })
+						end
 					end
 				end
 			end

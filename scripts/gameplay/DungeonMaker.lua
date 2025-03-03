@@ -92,21 +92,11 @@ end
 
 function MakeDungeonRoom(index)
 	Dungeon = Dungeons.maps[index]
-	Dungeons.playerDistance = DistanceMap:From(Dungeon.floor, { { PlayerEntity[Position].x, PlayerEntity[Position].y } }, 0)
-	Dungeons.playerDistance:AddCondition(DistanceMap.IS_FLOOR)
-	Dungeons.playerDistance:AddCondition(DistanceMap.IS_OPEN_DOOR)
-	Dungeons.playerDistance:Flood()
-	Dungeons.created = true
-end
-
-local function signum(number)
-   if number > 0 then
-      return 1
-   elseif number < 0 then
-      return -1
-   else
-      return 0
-   end
+	Dungeon.playerDistance = DistanceMap:From(Dungeon.floor, { { PlayerEntity[Position].x, PlayerEntity[Position].y } }, 0)
+	Dungeon.playerDistance:AddCondition(DistanceMap.IS_FLOOR)
+	Dungeon.playerDistance:AddCondition(DistanceMap.IS_OPEN_DOOR)
+	Dungeon.playerDistance:Flood()
+	Dungeon.created = true
 end
 
 local function MakeDungeon()	
@@ -114,27 +104,40 @@ local function MakeDungeon()
 	Dungeons.maps = {}
 	Dungeons.created = true
 
-	local w, h = Config.Width, Config.Height
+	local w, h = Config.Width - 16, Config.Height - 4
+
 	Dungeons.maps[1] = {}
-	Dungeons.maps[1].index = 1
-	Dungeons.maps[1].name = "Room" .. 1
-	Dungeons.maps[1].entities = {}
-	Dungeons.maps[1].entitiesList = {}
-	Dungeons.maps[1].passable = Map:New(Config.Width, Config.Height)
-	Dungeons.maps[1].floor = Map:New(Config.Width, Config.Height, nil)
-	Dungeons.maps[1].visibility = Map:New(Config.Width, Config.Height, false)
-	Dungeons.maps[1].visited = Map:New(Config.Width, Config.Height, false)
-		
 	Dungeon = Dungeons.maps[1]
-	local m1 = Markov:Run("SelectLargeCaves", Config.Width, Config.Height - 4, 2500)
-	local m2 = Markov:Or(m1, "BasicDijkstraFill", Config.Width, Config.Height - 4)
+
+	Dungeon.index = 1
+	Dungeon.name = "Room" .. 1
+	Dungeon.entities = {}
+	Dungeon.entitiesList = {}
+	Dungeon.passable = Map:New(w, h)
+	Dungeon.floor = Map:New(w, h, nil)
+	Dungeon.visibility = Map:New(w, h, false)
+	Dungeon.visited = Map:New(w, h, false)
 	
-	local m = Map:From(m2, Config.Width)
-	local ok = {}
+	local m1 = Markov:Run("StrangeDungeon", w, h)
+	local m2 = Markov:Or(m1, "DijkstraDungeon", w, h)
+	local m3 = Markov:Or(m2, "SelectLargeCaves", w, h, 10000, 2)
+	local m = Map:From(m3, w)
+
+	for i = 1, w - 1 do
+		m:Set(i, 1, 0)
+		m:Set(i, h, 0)
+	end
+
+	for i = 1, h do
+		m:Set(1, i, 0)
+		m:Set(w, i, 0)
+	end
+	
 	local values = {}
 	local walls = {}
-	for i = 1, Config.Width do
-		for j = 1, Config.Height - 4 do 
+	
+	for i = 1, w do
+		for j = 1, h do
 			local v = m:Get(i, j)
 			if values[v] == nil then values[v] = 1 end
 			local ij = { i, j }
@@ -142,7 +145,6 @@ local function MakeDungeon()
 			if v == 1 or v == 2 or v == 3 then
 				Dungeon.passable:Set(i, j, true)
 				Dungeon.floor:Set(i, j, { type = Floor })
-				table.insert(ok, ij)
 			else
 				Dungeon.passable:Set(i, j, false)
 				Dungeon.floor:Set(i, j, { type = Wall })
@@ -150,28 +152,92 @@ local function MakeDungeon()
 			end
 		end
 	end
-	for k, _ in pairs(values) do print(k) end
+
+	Dungeon.wallDistances = DistanceMap:From(Dungeon.floor, walls, 0)
+	Dungeon.wallDistances:AddCondition(DistanceMap.IS_FLOOR)
+	Dungeon.wallDistances:Flood()
+
+	-- ROOM SETUP
+
+	Dungeon.zones = Map:New(w, h, 0)
+
+	local centers = {}
+	local zoneId = 1
+	local bucketIndex = Dungeon.wallDistances:GetHighestBucket()
+	
+	while bucketIndex > 0 do
+		local usedRs = {}
+		for i = 0, 8 + (10 - bucketIndex) do
+			local bucket = Dungeon.wallDistances:GetAt(bucketIndex)
+			if bucket ~= nil then
+				local r = 1
+				local attempts = 0
+				repeat 
+					r = Rand:Range(1, #bucket)
+					attempts = attempts + 1
+					if attempts > #bucket then
+						break
+					end
+				until usedRs[r] == nil
+				usedRs[r] = true
+
+				local rx, ry = math.floor(bucket[r].x), math.floor(bucket[r].y)
+				table.insert(centers, { rx, ry })
+
+				local rise = DistanceMap:From(Dungeon.floor, { { rx, ry } }, 0, bucketIndex)
+				rise:AddCondition(DistanceMap.IS_FLOOR)
+				rise:Flood()
+
+				local shape = nil
+				if Rand:Range(0, 10) < 5 then
+					shape = Geometry.MakeCircle(rx, ry, bucketIndex)
+				else
+					shape = Geometry.MakeRect(rx - bucketIndex, ry - bucketIndex, bucketIndex, bucketIndex)
+				end
+
+				local surf = Geometry.Surface(shape).Points:GetEnumerator()
+				while surf:MoveNext() do
+					local pt = surf.Current
+
+					if rise:Get(pt.X, pt.Y) <= bucketIndex then
+						local oldZone = Dungeon.zones:Get(pt.X, pt.Y)
+						if (oldZone == 0) or (oldZone > 0 and Rand:Range(0, 10) < zoneId - oldZone) then
+							Dungeon.zones:Set(pt.X, pt.Y, zoneId)
+						end
+					end
+				end
+				zoneId = zoneId + 1
+				if zoneId > 12 then zoneId = 1 end
+			end
+		end
+
+		bucketIndex = bucketIndex - 1
+	end
+
+	Dungeon.quiet = DistanceMap:From(Dungeon.floor, centers, 0)
+	Dungeon.quiet:AddCondition(DistanceMap.IS_FLOOR)
+	Dungeon.quiet:Flood()
+
+	local mostQuiet = Dungeon.quiet:GetHighestBucket()
+	local ok = Dungeon.quiet:GetAt(mostQuiet)
 	local xy = ok[Rand:Range(1, #ok)]
-		
+	local x, y = xy.x, xy.y
+
+	-- PLAYER SETUP
+
 	PlayerEntity = World:Entity(
 		Player(),
-		Position{ x = xy[1], y = xy[2] },
+		Position{ x = x, y = y },
 		Glyph{ name = "mage" },
 		Contents{ items = {} }
 	)
 	
-	Dungeon.visited:Set(xy[1], xy[2], true)
-	print(PlayerEntity[Position].x, PlayerEntity[Position].y)
-	
-	Dungeons.wallDistances = DistanceMap:From(Dungeon.floor, walls, 0)
-	Dungeons.wallDistances:AddCondition(DistanceMap.IS_FLOOR)
-	Dungeons.wallDistances:AddCondition(DistanceMap.IS_OPEN_DOOR)
-	Dungeons.wallDistances:Flood()
+	Dungeon.visited:Set(x, y, true)
 
-	Dungeons.playerDistance = DistanceMap:From(Dungeon.floor, { { PlayerEntity[Position].x, PlayerEntity[Position].y } }, 0)
-	Dungeons.playerDistance:AddCondition(DistanceMap.IS_FLOOR)
-	Dungeons.playerDistance:AddCondition(DistanceMap.IS_OPEN_DOOR)
-	Dungeons.playerDistance:Flood()
+	Dungeon.playerDistance = DistanceMap:From(Dungeon.floor, { { PlayerEntity[Position].x, PlayerEntity[Position].y } }, 0)
+	Dungeon.playerDistance:AddCondition(DistanceMap.IS_FLOOR)
+	Dungeon.playerDistance:Flood()
+	
 	Dungeons.created = true
 end
 

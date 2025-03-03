@@ -14,7 +14,7 @@ LoadPlayerSystem "InventoryInputActions"
 LoadPlayerSystem "InventoryUpdate"
 LoadPlayerSystem "TargetingInputActions"
 
-LoadEnviroSystem "DoorMechanics"
+--LoadEnviroSystem "DoorMechanics"
 LoadEnviroSystem "FriendlySwapBehaviour"
 LoadEnviroSystem "PickUpMechanics"
 LoadEnviroSystem "PassabilityUpdate"
@@ -29,8 +29,8 @@ LoadRenderSystem "TopLevelRender"
 
 LoadRenderSystem "DiaryRender"
 LoadRenderSystem "TargetRender"
---LoadRenderSystem "UITestRender"
 LoadRenderSystem "InventoryRender"
+--LoadRenderSystem "UITestRender"
 
 LoadScriptIfExists "debug\\DebugSpawnLibrary"
 LoadScriptIfExists "debug\\render\\DebugDistancesRender"

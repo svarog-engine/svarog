@@ -18,7 +18,7 @@ public class Markov
         return second;
     }
 
-    public byte[]? Or(byte[] first, string model, int width, int height, int steps = 10000, int amount = 3)
+    public byte[]? Or(byte[] first, string model, int width, int height, int steps = 10000, int amount = 3, int offsetX = 0, int offsetY = 0)
     {
         byte[] second = Run(model, width, height, steps, amount)!;
         for (int i = 0; i < width; i++)
@@ -26,7 +26,9 @@ public class Markov
             for (int j = 0; j < height; j++)
             {
                 var index = j * height + i;
-                second[index] = (byte)(first[index] | second[index]);
+                var dest = (j + offsetY) * height + (i + offsetX);
+                if (dest < 0 || dest > width * height) continue;
+                second[dest] = (byte)(first[index] | second[index]);
             }
         }
         return second;
