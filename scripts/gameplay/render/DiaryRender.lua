@@ -2,10 +2,11 @@
 local DiaryRenderSystem = Engine.RegisterUIRenderSystem("Diary Render");
 
 function DiaryRenderSystem.Render(ui)
-	ui.PushBox(1, Config.Height - 2, Config.Width, 2)
+	local messageCount = 3
+	ui.PushBox(1, Config.Height - messageCount, Config.Width, messageCount)
 		ui.PushOrder("|")
-			local diary = DiaryEntity[Diary]
-			ui.Label(diary.log[diary.index])
+			local entries = Diary.Messages(messageCount)
+			ui.List(entries, 0)
 		ui.PopOrder()
 	ui.PopBox()
 end

@@ -7,3 +7,17 @@ function Diary.Write(message)
 	table.insert(diary.log, message)
 	diary.index = diary.index + 1
 end
+
+function Diary.Messages(n)
+	local diary = DiaryEntity[Diary]
+	local index = diary.index
+	local messages = {}
+	
+	for i = n - 1, 0, -1 do
+		if index - i >= 0 then
+			table.insert(messages, diary.log[index - i])		
+		end
+	end
+
+	return messages
+end
