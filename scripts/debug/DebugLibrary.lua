@@ -7,6 +7,8 @@ local DebugSpawnLibrary = {
 			World:Entity(
 				Creature(),
 				AIMoveTowardsPlayer{ distance = 0, chance = 90 },
+				Health { current = 3, maximum = 3 },
+				BumpAttack { damage = 1 },
 				Position{ x = x, y = y },
 				Glyph{ name = "goblin" }
 			)

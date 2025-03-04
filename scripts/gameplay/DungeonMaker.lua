@@ -230,7 +230,8 @@ local function MakeDungeon()
 		Position{ x = x, y = y },
 		Glyph{ name = "mage" },
 		Contents{ items = {} },
-		Health { current = 100, maximum = 100 }
+		Health { current = 10, maximum = 10 },
+		BumpAttack { damage = 2 }
 	)
 	
 	Dungeon.visited:Set(x, y, true)
