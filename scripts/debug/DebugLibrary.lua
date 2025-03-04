@@ -22,6 +22,18 @@ local DebugSpawnLibrary = {
 				Glyph{ name = "treasure" }
 			)
 		end
+	},
+
+	{
+		name = "Telepathic",
+		callback = function (x, y)
+			World:Entity(
+				Item { id = "stone"},
+				Position{ x = x, y = y },
+				Glyph{ name = "%" },
+				InflictStatus { component = function() return Telepathic { duration = 5, turnsLeft = 5 } end }
+			)
+		end
 	}
 }
 

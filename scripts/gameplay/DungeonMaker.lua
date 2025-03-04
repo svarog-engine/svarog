@@ -229,7 +229,8 @@ local function MakeDungeon()
 		Player(),
 		Position{ x = x, y = y },
 		Glyph{ name = "mage" },
-		Contents{ items = {} }
+		Contents{ items = {} },
+		Health { current = 100, maximum = 100 }
 	)
 	
 	Dungeon.visited:Set(x, y, true)

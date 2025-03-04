@@ -30,16 +30,18 @@
   <ItemGroup>
     <None Remove="scripts\components\ai.lua" />
     <None Remove="scripts\components\Diary.lua" />
-    <None Remove="scripts\components\Gameplay.lua" />
     <None Remove="scripts\components\Render.lua" />
     <None Remove="scripts\components\Status.lua" />
     <None Remove="scripts\components\UI.lua" />
     <None Remove="scripts\components\World.lua" />
     <None Remove="scripts\gameplay\algorithms\Bresenham.lua" />
     <None Remove="scripts\gameplay\algorithms\Stack.lua" />
+    <None Remove="scripts\gameplay\enviro\InflictStatusMechanics.lua" />
+    <None Remove="scripts\gameplay\enviro\StatusEffectUpdate.lua" />
     <None Remove="scripts\gameplay\player\InventoryInputActions.lua" />
     <None Remove="scripts\gameplay\player\InventoryUpdate.lua" />
     <None Remove="scripts\gameplay\player\TargetingInputActions.lua" />
+    <None Remove="scripts\gameplay\render\PlayerInfoRender.lua" />
     <None Remove="scripts\gameplay\render\UIRender.lua" />
     <None Remove="scripts\gameplay\render\UITestRender.lua" />
   </ItemGroup>

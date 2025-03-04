@@ -6,7 +6,7 @@ function InventoryRender:ShouldRender()
 end
 
 function InventoryRender.Render(ui)
-	ui.PushBox(45, 2, 20, 20)
+	ui.PushBox(46, 10, 20, 20)
 		ui.PushOrder("|")
 			ui.Label("= INVENTORY =")
 			ui.Space(1)

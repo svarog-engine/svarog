@@ -149,7 +149,7 @@ UIRenderer = {
 		local s = ""
 		s = s .. start
 		local fullCells = math.ceil(value / max * width)
-		for i = 0, fullCells do s = s .. full end
+		for i = 0, fullCells - 1 do s = s .. full end
 		for i = 1, width - fullCells do s = s .. empty end
 		s = s .. stop
 		UIRenderer.Label(title)

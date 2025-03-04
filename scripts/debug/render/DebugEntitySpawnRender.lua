@@ -8,7 +8,7 @@ function DebugEntitySpawnRenderSystem.Render(ui)
 	local contents = DebugSpawnUI[Contents].items
 	local selection = DebugSpawnUI[Selection].value
 
-	ui.PushBox(39, 1, 20, 40)
+	ui.PushBox(35, 1, 20, 40)
 		ui.PushOrder("|")
 			ui.PushStyle(Colors.DarkCyan, Colors.Black)
 			ui.List(contents, selection, function(e)
