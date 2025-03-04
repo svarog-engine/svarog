@@ -25,6 +25,6 @@ Store = ECS.Component { level = 1 }
 Light = ECS.Component { level = 1 }
 Strengthen = ECS.Component { level = 1 }
 Steal = ECS.Component { level = 1 }
-learn = ECS.Component { level = 1 }
+Learn = ECS.Component { level = 1 }
 Weaken = ECS.Component { level = 1 }
 Break = ECS.Component { level = 1 }
