@@ -99,7 +99,7 @@ function MakeDungeonRoom(index)
 	Dungeon.created = true
 end
 
-local function MakeDungeon()	
+local function MakeDungeon()
 	Dungeons = {}
 	Dungeons.maps = {}
 	Dungeons.created = true
@@ -164,7 +164,12 @@ local function MakeDungeon()
 	local centers = {}
 	local zoneId = 1
 	local bucketIndex = Dungeon.wallDistances:GetHighestBucket()
-	
+	local halfsteps = { 1, 3, 2, 1, 1, 2, 2, 1, 1, 2, 3, 1 }
+	for i = #halfsteps, 2, -1 do
+        local j = math.random(i)
+        halfsteps[i], halfsteps[j] = halfsteps[j], halfsteps[i]
+    end
+
 	while bucketIndex > 0 do
 		local usedRs = {}
 		for i = 0, 8 + (10 - bucketIndex) do
@@ -206,7 +211,8 @@ local function MakeDungeon()
 						end
 					end
 				end
-				zoneId = zoneId + 1
+
+				zoneId = zoneId + halfsteps[zoneId]
 				if zoneId > 12 then zoneId = 1 end
 			end
 		end
@@ -242,4 +248,6 @@ local function MakeDungeon()
 	Dungeons.created = true
 end
 
-OnStartup(function() MakeDungeon() end)
+OnStartup(function() 
+	MakeDungeon() 
+end)

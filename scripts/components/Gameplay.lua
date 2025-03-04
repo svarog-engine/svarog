@@ -17,7 +17,5 @@ Bumped = ECS.Component{ by = 0 }
 
 Floor = ECS.Component()
 Wall = ECS.Component()
-Door = ECS.Component{ closed = true, locked = false, travelTo = nil, hidden = false }
-Key = ECS.Component { item = nil }
 
 Health = ECS.Component { current = 100, maximum = 100 }
