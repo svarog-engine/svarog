@@ -9,7 +9,7 @@ Calm = ECS.Component { level = 1 }
 Rage = ECS.Component { level = 1 }
 Yearn = ECS.Component { level = 1 }
 Discover = ECS.Component { level = 1 }
-Heal = ECS.Component { level = 1 }
+Heal = ECS.Component { level = 1, chance = 3 }
 Endure = ECS.Component { level = 1 }
 Luck = ECS.Component { level = 1 }
 Fade = ECS.Component { level = 1 }
