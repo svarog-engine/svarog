@@ -18,5 +18,5 @@ Bumped = ECS.Component{ by = 0 }
 Floor = ECS.Component()
 Wall = ECS.Component()
 
-Health = ECS.Component { current = 10, maximum = 10 }
+Health = ECS.Component(Range(10, 10))
 BumpAttack = ECS.Component { damage = 1 }

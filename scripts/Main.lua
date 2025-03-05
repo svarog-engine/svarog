@@ -1,10 +1,7 @@
 ﻿DoMeasurements = false 
 
-IncludeGameplay "algorithms\\Stack"
-IncludeGameplay "algorithms\\Bresenham"
-IncludeGameplay "algorithms\\RecursiveShadowcast"
-
-IncludeGameplay "Chance"
+IncludeGameplay "DungeonEntities"
+IncludeGameplay "Chances"
 IncludeGameplay "UIRender"
 IncludeGameplay "DungeonMaker"
 IncludeGameplay "BumpMechanics"

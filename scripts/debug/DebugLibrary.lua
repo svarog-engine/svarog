@@ -7,7 +7,7 @@ local DebugSpawnLibrary = {
 			World:Entity(
 				Creature(),
 				AIMoveTowardsPlayer{ distance = 0, chance = 90 },
-				Health { current = 3, maximum = 3 },
+				Health(Range(3)),
 				BumpAttack { damage = 1 },
 				Position{ x = x, y = y },
 				Glyph{ name = "goblin" }
@@ -33,7 +33,7 @@ local DebugSpawnLibrary = {
 				Item { id = "stone"},
 				Position{ x = x, y = y },
 				Glyph{ name = "%" },
-				InflictStatus { component = function() return Telepathic { duration = 5, turnsLeft = 5 } end }
+				InflictStatus { component = function() return Telepathic(Range(5)) end }
 			)
 		end
 	},

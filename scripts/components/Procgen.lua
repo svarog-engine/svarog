@@ -2,13 +2,6 @@
 Burnable = ECS.Component()
 Dissolvable = ECS.Component()
 
-Steel = ECS.Component()
-Iron = ECS.Component()
-Silver = ECS.Component()
-Darkore = ECS.Component()
-
-Alarm = ECS.Component()
-
 Key = ECS.Component()
 Locked = ECS.Component()
 
@@ -61,6 +54,10 @@ local steelKey = MakeItem("steel key", "steelKey", { Steel, Key })
 local ironKey = MakeItem("iron key", "ironKey", { Iron, Key })
 local silverKey = MakeItem("silver key", "silverKey", { Silver, Key })
 local darkoreKey = MakeItem("darkore key", "darkoreKey", { Darkore, Key })
+
+function Choose(tbl)
+	return true
+end
 
 local RESOLVE_METAL = Choose({ Steel, Iron, Silver, Darkore })
 local key = MakeItem("key", { RESOLVE_METAL })

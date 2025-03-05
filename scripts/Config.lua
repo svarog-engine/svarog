@@ -22,3 +22,8 @@
 
 -- FOV configuration:
 --		Config.FOVRadius = 10
+
+IncludeGameplay "algorithms\\Range"
+IncludeGameplay "algorithms\\Stack"
+IncludeGameplay "algorithms\\Bresenham"
+IncludeGameplay "algorithms\\RecursiveShadowcast"

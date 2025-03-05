@@ -8,8 +8,8 @@ function StatusEffectUpdateSystem:UpdateDuration(entity, statusEffect)
 	local effect = entity[statusEffect]
 
 	if effect ~= nil then
-		effect.turnsLeft = effect.turnsLeft - 1
-		if effect.turnsLeft == 0 then
+		effect.current = effect.current - 1
+		if effect.current == 0 then
 			entity:Unset(statusEffect)
 		end
 	end

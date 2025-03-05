@@ -28,3 +28,16 @@ Steal = ECS.Component { level = 1 }
 Learn = ECS.Component { level = 1 }
 Weaken = ECS.Component { level = 1 }
 Break = ECS.Component { level = 1 }
+
+-- Metals
+
+Metallic = ECS.Component()
+Steel = ECS.Component()
+Iron = ECS.Component()
+Silver = ECS.Component()
+Darkore = ECS.Component()
+
+-- Herbs
+
+Herb = ECS.Component(name = "", element = Open)
+Mineral = ECS.Component(name = "", element = Open)
