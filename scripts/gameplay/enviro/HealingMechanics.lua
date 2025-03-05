@@ -14,7 +14,7 @@ function HealingSystem:Tick()
 			return
 		end
 
-		local shouldHeal = Chances[heal.chance]:MakeGuess()
+		local shouldHeal = Chances[7 + heal.level]:MakeGuess()
 
 		if shouldHeal then
 			health.current = health.current + 1

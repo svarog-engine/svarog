@@ -100,10 +100,6 @@ function MakeDungeonRoom(index)
 end
 
 local function MakeDungeon()
-	Dungeons = {}
-	Dungeons.maps = {}
-	Dungeons.created = true
-
 	local w, h = Config.Width - 16, Config.Height - 4
 
 	Dungeons.maps[1] = {}
@@ -249,6 +245,23 @@ local function MakeDungeon()
 	Dungeons.created = true
 end
 
+local function MakeWheels()
+	local majorStart = Rand:Range(1, 12)
+	local minorStart = Rand:Range(1, 12)
+	print(majorStart, minorStart)
+	Dungeons.wheels = CreateWheels(majorStart, minorStart)
+	for i = 1, 12 do
+		local man, mam = Dungeons.wheels:GetMajor(i)
+		local min, mim = Dungeons.wheels:GetMinor(i)
+		print(man, min, mam, mim)
+	end
+end
+
 OnStartup(function() 
+	Dungeons = {}
+	Dungeons.maps = {}
+	Dungeons.created = true
+
+	MakeWheels()
 	MakeDungeon() 
 end)

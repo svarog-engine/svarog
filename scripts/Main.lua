@@ -3,6 +3,7 @@
 IncludeGameplay "DungeonEntities"
 IncludeGameplay "Chances"
 IncludeGameplay "UIRender"
+IncludeGameplay "Wheels"
 IncludeGameplay "DungeonMaker"
 IncludeGameplay "BumpMechanics"
 IncludeGameplay "ItemLibrary"

@@ -36,7 +36,7 @@ local function CheckKeepDistanceFromPlayer(entity)
 end
 
 function AIBehavioursSystem:ShouldTick()
-	return Dungeon.playerDistance ~= nil
+	return Dungeon ~= nil and Dungeon.playerDistance ~= nil
 end
 
 function AIBehavioursSystem:Tick()

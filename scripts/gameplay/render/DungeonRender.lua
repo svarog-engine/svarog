@@ -2,7 +2,7 @@
 local DungeonRenderSystem = Engine.RegisterRenderSystem("Dungeon Render")
 
 function DungeonRenderSystem:ShouldRender()
-	return Dungeon.floor ~= nil
+	return Dungeon ~= nil and Dungeon.floor ~= nil
 end
 
 function DungeonRenderSystem:Render()

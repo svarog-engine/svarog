@@ -56,21 +56,22 @@ local silverKey = MakeItem("silver key", "silverKey", { Silver, Key })
 local darkoreKey = MakeItem("darkore key", "darkoreKey", { Darkore, Key })
 
 function Choose(tbl)
-	return true
+	return function() return tbl[Rand:Range(1, #tbl)] end
 end
 
 local RESOLVE_METAL = Choose({ Steel, Iron, Silver, Darkore })
-local key = MakeItem("key", { RESOLVE_METAL })
-local key = MakeItem("dagger", { RESOLVE_METAL, Weapon, Small })
 
-local artifact = MakeCollection("artifact", {})
+local key = MakeItem("key", { RESOLVE_METAL() })
+local dagger = MakeItem("dagger", { RESOLVE_METAL(), Weapon, Small })
+local amulet = MakeItem("amulet", { RESOLVE_METAL(), RESOLVE_})
+local artifact = Choose({ key, dagger })
 
 local common1 = MakeTemplate(3, 3,
 [[
 .23
 .1.
 ...
-]], { nil, nil, nil, nil, nil, nil, steelKey, ironKey }, { nil, barrel, table, crate }, { nil, nil, table, crate })
+]], { nil, nil, nil, nil, nil, nil, key }, { nil, barrel, table, crate }, { nil, nil, table, crate })
 
 local common2 = MakeTemplate(4, 3,
 [[
@@ -137,9 +138,11 @@ local exhibit2 = MakeTemplate(3, 3,
 ..2
 .1.
 ...
-]], { nil, painting, artifact }, { nil, nil, nil, nil, nil, darkoreKey, silverKey })
+]], { nil, painting, artifact }, { nil, nil, nil, nil, nil, key, amulet })
 
 local anvil = MakeItem("anvil", { BlockingPassage })
+local cauldron = MakeItem("cauldron", { BlockingPassage })
+
 local workshop1 = MakeTemplate(5, 5,
 [[
 .....
@@ -155,4 +158,47 @@ local workshop2 = MakeTemplate(3, 3,
 .21
 ...
 ]], { nil, shelf, shelf, shelf, crate }, { anvil, cauldron })
+
+local shrine1 = MakeTemplate(3, 3,
+[[
+1..
+...
+..1
+]], { candle })
+
+local shrine1 = MakeTemplate(5, 3,
+[[
+1..1.
+.1..1
+..11.
+]], { nil, candle })
+
+local statue = MakeItem("statue", { BlockingPassage, BlockingSight })
+local shrine2 = MakeTemplate(6, 6,
+[[
+13.1.
+3...3
+.124.
+3...1
+.3.1.
+]], { nil, nil, candle, candle }, { statue }, { nil, nil, nil, nil, nil, bool, candle }, { nil, nil, nil, artifact })
+
+local furnace = MakeItem("furnace", { BlockingPassage, BlockingSight, Burning })
+local grate = MakeItem("grate", { Metallic })
+local forge1 = MakeTemplate(6, 6,
+[[
+333333
+331133
+323323
+331133
+323323
+333333
+]], { furnace }, { nil, furnace }, { grate, nil })
+
+local forge2 = MakeTemplate(3, 3,
+[[
+333
+213
+332
+]], { furnace }, { nil, furnace }, { grate, nil })
 

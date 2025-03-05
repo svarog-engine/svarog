@@ -49,6 +49,7 @@
     <None Remove="scripts\gameplay\render\PlayerInfoRender.lua" />
     <None Remove="scripts\gameplay\render\UIRender.lua" />
     <None Remove="scripts\gameplay\render\UITestRender.lua" />
+    <None Remove="scripts\gameplay\Wheels.lua" />
   </ItemGroup>
 
   <ItemGroup>

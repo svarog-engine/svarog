@@ -46,6 +46,11 @@ Glossary.Default = {
 	darkoreKey = { x = 6, y = 2, fg = Colors.DarkRed, bg = Colors.Black },
 	alarmTrap = { x = 13, y = 20, fg = Colors.LightRed, bg = Colors.DarkRed },
 	book = { x = 3, y = 2, fg = Colors.Brown, bg = Colors.Black },
+	anvil = { x = 25, y = 1, fg = Colors.Gray, bg = Colors.Black },
+	cauldron = { x = 21, y = 1, fg = Colors.LightGray, bg = Colors.Black },
+	statue = { x = 0, y = 1, fg = Colors.LightGray, bg = Colors.DarkGray },
+	furnace = { x = 20, y = 15, fg = Colors.Red, bg = Colors.Black },
+	grate = { x = 31, y = 1, fg = Colors.Gray, bg = Colors.Black },
 }
 
 InsertSpriteCharRanges(Glossary.Default, 1, 1, "ABCDEFGHIJKLMNOPQRSTUVWXYZ[ ]^_")
