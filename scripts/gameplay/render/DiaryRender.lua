@@ -3,6 +3,9 @@ local DiaryRenderSystem = Engine.RegisterUIRenderSystem("Diary Render");
 
 function DiaryRenderSystem.Render(ui)
 	local messageCount = 3
+
+	UIRenderer.ClearBox(1, Config.Height - messageCount, Config.Width, messageCount)
+
 	ui.PushBox(1, Config.Height - messageCount, Config.Width, messageCount)
 		ui.PushOrder("|")
 			local entries = Diary.Messages(messageCount)

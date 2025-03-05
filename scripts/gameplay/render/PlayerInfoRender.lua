@@ -5,6 +5,7 @@ local Components = {
 	Health = Health, 
 	Telepathic = Telepathic, 
 	Invisible = Invisible,
+	Delayed = Delayed,
 }
 
 function PlayerInfoRenderSystem.Render(ui)
@@ -13,12 +14,14 @@ function PlayerInfoRenderSystem.Render(ui)
 		return
 	end
 
+	UIRenderer.ClearBox(47, 2, 20, 20)
+
 	ui.PushBox(47, 2, 20, 20)
 		ui.PushOrder("|")
 			for name, comp in pairs(Components) do
 				local v = player[comp]
 				if v ~= nil then
-					ui.Bar(name, v.current, v.maximum, { width = 10 })
+					ui.Bar(name, v.current, v.maximum, { width = v.maximum })
 				end
 			end
 		ui.PopOrder()

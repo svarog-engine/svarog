@@ -25,6 +25,14 @@ UIRenderer = {
 		end
 	end,
 
+	ClearBox = function(x, y, width, height)
+		for i = x, x + width do
+			for j = y, y + height do
+				Engine.Glyph(i, j, "invalid", { fg = Colors.Red, bg = Colors.Black }, "UI")
+			end
+		end
+	end,
+
 	Line = function(x1, y1, x2, y2, color, isVisibleFn)
 		if color == nil then color = Colors.White end
 		PlotLine(x1, y1, x2, y2, color, isVisibleFn)

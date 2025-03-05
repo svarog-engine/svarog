@@ -2,13 +2,27 @@
 
 local DebugSpawnLibrary = {
 	{
-		name = "goblin", 
+		name = "weak goblin", 
 		callback = function(x, y)
 			World:Entity(
 				Creature(),
 				AIMoveTowardsPlayer{ distance = 0, chance = 90 },
 				Health(Range(3)),
-				BumpAttack { damage = 1 },
+				BumpAttack { damage = 2 },
+				Position{ x = x, y = y },
+				Glyph{ name = "goblin" }
+			)
+		end
+	},
+
+	{
+		name = "strong goblin", 
+		callback = function(x, y)
+			World:Entity(
+				Creature(),
+				AIMoveTowardsPlayer{ distance = 0, chance = 90 },
+				Health(Range(3)),
+				BumpAttack { damage = 12 },
 				Position{ x = x, y = y },
 				Glyph{ name = "goblin" }
 			)
@@ -46,6 +60,18 @@ local DebugSpawnLibrary = {
 				Position{ x = x, y = y },
 				Glyph{ name = "H" },
 				InflictStatus { component = function() return Heal { level = 1 } end }
+			)
+		end
+	},
+
+	{
+		name = "endure",
+		callback = function (x, y)
+			World:Entity(
+				Item { id = "stone"},
+				Position{ x = x, y = y },
+				Glyph{ name = "E" },
+				InflictStatus { component = function() return Endure { level = 1, turns = 8 } end }
 			)
 		end
 	}
