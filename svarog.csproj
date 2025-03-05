@@ -30,6 +30,7 @@
   <ItemGroup>
     <None Remove="scripts\components\ai.lua" />
     <None Remove="scripts\components\Diary.lua" />
+    <None Remove="scripts\components\Procgen.lua" />
     <None Remove="scripts\components\Render.lua" />
     <None Remove="scripts\components\Status.lua" />
     <None Remove="scripts\components\UI.lua" />

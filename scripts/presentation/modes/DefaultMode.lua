@@ -36,6 +36,16 @@ Glossary.Default = {
 
 	empty = { x = 0, y = 0, fg = Colors.DarkGray, bg = Colors.Black },
 	invalid = { x = -1, y = -1, fg = Colors.Transparent, bg = Colors.Transparent },
+
+	crate = { x = 29, y = 0, fg = Colors.Gray, bg = Colors.Black },
+	table = { x = 14, y = 1, fg = Colors.Gray, bg = Colors.Black },
+	barrel = { x = 15, y = 2, fg = Colors.Gray, bg = Colors.Black },
+	steelKey = { x = 6, y = 2, fg = Colors.LightBlue, bg = Colors.Black },
+	ironKey = { x = 6, y = 2, fg = Colors.Gray, bg = Colors.Black },
+	silverKey = { x = 6, y = 2, fg = Colors.LightGray, bg = Colors.Black },
+	darkoreKey = { x = 6, y = 2, fg = Colors.DarkRed, bg = Colors.Black },
+	alarmTrap = { x = 13, y = 20, fg = Colors.LightRed, bg = Colors.DarkRed },
+	book = { x = 3, y = 2, fg = Colors.Brown, bg = Colors.Black },
 }
 
 InsertSpriteCharRanges(Glossary.Default, 1, 1, "ABCDEFGHIJKLMNOPQRSTUVWXYZ[ ]^_")
