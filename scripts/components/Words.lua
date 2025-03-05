@@ -39,5 +39,5 @@ Darkore = ECS.Component()
 
 -- Herbs
 
-Herb = ECS.Component(name = "", element = Open)
-Mineral = ECS.Component(name = "", element = Open)
+Herb = ECS.Component { name = "", element = nil }
+Mineral = ECS.Component { name = "", element = nil }

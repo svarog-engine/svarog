@@ -80,7 +80,7 @@ local common2 = MakeTemplate(4, 3,
 ]], { nil, nil, crate, barrel }
 )
 
-local alarmTrap = MakeItem("alarm trap", "alarmTrap", { Hidden, Alarm{ distance = 0 } })
+local alarmTrap = MakeItem("alarm trap", "alarmTrap", { Hidden, Alarm })
 local book = MakeItem("book", { Paper, Burnable, Dissolvable })
 local warehouse1 = MakeTemplate(5, 5,
 [[
