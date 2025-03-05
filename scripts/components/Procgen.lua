@@ -45,6 +45,13 @@ function MakeTemplate(w, h, template, ...)
 	return template
 end
 
+function MakeCollection(name, collection)
+	local coll = {}
+	coll.name = name
+	coll.items = collection
+	return coll
+end
+
 local crate = MakeItem("crate", { Breakable, CanHaveContent, BlockingSight, BlockingPassage })
 local chest = MakeItem("chest", "crate", { Breakable, CanHaveContent, Locked, BlockingPassage })
 local table = MakeItem("table", { Breakable, BlockingPassage })
@@ -54,7 +61,12 @@ local steelKey = MakeItem("steel key", "steelKey", { Steel, Key })
 local ironKey = MakeItem("iron key", "ironKey", { Iron, Key })
 local silverKey = MakeItem("silver key", "silverKey", { Silver, Key })
 local darkoreKey = MakeItem("darkore key", "darkoreKey", { Darkore, Key })
-local key = MakeCollection("key", { ironKey, silverKey, darkoreKey, steelKey })
+
+local RESOLVE_METAL = Choose({ Steel, Iron, Silver, Darkore })
+local key = MakeItem("key", { RESOLVE_METAL })
+local key = MakeItem("dagger", { RESOLVE_METAL, Weapon, Small })
+
+local artifact = MakeCollection("artifact", {})
 
 local common1 = MakeTemplate(3, 3,
 [[
@@ -130,6 +142,7 @@ local exhibit2 = MakeTemplate(3, 3,
 ...
 ]], { nil, painting, artifact }, { nil, nil, nil, nil, nil, darkoreKey, silverKey })
 
+local anvil = MakeItem("anvil", { BlockingPassage })
 local workshop1 = MakeTemplate(5, 5,
 [[
 .....
