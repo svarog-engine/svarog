@@ -74,6 +74,18 @@ local DebugSpawnLibrary = {
 				InflictStatus { component = function() return Endure { level = 1, turns = 8 } end }
 			)
 		end
+	},
+
+	{
+		name = "luck",
+		callback = function (x, y)
+			World:Entity(
+				Item { id = "stone"},
+				Position{ x = x, y = y },
+				Glyph{ name = "L" },
+				InflictStatus { component = function() return Luck { level = 1, chance = 5, multiplier = 2 } end }
+			)
+		end
 	}
 }
 

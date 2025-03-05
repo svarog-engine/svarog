@@ -26,6 +26,8 @@ function BumpAttackMechanicsSystem:Tick()
 					entity[Delayed].maximum = entity[Endure].turns
 				end
 
+				Diary.Write("Endure activated! You going to receive damage over time.")
+
 			else
 				entity[Health].current = entity[Health].current - totalDamage
 			end
