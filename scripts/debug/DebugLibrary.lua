@@ -27,13 +27,25 @@ local DebugSpawnLibrary = {
 	},
 
 	{
-		name = "Telepathic",
+		name = "telepathic",
 		callback = function (x, y)
 			World:Entity(
 				Item { id = "stone"},
 				Position{ x = x, y = y },
 				Glyph{ name = "%" },
 				InflictStatus { component = function() return Telepathic { duration = 5, turnsLeft = 5 } end }
+			)
+		end
+	},
+
+	{
+		name = "healing",
+		callback = function (x, y)
+			World:Entity(
+				Item { id = "stone"},
+				Position{ x = x, y = y },
+				Glyph{ name = "H" },
+				InflictStatus { component = function() return Heal { level = 1 } end }
 			)
 		end
 	}
