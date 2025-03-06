@@ -4,7 +4,7 @@ local function TryApplyComponent(x, y, component)
 	local id = Dungeon.floor:ID(x, y)
 	local entities = Dungeon.entities[id] or {}
 	if #entities > 0 then
-		for _, e in ipairs(entities) do
+		for _, e in pairs(entities) do
 			e:Set(component)
 		end
 	end
@@ -15,6 +15,13 @@ DebugWordsLibrary = {
 		name = "calm",
 		callback = function (x, y)
 			TryApplyComponent(x, y, Calm { level = 1, chance = 8 })
+		end
+	},
+
+	{
+		name = "yearn",
+		callback = function (x, y)
+			TryApplyComponent(x, y, Yearn { level = 1, chances = 8 })
 		end
 	},
 

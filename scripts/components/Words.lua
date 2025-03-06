@@ -7,7 +7,7 @@ Enlarge = ECS.Component { level = 1 }
 Flow = ECS.Component { level = 1 }
 Calm = ECS.Component { level = 1, chance = 8 }
 Rage = ECS.Component { level = 1 }
-Yearn = ECS.Component { level = 1 }
+Yearn = ECS.Component { level = 1, chance = 2 }
 Discover = ECS.Component { level = 1 }
 Heal = ECS.Component { level = 1, chance = 3 }
 Endure = ECS.Component { level = 1, turns = 8 }

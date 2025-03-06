@@ -1,14 +1,16 @@
 ﻿
-function PerformBump(entity, x, y, dx, dy)
+function PerformBump(entity, x, y, dx, dy, canBump)
 	local nx = x + dx
 	local ny = y + dy
-			
+	local canBump = canBump or function(bumpEntity, bumpedEntity) return true end
 	local pass = Dungeon.passable:Has(nx, ny) and Dungeon.passable:Get(nx, ny)
 	local id = Dungeon.floor:ID(nx, ny)
 	local entities = Dungeon.entities[id] or {}
 	if #entities > 0 then
 		for _, e in ipairs(entities) do
-			e:Set(Bumped({ by = entity.id }))
+			if canBump(entity, e) then
+				e:Set(Bumped({ by = entity.id }))
+			end
 		end
 	elseif pass then
 		if entity[Position] ~= nil then

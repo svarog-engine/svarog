@@ -1,6 +1,20 @@
 ﻿
 local AIBehavioursSystem = Engine.RegisterEnviroSystem("AI Behaviours")
 
+local CanBump = function(bumpEntity, bumpedEntity)
+	local yearnComp = PlayerEntity[Yearn]
+	if yearnComp ~= nil and bumpedEntity[Creature] ~= nil and Chances[yearnComp.chance]:MakeGuess() then
+		return true
+	end
+
+	local breakComp = bumpEntity[Break]
+	if breakComp ~= nil and bumpedEntity[Breakable] ~= nil and Chances[breakComp.chance]:MakeGuess() then
+		return true
+	end
+
+	return bumpedEntity == PlayerEntity
+end
+
 local function CheckMoveTowardsPlayer(entity)
 	local ai = entity[AIMoveTowardsPlayer]
 	if ai ~= nil then
@@ -10,7 +24,7 @@ local function CheckMoveTowardsPlayer(entity)
 			if Dungeon.playerDistance:Has(neighbor.x, neighbor.y) then
 				local value = Dungeon.playerDistance:Get(neighbor.x, neighbor.y)
 				if value < current and Rand:Range(0, 100) < ai.chance then
-					table.insert(entity[Creature].goals, { "MoveTowardsPlayer", 1, function() PerformBump(entity, pos.x, pos.y, neighbor.x - pos.x, neighbor.y - pos.y) end })
+					table.insert(entity[Creature].goals, { "MoveTowardsPlayer", 1, function() PerformBump(entity, pos.x, pos.y, neighbor.x - pos.x, neighbor.y - pos.y, CanBump) end })
 				end
 			end
 		end
@@ -27,7 +41,7 @@ local function CheckKeepDistanceFromPlayer(entity)
 				if Dungeon.playerDistance:Has(neighbor.x, neighbor.y) then
 					local value = Dungeon.playerDistance:Get(neighbor.x, neighbor.y)
 					if value >= current and Rand:Range(0, 100) < ai.chance then
-						table.insert(entity[Creature].goals, { "KeepDistanceFromPlayer", 1, function() PerformBump(entity, pos.x, pos.y, neighbor.x - pos.x, neighbor.y - pos.y) end })
+						table.insert(entity[Creature].goals, { "KeepDistanceFromPlayer", 1, function() PerformBump(entity, pos.x, pos.y, neighbor.x - pos.x, neighbor.y - pos.y, CanBump) end })
 					end
 				end
 			end
