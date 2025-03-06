@@ -361,8 +361,10 @@ function RegisterUIRenderSystem(name, q)
     system.Widget = widget
 
     system.Update = function(self)
+        StartMeasure()
         CurrentSystem:Set(name)
     	RenderUI(widget)
+        EndMeasure(name)
         CurrentSystem:Reset()
     end
 

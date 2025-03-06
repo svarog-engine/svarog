@@ -1,5 +1,4 @@
-﻿DoMeasurements = false 
-
+﻿
 IncludeGameplay "DungeonEntities"
 IncludeGameplay "Chances"
 IncludeGameplay "UIRender"
