@@ -26,5 +26,12 @@ function ShadowcastSystem:Tick()
 	local playerPosition = PlayerEntity[Position]
 	Dungeon.visibility:Reset(false)
 
+	local light = PlayerEntity[Light]
+	if light ~= nil then
+		if Chances[light.chance]:MakeGuess() then
+			radius = radius + light.bonusRadius
+		end
+	end
+
 	FOV_algorithm(playerPosition.x, playerPosition.y, radius, IsTransparent, OnVisible, 0, arc)
 end

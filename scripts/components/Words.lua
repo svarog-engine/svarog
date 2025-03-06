@@ -22,12 +22,12 @@ Stop = ECS.Component { level = 1 }
 Darken = ECS.Component { level = 1 }
 Frighten = ECS.Component { level = 1 }
 Store = ECS.Component { level = 1 }
-Light = ECS.Component { level = 1 }
+Light = ECS.Component { level = 1, chance = 8, bonusRadius = 5 }
 Strengthen = ECS.Component { level = 1 }
 Steal = ECS.Component { level = 1 }
 Learn = ECS.Component { level = 1 }
 Weaken = ECS.Component { level = 1 }
-Break = ECS.Component { level = 1 }
+Break = ECS.Component { level = 1, chance = 8 }
 
 -- Metals
 

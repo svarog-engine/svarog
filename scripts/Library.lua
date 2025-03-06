@@ -10,4 +10,5 @@ LoadScriptIfExists("components\\UI")
 LoadScriptIfExists("components\\AI")
 
 LoadScriptIfExists("debug\\DebugLibrary")
+LoadScriptIfExists("debug\\DebugWordsLibrary")
 LoadScriptIfExists("components\\Procgen")

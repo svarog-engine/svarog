@@ -48,6 +48,15 @@ end)
 
 Engine.RegisterInputSystem({ Action_DebugSpawn_Reload }, function()
 	Svarog:RunScriptFileIfExists("scripts\\debug\\DebugSpawnLibrary")
+	Svarog:RunScriptFileIfExists("scripts\\debug\\DebugSpawnLibrary")
+end)
+
+Engine.RegisterInputSystem({ Action_DebugSpawn_ShowWords }, function()
+	DebugSpawnUI[Contents].items = DebugWordsLibrary
+end)
+
+Engine.RegisterInputSystem({ Action_DebugSpawn_ShowEntities }, function()
+	DebugSpawnUI[Contents].items = DebugSpawnLibrary
 end)
 
 Engine.RegisterInputSystem({ Action_DebugSpawn_Exit }, function()

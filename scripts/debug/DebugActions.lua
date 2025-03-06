@@ -9,4 +9,6 @@ Actions.DebugSpawn = {
 	Select = { Input.Press("Key: Enter") },
 	Exit   = { Input.Press("Key: Escape") },
 	Reload = { Input.Press("Key: F5") },
+	ShowWords = { Input.Press("Key: W") },
+	ShowEntities = { Input.Press("Key: E") },
 }

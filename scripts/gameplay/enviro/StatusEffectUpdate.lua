@@ -21,5 +21,4 @@ function StatusEffectUpdateSystem:Tick()
 		StatusEffectUpdateSystem:UpdateDuration(entity, Invisible)
 		StatusEffectUpdateSystem:UpdateDuration(entity, Delayed)
 	end
-	UIRenderer.Clear()
 end
