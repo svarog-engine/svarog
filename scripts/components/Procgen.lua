@@ -49,6 +49,12 @@ function Procgen.IsPaper(e)
 	e:Set(Dissolvable{})
 end
 
+function Procgen.Glass(e)
+	e:Set(Breakable{})
+	e:Set(BlockingPassage{})
+	e:Set(Glyph{ name = " " }) 
+end
+
 function Procgen.Crate(e, x, y)
 	Procgen.IsFurniture(e)
 	Procgen.IsWooden(e)
@@ -197,7 +203,7 @@ MakeTemplate("common1", 3, 3,
 .23
 .1.
 ...
-]], { nil, nil, nil, nil, nil, nil, "Key", "Goblin" }, { nil, "Crate", "Desk", "Crate" }, { nil, nil, "Desk", "Crate" })
+]], { nil, nil, nil, nil, nil, nil, "Key", "Goblin" }, { nil, "Crate", "Table", "Crate" }, { nil, nil, "Table", "Crate" })
 
 MakeTemplate("common2", 4, 3,
 [[
@@ -223,7 +229,7 @@ MakeTemplate("warehouse2", 4, 4,
 12.1
 1.21
 1111
-]], { "Crate", "Desk", "Shelf" }, { nil, nil, "Chest", "Chest", "Crate", "Goblin" })
+]], { "Crate", "Table", "Shelf" }, { nil, nil, "Chest", "Chest", "Crate", "Goblin" })
 
 MakeTemplate("library1", 3, 3,
 [[
@@ -261,7 +267,7 @@ MakeTemplate("exhibit2", 3, 3,
 ..2
 .1.
 ...
-]], { nil, "Painting", "Artifact" }, { nil, nil, nil, nil, nil, "Key", "Amulet" })
+]], { nil, nil, "Artifact" }, { nil, nil, nil, nil, nil, "Key", "Amulet" })
 
 MakeTemplate("workshop1", 5, 5,
 [[
@@ -270,7 +276,7 @@ MakeTemplate("workshop1", 5, 5,
 ..23.
 .4...
 .....
-]], { nil, "Shelf", "Shelf", "Shelf", "Crate" }, { "Anvil" }, { nil, "Desk" }, { "Artifact" })
+]], { nil, "Shelf", "Shelf", "Shelf", "Crate" }, { "Anvil" }, { nil, "Table" }, { "Artifact" })
 
 MakeTemplate("workshop2", 3, 3,
 [[
