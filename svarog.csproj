@@ -40,6 +40,7 @@
     <None Remove="scripts\gameplay\algorithms\Range.lua" />
     <None Remove="scripts\gameplay\algorithms\Stack.lua" />
     <None Remove="scripts\gameplay\Chances.lua" />
+    <None Remove="scripts\gameplay\enviro\DelayedDamageMechanics.lua" />
     <None Remove="scripts\gameplay\enviro\HealingMechanics.lua" />
     <None Remove="scripts\gameplay\enviro\InflictStatusMechanics.lua" />
     <None Remove="scripts\gameplay\enviro\StatusEffectUpdate.lua" />

@@ -16,9 +16,10 @@ function StatusEffectUpdateSystem:UpdateDuration(entity, statusEffect)
 end
 
 function StatusEffectUpdateSystem:Tick()
-	for _, entity in World:Exec(ECS.Query.Any(Telepathic, Invisible)):Iterator() do
+	for _, entity in World:Exec(ECS.Query.Any(Telepathic, Invisible, Delayed)):Iterator() do
 		StatusEffectUpdateSystem:UpdateDuration(entity, Telepathic)
 		StatusEffectUpdateSystem:UpdateDuration(entity, Invisible)
+		StatusEffectUpdateSystem:UpdateDuration(entity, Delayed)
 	end
 	UIRenderer.Clear()
 end

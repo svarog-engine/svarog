@@ -218,7 +218,7 @@ local function MakeDungeon()
 		Position{ x = x, y = y },
 		Glyph{ name = "mage" },
 		Contents{ items = {} },
-		Health(Range(1, 10)),
+		Health(Range(10, 10)),
 		BumpAttack { damage = 2 }
 	)
 	

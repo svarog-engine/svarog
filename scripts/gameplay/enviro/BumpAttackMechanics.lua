@@ -10,7 +10,27 @@ function BumpAttackMechanicsSystem:Tick()
 
 		if entity ~= nil and who ~= nil then
 			local totalDamage = BumpAttackMechanicsSystem:CalculateDamage(who, entity)
-			entity[Health].current = entity[Health].current - totalDamage
+
+			if entity[Endure] ~= nill then
+				if entity[Delayed] == nill then
+					entity:Set(Delayed{ damage = 0, current = 8, maximum = 8 })
+				end
+
+				entity[Delayed].damage = entity[Delayed].damage + totalDamage
+
+				if entity[Delayed].damage < entity[Endure].turns then
+					entity[Delayed].current = entity[Delayed].damage
+					entity[Delayed].maximum = entity[Delayed].damage
+				else
+					entity[Delayed].current = entity[Endure].turns
+					entity[Delayed].maximum = entity[Endure].turns
+				end
+
+				Diary.Write("Endure activated! You going to receive damage over time.")
+
+			else
+				entity[Health].current = entity[Health].current - totalDamage
+			end
 
 			entity:Unset(Bumped)
 
