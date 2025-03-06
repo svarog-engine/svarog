@@ -13,5 +13,5 @@
     FrameTime = 66,
 
     Palette = nil,
-    FOVRadius = 10,
+    FOVRadius = 20,
 }

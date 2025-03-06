@@ -52,7 +52,7 @@ end
 function Procgen.Glass(e)
 	e:Set(Breakable{})
 	e:Set(BlockingPassage{})
-	e:Set(Glyph{ name = " " }) 
+	e:Set(Glyph{ name = "alarmTrap" }) 
 end
 
 function Procgen.Crate(e, x, y)
@@ -245,22 +245,22 @@ MakeTemplate("library2", 3, 3,
 1.1
 ]], { nil, "Shelf", "Shelf", "Shelf" })
 
-MakeTemplate("library3", 5, 5,
+MakeTemplate("library3", 5, 4,
 [[
-1.1.1.
-.1.2..
-1.1.1.
-......
-]], { "Shelf", "Shelf", "Shelf" }, { nil, "Shelf", "Chair" })
+1.1.1
+..1..
+1.1.1
+.....
+]], { "Shelf", "Shelf", "Shelf" }, { nil, "Shelf" })
 
 MakeTemplate("exhibit1", 5, 5,
 [[
 .....
-.222.
-.212.
-.222.
 .....
-]], { "Artifact" }, { "Glass" })
+..1..
+.....
+.....
+]], { "Artifact" })
 
 MakeTemplate("exhibit2", 3, 3,
 [[

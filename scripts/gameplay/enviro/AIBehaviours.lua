@@ -51,9 +51,15 @@ function AIBehavioursSystem:ShouldTick()
 end
 
 function AIBehavioursSystem:Tick()
+	local p = PlayerEntity[Position]
+	local px, py = p.x, p.y
 	for _, entity in World:Exec(ECS.Query.All(Creature, Position)):Iterator() do
+		local pos = entity[Position]
+		local ex, ey = pos.x, pos.y
 		entity[Creature].goals = {}
-		CheckMoveTowardsPlayer(entity)
-		CheckKeepDistanceFromPlayer(entity)
+		if Dungeon.playerDistance:Get(ex, ey) < 9 then
+			CheckMoveTowardsPlayer(entity)
+			CheckKeepDistanceFromPlayer(entity)
+		end
 	end
 end

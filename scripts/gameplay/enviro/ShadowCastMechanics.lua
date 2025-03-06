@@ -6,6 +6,7 @@ local arc = 2 * math.pi -- full circle
 function OnVisible(x, y)
 	Dungeon.visibility:Set(x, y, 1)
 	Dungeon.visited:Set(x, y, 1)
+	Dungeon.memory:Set(x, y, 1)
 end
 
 function IsTransparent(x, y)
@@ -38,5 +39,6 @@ function ShadowcastSystem:Tick()
 		radius = 1
 	end
 
+	FOV = {}
 	FOV_algorithm(playerPosition.x, playerPosition.y, radius, IsTransparent, OnVisible, 0, arc)
 end

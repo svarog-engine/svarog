@@ -109,6 +109,7 @@ local function MakeDungeon()
 	Dungeon.entities = {}
 	Dungeon.entitiesList = {}
 	Dungeon.passable = Map:New(w, h)
+	Dungeon.memory = Map:New(w, h)
 	Dungeon.floor = Map:New(w, h, nil)
 	Dungeon.visibility = Map:New(w, h, false)
 	Dungeon.visited = Map:New(w, h, false)
