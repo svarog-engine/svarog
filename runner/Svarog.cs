@@ -277,7 +277,7 @@ namespace svarog.runner
             m_Lua = new();
             m_InputManager = new();
 
-            LogInfo($"Seed: {m_Randomness.Seed}");
+            LogWarning($"Seed: {m_Randomness.Seed}");
         }
 
         static void Main(string[] args)

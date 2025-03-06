@@ -168,7 +168,7 @@ local function MakeDungeon()
 
 	while bucketIndex > 0 do
 		local usedRs = {}
-		for i = 0, 8 + (10 - bucketIndex) do
+		for i = 0, 100 do
 			local bucket = Dungeon.wallDistances:GetAt(bucketIndex)
 			if bucket ~= nil then
 				local r = 1
@@ -185,27 +185,11 @@ local function MakeDungeon()
 				local rx, ry = math.floor(bucket[r].x), math.floor(bucket[r].y)
 				table.insert(centers, { rx, ry })
 
-				local rise = DistanceMap:From(Dungeon.floor, { { rx, ry } }, 0, bucketIndex)
-				rise:AddCondition(DistanceMap.IS_FLOOR)
-				rise:Flood()
-
-				local shape = nil
-				if Rand:Range(0, 10) < 5 then
-					shape = Geometry.MakeCircle(rx, ry, bucketIndex)
-				else
-					shape = Geometry.MakeRect(rx - bucketIndex, ry - bucketIndex, bucketIndex, bucketIndex)
-				end
-
-				local surf = Geometry.Surface(shape).Points:GetEnumerator()
-				while surf:MoveNext() do
-					local pt = surf.Current
-
-					if rise:Get(pt.X, pt.Y) <= bucketIndex then
-						local oldZone = Dungeon.zones:Get(pt.X, pt.Y)
-						if (oldZone == 0) or (oldZone > 0 and Rand:Range(0, 10) < zoneId - oldZone) then
-							Dungeon.zones:Set(pt.X, pt.Y, zoneId)
-						end
-					end
+				local name, comp = Wheels:GetMajor(i)
+				local roomTemplates = Rooms[comp]
+				local roomTemplate = roomTemplates[Rand:Range(0, #roomTemplates)]
+				if roomTemplate ~= nil then
+					roomTemplate(rx, ry)
 				end
 
 				zoneId = zoneId + halfsteps[zoneId]
@@ -215,6 +199,8 @@ local function MakeDungeon()
 
 		bucketIndex = bucketIndex - 1
 	end
+
+	-- QUIET ZONES
 
 	Dungeon.quiet = DistanceMap:From(Dungeon.floor, centers, 0)
 	Dungeon.quiet:AddCondition(DistanceMap.IS_FLOOR)

@@ -10,8 +10,11 @@ local function Draw(query)
 	end
 end
 
+function TopLevelRenderSystem:ShouldRender()
+	return Dungeon ~= nil and PlayerEntity ~= nil
+end
+
 function TopLevelRenderSystem:Render()
-	Draw(ECS.Query.All(Glyph, Position, Item))
-	Draw(ECS.Query.All(Glyph, Position, Creature))
+	Draw(ECS.Query.All(Glyph, Position).None(Player))
 	Draw(ECS.Query.All(Glyph, Position, Player))
 end

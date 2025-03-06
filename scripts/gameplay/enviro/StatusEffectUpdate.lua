@@ -20,4 +20,5 @@ function StatusEffectUpdateSystem:Tick()
 		StatusEffectUpdateSystem:UpdateDuration(entity, Telepathic)
 		StatusEffectUpdateSystem:UpdateDuration(entity, Invisible)
 	end
+	UIRenderer.Clear()
 end

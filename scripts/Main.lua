@@ -13,7 +13,6 @@ LoadPlayerSystem "InventoryInputActions"
 LoadPlayerSystem "InventoryUpdate"
 LoadPlayerSystem "TargetingInputActions"
 
---LoadEnviroSystem "DoorMechanics"
 LoadEnviroSystem "FriendlySwapBehaviour"
 LoadEnviroSystem "PassabilityUpdate"
 LoadEnviroSystem "AIBehaviours"

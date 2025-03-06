@@ -16,14 +16,14 @@ end
 function Wheels:GetMajor(n, o)
 	local offset = o or 0
 	local index = self.major + n + offset
-	if index > 12 then index = (index % 12) end
+	if index > 12 then index = (index % 12) + 1 end
 	return majorNames[index], majorWheel[majorNames[index]]
 end
 
 function Wheels:GetMinor(n, o)
 	local offset = o or 0
 	local index = self.minor + n + offset
-	if index > 12 then index = (index % 12) end
+	if index > 12 then index = (index % 12) + 1 end
 	return minorNames[index], minorWheel[minorNames[index]]
 end
 
