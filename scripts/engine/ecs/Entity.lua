@@ -4,7 +4,7 @@
    the data is stored in the components and the behavior is provided by the systems that process those components. 
 ]]
 
-Svarog:RequireModule( "scripts\\engine\\ecs\\Archetype", "Archetype")
+Svarog:RequireModule("scripts\\engine\\ecs\\Archetype", "Archetype")
 
 local SEQ  = 0
 

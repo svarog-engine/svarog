@@ -1,4 +1,4 @@
-Svarog:RequireModule( "scripts\\engine\\ecs\\Event", "Event")
+Svarog:RequireModule("scripts\\engine\\ecs\\Event", "Event")
 
 --[[
    The repository (database) of entities in a world.

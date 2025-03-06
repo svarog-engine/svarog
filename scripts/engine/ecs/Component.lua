@@ -1,5 +1,5 @@
-Svarog:RequireModule( "scripts\\engine\\ecs\\Utility", "Utility")
-Svarog:RequireModule( "scripts\\engine\\ecs\\ComponentFSM", "ComponentFSM")
+Svarog:RequireModule("scripts\\engine\\ecs\\Utility", "Utility")
+Svarog:RequireModule("scripts\\engine\\ecs\\ComponentFSM", "ComponentFSM")
 
 local copyDeep = Utility.copyDeep
 local mergeDeep = Utility.mergeDeep

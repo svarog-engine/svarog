@@ -1,9 +1,9 @@
-Svarog:RequireModule( "scripts\\engine\\ecs\\Timer", "Timer")
-Svarog:RequireModule( "scripts\\engine\\ecs\\Event", "Event")
-Svarog:RequireModule( "scripts\\engine\\ecs\\Entity", "Entity")
-Svarog:RequireModule( "scripts\\engine\\ecs\\Archetype", "Archetype")
-Svarog:RequireModule( "scripts\\engine\\ecs\\SystemExecutor", "SystemExecutor")
-Svarog:RequireModule( "scripts\\engine\\ecs\\EntityRepository", "EntityRepository")
+Svarog:RequireModule("scripts\\engine\\ecs\\Timer", "Timer")
+Svarog:RequireModule("scripts\\engine\\ecs\\Event", "Event")
+Svarog:RequireModule("scripts\\engine\\ecs\\Entity", "Entity")
+Svarog:RequireModule("scripts\\engine\\ecs\\Archetype", "Archetype")
+Svarog:RequireModule("scripts\\engine\\ecs\\SystemExecutor", "SystemExecutor")
+Svarog:RequireModule("scripts\\engine\\ecs\\EntityRepository", "EntityRepository")
 
 
 local World = {}

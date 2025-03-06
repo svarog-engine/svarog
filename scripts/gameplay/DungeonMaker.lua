@@ -168,7 +168,7 @@ local function MakeDungeon()
 
 	while bucketIndex > 0 do
 		local usedRs = {}
-		for i = 0, 10 do
+		for i = 0, 40 do
 			local bucket = Dungeon.wallDistances:GetAt(bucketIndex)
 			if bucket ~= nil then
 				local r = 1
