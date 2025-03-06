@@ -33,5 +33,10 @@ function ShadowcastSystem:Tick()
 		end
 	end
 
+	local blindness = PlayerEntity[Blindness]
+	if blindness ~= nil then
+		radius = 1
+	end
+
 	FOV_algorithm(playerPosition.x, playerPosition.y, radius, IsTransparent, OnVisible, 0, arc)
 end

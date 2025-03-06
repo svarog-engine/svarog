@@ -19,7 +19,7 @@ Fade = ECS.Component { level = 1 }
 Alarm = ECS.Component { level = 1 }
 Identify = ECS.Component { level = 1 }
 Stop = ECS.Component { level = 1 }
-Darken = ECS.Component { level = 1 }
+Darken = ECS.Component { level = 1 ,chance = 8 }
 Frighten = ECS.Component { level = 1 }
 Store = ECS.Component { level = 1 }
 Light = ECS.Component { level = 1, chance = 8, bonusRadius = 5 }

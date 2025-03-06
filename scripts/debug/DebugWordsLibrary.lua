@@ -47,6 +47,13 @@ DebugWordsLibrary = {
 	},
 
 	{
+		name = "darken",
+		callback = function (x, y)
+			TryApplyComponent(x, y, Darken { level = 1 ,chance = 5 })
+		end
+	},
+
+	{
 		name = "light",
 		callback = function (x, y)
 			TryApplyComponent(x, y, Light { level = 1, chance = 8, bonusRadius = 5 })

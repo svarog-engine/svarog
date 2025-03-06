@@ -9,6 +9,7 @@ DebugSpawnLibrary = {
 				AIMoveTowardsPlayer{ distance = 0, chance = 90 },
 				Health(Range(3)),
 				BumpAttack { damage = 2 },
+				Darken {level = 1, chance = 8 },
 				Position{ x = x, y = y },
 				Glyph{ name = "goblin" }
 			)
@@ -47,7 +48,7 @@ DebugSpawnLibrary = {
 				Item { id = "stone"},
 				Position{ x = x, y = y },
 				Glyph{ name = "%" },
-				InflictStatus { component = function() return Telepathic(Range(5)) end }
+				ProvideStatus { component = function() return Telepathic(Range(5)) end }
 			)
 		end
 	},

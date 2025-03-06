@@ -6,6 +6,7 @@ local Components = {
 	Telepathic = Telepathic, 
 	Invisible = Invisible,
 	Delayed = Delayed,
+	Blindness = Blindness,
 }
 
 -- optimize this crap

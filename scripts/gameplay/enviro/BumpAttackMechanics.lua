@@ -70,6 +70,13 @@ local function TryCalm(attackerEntity, targetEntity)
 	return false
 end
 
+local function CheckInflictStatus(entity, target)
+	local darken = entity[Darken]
+	if darken ~= nil and Chances[darken.chance]:MakeGuess() then
+		target:Set(InflictStatus{ component = function() return Blindness { current = 3, maximum = 3 } end })
+	end
+end
+
 function BumpAttackMechanicsSystem:ShouldTick()
 	return Dungeons.created
 end
@@ -77,14 +84,14 @@ end
 function BumpAttackMechanicsSystem:Tick()
 	for _, entity in World:Exec(ECS.Query.All(Bumped, Position).Any(Health, Breakable)):Iterator() do
 		local who = World:FetchEntityById(entity[Bumped].by)
-
 		if entity ~= nil and who ~= nil then
-			
-			if TryBreak(who, entity) then
+
+			if TryCalm(who, entity) then
 				return
 			end
 
-			if TryCalm(who, entity) then
+			CheckInflictStatus(who, entity)
+			if TryBreak(who, entity) then
 				return
 			end
 
