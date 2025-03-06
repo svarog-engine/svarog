@@ -1,11 +1,13 @@
 ﻿
 Name = ECS.Component("")
 Burnable = ECS.Component()
+Burning = ECS.Component()
 Dissolvable = ECS.Component()
 
 Weapon = ECS.Component()
 Amulet = ECS.Component()
 Small = ECS.Component()
+Paper = ECS.Component()
 
 Key = ECS.Component()
 Locked = ECS.Component()
@@ -18,42 +20,140 @@ CanHaveContent = ECS.Component()
 
 ID = ECS.Component(0)
 
-Objects = {}
 Templates = {}
 
 IDS = 1
 
-function RegisterObject(what, glyph, ...)
-	if glyph == nil then glyph = what end
-	
-	Objects[what] = {
-		Glyph{ name = glyph },
-		...
-	}
+Procgen = {}
+
+function Procgen.IsFurniture(e)
+	e:Set(Breakable{})
+	e:Set(BlockingPassage{})
+end
+
+function Procgen.IsContainer(e)
+	e:Set(CanHaveContent{})
+end
+
+function Procgen.CanBreak(e)
+	e:Set(Breakable{})
+end
+
+function Procgen.IsWooden(e)
+	Procgen.CanBreak(e)
+	e:Set(Burnable{})
+end
+
+function Procgen.IsPaper(e)
+	Procgen.IsWooden(e)
+	e:Set(Dissolvable{})
+end
+
+function Procgen.Crate(e, x, y)
+	Procgen.IsFurniture(e)
+	Procgen.IsWooden(e)
+	e:Set(Glyph{ name = "crate" })
+end
+
+function Procgen.Chest(e, x, y)
+	Procgen.IsFurniture(e)
+	Procgen.IsContainer(e)
+	e:Set(Locked{})
+	e:Set(Glyph{ name = "chest" })
+end
+
+function Procgen.Table(e, x, y)
+	Procgen.IsFurniture(e)
+	Procgen.IsWooden(e)
+	e:Set(Glyph{ name = "table" })
+end
+
+function Procgen.Key(e, x, y)
+	e:Set(Item{}, Key{}, Metallic{})
+	e:Set(Glyph{ name = "key" })
+end
+
+function Procgen.Dagger(e, x, y)
+	e:Set(Item{}, Weapon{}, Small{})
+	e:Set(Glyph{ name = "dagger" })
+end
+
+function Procgen.Amulet(e, x, y)
+	e:Set(Item{}, Amulet{}, Small{})
+	e:Set(Glyph{ name = "amulet" })
+end
+
+function Procgen.Artifact(e, x, y)
+	local options = { "Dagger", "Key", "Book", "Amulet" }
+	return Procgen[options[Rand:Range(1, #options)]]
+end
+
+function Procgen.Goblin(e, x, y)
+	e:Set(Creature{}, AIMoveTowardsPlayer{ distance = 0, chance = 9 }, Health{ value = Range(3) }, BumpAttack { damage = 1 }, Glyph{ name = "goblin" })
+end
+
+function Procgen.AlarmTrap(e, x, y)
+	e:Set(Invisible(Range(100)), Alarm{})
+	e:Set(Glyph{ name = "alarmTrap" })
+end
+
+function Procgen.Book(e, x, y)
+	Procgen.IsPaper(e)
+	e:Set(Item{})
+	e:Set(Glyph{ name = "book" })
+end
+
+function Procgen.Shelf(e, x, y)
+	Procgen.IsFurniture(e)
+	Procgen.IsWooden(e)
+	Procgen.IsContainer(e)
+	e:Set(Glyph{ name = "shelf" })
+end
+
+function Procgen.Anvil(e, x, y)
+	e:Set(BlockingPassage{})
+	e:Set(Glyph{ name = "anvil" })
+end
+
+function Procgen.Cauldron(e, x, y)
+	e:Set(BlockingPassage{})
+	e:Set(Glyph{ name = "cauldron" })
+end
+
+function Procgen.Statue(e, x, y)
+	e:Set(BlockingPassage{})
+	e:Set(Glyph{ name = "statue" })
+end
+
+function Procgen.Candle(e, x, y)
+	e:Set(BlockingPassage{})
+	if Rand:Range(1, 10) < 5 then
+		e:Set(Burning{})
+	end
+	e:Set(Glyph{ name = "candle" })
+end
+
+function Procgen.Furnace(e, x, y)
+	e:Set(BlockingPassage{})
+	e:Set(Burning{})
+	e:Set(Glyph{ name = "furnace" })
+end
+
+function Procgen.Grate(e, x, y)
+	e:Set(Metallic{})
+	e:Set(Glyph{ name = "grate" .. Rand:Range(1, 3) })
 end
 
 function MakeObject(what, x, y)
-	if Objects[what] ~= nil then
+	local e = World:Entity(Position{ x = x, y = y })
 		
-		local e = World:Entity(Position{ x = x, y = y })
-		
-		e:Set(Name(what))
-		e:Set(ID(IDS))
-		IDS = IDS + 1
+	e:Set(Name(what))
+	e:Set(ID(IDS))
+	IDS = IDS + 1
 
-		for _, v in ipairs(Objects[what]) do 
-			e:Set(v)
-			if v == BlockingPassage then 
-				Dungeon.floor:Get(x, y).type = BlockingPassage
-				Dungeon.floor:Get(x, y).entity = e
-				Dungeon.passable:Set(x, y, false)
-			elseif v == BlockingSight then
-				Dungeon.visibility:Set(x, y, false)
-			end
-		end
-
-		AddEntityToDungeon(x, y, e)
-	end
+	print(what, Procgen[what])
+	Procgen[what](e, x, y)
+	AddEntityToDungeon(x, y, e)
 end
 
 local function MakeTemplate(name, w, h, template, ...)
@@ -91,39 +191,22 @@ local function MakeTemplate(name, w, h, template, ...)
 	end
 end
 
-RegisterObject("crate", nil, Breakable, CanHaveContent, BlockingSight, BlockingPassage)
-RegisterObject("chest", nil, Breakable, CanHaveContent, Locked, BlockingPassage)
-RegisterObject("table", nil, Item, Breakable, BlockingPassage)
-
-function Choose(tbl)
-	return function() return tbl[Rand:Range(1, #tbl)] end
-end
-
-RegisterObject("key", nil, Item, Key)
-RegisterObject("dagger", nil, Item, Weapon, Small)
-RegisterObject("amulet", nil, Item, Amulet, Small)
-
-RegisterObject("goblin", nil, Creature(), AIMoveTowardsPlayer{ distance = 0, chance = 9 }, Health(Range(3)), BumpAttack { damage = 1 }, Glyph{ name = "goblin" })
-
-local artifact = Choose({ key, dagger })
 
 MakeTemplate("common1", 3, 3,
 [[
 .23
 .1.
 ...
-]], { nil, nil, nil, nil, nil, nil, "key", "goblin" }, { nil, "crate", "desk", "crate" }, { nil, nil, "desk", "crate" })
+]], { nil, nil, nil, nil, nil, nil, "Key", "Goblin" }, { nil, "Crate", "Desk", "Crate" }, { nil, nil, "Desk", "Crate" })
 
 MakeTemplate("common2", 4, 3,
 [[
 .1..
 ....
 1.1.
-]], { nil, nil, "crate", "chest", "chest" }
+]], { nil, nil, "Crate", "Chest", "Chest" }
 )
 
-RegisterObject("alarm trap", "alarmTrap", Hidden, Alarm)
-RegisterObject("book", nil, Item, Paper, Burnable, Dissolvable)
 MakeTemplate("warehouse1", 5, 5,
 [[
 ..1.
@@ -131,7 +214,7 @@ MakeTemplate("warehouse1", 5, 5,
 .121.
 .1.1.
 .....
-]], { nil, "crate", "crate", "crate", "crate" }, { nil, nil, nil, "book", "key", "alarmTrap", "goblin" }
+]], { nil, "Crate", "Crate", "Crate", "Crate" }, { nil, nil, nil, "Book", "Key", "AlarmTrap", "Goblin" }
 )
 
 MakeTemplate("warehouse2", 4, 4,
@@ -140,22 +223,21 @@ MakeTemplate("warehouse2", 4, 4,
 12.1
 1.21
 1111
-]], { "crate", "desk", "shelf" }, { nil, nil, "chest", "chest", "crate", "goblin" })
+]], { "Crate", "Desk", "Shelf" }, { nil, nil, "Chest", "Chest", "Crate", "Goblin" })
 
-RegisterObject("shelf", nil, Breakable, CanHaveContent, BlockingPassage)
 MakeTemplate("library1", 3, 3,
 [[
 1.1
 .1.
 1.1
-]], { nil, "shelf", "shelf", "shelf" })
+]], { nil, "Shelf", "Shelf", "Shelf" })
 
 MakeTemplate("library2", 3, 3,
 [[
 1.1
 ...
 1.1
-]], { nil, "shelf", "shelf", "shelf" })
+]], { nil, "Shelf", "Shelf", "Shelf" })
 
 MakeTemplate("library3", 5, 5,
 [[
@@ -163,7 +245,7 @@ MakeTemplate("library3", 5, 5,
 .1.2..
 1.1.1.
 ......
-]], { "shelf", "shelf", "shelf" }, { nil, "shelf", "chair" })
+]], { "Shelf", "Shelf", "Shelf" }, { nil, "Shelf", "Chair" })
 
 MakeTemplate("exhibit1", 5, 5,
 [[
@@ -172,17 +254,14 @@ MakeTemplate("exhibit1", 5, 5,
 .212.
 .222.
 .....
-]], { "artifact" }, { "glass" })
+]], { "Artifact" }, { "Glass" })
 
 MakeTemplate("exhibit2", 3, 3,
 [[
 ..2
 .1.
 ...
-]], { nil, "painting", "artifact" }, { nil, nil, nil, nil, nil, "key", "amulet" })
-
-RegisterObject("anvil", nil, BlockingPassage)
-RegisterObject("cauldron", nil, BlockingPassage)
+]], { nil, "Painting", "Artifact" }, { nil, nil, nil, nil, nil, "Key", "Amulet" })
 
 MakeTemplate("workshop1", 5, 5,
 [[
@@ -191,30 +270,29 @@ MakeTemplate("workshop1", 5, 5,
 ..23.
 .4...
 .....
-]], { nil, "shelf", "shelf", "shelf", "crate" }, { "anvil" }, { nil, "desk" }, { "artifact" })
+]], { nil, "Shelf", "Shelf", "Shelf", "Crate" }, { "Anvil" }, { nil, "Desk" }, { "Artifact" })
 
 MakeTemplate("workshop2", 3, 3,
 [[
 111
 .21
 ...
-]], { nil, "shelf", "shelf", "shelf", "crate" }, { "anvil", "cauldron" })
+]], { nil, "Shelf", "Shelf", "Shelf", "Crate" }, { "Anvil", "Cauldron" })
 
 MakeTemplate("shrine1", 3, 3,
 [[
 1..
 ...
 ..1
-]], { "candle" })
+]], { "Candle" })
 
 MakeTemplate("shrine1", 5, 3,
 [[
 1..1.
 .1..1
 ..11.
-]], { nil, "candle" })
+]], { nil, "Candle" })
 
-RegisterObject("statue", nil, BlockingPassage, BlockingSight)
 MakeTemplate("shrine2", 6, 6,
 [[
 13.1.
@@ -222,12 +300,7 @@ MakeTemplate("shrine2", 6, 6,
 .124.
 3...1
 .3.1.
-]], { nil, nil, "candle", "candle" }, { "statue" }, { nil, nil, nil, nil, nil, "book", "candle" }, { nil, nil, nil, "artifact" })
-
-RegisterObject("furnace", nil, BlockingPassage, BlockingSight, Burning)
-RegisterObject("grate", "grate1", Metallic)
-RegisterObject("grate", "grate2", Metallic)
-RegisterObject("grate", "grate3", Metallic)
+]], { nil, nil, "Candle", "Candle" }, { "Statue" }, { nil, nil, nil, nil, nil, "Book", "Candle" }, { nil, nil, nil, "Artifact" })
 
 MakeTemplate("forge1", 6, 6,
 [[
@@ -237,14 +310,14 @@ MakeTemplate("forge1", 6, 6,
 3.1.3.
 323323
 3.3.3.
-]], { "furnace" }, { nil, "furnace" }, { "grate1", "grate2", "grate3" })
+]], { "Furnace" }, { nil, "Furnace" }, { "Grate" })
 
 MakeTemplate("forge2", 3, 3,
 [[
 333
 213
 332
-]], { "furnace" }, { nil, "furnace" }, { "grate", nil })
+]], { "Furnace" }, { nil, "Furnace" }, { "Grate", nil })
 
 Rooms = {}
 Rooms[Open] = { "common1", "common2", "warehouse1", "warehouse2" }

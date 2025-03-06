@@ -12,8 +12,8 @@ end
 local function PerformAttack(attackerEntity, targetEntity)
 		local totalDamage = CalculateDamage(attackerEntity, targetEntity)
 
-		if targetEntity[Endure] ~= nill then
-			if targetEntity[Delayed] == nill then
+		if targetEntity[Endure] ~= nil then
+			if targetEntity[Delayed] == nil then
 				targetEntity:Set(Delayed{ damage = 0, current = 8, maximum = 8 })
 			end
 

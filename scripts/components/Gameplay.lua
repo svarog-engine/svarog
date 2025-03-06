@@ -1,7 +1,7 @@
 ﻿
 Player = ECS.Component()
 Friendly = ECS.Component()
-Creature = ECS.Component{ name = "", goals = {}, actions = 0, timestamp = 0 }
+Creature = ECS.Component{ goals = {}, actions = 0, timestamp = 0 }
 
 function TickCreature(entity)
 	if Engine.Tick() > entity[Creature].timestamp then

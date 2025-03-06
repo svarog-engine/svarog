@@ -6,6 +6,15 @@ function PassabilityUpdateSystem:ShouldTick()
 end
 
 function PassabilityUpdateSystem:Tick()
+	for _, entity in World:Exec(ECS.Query.All(Position, BlockingPassage)):Iterator() do
+		local p = entity[Position]
+		local x, y = p.x, p.y
+		Dungeon.floor:Get(x, y).type = BlockingPassage
+		Dungeon.floor:Get(x, y).entity = entity
+		Dungeon.passable:Set(x, y, false)
+		entity:Unset(BlockingPassage)
+	end
+
 	local w, h = Dungeon.floor:Size()
 	for x = 1, w do 
 		for y = 1, h do

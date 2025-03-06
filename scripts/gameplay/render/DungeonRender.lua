@@ -19,9 +19,13 @@ function DungeonRenderSystem:Render()
 					end
 				elseif tile.type == Wall or (tile.type == Door and tile.entity[Door].hidden) then
 					Engine.Glyph(x, y, "wall", { fg = Colors.White, bg = Colors.DarkGray } )
-				else
+				elseif tile.entity ~= nil then
 					local glyph = tile.entity[Glyph]
-					Engine.Glyph(x, y, glyph.name)
+					if glyph ~= nil then
+						Engine.Glyph(x, y, glyph.name)
+					else
+						Svarog.Instance:LogError("GLYPH MISSING ON " .. tile.entity[Name].value)
+					end
 				end
 			else
 				Engine.Glyph(x, y, "empty_tile")
