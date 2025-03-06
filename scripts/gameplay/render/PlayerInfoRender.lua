@@ -3,10 +3,23 @@ local PlayerInfoRenderSystem = Engine.RegisterUIRenderSystem("Player Info Render
 
 local Components = { 
 	Health = Health, 
+	Tension = Tension,
+	Stamina = Stamina,
 	Telepathic = Telepathic, 
 	Invisible = Invisible,
 	Delayed = Delayed,
 	Blindness = Blindness,
+}
+
+local ComponentsInOrder = {
+	"Health", "Stamina", "Tension",
+	"Telepathic", "Invisible", "Delayed", "Blindness"
+}
+
+local ComponentColors = {
+	Health = Colors.Red,
+	Tension = Colors.LightMagenta,
+	Stamina = Colors.Green
 }
 
 -- optimize this crap
@@ -46,10 +59,17 @@ function PlayerInfoRenderSystem.Render(ui)
 			
 			ui.Space(1)
 
-			for name, comp in pairs(Components) do
+			for _, name in ipairs(ComponentsInOrder) do
+				local comp = Components[name]
 				local v = player[comp]
 				if v ~= nil then
+					if ComponentColors[name] ~= nil then
+						ui.PushStyle(ComponentColors[name], Colors.Black)
+					end
 					ui.Bar(name, v.current, v.maximum, { width = v.maximum })
+					if ComponentColors[name] ~= nil then
+						ui.PopStyle()
+					end
 				end
 			end
 		ui.PopOrder()

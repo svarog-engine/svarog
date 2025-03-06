@@ -32,7 +32,6 @@ LoadRenderSystem "DiaryRender"
 LoadRenderSystem "PlayerInfoRender"
 LoadRenderSystem "TargetRender"
 LoadRenderSystem "InventoryRender"
---LoadRenderSystem "UITestRender"
 
 LoadScriptIfExists "debug\\DebugSpawnLibrary"
 LoadScriptIfExists "debug\\render\\DebugDistancesRender"

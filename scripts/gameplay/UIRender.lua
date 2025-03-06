@@ -160,6 +160,7 @@ UIRenderer = {
 		for i = 0, fullCells - 1 do s = s .. full end
 		for i = 1, width - fullCells do s = s .. empty end
 		s = s .. stop
+		
 		UIRenderer.Label(title)
 		UIRenderer.Label(s)
 		UIRenderer.Space(1)
