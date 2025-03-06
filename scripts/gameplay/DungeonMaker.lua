@@ -93,8 +93,7 @@ end
 function MakeDungeonRoom(index)
 	Dungeon = Dungeons.maps[index]
 	Dungeon.playerDistance = DistanceMap:From(Dungeon.floor, { { PlayerEntity[Position].x, PlayerEntity[Position].y } }, 0)
-	Dungeon.playerDistance:AddCondition(DistanceMap.IS_FLOOR)
-	Dungeon.playerDistance:AddCondition(DistanceMap.IS_OPEN_DOOR)
+	Dungeon.playerDistance:AddCondition(function(map, x, y) return Dungeon.passable:Has(x, y) and Dungeon.passable:Get(x, y) end)
 	Dungeon.playerDistance:Flood()
 	Dungeon.created = true
 end
@@ -226,13 +225,7 @@ local function MakeDungeon()
 	)
 	
 	Dungeon.visited:Set(x, y, true)
-
-	Dungeon.playerDistance = DistanceMap:From(Dungeon.floor, { { PlayerEntity[Position].x, PlayerEntity[Position].y } }, 0)
-	Dungeon.playerDistance:AddCondition(DistanceMap.IS_FLOOR)
-	Dungeon.playerDistance:AddCondition(function(map, x, y) return Dungeon.passable:Has(x, y) and Dungeon.passable:Get(x, y) end)
-	Dungeon.playerDistance:Flood()
-	
-	Dungeons.created = true
+	MakeDungeonRoom(1)
 end
 
 local function MakeWheels()

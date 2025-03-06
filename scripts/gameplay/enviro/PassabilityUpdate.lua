@@ -19,6 +19,8 @@ function PassabilityUpdateSystem:Tick()
 					else
 						Dungeon.passable:Set(x, y, not tile.entity[Door].closed and tile.entity[Door].travelTo == nil)
 					end
+				elseif tile.entity ~= nil and tile.entity[BlockingPassage] ~= nil then
+					Dungeon.passable:Set(x, y, false)
 				end
 			end
 		end

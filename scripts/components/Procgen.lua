@@ -36,11 +36,23 @@ function MakeObject(what, x, y)
 	if Objects[what] ~= nil then
 		
 		local e = World:Entity(Position{ x = x, y = y })
-		for _, v in ipairs(Objects[what]) do 
-			e:Set(v)
-		end
+		
+		e:Set(Name(what))
 		e:Set(ID(IDS))
 		IDS = IDS + 1
+
+		for _, v in ipairs(Objects[what]) do 
+			e:Set(v)
+			if v == BlockingPassage then 
+				Dungeon.floor:Get(x, y).type = BlockingPassage
+				Dungeon.floor:Get(x, y).entity = e
+				Dungeon.passable:Set(x, y, false)
+			elseif v == BlockingSight then
+				Dungeon.visibility:Set(x, y, false)
+			end
+		end
+
+		AddEntityToDungeon(x, y, e)
 	end
 end
 
@@ -79,19 +91,19 @@ local function MakeTemplate(name, w, h, template, ...)
 	end
 end
 
-RegisterObject("crate", nil, Breakable, CanHaveContent, BlockingSight, BlockingPassage, Name{ value = "crate" })
-RegisterObject("chest", nil, Breakable, CanHaveContent, Locked, BlockingPassage, Name{ value = "chest" })
-RegisterObject("table", nil, Item, Breakable, BlockingPassage, Name("table"))
+RegisterObject("crate", nil, Breakable, CanHaveContent, BlockingSight, BlockingPassage)
+RegisterObject("chest", nil, Breakable, CanHaveContent, Locked, BlockingPassage)
+RegisterObject("table", nil, Item, Breakable, BlockingPassage)
 
 function Choose(tbl)
 	return function() return tbl[Rand:Range(1, #tbl)] end
 end
 
-RegisterObject("key", nil, Item, Key, Name("key"))
-RegisterObject("dagger", nil, Item, Weapon, Small, Name("dagger"))
-RegisterObject("amulet", nil, Item, Amulet, Small, Name("amulet"))
+RegisterObject("key", nil, Item, Key)
+RegisterObject("dagger", nil, Item, Weapon, Small)
+RegisterObject("amulet", nil, Item, Amulet, Small)
 
-RegisterObject("goblin", nil, Creature(), AIMoveTowardsPlayer{ distance = 0, chance = 9 }, Health(Range(3)), BumpAttack { damage = 1 }, Glyph{ name = "goblin" }, Name("goblin"))
+RegisterObject("goblin", nil, Creature(), AIMoveTowardsPlayer{ distance = 0, chance = 9 }, Health(Range(3)), BumpAttack { damage = 1 }, Glyph{ name = "goblin" })
 
 local artifact = Choose({ key, dagger })
 
@@ -130,7 +142,7 @@ MakeTemplate("warehouse2", 4, 4,
 1111
 ]], { "crate", "desk", "shelf" }, { nil, nil, "chest", "chest", "crate", "goblin" })
 
-RegisterObject("shelf", nil, Breakable, CanHaveContent, BlockingSight, BlockingPassage, Name("shelf"))
+RegisterObject("shelf", nil, Breakable, CanHaveContent, BlockingPassage)
 MakeTemplate("library1", 3, 3,
 [[
 1.1
@@ -169,8 +181,8 @@ MakeTemplate("exhibit2", 3, 3,
 ...
 ]], { nil, "painting", "artifact" }, { nil, nil, nil, nil, nil, "key", "amulet" })
 
-RegisterObject("anvil", nil, BlockingPassage, Name("anvil"))
-RegisterObject("cauldron", nil, BlockingPassage, Name("cauldron"))
+RegisterObject("anvil", nil, BlockingPassage)
+RegisterObject("cauldron", nil, BlockingPassage)
 
 MakeTemplate("workshop1", 5, 5,
 [[
@@ -202,7 +214,7 @@ MakeTemplate("shrine1", 5, 3,
 ..11.
 ]], { nil, "candle" })
 
-RegisterObject("statue", nil, BlockingPassage, BlockingSight, Name("statue"))
+RegisterObject("statue", nil, BlockingPassage, BlockingSight)
 MakeTemplate("shrine2", 6, 6,
 [[
 13.1.
@@ -212,10 +224,10 @@ MakeTemplate("shrine2", 6, 6,
 .3.1.
 ]], { nil, nil, "candle", "candle" }, { "statue" }, { nil, nil, nil, nil, nil, "book", "candle" }, { nil, nil, nil, "artifact" })
 
-RegisterObject("furnace", nil, BlockingPassage, BlockingSight, Burning, Name("furnace"))
-RegisterObject("grate", "grate1", Metallic, Name("grate"))
-RegisterObject("grate", "grate2", Metallic, Name("grate"))
-RegisterObject("grate", "grate3", Metallic, Name("grate"))
+RegisterObject("furnace", nil, BlockingPassage, BlockingSight, Burning)
+RegisterObject("grate", "grate1", Metallic)
+RegisterObject("grate", "grate2", Metallic)
+RegisterObject("grate", "grate3", Metallic)
 
 MakeTemplate("forge1", 6, 6,
 [[
