@@ -40,10 +40,8 @@ local function MakeTemplate(w, h, template, ...)
 			for j = 1, h do
 				local index = j * w + i
 				local t = string.sub(template, index, index)
-				if tonumber(t) ~= nil then
-					if not Dungeon.floor:Has(x + i, y + j) then return end
-					if Dungeon.zones:Get(x + i, y + j) == -1 or Dungeon.wallDistances:Get(x + i, y + j) < 2 then return end
-				end
+				if not Dungeon.floor:Has(x + i, y + j) then return end
+				if Dungeon.zones:Get(x + i, y + j) == -1 then return end
 			end
 		end
 

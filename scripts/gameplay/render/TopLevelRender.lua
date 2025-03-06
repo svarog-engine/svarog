@@ -15,6 +15,7 @@ function TopLevelRenderSystem:ShouldRender()
 end
 
 function TopLevelRenderSystem:Render()
-	Draw(ECS.Query.All(Glyph, Position).None(Player))
+	Draw(ECS.Query.All(Glyph, Position).None(Player, Creature))
+	Draw(ECS.Query.All(Glyph, Position).None(Player, Item))
 	Draw(ECS.Query.All(Glyph, Position, Player))
 end
