@@ -16,6 +16,8 @@ BlockingSight = ECS.Component()
 Breakable = ECS.Component()
 CanHaveContent = ECS.Component()
 
+ID = ECS.Component(0)
+
 Objects = {}
 Templates = {}
 
@@ -37,6 +39,8 @@ function MakeObject(what, x, y)
 		for _, v in ipairs(Objects[what]) do 
 			e:Set(v)
 		end
+		e:Set(ID(IDS))
+		IDS = IDS + 1
 	end
 end
 

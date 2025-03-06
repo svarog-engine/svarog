@@ -10,7 +10,7 @@ function PerformBump(entity, x, y, dx, dy)
 			if e ~= entity then
 				e:Set(Bumped({ by = entity.id }))
 				Fade(e, Colors.Green, Colors.Black, 0.5)
-				print((entity[Name].value or "???") .. " bumped into " .. (e[Name].value or "???"))
+				print((entity[Name].value or "???") .. " (" .. entity[ID].value .. ") bumped into " .. (e[Name].value or "???") .. " (" .. e[ID].value .. ")")
 			end
 		end
 	elseif pass then
@@ -23,6 +23,6 @@ function PerformBump(entity, x, y, dx, dy)
 	elseif Dungeon.floor:Has(nx, ny) and Dungeon.floor.tiles[nx][ny].entity ~= nil then
 		Dungeon.floor:Get(nx, ny).entity:Set(Bumped({ by = entity.id }))
 		Fade(Dungeon.floor:Get(nx, ny).entity, Colors.Green, Colors.Black, 0.5)
-		print((entity[Name].value or "???") .. " bumped into " .. (e[Name].value or "???"))
+		print((entity[Name].value or "???") .. " (" .. entity[ID].value .. ") bumped into " .. (e[Name].value or "???") .. " (" .. e[ID].value .. ")")
 	end
 end

@@ -216,6 +216,7 @@ local function MakeDungeon()
 
 	PlayerEntity = World:Entity(
 		Player(),
+		ID(-1),
 		Position{ x = x, y = y },
 		Glyph{ name = "mage" },
 		Contents{ items = {} },
