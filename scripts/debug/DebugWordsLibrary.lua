@@ -12,6 +12,13 @@ end
 
 DebugWordsLibrary = {
 	{
+		name = "calm",
+		callback = function (x, y)
+			TryApplyComponent(x, y, Calm { level = 1, chance = 8 })
+		end
+	},
+
+	{
 		name = "heal",
 		callback = function (x, y)
 			TryApplyComponent(x, y, Heal { level = 1 })

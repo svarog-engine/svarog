@@ -5,7 +5,7 @@ Open = ECS.Component { level = 1 }
 Uncover = ECS.Component { level = 1 }
 Enlarge = ECS.Component { level = 1 }
 Flow = ECS.Component { level = 1 }
-Calm = ECS.Component { level = 1 }
+Calm = ECS.Component { level = 1, chance = 8 }
 Rage = ECS.Component { level = 1 }
 Yearn = ECS.Component { level = 1 }
 Discover = ECS.Component { level = 1 }

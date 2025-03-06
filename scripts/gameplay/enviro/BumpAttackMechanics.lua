@@ -41,7 +41,7 @@ local function TryBreak(attackerEntity, targetEntity)
 			-- print("Broke entity -> ID: " .. targetEntity)
 
 			if attackerEntity == PlayerEntity then 
-				Diary.Write("You broke something!")		
+				Diary.Write("You broke something!")
 			end
 
 			RemoveEntityFromDungeon(targetEntity)
@@ -50,6 +50,21 @@ local function TryBreak(attackerEntity, targetEntity)
 
 			return true
 		end
+	end
+
+	return false
+end
+
+local function TryCalm(attackerEntity, targetEntity)
+	local calm = targetEntity[Calm]
+	if calm ~= nil and Chances[calm.chance]:MakeGuess() then
+		if targetEntity == PlayerEntity then
+			Diary.Write("You calm down creature!")
+		end
+
+		targetEntity:Unset(Bumped)
+
+		return true
 	end
 
 	return false
@@ -66,6 +81,10 @@ function BumpAttackMechanicsSystem:Tick()
 		if entity ~= nil and who ~= nil then
 			
 			if TryBreak(who, entity) then
+				return
+			end
+
+			if TryCalm(who, entity) then
 				return
 			end
 
