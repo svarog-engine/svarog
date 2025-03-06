@@ -43,7 +43,7 @@ function DoorMechanicsSystem:Tick()
 					end
 				end
 				local oldRoom = Dungeon.index
-				MakeDungeonRoom(door.travelTo)
+				SelectDungeonLevel(door.travelTo)
 				local door = FindDoorTo(oldRoom)
 				if door ~= nil then
 					door[Door].closed = false

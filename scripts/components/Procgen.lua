@@ -157,7 +157,6 @@ function MakeObject(what, x, y)
 	e:Set(ID(IDS))
 	IDS = IDS + 1
 
-	print(what, Procgen[what])
 	Procgen[what](e, x, y)
 	AddEntityToDungeon(x, y, e)
 end
@@ -213,45 +212,50 @@ MakeTemplate("common2", 4, 3,
 ]], { nil, nil, "Crate", "Chest", "Chest" }
 )
 
-MakeTemplate("warehouse1", 5, 5,
+MakeTemplate("warehouse1", 5, 3,
 [[
-..1.
-.121.
-.121.
 .1.1.
-.....
+.1.1.
+.1.1.
 ]], { nil, "Crate", "Crate", "Crate", "Crate" }, { nil, nil, nil, "Book", "Key", "AlarmTrap", "Goblin" }
 )
 
 MakeTemplate("warehouse2", 4, 4,
 [[
 1111
-12.1
-1.21
+1...
+1..1
 1111
-]], { "Crate", "Table", "Shelf" }, { nil, nil, "Chest", "Chest", "Crate", "Goblin" })
+]], { "Crate", "Table", "Shelf" }, { nil, nil, "Chest", "Chest", "Crate" })
+
+MakeTemplate("warehouse3", 4, 4,
+[[
+1111
+....
+1..1
+1.11
+]], { "Crate", "Table", "Shelf" }, { nil, nil, "Chest", "Chest", "Crate" })
 
 MakeTemplate("library1", 3, 3,
 [[
 1.1
 .1.
 1.1
-]], { nil, "Shelf", "Shelf", "Shelf" })
+]], { "Shelf" })
 
 MakeTemplate("library2", 3, 3,
 [[
 1.1
 ...
 1.1
-]], { nil, "Shelf", "Shelf", "Shelf" })
+]], { "Shelf" })
 
-MakeTemplate("library3", 5, 4,
+MakeTemplate("library3", 5, 3,
 [[
 1.1.1
-..1..
-1.1.1
 .....
-]], { "Shelf", "Shelf", "Shelf" }, { nil, "Shelf" })
+1.1.1
+]], { "Shelf" })
 
 MakeTemplate("exhibit1", 5, 5,
 [[
@@ -267,7 +271,7 @@ MakeTemplate("exhibit2", 3, 3,
 ..2
 .1.
 ...
-]], { nil, nil, "Artifact" }, { nil, nil, nil, nil, nil, "Key", "Amulet" })
+]], { "Artifact", "Statue" }, { nil, nil, nil, nil, nil, "Key", "Amulet" })
 
 MakeTemplate("workshop1", 5, 5,
 [[
@@ -294,9 +298,9 @@ MakeTemplate("shrine1", 3, 3,
 
 MakeTemplate("shrine1", 5, 3,
 [[
-1..1.
-.1..1
-..11.
+1...1
+1...1
+1...1
 ]], { nil, "Candle" })
 
 MakeTemplate("shrine2", 6, 6,
@@ -306,16 +310,15 @@ MakeTemplate("shrine2", 6, 6,
 .124.
 3...1
 .3.1.
-]], { nil, nil, "Candle", "Candle" }, { "Statue" }, { nil, nil, nil, nil, nil, "Book", "Candle" }, { nil, nil, nil, "Artifact" })
+]], { "Candle" }, { "Statue" }, { nil, nil, nil, nil, nil, "Book", "Candle" }, { nil, nil, nil, "Artifact" })
 
-MakeTemplate("forge1", 6, 6,
+MakeTemplate("forge1", 5, 5,
 [[
-333333
-3.1.3.
-323323
-3.1.3.
-323323
-3.3.3.
+33333
+3.1.3
+32332
+3.1.3
+32332
 ]], { "Furnace" }, { nil, "Furnace" }, { "Grate" })
 
 MakeTemplate("forge2", 3, 3,

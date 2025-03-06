@@ -90,12 +90,26 @@ function FindDoorTo(index)
 	return nil
 end
 
-function MakeDungeonRoom(index)
+function SelectDungeonLevel(index)
 	Dungeon = Dungeons.maps[index]
 	Dungeon.playerDistance = DistanceMap:From(Dungeon.floor, { { PlayerEntity[Position].x, PlayerEntity[Position].y } }, 0)
 	Dungeon.playerDistance:AddCondition(function(map, x, y) return Dungeon.passable:Has(x, y) and Dungeon.passable:Get(x, y) end)
 	Dungeon.playerDistance:Flood()
 	Dungeon.created = true
+end
+
+-- make shell 
+--  012
+--  783
+--  654
+local function Snail(x, y)
+    local lookup = {
+        [0] = {[0] = 0, [1] = 7, [2] = 6},
+        [1] = {[0] = 1, [1] = 8, [2] = 5},
+        [2] = {[0] = 2, [1] = 3, [2] = 4}
+    }
+    
+    return lookup[x] and lookup[x][y] or nil
 end
 
 local function MakeDungeon()
@@ -158,17 +172,17 @@ local function MakeDungeon()
 	Dungeon.zones = Map:New(w, h, 0)
 
 	local centers = {}
-	local zoneId = 1
 	local bucketIndex = Dungeon.wallDistances:GetHighestBucket()
-	local halfsteps = { 1, 3, 2, 1, 1, 2, 2, 1, 1, 2, 3, 1 }
-	for i = #halfsteps, 2, -1 do
-        local j = math.random(i)
-        halfsteps[i], halfsteps[j] = halfsteps[j], halfsteps[i]
-    end
+	local halfsteps = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 }
+	
+	table.remove(halfsteps, Rand:Range(1, #halfsteps))
+	table.remove(halfsteps, Rand:Range(1, #halfsteps))
+	table.remove(halfsteps, Rand:Range(1, #halfsteps))
 
+	local w3, h3 = math.ceil(w / 3), math.ceil(h / 3)
 	while bucketIndex > 0 do
 		local usedRs = {}
-		for i = 0, 200 do
+		for i = 0, 400 do
 			local bucket = Dungeon.wallDistances:GetAt(bucketIndex)
 			if bucket ~= nil then
 				local r = 1
@@ -184,17 +198,14 @@ local function MakeDungeon()
 
 				local rx, ry = math.floor(bucket[r].x), math.floor(bucket[r].y)
 				table.insert(centers, { rx, ry })
-
-				local name, comp = Wheels:GetMajor(i)
+				local cx, cy = math.floor(rx / w3), math.floor(ry / h3)
+				local name, comp = Wheels:GetMajor(halfsteps[(Snail(cx, cy) or 1 + i) % 9 + 1])
 				local roomTemplates = Rooms[comp]
 				local roomTemplate = roomTemplates[Rand:Range(0, #roomTemplates)]
 				
 				if roomTemplate ~= nil then
 					Templates[roomTemplate](rx, ry)
 				end
-
-				zoneId = zoneId + halfsteps[zoneId]
-				if zoneId > 12 then zoneId = 1 end
 			end
 		end
 
@@ -226,13 +237,13 @@ local function MakeDungeon()
 	)
 	
 	Dungeon.visited:Set(x, y, true)
-	MakeDungeonRoom(1)
+	SelectDungeonLevel(1)
 end
 
 local function MakeWheels()
 	local majorStart = Rand:Range(1, 12)
 	local minorStart = Rand:Range(1, 12)
-	print(majorStart, minorStart)
+	
 	Dungeons.wheels = CreateWheels(majorStart, minorStart)
 	for i = 1, 12 do
 		local man, mam = Dungeons.wheels:GetMajor(i)
@@ -247,6 +258,5 @@ OnStartup(function()
 
 	MakeWheels()
 	MakeDungeon() 
-	MakeDungeonRoom(1)
-	print("DONE")
+	SelectDungeonLevel(1)
 end)

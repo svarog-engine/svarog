@@ -39,7 +39,7 @@ Glossary.Default = {
 
 	crate = { x = 13, y = 4, fg = Colors.White, bg = Colors.Black },
 	chest = { x = 12, y = 4, fg = Colors.LightBlue, bg = Colors.Black },
-	table = { x = 14, y = 1, fg = Colors.White, bg = Colors.Black },
+	table = { x = 0, y = 2, fg = Colors.LightBrown, bg = Colors.Black },
 	alarmTrap = { x = 13, y = 20, fg = Colors.LightRed, bg = Colors.DarkRed },
 	shelf = { x = 27, y = 1, fg = Colors.Green, bg = Colors.Black },
 	book = { x = 3, y = 2, fg = Colors.LightBrown, bg = Colors.Black },
@@ -47,6 +47,7 @@ Glossary.Default = {
 	cauldron = { x = 21, y = 1, fg = Colors.DarkBlue, bg = Colors.LightRed },
 	statue = { x = 0, y = 1, fg = Colors.LightGray, bg = Colors.DarkGray },
 	furnace = { x = 20, y = 15, fg = Colors.Red, bg = Colors.LightRed },
+	candle = { x = 13, y = 6, fg = Colors.Yellow, bg = Colors.Black },
 	grate1 = { x = 31, y = 1, fg = Colors.DarkBlue, bg = Colors.LightRed },
 	grate2 = { x = 31, y = 1, fg = Colors.LightBlue, bg = Colors.DarkRed },
 	grate3 = { x = 31, y = 1, fg = Colors.White, bg = Colors.Red },
