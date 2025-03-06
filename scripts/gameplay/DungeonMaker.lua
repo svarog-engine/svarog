@@ -116,7 +116,7 @@ local function MakeDungeon()
 	
 	local m1 = Markov:Run("StrangeDungeon", w, h)
 	local m2 = Markov:Or(m1, "DijkstraDungeon", w, h)
-	local m3 = Markov:Or(m2, "SelectLargeCaves", w, h, 10000, 2)
+	local m3 = Markov:Or(m2, "SelectLargeCaves", w, h, 2000, 2)
 	local m = Map:From(m3, w)
 
 	for i = 1, w - 1 do

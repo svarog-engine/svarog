@@ -36,36 +36,34 @@ end
 local function MakeTemplate(w, h, template, ...)
 	local argz = { ... }
 	return function(x, y)
-		for i = 1, w do
-			for j = 1, h do
-				local index = j * w + i
-				local t = string.sub(template, index, index)
-				if not Dungeon.floor:Has(x + i, y + j) then return end
-				if Dungeon.zones:Get(x + i, y + j) == -1 then return end
-			end
+		local wall = Dungeon.wallDistances:Get(x, y)
+		if wall < w or wall < h then
+			return
 		end
 
+		local w2, h2 = math.floor(w / 2), math.floor(h / 2)
 		for i = 1, w do
 			for j = 1, h do
-				if Dungeon.floor:Has(x + i, y + j) and Dungeon.floor:Get(x + i, y + j).type == Floor then
+				if Dungeon.floor:Has(x + i - w2, y + j - h2) and Dungeon.floor:Get(x + i - w2, y + j - h2).type == Floor then
 					local index = j * w + i
 					local t = string.sub(template, index, index)
 					if t ~= "." and t ~= " " and t ~= "\n" and t ~= "\t" then
+						Dungeon.zones:Set(x + i - w2, y + j - h2, -1)
+
 						local num = tonumber(t)
 						if num ~= nil then
 							local spots = argz[num]
 							local spot = spots[Rand:Range(1, #spots)]
 							if spot ~= nil then 
-								local e = spot(x + i, y + j)
+								local e = spot(x + i - w2, y + j - h2)
 
 								if type(e) ~= 'function' then
-									Dungeon.zones:Set(x + i, y + j, -1)
 									if e[BlockingSight] ~= nil then
-										Dungeon.visibility:Set(x + i, y + j, false)
+										Dungeon.visibility:Set(x + i - w2, y + j - h2, false)
 									end
 
 									if e[BlockingPassage] ~= nil then
-										Dungeon.passable:Set(x + i, y + j, false)
+										Dungeon.passable:Set(x + i - w2, y + j - h2, false)
 									end
 								end
 							end
