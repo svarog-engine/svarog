@@ -37,12 +37,6 @@ Svarog:RequireModule( "scripts\\engine\\ecs\\System", "System")
 Svarog:RequireModule( "scripts\\engine\\ecs\\Archetype", "Archetype")
 Svarog:RequireModule( "scripts\\engine\\ecs\\Component", "Component")
 
-local Query = require "Query"
-local World = require "World"
-local System = require "System"
-local Archetype = require "Archetype"
-local Component = require "Component"
-
 local function setLoopManager(manager)
    World.LoopManager = manager
 end

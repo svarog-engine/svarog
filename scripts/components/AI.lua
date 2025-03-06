@@ -1,9 +1,9 @@
 ﻿
 AIMoveTowardsPlayer = ECS.Component{
-	chance = 50
+	chance = 5
 }
 
 KeepDistanceFromPlayer = ECS.Component{
 	distance = 5, 
-	chance = 50
+	chance = 5
 }

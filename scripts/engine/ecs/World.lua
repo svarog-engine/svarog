@@ -5,12 +5,6 @@ Svarog:RequireModule( "scripts\\engine\\ecs\\Archetype", "Archetype")
 Svarog:RequireModule( "scripts\\engine\\ecs\\SystemExecutor", "SystemExecutor")
 Svarog:RequireModule( "scripts\\engine\\ecs\\EntityRepository", "EntityRepository")
 
-local Timer = require "Timer"
-local Event = require "Event"
-local Entity = require "Entity"
-local Archetype = require "Archetype"
-local SystemExecutor = require "SystemExecutor"
-local EntityRepository = require "EntityRepository"
 
 local World = {}
 World.__index = World

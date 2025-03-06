@@ -17,6 +17,8 @@ using svarog.procgen.rewriting;
 using svarog.utility.filesystem;
 using System.Reflection;
 using System.Reflection.PortableExecutable;
+using Universal.Common.Collections;
+using System.Runtime.InteropServices;
 
 namespace svarog.runner
 {
@@ -121,17 +123,41 @@ namespace svarog.runner
 
         public void RunScriptFile(string filename)
         {
+
+#if DEBUG
+            try
+            {
+                m_Lua.DoFile(filename + ".lua");
+            }
+            catch (LuaScriptException scriptingException)
+            {
+                var cs = m_Lua["CurrentSystem"] as SystemTracker;
+                LogError("[ in " + scriptingException.Source + " ] " + scriptingException.ToString());
+            }
+            catch (LuaException luaException)
+            {
+                var cs = m_Lua["CurrentSystem"] as SystemTracker;
+                LogError("[ in " + luaException.Source + " ] " + luaException.ToString());
+            }
+#else
             var code = "";
             if (m_FileSystem != null)
             {
                 code = m_FileSystem.GetFileContent(filename + ".lua");
             }
-
             RunScript(code);
+#endif
+
         }
 
         public void RunScriptFileIfExists(string filename)
         {
+#if DEBUG
+            if (Path.Exists(filename + ".lua"))
+            {
+                RunScriptFile(filename);
+            }
+#else
             if (m_FileSystem == null || !m_FileSystem.FileExists(filename + ".lua"))
                 return;
 
@@ -142,11 +168,17 @@ namespace svarog.runner
             }
 
             RunScript(code);
+#endif
         }
 
         public void RequireModule(string modulePath, string moduleName)
         {
+#if DEBUG
+            RunScript(@$"{moduleName} = require '{modulePath.Replace(@"\", @"\\")}'");
+#else
             RunScript($"package.preload[\"{moduleName}\"] = function () {m_FileSystem?.GetFileContent(modulePath + ".lua")} end");
+            RunScript(@$"{moduleName} = require '{moduleName}'");
+#endif
         }
 
         #endregion Scripting
@@ -322,23 +354,12 @@ namespace svarog.runner
             m_Lua["CurrentSystem"] = new SystemTracker();
 
             RequireModule("scripts\\engine\\Map", "Map");
-            RunScript(@"Map = require 'Map'");
-
             RequireModule("scripts\\engine\\DistanceMap", "DistanceMap");
-            RunScript(@"DistanceMap = require 'DistanceMap'");
-
             RequireModule("scripts\\engine\\Queue", "Queue");
-            RunScript(@"Queue = require 'Queue'");
-
             RequireModule("scripts\\engine\\ecs\\ECS", "ECS");
-            RunScript(@"ECS = require 'ECS'");
-
             RequireModule("scripts\\engine\\Engine", "Engine");
-            RunScript(@"Engine = require 'Engine'");
-
             RequireModule("scripts\\engine\\Input", "Input");
-            RunScript(@"Input = require 'Input'");
-
+            
             ReloadPCG();
             ReloadConfig();
             ReloadGlossary();

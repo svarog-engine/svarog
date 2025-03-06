@@ -31,6 +31,7 @@ local function PerformAttack(attackerEntity, targetEntity)
 
 		else
 			targetEntity[Health].current = targetEntity[Health].current - totalDamage
+			Fade(targetEntity, Colors.Red, Colors.Black, 0.5)
 		end
 end
 
@@ -59,7 +60,7 @@ local function TryCalm(attackerEntity, targetEntity)
 	local calm = targetEntity[Calm]
 	if calm ~= nil and Chances[calm.chance]:MakeGuess() then
 		if targetEntity == PlayerEntity then
-			Diary.Write("You calm down creature!")
+			Diary.Write("You calm the creature down!")
 		end
 
 		targetEntity:Unset(Bumped)

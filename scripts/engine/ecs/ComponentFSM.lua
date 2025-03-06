@@ -37,8 +37,6 @@
 
 Svarog:RequireModule( "scripts\\engine\\ecs\\Query", "Query")
 
-local Query = require "Query"
-
 --[[
    Filter used in Query and QueryResult
 

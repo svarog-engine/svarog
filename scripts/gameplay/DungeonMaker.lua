@@ -168,7 +168,7 @@ local function MakeDungeon()
 
 	while bucketIndex > 0 do
 		local usedRs = {}
-		for i = 0, 100 do
+		for i = 0, 10 do
 			local bucket = Dungeon.wallDistances:GetAt(bucketIndex)
 			if bucket ~= nil then
 				local r = 1
@@ -188,8 +188,9 @@ local function MakeDungeon()
 				local name, comp = Wheels:GetMajor(i)
 				local roomTemplates = Rooms[comp]
 				local roomTemplate = roomTemplates[Rand:Range(0, #roomTemplates)]
+				
 				if roomTemplate ~= nil then
-					roomTemplate(rx, ry)
+					Templates[roomTemplate](rx, ry)
 				end
 
 				zoneId = zoneId + halfsteps[zoneId]
@@ -219,13 +220,15 @@ local function MakeDungeon()
 		Glyph{ name = "mage" },
 		Contents{ items = {} },
 		Health(Range(10, 10)),
-		BumpAttack { damage = 2 }
+		BumpAttack { damage = 2 },
+		Name("you")
 	)
 	
 	Dungeon.visited:Set(x, y, true)
 
 	Dungeon.playerDistance = DistanceMap:From(Dungeon.floor, { { PlayerEntity[Position].x, PlayerEntity[Position].y } }, 0)
 	Dungeon.playerDistance:AddCondition(DistanceMap.IS_FLOOR)
+	Dungeon.playerDistance:AddCondition(function(map, x, y) return Dungeon.passable:Has(x, y) and Dungeon.passable:Get(x, y) end)
 	Dungeon.playerDistance:Flood()
 	
 	Dungeons.created = true
@@ -239,7 +242,6 @@ local function MakeWheels()
 	for i = 1, 12 do
 		local man, mam = Dungeons.wheels:GetMajor(i)
 		local min, mim = Dungeons.wheels:GetMinor(i)
-		print(man, min, mam, mim)
 	end
 end
 
@@ -250,4 +252,6 @@ OnStartup(function()
 
 	MakeWheels()
 	MakeDungeon() 
+	MakeDungeonRoom(1)
+	print("DONE")
 end)

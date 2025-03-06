@@ -1,4 +1,5 @@
 ﻿
+Name = ECS.Component("")
 Burnable = ECS.Component()
 Dissolvable = ECS.Component()
 
@@ -15,27 +16,34 @@ BlockingSight = ECS.Component()
 Breakable = ECS.Component()
 CanHaveContent = ECS.Component()
 
-Items = {}
+Objects = {}
+Templates = {}
 
-function MakeObject(what, glyph, other)
-	if glyph == nil then glyph = what end
-	if other == nil then other = {} end
+IDS = 1
 
-	local w = what
-	local g = glyph
+function RegisterObject(what, glyph, ...)
+	Objects[what] = {
+		Glyph{ name = glyph },
+		...
+	}
+end
 
-	return function(x, y)
-		return World:Entity(
-			Position{ x = x, y = y },
-			Glyph{ name = g },
-			table.unpack(other)
-		)
+function MakeObject(what, x, y)
+	if Objects[what] ~= nil then
+		
+		local e = World:Entity(Position{ x = x, y = y })
+		for _, v in ipairs(Objects[what]()) do 
+			e:Set(v)
+		end
 	end
 end
 
-local function MakeTemplate(w, h, template, ...)
+local function MakeTemplate(name, w, h, template, ...)
 	local argz = { ... }
-	return function(x, y)
+	local w = w or 0
+	local h = h or 0
+	local template = template or ""
+	Templates[name] = function(x, y)
 		local wall = Dungeon.wallDistances:Get(x, y)
 		if wall < w or wall < h then
 			return
@@ -44,28 +52,18 @@ local function MakeTemplate(w, h, template, ...)
 		local w2, h2 = math.floor(w / 2), math.floor(h / 2)
 		for i = 1, w do
 			for j = 1, h do
-				if Dungeon.floor:Has(x + i - w2, y + j - h2) and Dungeon.floor:Get(x + i - w2, y + j - h2).type == Floor then
+				local xx, yy = x + i - w2, y + j - h2
+				if Dungeon.floor:Has(xx, yy) and Dungeon.floor:Get(xx, yy).type == Floor and Dungeon.zones:Get(xx, yy) >= 0 then
 					local index = j * w + i
 					local t = string.sub(template, index, index)
+					Dungeon.zones:Set(xx, yy, -1)
 					if t ~= "." and t ~= " " and t ~= "\n" and t ~= "\t" then
-						Dungeon.zones:Set(x + i - w2, y + j - h2, -1)
-
 						local num = tonumber(t)
 						if num ~= nil then
 							local spots = argz[num]
 							local spot = spots[Rand:Range(1, #spots)]
 							if spot ~= nil then 
-								local e = spot(x + i - w2, y + j - h2)
-
-								if type(e) ~= 'function' then
-									if e[BlockingSight] ~= nil then
-										Dungeon.visibility:Set(x + i - w2, y + j - h2, false)
-									end
-
-									if e[BlockingPassage] ~= nil then
-										Dungeon.passable:Set(x + i - w2, y + j - h2, false)
-									end
-								end
+								MakeObject(spot, xx, yy)
 							end
 						end
 					end
@@ -75,172 +73,171 @@ local function MakeTemplate(w, h, template, ...)
 	end
 end
 
-local crate = MakeObject("crate", nil,{ Breakable, CanHaveContent, BlockingSight, BlockingPassage })
-local chest = MakeObject("chest", nil, { Breakable, CanHaveContent, Locked, BlockingPassage })
-local desk = MakeObject("table", nil, { Item, Breakable, BlockingPassage })
+RegisterObject("crate", nil, function(e) e:Set(Breakable, CanHaveContent, BlockingSight, BlockingPassage, Name("crate")) end)
+RegisterObject("chest", nil, function(e) e:Set(Breakable, CanHaveContent, Locked, BlockingPassage, Name("chest")) end)
+RegisterObject("table", nil, function(e) e:Set(Item, Breakable, BlockingPassage, Name("table")) end)
 
 function Choose(tbl)
 	return function() return tbl[Rand:Range(1, #tbl)] end
 end
 
-local key = MakeObject("key", nil, { Item, Key })
-local dagger = MakeObject("dagger", nil, { Item, Weapon, Small })
-local amulet = MakeObject("amulet", nil, { Item, Amulet, Small })
-local goblin = MakeObject("goblin", goblin, { Creature(), AIMoveTowardsPlayer{ distance = 0, chance = 90 }, Health(Range(3)), BumpAttack { damage = 1 }, Glyph{ name = "goblin" }})
+RegisterObject("key", nil, function(e) e:Set(Item, Key, Name("key")) end)
+RegisterObject("dagger", nil, function(e) e:Set(Item, Weapon, Small, Name("dagger")) end)
+RegisterObject("amulet", nil, function(e) e:Set(Item, Amulet, Small, Name("amulet")) end)
+
+RegisterObject("goblin", nil, function(e) e:Set(Creature(), AIMoveTowardsPlayer{ distance = 0, chance = 9 }, Health(Range(3)), BumpAttack { damage = 1 }, Glyph{ name = "goblin" }, Name("goblin")) end)
 
 local artifact = Choose({ key, dagger })
 
-local common1 = MakeTemplate(3, 3,
+MakeTemplate("common1", 3, 3,
 [[
 .23
 .1.
 ...
-]], { nil, nil, nil, nil, nil, nil, key, goblin }, { nil, crate, desk, crate }, { nil, nil, desk, crate })
+]], { nil, nil, nil, nil, nil, nil, "key", "goblin" }, { nil, "crate", "desk", "crate" }, { nil, nil, "desk", "crate" })
 
-local common2 = MakeTemplate(4, 3,
+MakeTemplate("common2", 4, 3,
 [[
 .1..
 ....
 1.1.
-]], { nil, nil, crate, chest, chest }
+]], { nil, nil, "crate", "chest", "chest" }
 )
 
-local alarmTrap = MakeObject("alarm trap", "alarmTrap", { Hidden, Alarm })
-local book = MakeObject("book", nil, { Item, Paper, Burnable, Dissolvable })
-local warehouse1 = MakeTemplate(5, 5,
+RegisterObject("alarm trap", "alarmTrap", function(e) e:Set(Hidden, Alarm) end)
+RegisterObject("book", nil, function(e) e:Set(Item, Paper, Burnable, Dissolvable) end)
+MakeTemplate("warehouse1", 5, 5,
 [[
 ..1.
 .121.
 .121.
 .1.1.
 .....
-]], { nil, crate, crate, crate, crate, crate, crate, crate, crate  }, { nil, nil, nil, book, key, alarmTrap, goblin }
+]], { nil, "crate", "crate", "crate", "crate" }, { nil, nil, nil, "book", "key", "alarmTrap", "goblin" }
 )
 
-local warehouse2 = MakeTemplate(4, 4,
+MakeTemplate("warehouse2", 4, 4,
 [[
 1111
 12.1
 1.21
 1111
-]], { crate, desk, shelf }, { nil, nil, chest, chest, crate, goblin })
+]], { "crate", "desk", "shelf" }, { nil, nil, "chest", "chest", "crate", "goblin" })
 
-local shelf = MakeObject("shelf", nil, { Breakable, CanHaveContent, BlockingSight, BlockingPassage })
-local library1 = MakeTemplate(3, 3,
+RegisterObject("shelf", nil, function(e) e:Set(Breakable, CanHaveContent, BlockingSight, BlockingPassage, Name("shelf")) end)
+MakeTemplate("library1", 3, 3,
 [[
 1.1
 .1.
 1.1
-]], { nil, shelf, shelf, shelf })
+]], { nil, "shelf", "shelf", "shelf" })
 
-local library2 = MakeTemplate(3, 3,
+MakeTemplate("library2", 3, 3,
 [[
 1.1
 ...
 1.1
-]], { nil, shelf, shelf, shelf })
+]], { nil, "shelf", "shelf", "shelf" })
 
-local library3 = MakeTemplate(5, 5,
+MakeTemplate("library3", 5, 5,
 [[
 1.1.1.
 .1.2..
 1.1.1.
 ......
-]], { shelf, shelf, shelf }, { nil, shelf, chair })
+]], { "shelf", "shelf", "shelf" }, { nil, "shelf", "chair" })
 
-local exhibit1 = MakeTemplate(5, 5,
+MakeTemplate("exhibit1", 5, 5,
 [[
 .....
 .222.
 .212.
 .222.
 .....
-]], { artifact }, { glass })
+]], { "artifact" }, { "glass" })
 
-local exhibit2 = MakeTemplate(3, 3,
+MakeTemplate("exhibit2", 3, 3,
 [[
 ..2
 .1.
 ...
-]], { nil, painting, artifact }, { nil, nil, nil, nil, nil, key, amulet })
+]], { nil, "painting", "artifact" }, { nil, nil, nil, nil, nil, "key", "amulet" })
 
-local anvil = MakeObject("anvil", nil, { BlockingPassage })
-local cauldron = MakeObject("cauldron", nil, { BlockingPassage })
+RegisterObject("anvil", nil, function(e) e:Set(BlockingPassage, Name("anvil")) end)
+RegisterObject("cauldron", nil, function(e) e:Set(BlockingPassage, Name("cauldron")) end)
 
-local workshop1 = MakeTemplate(5, 5,
+MakeTemplate("workshop1", 5, 5,
 [[
 .....
 .111.
 ..23.
 .4...
 .....
-]], { nil, shelf, shelf, shelf, crate }, { anvil }, { nil, chair }, { artifact })
+]], { nil, "shelf", "shelf", "shelf", "crate" }, { "anvil" }, { nil, "desk" }, { "artifact" })
 
-local workshop2 = MakeTemplate(3, 3,
+MakeTemplate("workshop2", 3, 3,
 [[
 111
 .21
 ...
-]], { nil, shelf, shelf, shelf, crate }, { anvil, cauldron })
+]], { nil, "shelf", "shelf", "shelf", "crate" }, { "anvil", "cauldron" })
 
-local shrine1 = MakeTemplate(3, 3,
+MakeTemplate("shrine1", 3, 3,
 [[
 1..
 ...
 ..1
-]], { candle })
+]], { "candle" })
 
-local shrine1 = MakeTemplate(5, 3,
+MakeTemplate("shrine1", 5, 3,
 [[
 1..1.
 .1..1
 ..11.
-]], { nil, candle })
+]], { nil, "candle" })
 
-local statue = MakeObject("statue", nil, { BlockingPassage, BlockingSight })
-local shrine2 = MakeTemplate(6, 6,
+RegisterObject("statue", nil, function(e) e:Set(BlockingPassage, BlockingSight, Name("statue")) end)
+MakeTemplate("shrine2", 6, 6,
 [[
 13.1.
 3...3
 .124.
 3...1
 .3.1.
-]], { nil, nil, candle, candle }, { statue }, { nil, nil, nil, nil, nil, bool, candle }, { nil, nil, nil, artifact })
+]], { nil, nil, "candle", "candle" }, { "statue" }, { nil, nil, nil, nil, nil, "book", "candle" }, { nil, nil, nil, "artifact" })
 
-local furnace = MakeObject("furnace", nil, { BlockingPassage, BlockingSight, Burning })
-local grate1 = MakeObject("grate", "grate1", { Metallic })
-local grate2 = MakeObject("grate", "grate2", { Metallic })
-local grate3 = MakeObject("grate", "grate3", { Metallic })
+RegisterObject("furnace", nil, function(e) e:Set(BlockingPassage, BlockingSight, Burning, Name("furnace")) end)
+RegisterObject("grate", "grate1", function(e) e:Set(Metallic, Name("grate")) end)
+RegisterObject("grate", "grate2", function(e) e:Set(Metallic, Name("grate")) end)
+RegisterObject("grate", "grate3", function(e) e:Set(Metallic, Name("grate")) end)
 
-local forge1 = MakeTemplate(6, 6,
+MakeTemplate("forge1", 6, 6,
 [[
 333333
-331133
+3.1.3.
 323323
-331133
+3.1.3.
 323323
-333333
-]], { furnace }, { nil, furnace }, { grate1, grate2, grate3, nil })
+3.3.3.
+]], { "furnace" }, { nil, "furnace" }, { "grate1", "grate2", "grate3" })
 
-local forge2 = MakeTemplate(3, 3,
+MakeTemplate("forge2", 3, 3,
 [[
 333
 213
 332
-]], { furnace }, { nil, furnace }, { grate, nil })
+]], { "furnace" }, { nil, "furnace" }, { "grate", nil })
 
 Rooms = {}
-Rooms[Open] = { common1, common2, warehouse1, warehouse2 }
-Rooms[Uncover] = { library1, library2, library3, exhibit1, exhibit2 }
-Rooms[Enlarge] = { workshop1, workshop2, shrine1, shrine2 }
-Rooms[Flow] = { common1, common2 }
-Rooms[Calm] = { common1, common2, shrine1 }
-Rooms[Rage] = { forge1, forge2, warehouse1, warehouse2, common1 }
-Rooms[Yearn] = { exhibit1, exhibit2, shrine2 }
-Rooms[Discover] = { library2, workshop2, common1, common2 }
-Rooms[Heal] = { common1, common2 } -- market, medic
-Rooms[Endure] = { workshop1, workshop2 } -- training room
-Rooms[Luck] = { common1, common2, } -- market
-Rooms[Fade] = { warehouse1, common1, common2 }
-
-print("PROCGEN DONE") 
+Rooms[Open] = { "common1", "common2", "warehouse1", "warehouse2" }
+Rooms[Uncover] = { "library1", "library2", "library3", "exhibit1", "exhibit2" }
+Rooms[Enlarge] = { "workshop1", "workshop2", "shrine1", "shrine2" }
+Rooms[Flow] = { "common1", "common2" }
+Rooms[Calm] = { "common1", "common2", "shrine1" }
+Rooms[Rage] = { "forge1", "forge2", "warehouse1", "warehouse2", "common1" }
+Rooms[Yearn] = { "exhibit1", "exhibit2", "shrine2" }
+Rooms[Discover] = { "library2", "workshop2", "common1", "common2" }
+Rooms[Heal] = { "common1", "common2" } --market, medic
+Rooms[Endure] = { "workshop1", "workshop2" } -- training room
+Rooms[Luck] = { "common1", "common2" } -- market
+Rooms[Fade] = { "warehouse1", "common1", "common2" }

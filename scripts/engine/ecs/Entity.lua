@@ -6,8 +6,6 @@
 
 Svarog:RequireModule( "scripts\\engine\\ecs\\Archetype", "Archetype")
 
-local Archetype = require "Archetype"
-
 local SEQ  = 0
 
 --[[
