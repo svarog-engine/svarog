@@ -40,7 +40,7 @@ local function TryBreak(attackerEntity, targetEntity)
 
 			if targetEntity[Contents] ~= nil then
 				local position = targetEntity[Position]
-				Contents.DropAll(entity, position.x, position.y)
+				Contents.DropOne(entity, position.x, position.y)
 			end
 
 			RemoveEntityFromDungeon(targetEntity)

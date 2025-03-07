@@ -18,6 +18,18 @@ Engine.RegisterInputSystem({ Action_Inventory_Drop }, function()
 	InventoryEntity:Set(DoInventoryAction{ action = "drop" })
 end)
 
+Engine.RegisterInputSystem({ Action_Inventory_Consume }, function()
+	InventoryEntity:Set(DoInventoryAction{ action = "consume" })
+end)
+
+Engine.RegisterInputSystem({ Action_Inventory_Cast }, function()
+	TargetOverlayEntity:Set(ActivateTargetOverlay{ 
+		callback = function(x, y)
+			InventoryEntity:Set(DoInventoryAction{ action = "cast", details = { x = x, y = y }})
+		end
+	})
+end)
+
 Engine.RegisterInputSystem({ Action_Inventory_Throw }, function()
 	TargetOverlayEntity:Set(ActivateTargetOverlay{ 
 		callback = function(x, y)

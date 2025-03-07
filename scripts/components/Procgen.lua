@@ -79,7 +79,7 @@ function Procgen.Crate(e, x, y)
 	Procgen.IsFurniture(e)
 	Procgen.IsWooden(e)
 	Procgen.IsContainer(e)
-	Procgen.GenerateContents(e)
+	Procgen.GenerateContents(e, Minerals)
 	e:Set(Glyph{ name = "crate" })
 end
 
@@ -98,7 +98,7 @@ end
 function Procgen.Chest(e, x, y)
 	Procgen.IsFurniture(e)
 	Procgen.IsContainer(e)
-	Procgen.GenerateContents(e)
+	Procgen.GenerateContents(e, Minerals)
 	e:Set(Locked{})
 	e:Set(Glyph{ name = "chest" })
 end
@@ -110,7 +110,7 @@ function Procgen.Table(e, x, y)
 end
 
 function Procgen.Key(e, x, y)
-	e:Set(Item{id = "key"}, Key{}, Metallic{})
+	e:Set(Item{id = "key", quantity = 1}, Key{}, Metallic{})
 	e:Set(Glyph{ name = "key" })
 end
 
@@ -137,7 +137,7 @@ function Procgen.Goblin(e, x, y)
 		BumpAttack { damage = 1 }, 
 		Glyph{ name = "goblin" },
 		Burnable{},
-		Contents{ items = {} }
+		Contents{ items = { { itemId = "gold", quantity = 20 } } }
 	)
 end
 
@@ -156,6 +156,7 @@ function Procgen.Shelf(e, x, y)
 	Procgen.IsFurniture(e)
 	Procgen.IsWooden(e)
 	Procgen.IsContainer(e)
+	Procgen.GenerateContents(e, Books)
 	e:Set(Glyph{ name = "shelf" })
 end
 
@@ -246,7 +247,7 @@ function Procgen.Mimic(e, x, y)
 	)
 end
 
-function Procgen.Hobgob(e, x, y)
+function Procgen.Ogre(e, x, y)
 	e:Set(
 		Creature{}, 
 		AIMoveTowardsPlayer{ distance = 0, chance = 8 },
@@ -258,7 +259,6 @@ function Procgen.Hobgob(e, x, y)
 		Contents{ items = {} }
 	)
 end
-
 
 function Procgen.GenerateContents(e, x, y)
 	local items = { Minerals[Rand:Range(1, #Minerals)] }
@@ -467,6 +467,7 @@ Rooms[Fade] = { "warehouse1", "common1", "common2" }
 
 Minerals = {"diamond", "topaz", "obsidian", "malachite", "lapis_lazuli", "onyx", "smoky_quartz" }
 Plants = {"ash", "frankincense", "blackthorn", "willow", "sage", "foxglove", "mandrake" }
+Books = { "book" }
 
 Monsters = {}
 Monsters[Endure] = { "Hobgob", "Mimic" }

@@ -6,6 +6,7 @@ IncludeGameplay "Wheels"
 IncludeGameplay "DungeonMaker"
 IncludeGameplay "BumpMechanics"
 IncludeGameplay "ItemLibrary"
+IncludeGameplay "ItemEffects"
 
 LoadPlayerSystem "DefaultInputActions"
 LoadPlayerSystem "InventoryInputActions"

@@ -23,13 +23,14 @@ function OpenCrateSystem:Tick()
 			if entity[Locked] == nil then
 				if entity[Contents] ~= nil then
 					Contents.MoveItems(entity, who)
+					entity:Unset(Contents)
+
+					entity[Glyph].name =  entity[Glyph].name .. "_empty"
 				end
 
 				if who == playerEntity then 
 					Diary.Write("PLAYER MESSAGE")
 				end
-
-				entity[Glyph].name =  entity[Glyph].name .. "_open"
 			end
 		end
 

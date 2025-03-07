@@ -15,7 +15,7 @@ function PickUpMechanicsSystem:Tick()
 		end
 
 		if who[Contents] ~= nil and ItemLibrary[item.id] ~= nil then
-			table.insert(who[Contents].items, item.id)
+			Contents.Add(who, item.id, item.quantity)
 
 			RemoveEntityFromDungeon(entity)
 			World:Remove(entity)

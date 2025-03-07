@@ -13,7 +13,7 @@ function TickCreature(entity)
 	end
 end
 
-Item = ECS.Component{id = ""}
+Item = ECS.Component{id = "", quantity = 1}
 
 Bump = ECS.Component{ x = 0, y = 0, dx = 0, dy = 0 }
 Bumped = ECS.Component{ by = 0 }
@@ -59,23 +59,51 @@ end
 
 Contents = ECS.Component{ items = {} }
 
-function Contents.Add(entity, item)
-	local inventory = entity[Contents]
-	table.insert(inventory.items, item)
+function Contents.Add(entity, itemId, quantity)
+	quantity = quantity or 1
+	local inventory = entity[Contents].items
+
+	local itemInInventory = false
+	for _, item in ipairs(inventory) do
+		if item.itemId == itemId then
+			item.quantity = item.quantity + quantity
+			itemInInventory = true
+			break
+		end
+	end
+
+	if not itemInInventory then 
+		table.insert(inventory, { itemId = itemId, quantity = quantity } )
+	end
 end
 
-function Contents.Remove(entity, item)
+function Contents.Remove(entity, itemId, quantity)
+	quantity = quantity or 1
 	local inventoryList = entity[Contents].items
-	table.remove(inventoryList, table.find(inventoryList, item))
-end
 
-function Contents.HasItem(entity, item)
-	local inventoryList = entity[Contents].items
-	if inventoryList ~= nil then
-		for _, value in ipairs(inventoryList) do 
-			if value == item then
-				return true
+	local indexToRemove = nil
+	for index, i in ipairs(inventoryList) do
+		if i.itemId == itemId then
+			i.quantity = i.quantity - quantity
+			if i.quantity <= 0 then
+				indexToRemove = index
+				break
 			end
+		end
+	end
+
+	if indexToRemove ~= nil then
+		table.remove(inventoryList, indexToRemove)
+	end
+end
+
+function Contents.HasItem(entity, itemId, quantity)
+	quantity = quantity or 1
+	local inventoryList = entity[Contents].items
+
+	for index, item in ipairs(inventoryList) do
+		if item.itemId == itemId then
+			return item.quantity >= quantity
 		end
 	end
 
@@ -84,23 +112,45 @@ end
 
 function Contents.MoveItems(source, target)
 	local inventoryList = source[Contents].items
-	for _, item in pairs(inventoryList) do 
-		Contents.Add(target, item)
-		Contents.Remove(source, item)
+	for _, item in ipairs(inventoryList) do
+		Contents.Add(target, item.itemId, item.quantity)
+		Contents.Remove(source, item.itemId, item.quantity)
 	end
 end
 
 function Contents.DropAll(entity, x, y)
 	local inventoryList = entity[Contents].items
 	for _, item in ipairs(inventoryList) do 
-		local itemMeta = ItemLibrary[item]
+		local itemMeta = ItemLibrary[item.itemId]
 
 		local itemEntity = World:Entity(
-			Item{ id = item },
+			Item{ id = item.itemId, quantity = item.quantity},
 			Position{ x = x, y = y },
 			Glyph{ name = itemMeta.glyph })
 
 		AddEntityToDungeon(x, y, itemEntity)
+	end
+
+	entity[Contents].items = {}
+end
+
+function Contents.DropOne(entity, x, y)
+	local inventoryList = entity[Contents].items
+	local dropIndex = Rand:Range(1, #inventoryList)
+
+	local index = 1
+	for _, item in ipairs(inventoryList) do 
+		if index == dropIndex then 
+			local itemMeta = ItemLibrary[item.itemId]
+			local itemEntity = World:Entity(
+				Item{ id = item.itemId, quantity = item.quantity},
+				Position{ x = x, y = y },
+				Glyph{ name = itemMeta.glyph })
+
+			AddEntityToDungeon(x, y, itemEntity)
+			break
+		end
+		index = index + 1
 	end
 
 	entity[Contents].items = {}

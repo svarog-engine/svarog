@@ -6,6 +6,7 @@ ItemLibrary = {
 	stone = { name = "Stone", description = "Magic stone", glyph = "%" },
 
 	gold = { name = "Gold", description = "Key desc", glyph = "gold"},
+	book = { name = "Book", description = "", glyph = "book"},
 
 -- Minerals
 	diamond = { name = "Diamond", description = "", glyph = "mineral"},
