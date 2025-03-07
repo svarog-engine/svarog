@@ -260,9 +260,10 @@ function Procgen.Ogre(e, x, y)
 	)
 end
 
-function Procgen.GenerateContents(e, x, y)
-	local items = { Minerals[Rand:Range(1, #Minerals)] }
-	e:Set(Contents { items = items })
+function Procgen.GenerateContents(e, itemList)
+-- mika
+    local items = { { itemId = itemList[Rand:Range(1, #itemList)], quantity = 1} }
+    e:Set(Contents { items = items })
 end
 
 function Templates.LibraryRoom(cx, cy)
@@ -274,8 +275,8 @@ function Templates.LibraryRoom(cx, cy)
 		local w, h = Dungeon.floor:Size()
 		for i = 1, w, 2 do
 			for j = 1, h, 2 do
-				Dungeon.zones:Set(i, j, -1)
 				if room:Has(i, j) and room:Get(i, j) >= 0 and room:Get(i, j) < 10 then
+					Dungeon.zones:Set(i, j, -1)
 					Procgen.MakeObject("Shelf", i, j)
 				end
 			end

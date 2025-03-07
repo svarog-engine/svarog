@@ -49,16 +49,16 @@ function Cast(x, y, itemId)
 	for _, e in ipairs(entities) do
 		if e[Creature] ~= nil then
 			local comp = component()
-			if e[comp] then
-				if entity[Contents] ~= nil then 
-					local position = entity[Position]
-					Contents.DropAll(entity, position.x, position.y)
+			if e[comp] ~= nil then
+				if e[Contents] ~= nil then 
+					local position = e[Position]
+					Contents.DropAll(e, position.x, position.y)
 				end
 
-				RemoveEntityFromDungeon(entity)
-				World:Remove(entity)
+				RemoveEntityFromDungeon(e)
+				World:Remove(e)
 			else
-				e:Set(comp())
+				e:Set(comp(), Magic{})
 			end
 		end
 	end
