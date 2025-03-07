@@ -31,6 +31,7 @@ function ShadowcastSystem:Tick()
 	if light ~= nil then
 		if Chances[light.chance]:MakeGuess() then
 			radius = radius + light.bonusRadius
+			IncreaseTension(PlayerEntity, light.level)
 		end
 	end
 

@@ -25,4 +25,17 @@ Health = ECS.Component(Range(9, 9))
 BumpAttack = ECS.Component { damage = 1 }
 
 Stamina = ECS.Component(Range(9, 9))
+
+Platform = ECS.Component { activate = nil, canActivate = nil, removeWhenActivated = false }
+
+-- Tension
 Tension = ECS.Component(Range(9, 9))
+
+TensionIncrease = ECS.Component { value = 0 }
+TensionLocked = ECS.Component()
+TensionDecrease = ECS.Component { value = 0 }
+TensionLimitReached = ECS.Component()
+
+-- Challenge
+
+ChallengePlatform = ECS.Component()
