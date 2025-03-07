@@ -42,7 +42,9 @@ Glossary.Default = {
 	invalid = { x = -1, y = -1, fg = Colors.Transparent, bg = Colors.Transparent },
 
 	crate = { x = 13, y = 4, fg = Colors.White, bg = Colors.Black },
+	crate_open = { x = 14, y = 4, fg = Colors.White, bg = Colors.Black },
 	chest = { x = 12, y = 4, fg = Colors.LightBlue, bg = Colors.Black },
+	chest_open = { x = 11, y = 4, fg = Colors.LightBlue, bg = Colors.Black },
 	table = { x = 0, y = 2, fg = Colors.LightBrown, bg = Colors.Black },
 	alarmTrap = { x = 13, y = 20, fg = Colors.LightRed, bg = Colors.DarkRed },
 	shelf = { x = 27, y = 1, fg = Colors.Green, bg = Colors.Black },
@@ -59,6 +61,11 @@ Glossary.Default = {
 	cinders = { x = 12, y = 0, fg = Colors.Red, bg = Colors.Black },
 	rift = { x = 9, y = 3, fg = Colors.Red, bg = Colors.Black },
 	portal = { x = 10, y = 16, fg = Colors.Magenta, bg = Colors.Black },
+	platform = { x = 31, y = 3, fg = Colors.White, bg = Colors.Magenta },
+
+	gold = { x = 4, y = 0, fg = Colors.Yellow, bg = Colors.Black },
+	mineral = { x = 5, y = 0, fg = Colors.Green, bg = Colors.Black },
+	plant = { x = 6, y = 0, fg = Colors.Blue, bg = Colors.Black },
 }
 
 InsertSpriteCharRanges(Glossary.Default, 1, 1, "ABCDEFGHIJKLMNOPQRSTUVWXYZ[ ]^_")

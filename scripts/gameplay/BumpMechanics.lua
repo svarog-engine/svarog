@@ -24,7 +24,7 @@ function PerformBump(entity, x, y, dx, dy)
 				ok = true
 			end
 		end
-		return true
+		return ok
 	elseif pass then
 		if entity[Position] ~= nil then
 			RemoveEntityFromDungeon(entity)

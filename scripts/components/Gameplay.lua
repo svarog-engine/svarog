@@ -55,7 +55,53 @@ function Tension:Down(n)
 	self.current = self.current - (n or 1)
 end
 
-TensionIncrease = ECS.Component { value = 0 }
-TensionLocked = ECS.Component()
-TensionDecrease = ECS.Component { value = 0 }
-TensionLimitReached = ECS.Component()
+-- Inventory
+
+Contents = ECS.Component{ items = {} }
+
+function Contents.Add(entity, item)
+	local inventory = entity[Contents]
+	table.insert(inventory.items, item)
+end
+
+function Contents.Remove(entity, item)
+	local inventoryList = entity[Contents].items
+	table.remove(inventoryList, table.find(inventoryList, item))
+end
+
+function Contents.HasItem(entity, item)
+	local inventoryList = entity[Contents].items
+	if inventoryList ~= nil then
+		for _, value in ipairs(inventoryList) do 
+			if value == item then
+				return true
+			end
+		end
+	end
+
+	return false
+end
+
+function Contents.MoveItems(source, target)
+	local inventoryList = source[Contents].items
+	for _, item in pairs(inventoryList) do 
+		Contents.Add(target, item)
+		Contents.Remove(source, item)
+	end
+end
+
+function Contents.DropAll(entity, x, y)
+	local inventoryList = entity[Contents].items
+	for _, item in ipairs(inventoryList) do 
+		local itemMeta = ItemLibrary[item]
+
+		local itemEntity = World:Entity(
+			Item{ id = item },
+			Position{ x = x, y = y },
+			Glyph{ name = itemMeta.glyph })
+
+		AddEntityToDungeon(x, y, itemEntity)
+	end
+
+	entity[Contents].items = {}
+end
