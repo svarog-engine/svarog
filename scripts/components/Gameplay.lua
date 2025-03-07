@@ -31,6 +31,14 @@ Platform = ECS.Component { activate = nil, canActivate = nil, removeWhenActivate
 -- Tension
 Tension = ECS.Component(Range(9, 9))
 
+function Tension:Up(n)
+	self.current = self.current + n
+
+	if self.current >= self.maximum then
+		self.current = self.maximum
+	end
+end
+
 TensionIncrease = ECS.Component { value = 0 }
 TensionLocked = ECS.Component()
 TensionDecrease = ECS.Component { value = 0 }
