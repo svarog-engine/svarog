@@ -21,6 +21,8 @@ Actions.Inventory = {
 	SelectPrevious  = {Input.Press("Key: Up") },
 	Drop			= { Input.Press("Key: D") },
 	Throw			= { Input.Press("Key: T") },
+	Consume			= { Input.Press("Key: C") },
+	Cast			= { Input.Press("Key: Z") },
 }
 
 Actions.TargetOverlay = {

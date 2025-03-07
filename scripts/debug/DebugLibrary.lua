@@ -50,7 +50,7 @@ DebugSpawnLibrary = {
 		name = "treasure",
 		callback = function(x, y)
 			AddEntityToDungeon(x, y, World:Entity(
-				Item{id = "treasure"},
+				Item{id = "treasure", quantity = 1},
 				Position{ x = x, y = y },
 				Glyph{ name = "treasure" },
 				Name("treasure")
@@ -62,7 +62,7 @@ DebugSpawnLibrary = {
 		name = "crate",
 		callback = function(x, y)
 			AddEntityToDungeon(x, y, World:Entity(
-				Item{id = "crate"},
+				Item{id = "crate", quantity = 1},
 				Position{ x = x, y = y },
 				Glyph{ name = "crate" },
 				Name("crate"),

@@ -8,21 +8,74 @@ local Actions = {
 		local selection = InventoryEntity[Selection].value
 		local contents = PlayerEntity[Contents].items
 		local item = contents[selection]
-		local itemMeta = ItemLibrary[item]
+		local itemMeta = ItemLibrary[item.itemId]
 
 		World:Entity(
-			Item{ id = item },
+			Item{ id = item.itemId, quantity = 1},
 			Position{ x = x, y = y },
 			Glyph{ name = itemMeta.glyph })
 
-		table.remove(contents, selection)
+		Contents.Remove(PlayerEntity, item.itemId, 1)
 		Diary.Write("Dropped " .. itemMeta.name .. ".")
 		while selection > #contents do
 			selection = selection - 1
 		end
 
 		InventoryEntity:Set(DeactivateInventoryOverlay())
-	end
+	end,
+
+	cast = function(details)
+		local x = details.x or PlayerEntity[Position].x
+		local y = details.y or PlayerEntity[Position].y
+		local selection = InventoryEntity[Selection].value
+		local contents = PlayerEntity[Contents].items
+		local item = contents[selection]
+		local itemMeta = ItemLibrary[item.itemId]
+
+		local actionDone = false
+		if CanCast(item.itemId) then
+			print("cast")
+			Cast(x, y, item.itemId)
+			actionDone = true
+		end
+
+		if actionDone then 
+			Contents.Remove(PlayerEntity, item.itemId, 1)
+			Diary.Write("Dropped " .. itemMeta.name .. ".")
+			while selection > #contents do
+				selection = selection - 1
+			end
+
+			InventoryEntity:Set(DeactivateInventoryOverlay())
+			PlayerDone = true
+		end
+	end,
+
+	consume = function(details)
+		local selection = InventoryEntity[Selection].value
+		local contents = PlayerEntity[Contents].items
+		local item = contents[selection]
+		local itemMeta = ItemLibrary[item.itemId]
+
+		local actionDone = false
+		if CanConsume(item.itemId) then
+			print("consume")
+			Consume(item.itemId)
+			actionDone = true
+		end
+
+		if actionDone then 
+			Contents.Remove(PlayerEntity, item.itemId, 1)
+			-- MIKA
+			Diary.Write("Dropped " .. itemMeta.name .. ".")
+			while selection > #contents do
+				selection = selection - 1
+			end
+
+			InventoryEntity:Set(DeactivateInventoryOverlay())
+			PlayerDone = true
+		end
+	end,
 }
 
 function InventoryToggleSystem:ShouldTick()

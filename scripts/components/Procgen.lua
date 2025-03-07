@@ -79,7 +79,7 @@ function Procgen.Crate(e, x, y)
 	Procgen.IsFurniture(e)
 	Procgen.IsWooden(e)
 	Procgen.IsContainer(e)
-	Procgen.GenerateContents(e)
+	Procgen.GenerateContents(e, Minerals)
 	e:Set(Glyph{ name = "crate" })
 end
 
@@ -98,7 +98,7 @@ end
 function Procgen.Chest(e, x, y)
 	Procgen.IsFurniture(e)
 	Procgen.IsContainer(e)
-	Procgen.GenerateContents(e)
+	Procgen.GenerateContents(e, Minerals)
 	e:Set(Locked{})
 	e:Set(Glyph{ name = "chest" })
 end
@@ -110,7 +110,7 @@ function Procgen.Table(e, x, y)
 end
 
 function Procgen.Key(e, x, y)
-	e:Set(Item{id = "key"}, Key{}, Metallic{})
+	e:Set(Item{id = "key", quantity = 1}, Key{}, Metallic{})
 	e:Set(Glyph{ name = "key" })
 end
 
@@ -137,7 +137,7 @@ function Procgen.Goblin(e, x, y)
 		BumpAttack { damage = 1 }, 
 		Glyph{ name = "goblin" },
 		Burnable{},
-		Contents{ items = {} }
+		Contents{ items = { { itemId = "gold", quantity = 20 } } }
 	)
 end
 
@@ -156,6 +156,7 @@ function Procgen.Shelf(e, x, y)
 	Procgen.IsFurniture(e)
 	Procgen.IsWooden(e)
 	Procgen.IsContainer(e)
+	Procgen.GenerateContents(e, Books)
 	e:Set(Glyph{ name = "shelf" })
 end
 
@@ -194,9 +195,9 @@ function Procgen.Grate(e, x, y)
 	e:Set(Glyph{ name = "grate" .. Rand:Range(1, 3) })
 end
 
-function Procgen.GenerateContents(e, x, y)
+function Procgen.GenerateContents(e, itemList)
 -- mika
-	local items = { Minerals[Rand:Range(1, #Minerals)] }
+	local items = { { itemId = itemList[Rand:Range(1, #itemList)], quantity = 1} }
 	e:Set(Contents { items = items })
 end
 
@@ -402,3 +403,4 @@ Rooms[Fade] = { "warehouse1", "common1", "common2" }
 
 Minerals = {"diamond", "topaz", "obsidian", "malachite", "lapis_lazuli", "onyx", "smoky_quartz" }
 Plants = {"ash", "frankincense", "blackthorn", "willow", "sage", "foxglove", "mandrake" }
+Books = { "book" }
