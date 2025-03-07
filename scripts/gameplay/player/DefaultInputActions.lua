@@ -62,8 +62,10 @@ Engine.RegisterInputSystem(
 		local mult = 1
 
 		if entity[Endure] ~= nil then mult = 0.5 end
-		if entity[Endure] ~= nil and speed == 1 and stam.current < stam.maximum and Chances[8]:MakeGuess() then
+		if entity[Endure] ~= nil and speed == 1 and stam.current < stam.maximum and Chances[8 + entity[Endure].level]:MakeGuess() then
 			stam.current = stam.current + 1
+			PlayerEntity[Tension]:Up()
+			Diary.Write("You regain stamina. Your [ENDURE] glyph quivers.")
 		end
 
 		local moved = 0
@@ -73,6 +75,8 @@ Engine.RegisterInputSystem(
 				local x, y = pos.x + dx, pos.y + dy	
 				if Dungeon.passable:Has(x, y) and not Dungeon.passable:Get(x, y) then
 					cost = 4
+					PlayerEntity[Tension]:Up()
+					Diary.Write("You phase through solid matter! Your [FLOW] glyph quivers.")
 				end
 			end
 			if stam.current >= cost * mult and PerformBump(entity, pos.x, pos.y, dx * speed, dy * speed) then

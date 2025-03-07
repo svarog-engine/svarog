@@ -27,17 +27,14 @@ function ShadowcastSystem:Tick()
 	local playerPosition = PlayerEntity[Position]
 	Dungeon.visibility:Reset(false)
 
-	local light = PlayerEntity[Light]
-	if light ~= nil then
-		if Chances[light.chance]:MakeGuess() then
-			radius = radius + light.bonusRadius
-			IncreaseTension(PlayerEntity, light.level)
-		end
-	end
-
 	local blindness = PlayerEntity[Blindness]
 	if blindness ~= nil then
-		radius = 1
+		if PlayerEntity[Light] ~= nil then
+			Diary.Write("Blindness failed to take root. Your [LIGHT] glyph quivers.")
+			PlayerEntity[Tension]:Up()
+		else
+			radius = 1
+		end
 	end
 
 	FOV = {}

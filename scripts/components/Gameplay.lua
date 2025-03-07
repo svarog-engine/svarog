@@ -26,16 +26,25 @@ BumpAttack = ECS.Component { damage = 1 }
 
 Stamina = ECS.Component(Range(9, 9))
 
-Platform = ECS.Component { activate = nil, canActivate = nil, removeWhenActivated = false }
+-- Challenge
+
+Challenged = ECS.Component()
+Platform = ECS.Component{} --activate = nil, canActivate = nil, removeWhenActivated = false }
 
 -- Tension
+
 Tension = ECS.Component(Range(9, 9))
+
+function Tension:Up(n)
+	local n = n or 1
+	self.current = self.current + n
+	if self.current > self.maximum then 
+		self.current = self.maximum
+		PlayerEntity:Set(Challenged{})
+	end
+end
 
 TensionIncrease = ECS.Component { value = 0 }
 TensionLocked = ECS.Component()
 TensionDecrease = ECS.Component { value = 0 }
 TensionLimitReached = ECS.Component()
-
--- Challenge
-
-ChallengePlatform = ECS.Component()

@@ -240,7 +240,7 @@ local function MakeDungeon()
 		BumpAttack { damage = 2 },
 		Name("you"),
 		Stamina(Range(9, 9)),
-		Tension(Range(1, 9))
+		Tension(Range(0, 9))
 	)
 	
 	Dungeon.visited:Set(x, y, true)

@@ -19,8 +19,7 @@ function PerformBump(entity, x, y, dx, dy)
 		for _, e in ipairs(entities) do
 			if e ~= entity then
 				e:Set(Bumped({ by = entity.id }))
-				Fade(e, Colors.Yellow, Colors.Black, 0.5)
-				print((entity[Name].value or "???") .. " (" .. (entity[ID] or {}).value .. ") bumped into " .. (e[Name].value or "???") .. " (" .. ((e[ID] or {}).value or "?") .. ")")
+				Fade(e, Colors.Yellow, Colors.Black, 0.5)				
 				return true
 			end
 		end

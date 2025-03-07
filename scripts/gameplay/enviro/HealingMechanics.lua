@@ -27,7 +27,7 @@ function HealingSystem:Tick()
 		if shouldHeal then
 			local healingAmount = 1
 
-			local gotLucky = false;
+			local gotLucky = false
 			local luck = entity[Luck]
 			if luck ~= nil then
 				if Chances[luck.chance]:MakeGuess() then
@@ -37,12 +37,15 @@ function HealingSystem:Tick()
 			end
 
 			health.current = Clamp(health.current + healingAmount, health.maximum)
-			
+			if entity[Tension] ~= nil then 
+				entity[Tension]:Up(healingAmount)
+			end
+
 			if entity == PlayerEntity then
 				if gotLucky then
-					Diary.Write("Got lucky! You heal for double amount!")
+					Diary.Write("Your wounds heal quickly. Your [HEAL] and [LUCK] glyphs resonate.")
 				else
-					Diary.Write("You heal for small amount!")
+					Diary.Write("Your wounds heal. Your [HEAL] glyph quivers.")
 				end
 			end
 		end

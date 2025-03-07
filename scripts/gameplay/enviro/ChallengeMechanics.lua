@@ -34,7 +34,7 @@ local function OnPlatformActivate(e)
 	local challenge = e[ChallengeActive]
 	challenge.activePlatforms = challenge.activePlatforms - 1
 
-	DecreaseTension(e, 1)
+	DecreaseTension(e, 5)
 end
 
 local function SpawnChallengeEnities(x, y, n)
@@ -70,10 +70,9 @@ local function SpawnChallengeEnities(x, y, n)
 			World:Entity(
 				Position{ x = selected.x, y = selected.y },
 				Glyph{ name = "platform" },
-				Platform { canActivate = function(e) return e == PlayerEntity end, activate = OnPlatformActivate, removeWhenActivated = true }
+				Name("Magic Circle"),
+				Platform {}
 			)
-			
-			-- print("platform spawned on " .. selected.x .. " and " .. selected.y)
 		else
 			n = n + 1
 		end

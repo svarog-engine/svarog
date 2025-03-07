@@ -12,23 +12,29 @@ end
 local function PerformAttack(attackerEntity, targetEntity)
 		local totalDamage = CalculateDamage(attackerEntity, targetEntity)
 
-		if targetEntity[Endure] ~= nil then
-			if targetEntity[Delayed] == nil then
-				targetEntity:Set(Delayed{ damage = 0, current = 8, maximum = 8 })
-			end
+		if targetEntity[Endure] ~= nil and Chances[8 + targetEntity[Endure].level]:MakeGuess() then
+			--if targetEntity[Delayed] == nil then
+			--	targetEntity:Set(Delayed{ damage = 0, current = 8, maximum = 8 })
+			--end
 
-			targetEntity[Delayed].damage = targetEntity[Delayed].damage + totalDamage
+			--targetEntity[Delayed].damage = targetEntity[Delayed].damage + totalDamage
 
-			if targetEntity[Delayed].damage < targetEntity[Endure].turns then
-				targetEntity[Delayed].current = targetEntity[Delayed].damage
-				targetEntity[Delayed].maximum = targetEntity[Delayed].damage
+			--if targetEntity[Delayed].damage < targetEntity[Endure].turns then
+			--	targetEntity[Delayed].current = targetEntity[Delayed].damage
+			--	targetEntity[Delayed].maximum = targetEntity[Delayed].damage
+			--else
+			--	targetEntity[Delayed].current = targetEntity[Endure].turns
+			--	targetEntity[Delayed].maximum = targetEntity[Endure].turns
+			--end
+
+			if targetEntity == PlayerEntity then
+				Diary.Write("You felt barely nothing. Your [ENDURE] glyph quivers.")
+				targetEntity[Tension]:Up()
 			else
-				targetEntity[Delayed].current = targetEntity[Endure].turns
-				targetEntity[Delayed].maximum = targetEntity[Endure].turns
+				Diary.Write(targetEntity[Name].value .. " seems to endure through the beating.")
 			end
 
-			Diary.Write("Endure activated! You're going to receive damage over time.")
-
+			Fade(targetEntity, Colors.Magenta, Colors.Black, 0.5)
 		else
 			targetEntity[Health].current = targetEntity[Health].current - totalDamage
 			Fade(targetEntity, Colors.Red, Colors.Black, 0.5)
@@ -42,7 +48,8 @@ local function TryBreak(attackerEntity, targetEntity)
 			-- print("Broke entity -> ID: " .. targetEntity)
 
 			if attackerEntity == PlayerEntity then 
-				Diary.Write("You broke something!")
+				Diary.Write("You broke " .. targetEntity[Name].value .. "! Your [BREAK] glyph quivers.")
+				attackerEntity[Tension]:Up()
 			end
 
 			RemoveEntityFromDungeon(targetEntity)
@@ -60,7 +67,25 @@ local function TryCalm(attackerEntity, targetEntity)
 	local calm = targetEntity[Calm]
 	if calm ~= nil and Chances[calm.chance]:MakeGuess() then
 		if targetEntity == PlayerEntity then
-			Diary.Write("You calm the creature down!")
+			Diary.Write("The " .. attackerEntity[Name].value .. " stops! Your [CALM] glyph quivers.")
+			targetEntity[Tension]:Up()
+		end
+
+		targetEntity:Unset(Bumped)
+
+		return true
+	end
+
+	return false
+end
+
+local function TryYearn(attackerEntity, targetEntity)
+	local yearn = targetEntity[Yearn]
+	if yearn ~= nil and Chances[yearn.chance]:MakeGuess() then
+		if targetEntity == PlayerEntity then
+			Diary.Write("The " .. attackerEntity[Name].value .. " stops! Your [YEARN] glyph quivers.")
+			attackerEntity:Set(Yearn{})
+			targetEntity[Tension]:Up()
 		end
 
 		targetEntity:Unset(Bumped)
@@ -86,6 +111,10 @@ function BumpAttackMechanicsSystem:Tick()
 	for _, entity in World:Exec(ECS.Query.All(Bumped, Position).Any(Health, Breakable)):Iterator() do
 		local who = World:FetchEntityById(entity[Bumped].by)
 		if entity ~= nil and who ~= nil then
+
+			if TryYearn(who, entity) then
+				return
+			end
 
 			if TryCalm(who, entity) then
 				return
