@@ -419,3 +419,14 @@ Rooms[Fade] = { "warehouse1", "common1", "common2" }
 
 Minerals = {"diamond", "topaz", "obsidian", "malachite", "lapis_lazuli", "onyx", "smoky_quartz" }
 Plants = {"ash", "frankincense", "blackthorn", "willow", "sage", "foxglove", "mandrake" }
+
+Monsters = {}
+Monsters[Endure] = { "Hobgob", "Mimic" }
+Monsters[Break] = { "Acid Cube", "Ogre" }
+Monsters[Luck] = { "Plague Rats", "Vampire" }
+Monsters[Darken] = { "Shade", "Wraith" }
+Monsters[Flow] = { "Restless Dead", "Gelatinous Cube" }
+Monsters[Heal] = { "Kobold", "Phantasm" }
+Monsters[Calm] = { "Banshee", "Nightmare" }
+Monsters[Steal] = { "Hobgob", "Mimic" }
+Monsters[Light] = { "Wisp", "Djinn" }
