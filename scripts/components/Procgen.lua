@@ -213,7 +213,7 @@ function Procgen.Rift(e, x, y, owner)
 	e:Set(BlockingSight{})
 end
 
-function Procgen.GenerateContents(e, x, y)
+function Procgen.GenerateContents(e, itemList)
 -- mika
 	local items = { { itemId = itemList[Rand:Range(1, #itemList)], quantity = 1} }
 	e:Set(Contents { items = items })
@@ -421,6 +421,7 @@ Rooms[Fade] = { "warehouse1", "common1", "common2" }
 
 Minerals = {"diamond", "topaz", "obsidian", "malachite", "lapis_lazuli", "onyx", "smoky_quartz" }
 Plants = {"ash", "frankincense", "blackthorn", "willow", "sage", "foxglove", "mandrake" }
+Books = { "book" }
 
 Monsters = {}
 Monsters[Endure] = { "Hobgob", "Mimic" }
