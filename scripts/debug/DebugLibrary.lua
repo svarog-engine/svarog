@@ -1,6 +1,20 @@
 -- UI
 
 DebugSpawnLibrary = {
+	{ 
+		name = "flame",
+		callback = function(x, y)
+			AddEntityToDungeon(x, y, World:Entity(
+				Position{ x = x, y = y },
+				Glyph{ name = "flame" },
+				Name("Flame"),
+				Burning{},
+				Health(Range(10, 10)),
+				Spread{ chance = 4 }
+			))
+		end
+	},
+
 	{
 		name = "weak goblin", 
 		callback = function(x, y)

@@ -6,6 +6,33 @@ namespace svarog.presentation
 {
     internal class Colors
     {
+        private static Color ColorFromHSV(double hue, double saturation, double value)
+        {
+            int hi = Convert.ToInt32(Math.Floor(hue / 60)) % 6;
+            double f = hue / 60 - Math.Floor(hue / 60);
+
+            value = value * 255;
+            byte v = Convert.ToByte(value);
+            byte p = Convert.ToByte(value * (1 - saturation));
+            byte q = Convert.ToByte(value * (1 - f * saturation));
+            byte t = Convert.ToByte(value * (1 - (1 - f) * saturation));
+
+            if (hi == 0)
+                return new Color(v, t, p, 255);
+            else if (hi == 1)
+                return new Color(q, v, p, 255);
+            else if (hi == 2)
+                return new Color(p, v, t, 255);
+            else if (hi == 3)
+                return new Color(p, q, v, 255);
+            else if (hi == 4)
+                return new Color(t, p, v, 255);
+            else
+                return new Color(v, p, q, 255);
+        }
+
+        public Color HSB(double h, double s, double v) => ColorFromHSV(h, s, v);
+        public Color RGB(byte r, byte g, byte b) => new Color(r, g, b);
         public Color Hex(string hex) => hex.ToColor();
 
         public Color Red = new(179, 33, 52);

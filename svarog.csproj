@@ -42,6 +42,7 @@
     <None Remove="scripts\gameplay\algorithms\Stack.lua" />
     <None Remove="scripts\gameplay\Chances.lua" />
     <None Remove="scripts\gameplay\enviro\DelayedDamageMechanics.lua" />
+    <None Remove="scripts\gameplay\enviro\FireSpreadingMechanics.lua" />
     <None Remove="scripts\gameplay\enviro\HealingMechanics.lua" />
     <None Remove="scripts\gameplay\enviro\InflictStatusMechanics.lua" />
     <None Remove="scripts\gameplay\enviro\StatusEffectUpdate.lua" />
@@ -51,6 +52,7 @@
     <None Remove="scripts\gameplay\render\PlayerInfoRender.lua" />
     <None Remove="scripts\gameplay\render\UIRender.lua" />
     <None Remove="scripts\gameplay\render\UITestRender.lua" />
+    <None Remove="scripts\gameplay\render\VFXRender.lua" />
     <None Remove="scripts\gameplay\Wheels.lua" />
   </ItemGroup>
 

@@ -32,7 +32,7 @@ function FromDict(sharp_dict)
 	return dict
 end
 
-local RenderChangelist = { Game = {}, UI = {}}
+local RenderChangelist = { Game = {}, UI = {} }
 
 local UpdateCount = 0
 local FrameCount = 0
@@ -78,6 +78,28 @@ end
 local function Draw(change, layer)
     local renderlayer = layer or "Game"
     table.insert(RenderChangelist[renderlayer], change)
+end
+
+local function Fg(x, y, change, layer)
+    local renderlayer = layer or "Game"
+    if x < 0 or y < 0 or x >= Config.Width or y >= Config.Height then return end
+    message = {}
+    message.Debug = true
+    message.X = x - 1
+    message.Y = y - 1
+    message.Foreground = change    
+    Engine.Draw(message, renderlayer)
+end
+
+local function Bg(x, y, change, layer)
+    local renderlayer = layer or "Game"
+    if x < 0 or y < 0 or x >= Config.Width or y >= Config.Height then return end
+    message = {}
+    message.Debug = true
+    message.X = x - 1
+    message.Y = y - 1
+    message.Background = change
+    Engine.Draw(message, renderlayer)
 end
 
 local function Glyph(x, y, name, overrides, layer)
@@ -415,6 +437,8 @@ function Hex(rgb)
 end
 
 return {
+    Bg = Bg,
+    Fg = Fg,
     Draw = Draw,
     Glyph = Glyph,
     Symbol = Symbol,

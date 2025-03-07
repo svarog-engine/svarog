@@ -1,13 +1,18 @@
 ﻿
 Name = ECS.Component("")
 Burnable = ECS.Component()
-Burning = ECS.Component()
+Burning = ECS.Component{value = 0.0}
+Unburnable = ECS.Component()
+
 Dissolvable = ECS.Component()
 
 Weapon = ECS.Component()
 Amulet = ECS.Component()
 Small = ECS.Component()
 Paper = ECS.Component()
+
+Lifetime = ECS.Component{ value = 5 }
+Spread = ECS.Component{ value = 5 }
 
 Key = ECS.Component()
 Locked = ECS.Component()
@@ -25,6 +30,21 @@ Templates = {}
 IDS = 1
 
 Procgen = {}
+
+function Procgen.MakeObject(what, x, y, ...)
+	local e = World:Entity(Position{ x = x, y = y })
+		
+	e:Set(Name(what))
+	e:Set(ID(IDS))
+	IDS = IDS + 1
+
+	if Procgen[what] == nil then
+		Svarog.Instance.LogError("PROCGEN: Generator " .. what .. " not found. Check your spelling.")
+	end
+	Procgen[what](e, x, y, ...)
+	AddEntityToDungeon(x, y, e)
+	return e
+end
 
 function Procgen.IsFurniture(e)
 	e:Set(Breakable{})
@@ -61,6 +81,18 @@ function Procgen.Crate(e, x, y)
 	e:Set(Glyph{ name = "crate" })
 end
 
+function Procgen.Flame(e, x, y, lifetime, spread)
+	e:Set(Burning{ value = Rand:F01() })
+	e:Set(Health{ value = lifetime or 20 })
+	e:Set(Spread{ chance = spread or 4 })
+	e:Set(Glyph{ name = "flame" })
+end
+
+function Procgen.Cinders(e, x, y)
+	e:Set(Glyph{ name = "cinders" })
+	e:Set(Unburnable{})
+end
+
 function Procgen.Chest(e, x, y)
 	Procgen.IsFurniture(e)
 	Procgen.IsContainer(e)
@@ -95,7 +127,13 @@ function Procgen.Artifact(e, x, y)
 end
 
 function Procgen.Goblin(e, x, y)
-	e:Set(Creature{}, AIMoveTowardsPlayer{ distance = 0, chance = 9 }, Health{ value = Range(3) }, BumpAttack { damage = 1 }, Glyph{ name = "goblin" })
+	e:Set(
+		Creature{}, 
+		AIMoveTowardsPlayer{ distance = 0, chance = 9 }, 
+		Health{ value = Range(3) }, 
+		BumpAttack { damage = 1 }, 
+		Glyph{ name = "goblin" },
+		Burnable{})
 end
 
 function Procgen.AlarmTrap(e, x, y)
@@ -124,6 +162,7 @@ end
 function Procgen.Cauldron(e, x, y)
 	e:Set(BlockingPassage{})
 	e:Set(Glyph{ name = "cauldron" })
+	e:Set(Burning{ value = Rand:F01(), colors = { Colors.LightBlue, Colors.Blue } })
 end
 
 function Procgen.Statue(e, x, y)
@@ -134,14 +173,14 @@ end
 function Procgen.Candle(e, x, y)
 	e:Set(BlockingPassage{})
 	if Rand:Range(1, 10) < 5 then
-		e:Set(Burning{})
+		e:Set(Burning{ value = Rand:F01() })
 	end
 	e:Set(Glyph{ name = "candle" })
 end
 
 function Procgen.Furnace(e, x, y)
 	e:Set(BlockingPassage{})
-	e:Set(Burning{})
+	e:Set(Burning{ value = Rand:F01() })
 	e:Set(Glyph{ name = "furnace" })
 end
 
@@ -150,16 +189,24 @@ function Procgen.Grate(e, x, y)
 	e:Set(Glyph{ name = "grate" .. Rand:Range(1, 3) })
 end
 
-function MakeObject(what, x, y)
-	local e = World:Entity(Position{ x = x, y = y })
-		
-	e:Set(Name(what))
-	e:Set(ID(IDS))
-	IDS = IDS + 1
+function Templates.LibraryRoom(cx, cy)
+	if Dungeon.wallDistances:Get(cx, cy) >= 2 then
+		local room = DistanceMap:From(Dungeon.floor, { { cx, cy } }, 0, 7)
+		room:AddCondition(function(map, x, y) return Dungeon.wallDistances:Has(x, y) and Dungeon.wallDistances:Get(x, y) >= 2 end)
+		room:Flood()
 
-	Procgen[what](e, x, y)
-	AddEntityToDungeon(x, y, e)
+		local w, h = Dungeon.floor:Size()
+		for i = 1, w, 2 do
+			for j = 1, h, 2 do
+				Dungeon.zones:Set(i, j, -1)
+				if room:Has(i, j) and room:Get(i, j) >= 0 and room:Get(i, j) < 10 then
+					Procgen.MakeObject("Shelf", i, j)
+				end
+			end
+		end
+	end
 end
+
 
 local function MakeTemplate(name, w, h, template, ...)
 	local argz = { ... }
@@ -186,7 +233,7 @@ local function MakeTemplate(name, w, h, template, ...)
 							local spots = argz[num]
 							local spot = spots[Rand:Range(1, #spots)]
 							if spot ~= nil then 
-								MakeObject(spot, xx, yy)
+								Procgen.MakeObject(spot, xx, yy)
 							end
 						end
 					end
@@ -238,23 +285,23 @@ MakeTemplate("warehouse3", 4, 4,
 
 MakeTemplate("library1", 3, 3,
 [[
-1.1
+...
 .1.
-1.1
+...
 ]], { "Shelf" })
 
 MakeTemplate("library2", 3, 3,
 [[
-1.1
+1..
 ...
-1.1
+..1
 ]], { "Shelf" })
 
 MakeTemplate("library3", 5, 3,
 [[
-1.1.1
+1...1
 .....
-1.1.1
+1...1
 ]], { "Shelf" })
 
 MakeTemplate("exhibit1", 5, 5,
@@ -330,7 +377,7 @@ MakeTemplate("forge2", 3, 3,
 
 Rooms = {}
 Rooms[Open] = { "common1", "common2", "warehouse1", "warehouse2" }
-Rooms[Uncover] = { "library1", "library2", "library3", "exhibit1", "exhibit2" }
+Rooms[Uncover] = { "LibraryRoom", "exhibit1", "exhibit2" }
 Rooms[Enlarge] = { "workshop1", "workshop2", "shrine1", "shrine2" }
 Rooms[Flow] = { "common1", "common2" }
 Rooms[Calm] = { "common1", "common2", "shrine1" }

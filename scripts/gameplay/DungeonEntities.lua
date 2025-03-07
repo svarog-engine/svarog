@@ -36,7 +36,10 @@ local function RemoveEntity(x, y, entity)
                     break
                 end
             end
-        end    
+        end
+
+        print("REM", entity)
+        World:Remove(entity)
     end
 end
 

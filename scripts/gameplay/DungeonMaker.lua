@@ -42,7 +42,9 @@ local function RemoveEntity(x, y, entity)
 end
 
 function RemoveEntityFromDungeon(entity)
-	RemoveEntity(entity[Position].x, entity[Position].y, entity)
+	if entity[Position] ~= nil then
+		RemoveEntity(entity[Position].x, entity[Position].y, entity)
+	end
 end
 
 local function MakeDoor(x, y, closed, locked, key, travelTo)
