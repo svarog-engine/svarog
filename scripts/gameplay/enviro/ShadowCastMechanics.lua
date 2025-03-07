@@ -23,7 +23,7 @@ function ShadowcastSystem:ShouldTick()
 end
 
 function ShadowcastSystem:Tick()
-	local radius = Config.FOVRadius
+	local radius = PlayerEntity[Sight].radius + PlayerEntity[Pause].duration
 	local playerPosition = PlayerEntity[Position]
 	Dungeon.visibility:Reset(false)
 

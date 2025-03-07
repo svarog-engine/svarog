@@ -61,9 +61,16 @@ DebugWordsLibrary = {
 	},
 
 	{
-		name = "brake",
+		name = "break",
 		callback = function (x, y)
 			TryApplyComponent(x, y, Break { level = 1, chance = 8 })
+		end
+	},
+
+	{
+		name = "flow",
+		callback = function (x, y)
+			TryApplyComponent(x, y, Flow { level = 1, chance = 8 })
 		end
 	},
 }

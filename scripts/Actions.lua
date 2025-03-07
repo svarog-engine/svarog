@@ -8,7 +8,8 @@ Actions.Default = {
 	Down	= { Input.Press("Key: Down") },
 	Exit	= { Input.Hold("Key: F10", 1000) },
 	Reload  = { Input.Press("Key: F5") },
-
+	JumpOn  = { Input.Press("Key: LShift")},
+	JumpOff = { Input.Release("Key: LShift")},
 	ZoomIn  = { Input.Press("Key: PageUp") },
 	ZoomOut = { Input.Press("Key: PageDown") },
 	Inventory = { Input.Press("Key: I")},

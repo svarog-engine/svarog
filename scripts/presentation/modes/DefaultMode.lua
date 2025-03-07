@@ -10,6 +10,10 @@
 Glossary.Meta.Default = SpritePresentationMode(fontMeta.name, fontMeta.size, fontMeta.paddingX, fontMeta.paddingY, fontMeta.offsetX, fontMeta.offsetY)
 
 Glossary.Default = {
+	target = { x = 10, y = 0, fg = Colors.White, bg = Colors.Black },
+	target2 = { x = 31, y = 2, fg = Colors.White, bg = Colors.Black },
+	target3 = { x = 10, y = 3, fg = Colors.White, bg = Colors.Black },
+	target4 = { x = 11, y = 3, fg = Colors.White, bg = Colors.Black },
 	goblin = { x = 7, y = 2, fg = Colors.LightGreen, bg = Colors.Black },
 	kobold = { x = 11, y = 2, fg = Colors.LightRed, bg = Colors.Black },
 

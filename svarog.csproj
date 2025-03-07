@@ -50,6 +50,7 @@
     <None Remove="scripts\gameplay\player\InventoryUpdate.lua" />
     <None Remove="scripts\gameplay\player\TargetingInputActions.lua" />
     <None Remove="scripts\gameplay\render\PlayerInfoRender.lua" />
+    <None Remove="scripts\gameplay\render\PossibleMoveRender.lua" />
     <None Remove="scripts\gameplay\render\UIRender.lua" />
     <None Remove="scripts\gameplay\render\UITestRender.lua" />
     <None Remove="scripts\gameplay\render\VFXRender.lua" />

@@ -3,8 +3,35 @@
 LoadScriptIfExists "debug\\DebugInputActions"
 
 Engine.RegisterInputSystem({ Action_Default_Wait }, function(input)
-	World:Exec(ECS.Query.All(Player)):ForEach(function(entity)
+	World:Exec(ECS.Query.All(Player, Stamina, Pause)):ForEach(function(entity)
+		local stam = entity[Stamina]
+		local pause = entity[Pause]
+		local plus = 1
+
+		pause.duration = pause.duration + 1
+		if pause.duration > 6 then pause.duration = 6 end
+
+		if entity[Endure] ~= nil then plus = 2 end
+
+		if stam.current < stam.maximum then
+			stam.current = stam.current + plus
+			if stam.current > stam.maximum then 
+				stam.current = stam.maximum
+			end
+		end
 		PlayerDone = true
+	end)
+end)
+
+Engine.RegisterInputSystem({ Action_Default_JumpOn }, function(input)
+	World:Exec(ECS.Query.All(Player, MoveMode, Position)):ForEach(function(entity)
+		entity[MoveMode].value = "Jump"
+	end)
+end)
+
+Engine.RegisterInputSystem({ Action_Default_JumpOff }, function(input)
+	World:Exec(ECS.Query.All(Player, MoveMode, Position)):ForEach(function(entity)
+		entity[MoveMode].value = "Walk"
 	end)
 end)
 
@@ -16,16 +43,50 @@ Engine.RegisterInputSystem(
 		Action_Default_Down
 	}, function(input)
 
-	World:Exec(ECS.Query.All(Player, Position)):ForEach(function(entity)
-		local dxl = input[Action_Default_Left] and -1 or 0
-		local dxr = input[Action_Default_Right] and 1 or 0
-		local dyl = input[Action_Default_Up] and -1 or 0
-		local dyr = input[Action_Default_Down] and 1 or 0
+	World:Exec(ECS.Query.All(Player, MoveMode, Stamina, Position, Pause)):ForEach(function(entity)
+		local move = entity[MoveMode]
+		local stam = entity[Stamina]
+		local pause = entity[Pause]
+		pause.duration = 0
+		local speed = 1
+		if move.value == "Jump" then speed = 2 end
+		local dxl = (input[Action_Default_Left] and -1 or 0) 
+		local dxr = (input[Action_Default_Right] and 1 or 0)
+		local dyl = (input[Action_Default_Up] and -1 or 0)
+		local dyr = (input[Action_Default_Down] and 1 or 0)
 		local dx = dxl + dxr
 		local dy = dyl + dyr
 		local pos = entity[Position]
-		PerformBump(entity, pos.x, pos.y, dx, dy)
-		PlayerDone = true
+		
+		local cost = speed - 1
+		local mult = 1
+		if entity[Endure] ~= nil then mult = 0.5 end
+
+		local moved = 0
+
+		if entity[Flow] ~= nil then
+			if speed == 2 then
+				local x, y = pos.x + dx, pos.y + dy	
+				if Dungeon.passable:Has(x, y) and not Dungeon.passable:Get(x, y) then
+					cost = 4
+				end
+			end
+			if stam.current >= cost * mult and PerformBump(entity, pos.x, pos.y, dx * speed, dy * speed) then
+				moved = moved + 1
+				entity[Stamina].current = entity[Stamina].current - cost * mult
+			end
+		else
+			for i = 1, speed do
+				if stam.current >= cost * mult and PerformBump(entity, pos.x, pos.y, dx, dy) then 
+					moved = moved + 1
+					entity[Stamina].current = entity[Stamina].current - cost * mult
+				end
+			end
+		end
+
+		if moved > 0 then
+			PlayerDone = true
+		end
 	end)
 end)
 

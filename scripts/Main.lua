@@ -27,6 +27,7 @@ LoadEnviroSystem "PickUpMechanics"
 LoadEnviroSystem "ShadowCastMechanics"
 
 LoadRenderSystem "DungeonRender"
+LoadRenderSystem "PossibleMoveRender"
 LoadRenderSystem "TopLevelRender"
 LoadRenderSystem "VFXRender"
 LoadRenderSystem "FadeOutRender"

@@ -1,5 +1,8 @@
 ﻿
 Player = ECS.Component()
+MoveMode = ECS.Component{value = ""}
+Sight = ECS.Component{ radius = 5 }
+Pause = ECS.Component{ duration = 0 }
 Friendly = ECS.Component()
 Creature = ECS.Component{ goals = {}, actions = 0, timestamp = 0 }
 

@@ -229,6 +229,9 @@ local function MakeDungeon()
 
 	PlayerEntity = World:Entity(
 		Player(),
+		MoveMode("Walk"),
+		Sight(5),
+		Pause(),
 		ID(-1),
 		Position{ x = x, y = y },
 		Glyph{ name = "mage" },
