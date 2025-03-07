@@ -58,9 +58,10 @@ Glossary.Default = {
 	grate1 = { x = 31, y = 1, fg = Colors.DarkBlue, bg = Colors.LightRed },
 	grate2 = { x = 31, y = 1, fg = Colors.LightBlue, bg = Colors.DarkRed },
 	grate3 = { x = 31, y = 1, fg = Colors.White, bg = Colors.Red },
-	flame = { x = 30, y = 1, fg = Colors.White, bg = Colors.Red },
+	flame = { x = 30, y = 1, fg = Colors.White, bg = Colors.Black },
 	cinders = { x = 12, y = 0, fg = Colors.Red, bg = Colors.Black },
-
+	rift = { x = 9, y = 3, fg = Colors.Red, bg = Colors.Black },
+	portal = { x = 10, y = 16, fg = Colors.Magenta, bg = Colors.Black },
 	platform = { x = 31, y = 3, fg = Colors.White, bg = Colors.Magenta },
 
 	gold = { x = 4, y = 0, fg = Colors.Yellow, bg = Colors.Black },

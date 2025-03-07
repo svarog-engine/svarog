@@ -12,7 +12,8 @@ Actions.Default = {
 	JumpOff = { Input.Release("Key: LShift")},
 	ZoomIn  = { Input.Press("Key: PageUp") },
 	ZoomOut = { Input.Press("Key: PageDown") },
-	Inventory = { Input.Press("Key: I")},
+	Inventory = { Input.Press("Key: I") },
+	Tension = { Input.Press("Key: T") },
 }
 
 Actions.Inventory = {

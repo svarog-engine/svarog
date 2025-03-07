@@ -13,20 +13,6 @@ local function PerformAttack(attackerEntity, targetEntity)
 		local totalDamage = CalculateDamage(attackerEntity, targetEntity)
 
 		if targetEntity[Endure] ~= nil and Chances[8 + targetEntity[Endure].level]:MakeGuess() then
-			--if targetEntity[Delayed] == nil then
-			--	targetEntity:Set(Delayed{ damage = 0, current = 8, maximum = 8 })
-			--end
-
-			--targetEntity[Delayed].damage = targetEntity[Delayed].damage + totalDamage
-
-			--if targetEntity[Delayed].damage < targetEntity[Endure].turns then
-			--	targetEntity[Delayed].current = targetEntity[Delayed].damage
-			--	targetEntity[Delayed].maximum = targetEntity[Delayed].damage
-			--else
-			--	targetEntity[Delayed].current = targetEntity[Endure].turns
-			--	targetEntity[Delayed].maximum = targetEntity[Endure].turns
-			--end
-
 			if targetEntity == PlayerEntity then
 				Diary.Write("You felt nothing. Your [ENDURE] glyph quivers.")
 				targetEntity[Tension]:Up()

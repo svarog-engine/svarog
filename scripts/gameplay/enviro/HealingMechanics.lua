@@ -43,7 +43,8 @@ function HealingSystem:Tick()
 
 			if entity == PlayerEntity then
 				if gotLucky then
-					Diary.Write("Your wounds heal quickly. Your [HEAL] and [LUCK] glyphs resonate.")
+					Diary.Write("Your wounds heal quickly.")
+					Diary.Write("Your [HEAL] and [LUCK] glyphs resonate.")
 				else
 					Diary.Write("Your wounds heal. Your [HEAL] glyph quivers.")
 				end

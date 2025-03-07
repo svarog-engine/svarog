@@ -1,82 +1,62 @@
 
 local ChallengeSystem = Engine.RegisterEnviroSystem("Challenge System")
 
-
-local function GetWheelsEntries()
-	local entries = {}
-	for i = 1, 12 do
-		name, component = Wheels:GetMajor(i)
-		table.insert(entries, component)
-	end
-
-	for i = 1, 12 do
-		name, component = Wheels:GetMinor(i)
-		table.insert(entries, component)
-	end
-
-	return entries
-end
-
-function ActiveWordsCount(entity)
-	local entries = GetWheelsEntries()
+local function ActiveWordsCount(entity)
 	local count = 0
-
-	for _, component in pairs(entries) do
-		if entity[component] ~= nil then
-			count = count + 1
-		end
+	for i = 1, 12 do
+		local _, component = Wheels:GetMajor(i)
+		if entity[component] ~= nil then count = count + 1 end
+		local _, component = Wheels:GetMinor(i)
+		if entity[component] ~= nil then count = count + 1 end
 	end
 
 	return count
 end
 
-local function OnPlatformActivate(e)
-	local challenge = e[ChallengeActive]
-	challenge.activePlatforms = challenge.activePlatforms - 1
-
-	DecreaseTension(e, 5)
-end
+local SpawnDeltaLocations = {}
+SpawnDeltaLocations[0] = { {  0,  0 } }
+SpawnDeltaLocations[1] = { {  0, -3 } }
+SpawnDeltaLocations[2] = { {  0, -3 }, {  0,  3 } }
+SpawnDeltaLocations[3] = { {  0,  3 }, { -4, -2 }, {  4, -2 } }
+SpawnDeltaLocations[4] = { { -3, -3 }, { -3,  3 }, {  3, -3 }, {  3, 3 } }
+SpawnDeltaLocations[5] = { {  0, -5 }, {  5, -2 }, { -5, -2 }, { -4, 4 }, { 4, 4 } }
 
 local function SpawnChallengeEntities(x, y, n, challenge)
-	for i = 1, n do
+	PCExplode(7, Colors.White, Colors.Magenta, function()
+		local c = Geometry.Boundary(Geometry.MakeCircle(x, y, 6))
+		local e = c.Points:GetEnumerator()
 
-		local neighbours = { {i, 0}, {0, i}, {-i, 0}, {0, -i}, { -i, -i }, { i, -i }, { -i, i }, { i, i }}
+		while e:MoveNext() do
+			local cx, cy = e.Current.X, e.Current.Y
+			if Dungeon.floor:Has(cx, cy) and Dungeon.floor:Get(cx, cy).type == Floor then
+				local id = Dungeon.floor:ID(cx, cy)
+				local entts = Dungeon.entities[id] or {}
+				
+				Procgen.MakeObject("Rift", cx, cy, challenge)
+			end
+		end
 
-		local positionFound = false
-		local selected = nil
-		for _, neighbour in ipairs(neighbours) do
-			local dx, dy = table.unpack(neighbour)
-			local nx = x + dx
-			local ny = y + dy
-			local pass = Dungeon.passable:Has(nx, ny) and Dungeon.passable:Get(nx, ny)
-			local id = Dungeon.floor:ID(nx, ny)
-			local entities = Dungeon.entities[id] or {}
-
-			local somethingElse = false	
-			for _, e in ipairs(entities) do
-				if e ~= entity then
-					somethingElse = true
-					break
+		local locs = SpawnDeltaLocations[n]
+		local ko = 0
+		for _, l in ipairs(locs) do
+			local lx, ly = x + l[1], y + l[2]
+			local lid = Dungeon.floor:ID(lx, ly)
+			if Dungeon.floor:Has(lx, ly) and Dungeon.passable:Get(lx, ly) then
+				local entts = Dungeon.entities[lid] or {}
+				if #entts == 0 then
+					Procgen.MakeObject("Portal", lx, ly, challenge)
+				else 
+					ko = ko + 1
 				end
 			end
-
-			if pass and not somethingElse then
-				selected = {x = nx, y = ny }
-				break;
-			end
 		end
 
-		if selected ~= nil then
-			local e  = World:Entity(
-				Position{ x = selected.x, y = selected.y },
-				Glyph{ name = "platform" },
-				Name("Magic Circle"),
-				Platform { challenge = challenge }
-			)
-		else
-			n = n + 1
+		if ko > 0 then
+			Diary.Write("Some portals failed to open. Tension subsides.")
+			local tension = PlayerEntity[Tension]
+			tension:Down(ko * 3)
 		end
-	end
+	end)
 end
 
 function ChallengeSystem:ShouldTick()
@@ -85,16 +65,12 @@ end
 
 function ChallengeSystem:Tick()
 	for _, entity in World:Exec(ECS.Query.All(Challenged, Position, Player)):Iterator() do
+		local challengeLevel = ActiveWordsCount(entity)
+		
+		local position = entity[Position]
 
-		local challengeLevel = ActiveWordsCount(entity) + 1
-
-		if challengeLevel > 0 then
-
-			local position = entity[Position]
-
-			local challengeEntity = World:Entity(MagicChallenge { time = 2 * challengeLevel, difficulty = challengeLevel })
-			SpawnChallengeEntities(position.x, position.y, challengeLevel, challengeEntity.id)
-		end
+		local challengeEntity = World:Entity(MagicChallenge { time = 0, difficulty = challengeLevel })
+		SpawnChallengeEntities(position.x, position.y, challengeLevel, challengeEntity.id)
 
 		entity:Unset(Challenged)
 	end
@@ -102,42 +78,29 @@ function ChallengeSystem:Tick()
 	for _, entity in World:Exec(ECS.Query.All(MagicChallenge)):Iterator() do
 		local challenge = entity[MagicChallenge]
 		local position = PlayerEntity[Position]
-		challenge.time = challenge.time - 1
+		challenge.time = challenge.time + 1
+		if challenge.time > 6 then
+			PlayerEntity[Tension]:Down(1) 
 
-		print("Challenge time: " , challenge.time)
-
-		if challenge.time == 0 then
-			
-			if challenge.difficulty > 0 then
-				local cd = challenge.difficulty
-				if cd > 10 then
-					cd = 10
-				end
-
-				local neighbours = { { -1, 0 }, { 1, 0 }, { 0, 1 }, { 0, -1 }, { -1, -1 }, { 1, -1 }, { -1, 1 }, { 1, 1 } }
-				for _, neighbour in ipairs(neighbours) do
-					local dx, dy = table.unpack(neighbour)
-					local nx = position.x + dx
-					local ny = position.y + dy
-					local pass = Dungeon.passable:Has(nx, ny) and Dungeon.passable:Get(nx, ny)
-
-					if pass and Chances[cd]:MakeGuess() then 
-						Procgen.MakeObject("Flame", nx, ny, 10, 5)
-					end
+			for _, re in World:Exec(ECS.Query.All(Magic, Dependent).None(Timeout)):Iterator() do
+				if re[Dependent].value == entity.id then
+					RemoveEntityFromDungeon(re)
+					World:Remove(re)
+					Dungeon.memory:Set(re[Position].x, re[Position].y, false)
+					Dungeon.passable:Set(re[Position].x, re[Position].y, true)
 				end
 			end
 
-			for _, p in World:Exec(ECS.Query.All(Platform)):Iterator() do
-				if p[Platform].challenge == entity.id then
-					local position = p[Position]
-					Procgen.MakeObject("Flame", position.x, position.y, 10, 5)
-					RemoveEntityFromDungeon(p)
-					World:Remove(p)
-				end
-			end
+			RemoveEntityFromDungeon(entity)
+			World:Remove(entity)
+		end
+	end
 
-			PlayerEntity[Tension]:Down(5)
+	for _, entity in World:Exec(ECS.Query.All(Timeout)):Iterator() do
+		local timeout = entity[Timeout]
+		timeout.value = timeout.value - 0.5
 
+		if timeout.value < 0 then
 			RemoveEntityFromDungeon(entity)
 			World:Remove(entity)
 		end

@@ -16,13 +16,15 @@ function PerformBump(entity, x, y, dx, dy)
 	end
 
 	if somethingElse then
+		local ok = false
 		for _, e in ipairs(entities) do
 			if e ~= entity then
 				e:Set(Bumped({ by = entity.id }))
-				Fade(e, Colors.Yellow, Colors.Black, 0.5)				
-				return true
+				Fade(e, Colors.Yellow, Colors.Black, 0.5)
+				ok = true
 			end
 		end
+		return ok
 	elseif pass then
 		if entity[Position] ~= nil then
 			RemoveEntityFromDungeon(entity)

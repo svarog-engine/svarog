@@ -39,7 +39,7 @@ function Procgen.MakeObject(what, x, y, ...)
 	IDS = IDS + 1
 
 	if Procgen[what] == nil then
-		Svarog.Instance.LogError("PROCGEN: Generator " .. what .. " not found. Check your spelling.")
+		Svarog.Instance:LogError("PROCGEN: Generator " .. what .. " not found. Check your spelling.")
 	end
 	Procgen[what](e, x, y, ...)
 	AddEntityToDungeon(x, y, e)
@@ -132,7 +132,7 @@ end
 function Procgen.Goblin(e, x, y)
 	e:Set(
 		Creature{}, 
-		AIMoveTowardsPlayer{ distance = 0, chance = 9 }, 
+		AIMoveTowardsPlayer{ distance = 0, chance = 6 }, 
 		Health{ value = Range(3) }, 
 		BumpAttack { damage = 1 }, 
 		Glyph{ name = "goblin" },
@@ -195,7 +195,25 @@ function Procgen.Grate(e, x, y)
 	e:Set(Glyph{ name = "grate" .. Rand:Range(1, 3) })
 end
 
-function Procgen.GenerateContents(e, itemList)
+function Procgen.Portal(e, x, y, owner, time)
+	e:Set(Name("Portal"))
+	e:Set(Dependent(owner))
+	e:Set(Portal{ challenge = owner })
+	e:Set(Magic{ value = Rand:F01(), colors = { Colors.DarkMagenta, Colors.Black } })
+	e:Set(Timeout{ value = time or 9 })
+	e:Set(Glyph{ name = "portal" })
+end
+
+function Procgen.Rift(e, x, y, owner)
+	e:Set(Glyph{ name = "rift" })
+	e:Set(Name("Rift"))
+	e:Set(Dependent{ value = owner })
+	e:Set(Magic{ value = Rand:F01() })
+	e:Set(BlockingPassage{})
+	e:Set(BlockingSight{})
+end
+
+function Procgen.GenerateContents(e, x, y)
 -- mika
 	local items = { { itemId = itemList[Rand:Range(1, #itemList)], quantity = 1} }
 	e:Set(Contents { items = items })
@@ -403,4 +421,14 @@ Rooms[Fade] = { "warehouse1", "common1", "common2" }
 
 Minerals = {"diamond", "topaz", "obsidian", "malachite", "lapis_lazuli", "onyx", "smoky_quartz" }
 Plants = {"ash", "frankincense", "blackthorn", "willow", "sage", "foxglove", "mandrake" }
-Books = { "book" }
+
+Monsters = {}
+Monsters[Endure] = { "Hobgob", "Mimic" }
+Monsters[Break] = { "Acid Cube", "Ogre" }
+Monsters[Luck] = { "Plague Rats", "Vampire" }
+Monsters[Darken] = { "Shade", "Wraith" }
+Monsters[Flow] = { "Restless Dead", "Gelatinous Cube" }
+Monsters[Heal] = { "Kobold", "Phantasm" }
+Monsters[Calm] = { "Banshee", "Nightmare" }
+Monsters[Steal] = { "Hobgob", "Mimic" }
+Monsters[Light] = { "Wisp", "Djinn" }

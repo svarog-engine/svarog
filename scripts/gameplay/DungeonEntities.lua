@@ -38,8 +38,16 @@ local function RemoveEntity(x, y, entity)
             end
         end
 
-        print("REM", entity)
-        World:Remove(entity)
+        if Dungeon.floor:Has(x, y) then
+            local tile = Dungeon.floor:Get(x, y)
+            if tile.entity == entity then 
+                tile.type = Floor
+                tile.entity = nil
+            end
+
+            print("REM", entity)
+            World:Remove(entity)
+        end
     end
 end
 
