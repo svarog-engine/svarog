@@ -39,7 +39,7 @@ function Procgen.MakeObject(what, x, y, ...)
 	IDS = IDS + 1
 
 	if Procgen[what] == nil then
-		Svarog.Instance.LogError("PROCGEN: Generator " .. what .. " not found. Check your spelling.")
+		Svarog.Instance:LogError("PROCGEN: Generator " .. what .. " not found. Check your spelling.")
 	end
 	Procgen[what](e, x, y, ...)
 	AddEntityToDungeon(x, y, e)
@@ -187,6 +187,22 @@ end
 function Procgen.Grate(e, x, y)
 	e:Set(Metallic{})
 	e:Set(Glyph{ name = "grate" .. Rand:Range(1, 3) })
+end
+
+function Procgen.Portal(e, x, y, owner, time)
+	e:Set(Name("Portal"))
+	e:Set(Dependent(owner))
+	e:Set(Magic{ value = Rand:F01() })
+	e:Set(Timeout{ value = time })
+end
+
+function Procgen.Rift(e, x, y, owner)
+	e:Set(Glyph{ name = "rift" })
+	e:Set(Name("Rift"))
+	e:Set(Dependent{ value = owner })
+	e:Set(Magic{ value = Rand:F01() })
+	e:Set(BlockingPassage{})
+	e:Set(BlockingSight{})
 end
 
 function Templates.LibraryRoom(cx, cy)

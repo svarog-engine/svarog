@@ -57,7 +57,7 @@ Glossary.Default = {
 	grate3 = { x = 31, y = 1, fg = Colors.White, bg = Colors.Red },
 	flame = { x = 30, y = 1, fg = Colors.White, bg = Colors.Red },
 	cinders = { x = 12, y = 0, fg = Colors.Red, bg = Colors.Black },
-
+	rift = { x = 9, y = 3, fg = Colors.Red, bg = Colors.LightMagenta },
 	platform = { x = 31, y = 3, fg = Colors.White, bg = Colors.Magenta }
 }
 

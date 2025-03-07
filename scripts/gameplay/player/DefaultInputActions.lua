@@ -12,6 +12,7 @@ Engine.RegisterInputSystem({ Action_Default_Wait }, function(input)
 		pause.duration = pause.duration + 1
 		if pause.duration > 6 then pause.duration = 6 end
 
+		tension:Up(2)
 		if pause.duration == 4 then
 			tension.current = tension.current - 1
 			if tension.current < 0 then
