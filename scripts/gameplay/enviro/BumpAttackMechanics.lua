@@ -27,7 +27,7 @@ local function PerformAttack(attackerEntity, targetEntity)
 				targetEntity[Delayed].maximum = targetEntity[Endure].turns
 			end
 
-			Diary.Write("Endure activated! You going to receive damage over time.")
+			Diary.Write("Endure activated! You're going to receive damage over time.")
 
 		else
 			targetEntity[Health].current = targetEntity[Health].current - totalDamage

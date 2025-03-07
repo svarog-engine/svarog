@@ -22,6 +22,7 @@ function FireSpreadingMechanicsSystem:Tick()
 		local x, y = entity[Position].x, entity[Position].y
 		print("REMOVING", entity[Name].value, x, y)
 		RemoveEntityFromDungeon(entity)
+		World:Remove(entity)
 		Procgen.MakeObject("Cinders", x, y)
 	end
 
