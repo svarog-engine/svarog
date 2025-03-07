@@ -11,10 +11,39 @@ function FireSpreadingMechanicsSystem:Tick()
 	local remove = {}
 	for _, entity in World:Exec(ECS.Query.All(Burning, Health, Position)):Iterator() do
 		local burn, life, pos = entity[Burning], entity[Health], entity[Position]
-		life.current = life.current - 1
 		
-		if life.current <= 0 then
-			table.insert(remove, entity)
+		local isPlayer = entity == PlayerEntity
+		local chance = 2
+		local usedCalm = false
+		local usedLuck = false
+		if isPlayer then
+			if entity[Calm] ~= nil then
+				chance = entity[Calm].level + chance
+				usedCalm = true
+			end
+
+			if entity[Luck] ~= nil then
+				chance = entity[Luck].level + chance
+				usedLuck = true
+			end
+		end
+		if Chances[chance]:MakeGuess()  then
+			entity:Unset(Burning)
+			if isPlayer then
+				if usedCalm and usedLuck then
+					Diary.Write("The fire dissipates quickly. Your [CALM] and [LUCK] glyphs resonate.")
+				elseif usedCalm then 
+					Diary.Write("The fire dissipates. Your [CALM] glyph quivers.")
+				elseif usedLuck then
+					Diary.Write("The fire dissipates. Your [LUCK] glyph quivers.")
+				end
+			end
+		else
+			life.current = life.current - 1
+		
+			if life.current <= 0 then
+				table.insert(remove, entity)
+			end
 		end
 	end
 
@@ -22,6 +51,7 @@ function FireSpreadingMechanicsSystem:Tick()
 		local x, y = entity[Position].x, entity[Position].y
 		RemoveEntityFromDungeon(entity)
 		World:Remove(entity)
+		Dungeon.passable:Set(x, y, true)
 		Procgen.MakeObject("Cinders", x, y)
 	end
 

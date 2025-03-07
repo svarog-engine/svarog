@@ -38,8 +38,6 @@ local function OnPlatformActivate(e)
 end
 
 local function SpawnChallengeEntities(x, y, n, challenge)
-	local platforms = {}
-
 	for i = 1, n do
 
 		local neighbours = { {i, 0}, {0, i}, {-i, 0}, {0, -i}, { -i, -i }, { i, -i }, { -i, i }, { i, i }}
@@ -75,17 +73,14 @@ local function SpawnChallengeEntities(x, y, n, challenge)
 				Name("Magic Circle"),
 				Platform { challenge = challenge }
 			)
-			table.insert(platforms, e)
 		else
 			n = n + 1
 		end
 	end
-
-	return platforms
 end
 
 function ChallengeSystem:ShouldTick()
-	return Dungeons.created and PlayerEntity ~= nil and PlayerEntity[Challenged] ~= nil
+	return Dungeons.created and PlayerEntity ~= nil
 end
 
 function ChallengeSystem:Tick()
@@ -106,8 +101,45 @@ function ChallengeSystem:Tick()
 
 	for _, entity in World:Exec(ECS.Query.All(MagicChallenge)):Iterator() do
 		local challenge = entity[MagicChallenge]
+		local position = PlayerEntity[Position]
 		challenge.time = challenge.time - 1
 
+		print("Challenge time: " , challenge.time)
 
+		if challenge.time == 0 then
+			
+			if challenge.difficulty > 0 then
+				local cd = challenge.difficulty
+				if cd > 10 then
+					cd = 10
+				end
+
+				local neighbours = { { -1, 0 }, { 1, 0 }, { 0, 1 }, { 0, -1 }, { -1, -1 }, { 1, -1 }, { -1, 1 }, { 1, 1 } }
+				for _, neighbour in ipairs(neighbours) do
+					local dx, dy = table.unpack(neighbour)
+					local nx = position.x + dx
+					local ny = position.y + dy
+					local pass = Dungeon.passable:Has(nx, ny) and Dungeon.passable:Get(nx, ny)
+
+					if pass and Chances[cd]:MakeGuess() then 
+						Procgen.MakeObject("Flame", nx, ny, 10, 5)
+					end
+				end
+			end
+
+			for _, p in World:Exec(ECS.Query.All(Platform)):Iterator() do
+				if p[Platform].challenge == entity.id then
+					local position = p[Position]
+					Procgen.MakeObject("Flame", position.x, position.y, 10, 5)
+					RemoveEntityFromDungeon(p)
+					World:Remove(p)
+				end
+			end
+
+			PlayerEntity[Tension]:Down(5)
+
+			RemoveEntityFromDungeon(entity)
+			World:Remove(entity)
+		end
 	end
 end

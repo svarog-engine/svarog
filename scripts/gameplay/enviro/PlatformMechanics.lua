@@ -23,7 +23,7 @@ function PlatformSystem:Tick()
 						challenge.time = 0
 					end
 					
-					PlayerEntity[Tension]:Down(challenge.difficulty)
+					PlayerEntity[Tension]:Down(1)
 
 					RemoveEntityFromDungeon(entity)
 					World:Remove(entity)
