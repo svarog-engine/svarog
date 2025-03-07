@@ -3,5 +3,25 @@ ItemLibrary = {
 	magic_wand = { name = "Magic Wand", description = "wand desc", glyph = "item" },
 	treasure = { name = "Treasure", description = "treasure desc", glyph = "treasure" },
 	key = { name = "Key", description = "Key desc", glyph = "key"},
-	stone = { name = "Stone", description = "Magic stone", glyph = "%" }
+	stone = { name = "Stone", description = "Magic stone", glyph = "%" },
+
+	gold = { name = "Gold", description = "Key desc", glyph = "gold"},
+
+-- Minerals
+	diamond = { name = "Diamond", description = "", glyph = "mineral"},
+	topaz = { name = "Topaz", description = "", glyph = "mineral"},
+	obsidian = { name = "Obsidian", description = "", glyph = "mineral"},
+	malachite = { name = "Malachite", description = "", glyph = "mineral"},
+	lapis_lazuli = { name = "Lapis Lazuli", description = "", glyph = "mineral"},
+	onyx = { name = "Onyx", description = "", glyph = "mineral"},
+	smoky_quartz = { name = "Smoky Quartz", description = "", glyph = "mineral"},
+
+-- Plants
+	ash = { name = "Ash", description = "", glyph = "plant"},
+	frankincense = { name = "Frankincense", description = "", glyph = "plant"},
+	blackthorn = { name = "Blackthorn", description = "", glyph = "plant"},
+	willow = { name = "Willow", description = "", glyph = "plant"},
+	sage = { name = "Sage", description = "", glyph = "plant"},
+	foxglove = { name = "Foxglove", description = "", glyph = "plant"},
+	mandrake = { name = "Mandrake", description = "", glyph = "plant"},
 }

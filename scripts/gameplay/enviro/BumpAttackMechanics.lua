@@ -52,6 +52,11 @@ local function TryBreak(attackerEntity, targetEntity)
 				attackerEntity[Tension]:Up()
 			end
 
+			if targetEntity[Contents] ~= nil then
+				local position = targetEntity[Position]
+				Contents.DropAll(entity, position.x, position.y)
+			end
+
 			RemoveEntityFromDungeon(targetEntity)
 			targetEntity:Unset(Bumped)
 			World:Remove(targetEntity)
@@ -131,6 +136,11 @@ function BumpAttackMechanicsSystem:Tick()
 				entity:Unset(Bumped)
 
 				if entity[Health].current <= 0 then
+					if entity[Contents] ~= nil then 
+						local position = entity[Position]
+						Contents.DropAll(entity, position.x, position.y)
+					end
+
 					RemoveEntityFromDungeon(entity)
 					World:Remove(entity)
 				end

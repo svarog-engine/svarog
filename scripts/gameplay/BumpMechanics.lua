@@ -35,6 +35,7 @@ function PerformBump(entity, x, y, dx, dy)
 		local e = Dungeon.floor.tiles[nx][ny].entity
 		Dungeon.floor:Get(nx, ny).entity:Set(Bumped({ by = entity.id }))
 		Fade(Dungeon.floor:Get(nx, ny).entity, Colors.Green, Colors.Black, 0.5)
+		return true
 	end
 
 	return false

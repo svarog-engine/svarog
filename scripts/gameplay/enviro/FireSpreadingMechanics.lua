@@ -47,12 +47,22 @@ function FireSpreadingMechanicsSystem:Tick()
 		end
 	end
 
-	for _, entity in ipairs(remove) do 
+	for _, entity in ipairs(remove) do
 		local x, y = entity[Position].x, entity[Position].y
+		local contents = entity[Contents]
+		local hasDrop = false
+		if contents ~= nil then 
+			hasDrop = #contents.items
+			Contents.DropAll(entity, x, y)
+		end
+
 		RemoveEntityFromDungeon(entity)
 		World:Remove(entity)
-		Dungeon.passable:Set(x, y, true)
-		Procgen.MakeObject("Cinders", x, y)
+
+		if not hasDrop then 
+			Dungeon.passable:Set(x, y, true)
+			Procgen.MakeObject("Cinders", x, y)
+		end
 	end
 
 	for _, entity in World:Exec(ECS.Query.All(Burning, Spread, Health, Position)):Iterator() do

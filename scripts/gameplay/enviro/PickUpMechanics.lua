@@ -16,8 +16,14 @@ function PickUpMechanicsSystem:Tick()
 
 		if who[Contents] ~= nil and ItemLibrary[item.id] ~= nil then
 			table.insert(who[Contents].items, item.id)
-			Diary.Write("Picked up " .. ItemLibrary[item.id].name .. ".")
+
+			RemoveEntityFromDungeon(entity)
 			World:Remove(entity)
+			Dungeon.passable:Set(pos.x, pos.y, true)
+
+			if who == PlayerEntity then 
+				Diary.Write("Picked up " .. ItemLibrary[item.id].name .. ".")
+			end
 		else
 			entity:Unset(Bumped)
 		end

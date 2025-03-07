@@ -37,7 +37,6 @@ TargetOverlayEntity = World:Entity(Position{ x = 0, y = 0 })
 
 ActivateInventoryOverlay = ECS.Component()
 DeactivateInventoryOverlay = ECS.Component()
-Contents = ECS.Component{ items = {} }
 DoInventoryAction = ECS.Component{ action = nil, details = {} }
 
 InventoryEntity = World:Entity(Selection(0))

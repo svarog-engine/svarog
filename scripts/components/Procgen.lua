@@ -78,6 +78,8 @@ end
 function Procgen.Crate(e, x, y)
 	Procgen.IsFurniture(e)
 	Procgen.IsWooden(e)
+	Procgen.IsContainer(e)
+	Procgen.GenerateContents(e)
 	e:Set(Glyph{ name = "crate" })
 end
 
@@ -96,6 +98,7 @@ end
 function Procgen.Chest(e, x, y)
 	Procgen.IsFurniture(e)
 	Procgen.IsContainer(e)
+	Procgen.GenerateContents(e)
 	e:Set(Locked{})
 	e:Set(Glyph{ name = "chest" })
 end
@@ -107,7 +110,7 @@ function Procgen.Table(e, x, y)
 end
 
 function Procgen.Key(e, x, y)
-	e:Set(Item{}, Key{}, Metallic{})
+	e:Set(Item{id = "key"}, Key{}, Metallic{})
 	e:Set(Glyph{ name = "key" })
 end
 
@@ -133,7 +136,9 @@ function Procgen.Goblin(e, x, y)
 		Health{ value = Range(3) }, 
 		BumpAttack { damage = 1 }, 
 		Glyph{ name = "goblin" },
-		Burnable{})
+		Burnable{},
+		Contents{ items = {} }
+	)
 end
 
 function Procgen.AlarmTrap(e, x, y)
@@ -187,6 +192,12 @@ end
 function Procgen.Grate(e, x, y)
 	e:Set(Metallic{})
 	e:Set(Glyph{ name = "grate" .. Rand:Range(1, 3) })
+end
+
+function Procgen.GenerateContents(e, x, y)
+-- mika
+	local items = { Minerals[Rand:Range(1, #Minerals)] }
+	e:Set(Contents { items = items })
 end
 
 function Templates.LibraryRoom(cx, cy)
@@ -388,3 +399,6 @@ Rooms[Heal] = { "common1", "common2" } --market, medic
 Rooms[Endure] = { "workshop1", "workshop2" } -- training room
 Rooms[Luck] = { "common1", "common2" } -- market
 Rooms[Fade] = { "warehouse1", "common1", "common2" }
+
+Minerals = {"diamond", "topaz", "obsidian", "malachite", "lapis_lazuli", "onyx", "smoky_quartz" }
+Plants = {"ash", "frankincense", "blackthorn", "willow", "sage", "foxglove", "mandrake" }
