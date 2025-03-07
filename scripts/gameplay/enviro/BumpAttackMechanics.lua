@@ -28,7 +28,7 @@ local function PerformAttack(attackerEntity, targetEntity)
 			--end
 
 			if targetEntity == PlayerEntity then
-				Diary.Write("You felt barely nothing. Your [ENDURE] glyph quivers.")
+				Diary.Write("You felt nothing. Your [ENDURE] glyph quivers.")
 				targetEntity[Tension]:Up()
 			else
 				Diary.Write(targetEntity[Name].value .. " seems to endure through the beating.")

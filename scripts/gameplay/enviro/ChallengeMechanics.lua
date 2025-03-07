@@ -37,10 +37,12 @@ local function OnPlatformActivate(e)
 	DecreaseTension(e, 5)
 end
 
-local function SpawnChallengeEnities(x, y, n)
+local function SpawnChallengeEntities(x, y, n, challenge)
+	local platforms = {}
+
 	for i = 1, n do
 
-		local neighbours = { {i, 0}, {0, i}, {-i, 0}, {0, -i} }
+		local neighbours = { {i, 0}, {0, i}, {-i, 0}, {0, -i}, { -i, -i }, { i, -i }, { -i, i }, { i, i }}
 
 		local positionFound = false
 		local selected = nil
@@ -67,47 +69,45 @@ local function SpawnChallengeEnities(x, y, n)
 		end
 
 		if selected ~= nil then
-			World:Entity(
+			local e  = World:Entity(
 				Position{ x = selected.x, y = selected.y },
 				Glyph{ name = "platform" },
 				Name("Magic Circle"),
-				Platform {}
+				Platform { challenge = challenge }
 			)
+			table.insert(platforms, e)
 		else
 			n = n + 1
 		end
 	end
+
+	return platforms
 end
 
 function ChallengeSystem:ShouldTick()
-	return Dungeons.created and PlayerEntity ~= nil
+	return Dungeons.created and PlayerEntity ~= nil and PlayerEntity[Challenged] ~= nil
 end
 
-ChallengeActive = ECS.Component { activePlatforms = 1 }
-
 function ChallengeSystem:Tick()
-	for _, entity in World:Exec(ECS.Query.All(TensionLimitReached, Position, Player).None(ChallengeActive)):Iterator() do
+	for _, entity in World:Exec(ECS.Query.All(Challenged, Position, Player)):Iterator() do
 
 		local challengeLevel = ActiveWordsCount(entity) + 1
 
 		if challengeLevel > 0 then
-			entity:Set(TensionLocked())
 
 			local position = entity[Position]
-			SpawnChallengeEnities(position.x, position.y, challengeLevel)
 
-			entity:Set(ChallengeActive { activePlatforms = challengeLevel })
+			local challengeEntity = World:Entity(MagicChallenge { time = 2 * challengeLevel, difficulty = challengeLevel })
+			SpawnChallengeEntities(position.x, position.y, challengeLevel, challengeEntity.id)
 		end
+
+		entity:Unset(Challenged)
 	end
 
-	if PlayerEntity[ChallengeActive] ~= nil then
+	for _, entity in World:Exec(ECS.Query.All(MagicChallenge)):Iterator() do
+		local challenge = entity[MagicChallenge]
+		challenge.time = challenge.time - 1
 
-		local challenge = PlayerEntity[ChallengeActive]
-		local playerPosition = PlayerEntity[Position]
 
-		if challenge.activePlatforms == 0 then
-			PlayerEntity:Unset(ChallengeActive)
-			PlayerEntity:Unset(TensionLocked)
-		end
 	end
 end

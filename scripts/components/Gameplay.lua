@@ -29,18 +29,28 @@ Stamina = ECS.Component(Range(9, 9))
 -- Challenge
 
 Challenged = ECS.Component()
-Platform = ECS.Component{} --activate = nil, canActivate = nil, removeWhenActivated = false }
+
+MagicChallenge = ECS.Component { time = 0, difficulty = 0 }
+
+Platform = ECS.Component { challenge = nil }
 
 -- Tension
 
 Tension = ECS.Component(Range(9, 9))
 
 function Tension:Up(n)
-	self.current = self.current + n
+	if self.current < self.maximum then
+		self.current = self.current + (n or 1)
 
-	if self.current >= self.maximum then
-		self.current = self.maximum
+		if self.current >= self.maximum then
+			self.current = self.maximum
+			PlayerEntity:Set(Challenged())
+		end
 	end
+end
+
+function Tension:Down(n)
+	self.current = self.current - (n or 1)
 end
 
 TensionIncrease = ECS.Component { value = 0 }

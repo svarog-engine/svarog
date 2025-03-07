@@ -15,16 +15,18 @@ function PlatformSystem:Tick()
 
 		for _, e in ipairs(entities) do
 			if e ~= entity then
-				if platform.canActivate ~= nil and platform.activate ~= nil then
-					if (platform.canActivate(e)) then 
-						platform.activate(e)
+				if e == PlayerEntity or e[Creature] ~= nil or e[Item] ~= nil then
+					local challenge = World:FetchEntityById(entity[Platform].challenge)[MagicChallenge]
+					challenge.difficulty = challenge.difficulty - 1
 
-						if platform.removeWhenActivated then
-							World:Remove(entity)
-						end
-
-						break
+					if challenge.difficulty == 0 then 
+						challenge.time = 0
 					end
+					
+					PlayerEntity[Tension]:Down(challenge.difficulty)
+
+					RemoveEntityFromDungeon(entity)
+					World:Remove(entity)
 				end
 			end
 		end
