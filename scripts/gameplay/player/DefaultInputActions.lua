@@ -60,7 +60,11 @@ Engine.RegisterInputSystem(
 		
 		local cost = speed - 1
 		local mult = 1
+
 		if entity[Endure] ~= nil then mult = 0.5 end
+		if entity[Endure] ~= nil and speed == 1 and stam.current < stam.maximum and Chances[8]:MakeGuess() then
+			stam.current = stam.current + 1
+		end
 
 		local moved = 0
 
