@@ -133,7 +133,7 @@ function Procgen.Goblin(e, x, y)
 	e:Set(
 		Creature{}, 
 		AIMoveTowardsPlayer{ distance = 0, chance = 6 }, 
-		Health{ value = Range(3) }, 
+		Health{ value = Range(2) }, 
 		BumpAttack { damage = 1 }, 
 		Glyph{ name = "goblin" },
 		Burnable{},
@@ -211,6 +211,54 @@ function Procgen.Rift(e, x, y, owner)
 	e:Set(BlockingPassage{})
 	e:Set(BlockingSight{})
 end
+
+--Monsters[Endure] = { "Hobgob", "Mimic" }
+--Monsters[Break] = { "Acid Cube", "Ogre" }
+--Monsters[Luck] = { "Plague Rats", "Vampire" }
+--Monsters[Darken] = { "Shade", "Wraith" }
+--Monsters[Flow] = { "Restless Dead", "Gelatinous Cube" }
+--Monsters[Heal] = { "Kobold", "Phantasm" }
+--Monsters[Calm] = { "Banshee", "Nightmare" }
+--Monsters[Steal] = { "Hobgob", "Mimic" }
+--Monsters[Light] = { "Wisp", "Djinn" }
+
+function Procgen.Hobgob(e, x, y)
+	e:Set(
+		Creature{}, 
+		AIMoveTowardsPlayer{ distance = 0, chance = 3 }, 
+		Health{ value = Range(5) }, 
+		BumpAttack { damage = 1 }, 
+		Glyph{ name = "hobgob" },
+		Contents{ items = {} }
+	)
+end
+
+function Procgen.Mimic(e, x, y)
+	e:Set(
+		Creature{}, 
+		AIAttackIfStandingNextTo{}, 
+		AIMoveTowardsPlayer{ distance = 10, chance = 1 }, 
+		Health{ value = Range(7) }, 
+		BumpAttack { damage = 3 }, 
+		Glyph{ name = "chest" },
+		Burnable{},
+		Contents{ items = {} }
+	)
+end
+
+function Procgen.Hobgob(e, x, y)
+	e:Set(
+		Creature{}, 
+		AIMoveTowardsPlayer{ distance = 0, chance = 8 },
+		AIRest{ chance = 9 },
+		AIBreakThroughToPlayer{ chance = 5, distance = 9 },
+		Health{ value = Range(3) }, 
+		BumpAttack { damage = 3 }, 
+		Glyph{ name = "ogre" },
+		Contents{ items = {} }
+	)
+end
+
 
 function Procgen.GenerateContents(e, x, y)
 	local items = { Minerals[Rand:Range(1, #Minerals)] }

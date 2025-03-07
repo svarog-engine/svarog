@@ -14,9 +14,7 @@ Glossary.Default = {
 	target2 = { x = 31, y = 2, fg = Colors.White, bg = Colors.Black },
 	target3 = { x = 10, y = 3, fg = Colors.White, bg = Colors.Black },
 	target4 = { x = 11, y = 3, fg = Colors.White, bg = Colors.Black },
-	goblin = { x = 7, y = 2, fg = Colors.LightGreen, bg = Colors.Black },
-	kobold = { x = 11, y = 2, fg = Colors.LightRed, bg = Colors.Black },
-
+	
 	player = { x = 0, y = 1, fg = Colors.Yellow, bg = Colors.Black },
 	pet = { x = 4, y = 2, fg = Colors.Yellow, bg = Colors.Black },
 
@@ -66,6 +64,11 @@ Glossary.Default = {
 	gold = { x = 4, y = 0, fg = Colors.Yellow, bg = Colors.Black },
 	mineral = { x = 5, y = 0, fg = Colors.Green, bg = Colors.Black },
 	plant = { x = 6, y = 0, fg = Colors.Blue, bg = Colors.Black },
+	
+	goblin = { x = 7, y = 2, fg = Colors.LightGreen, bg = Colors.Black },
+	kobold = { x = 11, y = 2, fg = Colors.LightRed, bg = Colors.Black },
+	hobgob = { x = 7, y = 1, fg = Colors.DarkGreen, bg = Colors.Black },
+	ogre = { x = 14, y = 9, fg = Colors.LightRed, bg = Colors.Black },
 }
 
 InsertSpriteCharRanges(Glossary.Default, 1, 1, "ABCDEFGHIJKLMNOPQRSTUVWXYZ[ ]^_")
