@@ -129,7 +129,7 @@ end
 function Procgen.Goblin(e, x, y)
 	e:Set(
 		Creature{}, 
-		AIMoveTowardsPlayer{ distance = 0, chance = 9 }, 
+		AIMoveTowardsPlayer{ distance = 0, chance = 6 }, 
 		Health{ value = Range(3) }, 
 		BumpAttack { damage = 1 }, 
 		Glyph{ name = "goblin" },
@@ -192,8 +192,10 @@ end
 function Procgen.Portal(e, x, y, owner, time)
 	e:Set(Name("Portal"))
 	e:Set(Dependent(owner))
-	e:Set(Magic{ value = Rand:F01() })
-	e:Set(Timeout{ value = time })
+	e:Set(Portal{ challenge = owner })
+	e:Set(Magic{ value = Rand:F01(), colors = { Colors.DarkMagenta, Colors.Black } })
+	e:Set(Timeout{ value = time or 9 })
+	e:Set(Glyph{ name = "portal" })
 end
 
 function Procgen.Rift(e, x, y, owner)

@@ -28,11 +28,16 @@ function DungeonRenderSystem:Render()
 					end
 				end
 			elseif Dungeon.memory:Has(x, y) then
-				local tile = Dungeon.floor:Get(x, y)
-				if tile.type == Floor then
-					Engine.Glyph(x, y, "back_dark", { fg = Colors.DarkBlue, bg = Colors.Black })
+				local seen = Dungeon.memory:Get(x, y)
+				if seen then
+					local tile = Dungeon.floor:Get(x, y)
+					if tile.type == Floor then
+						Engine.Glyph(x, y, "back_dark", { fg = Colors.DarkBlue, bg = Colors.Black })
+					else
+						Engine.Glyph(x, y, "wall", { fg = Colors.Gray, bg = Colors.Black } )
+					end
 				else
-					Engine.Glyph(x, y, "wall", { fg = Colors.Gray, bg = Colors.Black } )
+					Engine.Glyph(x, y, "empty_tile")
 				end
 			else
 				Engine.Glyph(x, y, "empty_tile")

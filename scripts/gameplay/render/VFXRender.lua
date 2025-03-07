@@ -36,12 +36,12 @@ function VFXRenderSystem:Render()
 	for _, entity in World:Exec(ECS.Query.All(Magic, Position)):Iterator() do
 		local magic = entity[Magic]
 		if magic.speed == nil then magic.speed = 0.6 + (Rand:F01() - 0.5) / 10.0 end
-		
+		local d = (Rand:F01() - 0.5) / 10.0
 		local pos = entity[Position]
 		local f = (math.sin(magic.value) + 1.0) * 0.5
 		local magicColors = magic.colors or defaultMagicColors
-		local fg = Colors:Lerp(defaultBurnColors[1], defaultBurnColors[2], f)
-		local bg = Colors:Lerp(magicColors[1], magicColors[2], f)
+		local fg = Colors:Lerp(defaultBurnColors[1], defaultBurnColors[2], f + d)
+		local bg = Colors:Lerp(magicColors[1], magicColors[2], f - d)
 		magic.value = magic.value + magic.speed
 		
 		if Dungeon.visibility:Get(pos.x, pos.y) then

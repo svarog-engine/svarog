@@ -12,7 +12,6 @@ Engine.RegisterInputSystem({ Action_Default_Wait }, function(input)
 		pause.duration = pause.duration + 1
 		if pause.duration > 6 then pause.duration = 6 end
 
-		tension:Up(2)
 		if pause.duration == 4 then
 			tension.current = tension.current - 1
 			if tension.current < 0 then
@@ -39,6 +38,12 @@ end)
 Engine.RegisterInputSystem({ Action_Default_JumpOff }, function(input)
 	World:Exec(ECS.Query.All(Player, MoveMode, Position)):ForEach(function(entity)
 		entity[MoveMode].value = "Walk"
+	end)
+end)
+
+Engine.RegisterInputSystem({ Action_Default_Tension }, function(input)
+	World:Exec(ECS.Query.All(Player, Tension)):ForEach(function(entity)
+		entity[Tension]:Up(2)
 	end)
 end)
 
@@ -69,7 +74,7 @@ Engine.RegisterInputSystem(
 		local mult = 1
 
 		if entity[Endure] ~= nil then mult = 0.5 end
-		if entity[Endure] ~= nil and speed == 1 and stam.current < stam.maximum and Chances[8 + entity[Endure].level]:MakeGuess() then
+		if entity[Endure] ~= nil and speed == 1 and stam.current < stam.maximum and Chances[1 + entity[Endure].level]:MakeGuess() then
 			stam.current = stam.current + 1
 			PlayerEntity[Tension]:Up()
 			Diary.Write("You regain stamina. Your [ENDURE] glyph quivers.")
@@ -105,11 +110,9 @@ Engine.RegisterInputSystem(
 					end
 				end
 			else
-				for i = 1, speed do
-					if stam.current >= cost * mult and PerformBump(entity, pos.x, pos.y, dx, dy) then 
-						moved = moved + 1
-						entity[Stamina].current = entity[Stamina].current - cost * mult
-					end
+				if stam.current >= cost * mult and PerformBump(entity, pos.x, pos.y, dx, dy) then 
+					moved = moved + 1
+					entity[Stamina].current = entity[Stamina].current - cost * mult
 				end
 			end
 		else

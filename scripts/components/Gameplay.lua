@@ -33,7 +33,8 @@ Dependent = ECS.Component{value = nil}
 MagicChallenge = ECS.Component { time = 0, difficulty = 0 }
 Magic = ECS.Component{value = 0.0}
 Timeout = ECS.Component{value = 0.0}
-Platform = ECS.Component { challenge = nil }
+Portal = ECS.Component { challenge = nil }
+VFXExplosion = ECS.Component(Range(0, 10))
 
 -- Tension
 
