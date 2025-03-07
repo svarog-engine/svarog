@@ -32,11 +32,19 @@ function PossibleMoveRenderSystem:Render()
 						Engine.Glyph(x2, y2, "target4")
 					elseif tile and tile2 then
 						Engine.Glyph(x2, y2, "target2")
+					elseif tile and not tile2 then
+						Engine.Glyph(x, y, "target3")
 					end
 				end
 			else
 				if Dungeon.floor:Has(x, y) and Dungeon.floor:Has(x2, y2) then
-					local tile = Dungeon.passable:Get(x, y)
+					local xyid = Dungeon.floor:ID(x, y)
+					local entts = Dungeon.entities[xyid]
+					local count = 0
+					if entts ~= nil then 
+						count = #entts
+					end
+					local tile = Dungeon.passable:Get(x, y) and count == 0
 					local tile2 = Dungeon.passable:Get(x2, y2)
 					if tile and tile2 then
 						Engine.Glyph(x2, y2, "target2")

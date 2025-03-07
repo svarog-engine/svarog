@@ -3,15 +3,21 @@
 LoadScriptIfExists "debug\\DebugInputActions"
 
 Engine.RegisterInputSystem({ Action_Default_Wait }, function(input)
-	World:Exec(ECS.Query.All(Player, Stamina, Pause)):ForEach(function(entity)
+	World:Exec(ECS.Query.All(Player, Stamina, Tension, Pause)):ForEach(function(entity)
 		local stam = entity[Stamina]
 		local pause = entity[Pause]
+		local tension = entity[Tension]
 		local plus = 1
 
 		pause.duration = pause.duration + 1
 		if pause.duration > 6 then pause.duration = 6 end
 
-		if entity[Endure] ~= nil then plus = 2 end
+		if pause.duration == 4 then
+			tension.current = tension.current - 1
+			if tension.current < 0 then
+				tension.current = 0
+			end
+		end
 
 		if stam.current < stam.maximum then
 			stam.current = stam.current + plus
@@ -73,15 +79,37 @@ Engine.RegisterInputSystem(
 		if entity[Flow] ~= nil then
 			if speed == 2 then
 				local x, y = pos.x + dx, pos.y + dy	
+				local id = Dungeon.floor:ID(x, y)
+				local entts = Dungeon.entities[id] or {}
 				if Dungeon.passable:Has(x, y) and not Dungeon.passable:Get(x, y) then
 					cost = 4
-					PlayerEntity[Tension]:Up()
-					Diary.Write("You phase through solid matter! Your [FLOW] glyph quivers.")
+					if stam.current >= cost * mult and PerformBump(entity, pos.x, pos.y, dx * speed, dy * speed) then
+						PlayerEntity[Tension]:Up()
+						Diary.Write("You phase through solid matter! Your [FLOW] glyph quivers.")
+						moved = moved + 1
+						entity[Stamina].current = entity[Stamina].current - cost * mult
+					end
+				elseif Dungeon.passable:Has(x, y) and #entts > 0 then
+					local name = Dungeon.entities[id][1][Name].value
+					cost = 3
+					if stam.current >= cost * mult and PerformBump(entity, pos.x, pos.y, dx * speed, dy * speed) then
+						PlayerEntity[Tension]:Up()
+						Diary.Write("You phase through the " .. name .. "! Your [FLOW] glyph quivers.")
+						entity[Stamina].current = entity[Stamina].current - cost * mult
+					end
+				elseif Dungeon.passable:Has(x + dx, y + dy) and Dungeon.passable:Has(x + dx, y + dy) then
+					cost = 2
+					if stam.current >= cost * mult and PerformBump(entity, pos.x, pos.y, dx * speed, dy * speed) then
+						entity[Stamina].current = entity[Stamina].current - cost * mult
+					end
 				end
-			end
-			if stam.current >= cost * mult and PerformBump(entity, pos.x, pos.y, dx * speed, dy * speed) then
-				moved = moved + 1
-				entity[Stamina].current = entity[Stamina].current - cost * mult
+			else
+				for i = 1, speed do
+					if stam.current >= cost * mult and PerformBump(entity, pos.x, pos.y, dx, dy) then 
+						moved = moved + 1
+						entity[Stamina].current = entity[Stamina].current - cost * mult
+					end
+				end
 			end
 		else
 			for i = 1, speed do
