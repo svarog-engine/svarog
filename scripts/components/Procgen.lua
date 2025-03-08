@@ -195,11 +195,11 @@ function Procgen.Grate(e, x, y)
 	e:Set(Glyph{ name = "grate" .. Rand:Range(1, 3) })
 end
 
-function Procgen.Portal(e, x, y, owner, time)
+function Procgen.Portal(e, x, y, owner, time, comp)
 	e:Set(Name("Portal"))
 	e:Set(Dependent(owner))
 	e:Set(Portal{ challenge = owner })
-	e:Set(Magic{ value = Rand:F01(), colors = { Colors.DarkMagenta, Colors.Black } })
+	e:Set(Magic{ value = Rand:F01(), colors = CompColors[comp] })
 	e:Set(Timeout{ value = time or 9 })
 	e:Set(Glyph{ name = "portal" })
 end

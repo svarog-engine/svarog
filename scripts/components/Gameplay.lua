@@ -1,5 +1,7 @@
 ﻿
 Player = ECS.Component()
+Boons = ECS.Component{ value = {} }
+
 MoveMode = ECS.Component{value = ""}
 Sight = ECS.Component{ radius = 5 }
 Pause = ECS.Component{ duration = 0 }
