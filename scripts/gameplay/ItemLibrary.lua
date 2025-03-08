@@ -16,6 +16,8 @@ ItemLibrary = {
 	lapis_lazuli = { name = "Lapis Lazuli", description = "", glyph = "mineral"},
 	onyx = { name = "Onyx", description = "", glyph = "mineral"},
 	smoky_quartz = { name = "Smoky Quartz", description = "", glyph = "mineral"},
+	sapphire = { name = "Sapphire", description = "", glyph = "mineral"},
+	garnet = { name = "Garnet", description = "", glyph = "mineral"},
 
 -- Plants
 	ash = { name = "Ash", description = "", glyph = "plant"},
@@ -25,4 +27,6 @@ ItemLibrary = {
 	sage = { name = "Sage", description = "", glyph = "plant"},
 	foxglove = { name = "Foxglove", description = "", glyph = "plant"},
 	mandrake = { name = "Mandrake", description = "", glyph = "plant"},
+	eye_of_newt = { name = "Eye of Newt", description = "", glyph = "plant"},
+	honey = { name = "Honey", description = "", glyph = "plant"},
 }

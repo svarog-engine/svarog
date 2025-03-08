@@ -466,7 +466,8 @@ Rooms[Endure] = { "workshop1", "workshop2" } -- training room
 Rooms[Luck] = { "common1", "common2" } -- market
 Rooms[Fade] = { "warehouse1", "common1", "common2" }
 
-ContentsItems = {"diamond", "topaz", "obsidian", "malachite", "lapis_lazuli", "onyx", "smoky_quartz", "ash", "frankincense", "blackthorn", "willow", "sage", "foxglove", "mandrake" }
+ContentsItems = {"diamond", "topaz", "obsidian", "malachite", "lapis_lazuli", "onyx", "smoky_quartz",
+	"sapphire", "garnet", "ash", "frankincense", "blackthorn", "willow", "sage", "foxglove", "mandrake", "eye_of_newt", "honey" }
 Books = { "book" }
 
 Monsters = {}
