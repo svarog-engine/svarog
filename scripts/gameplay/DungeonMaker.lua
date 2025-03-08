@@ -47,51 +47,6 @@ function RemoveEntityFromDungeon(entity)
 	end
 end
 
-local function MakeDoor(x, y, closed, locked, key, travelTo)
-	if closed == nil then closed = true end
-	if locked == nil then locked = false end
-
-	local glyph = "door_closed"
-
-	if not closed then 
-		locked = false
-		glyph = "door_open" 
-	end
-
-	local entity = World:Entity(
-		Glyph{ name = glyph },
-		Door{
-			closed = closed, 
-			locked = locked,
-			travelTo = travelTo,
-		}, 
-		Position{ x = x, y = y },
-		Key { item = key }
-	)
-
-	AddEntityToDungeon(x, y, entity)
-
-	Dungeon.floor:Set(x, y, { 
-		type = Door, 
-		pass = false,
-		entity = entity
-	})
-
-	return entity
-end
-
-function FindDoorTo(index)
-	for i, e in ipairs(Dungeon.entitiesList) do
-		local door = e[Door]
-		if door ~= nil then
-			if door.travelTo == index then
-				return e
-			end
-		end
-	end
-	return nil
-end
-
 function SelectDungeonLevel(index)
 	Dungeon = Dungeons.maps[index]
 	PlayerEntity[Position].x = Dungeon.start[1]
@@ -200,7 +155,7 @@ function MakeDungeon()
 	Dungeons.maps[Level] = {}
 	Dungeon = Dungeons.maps[Level]
 
-	Dungeon.index = n
+	Dungeon.index = Level
 	Dungeon.name = "Level" .. Level
 	Dungeon.entities = {}
 	Dungeon.entitiesList = {}
@@ -288,7 +243,6 @@ function MakeDungeon()
 	
 		Dungeon.visited:Set(x, y, true)
 		SelectDungeonLevel(Level)
-		print("!!!!")
 	end
 end
 

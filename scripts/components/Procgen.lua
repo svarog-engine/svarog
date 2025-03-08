@@ -1,4 +1,5 @@
 ﻿
+InLevel = ECS.Component{ value = 0 }
 Name = ECS.Component("")
 Burnable = ECS.Component()
 Burning = ECS.Component{value = 0.0}
@@ -38,6 +39,7 @@ function Procgen.MakeObject(what, x, y, ...)
 		
 	e:Set(Name(what))
 	e:Set(ID(IDS))
+	e:Set(InLevel{ value = Level })
 	IDS = IDS + 1
 
 	if Procgen[what] == nil then
