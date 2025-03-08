@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using System.Xml.Linq;
 using System.Collections.Generic;
+using svarog.runner;
 
 class TileNode : WFCNode
 {
@@ -22,7 +23,12 @@ class TileNode : WFCNode
 
         XDocument xdoc;
         string filepath = $"resources/procgen/tilesets/{name}.xml";
-        try { xdoc = XDocument.Load(filepath, LoadOptions.SetLineInfo); }
+        try {
+            using (Stream s = Svarog.Instance.FileSystem.GetStream(filepath))
+            {
+                xdoc = XDocument.Load(s, LoadOptions.SetLineInfo);
+            }
+        }
         catch (Exception)
         {
             Interpreter.WriteLine($"couldn't open tileset {filepath}");

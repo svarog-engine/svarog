@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using System.Xml.Linq;
 using System.Collections.Generic;
+using svarog.runner;
 
 static class GUI
 {
@@ -22,34 +23,37 @@ static class GUI
         for (int i = 0; i < legend.Length; i++) map.Add(legend[i], (byte)i);
         fonts = new (bool[], int, int)[2];
 
-        (int[] bitmap, int width, int height, _) = Graphics.LoadBitmap($"resources/procgen/fonts/{FONT}.png");
+        (int[] bitmap, int width, int height, _) = Graphics.LoadBitmap($"resources\\procgen\\fonts\\{FONT}.png");
         int b0 = bitmap[0];
         int b1 = bitmap[width - 1];
         fonts[0] = (bitmap.Select(argb => argb != b0 && argb != b1).ToArray(), width / 32, height / 3);
         
-        (bitmap, width, height, _) = Graphics.LoadBitmap($"resources/procgen/fonts/{TITLEFONT}.png");
+        (bitmap, width, height, _) = Graphics.LoadBitmap($"resources\\procgen\\fonts\\{TITLEFONT}.png");
         b0 = bitmap[0];
         b1 = bitmap[width - 1];
         fonts[1] = (bitmap.Select(argb => argb != b0 && argb != b1).ToArray(), width / 32, height / 3);
 
-        XElement settings = XDocument.Load("resources/procgen/settings.xml").Root;
-        S = settings.Get("squareSize", 7);
-        SMALL = settings.Get("smallSquareSize", 3);
-        MAXWIDTH = settings.Get("maxwidth", 10);
-        ZSHIFT = settings.Get("zshift", 2);
-        HINDENT = settings.Get("hindent", 30);
-        HGAP = settings.Get("hgap", 2);
-        HARROW = settings.Get("harrow", 10);
-        HLINE = settings.Get("hline", 14);
-        VSKIP = settings.Get("vskip", 2);
-        SMALLVSKIP = settings.Get("smallvskip", 2);
-        FONTSHIFT = settings.Get("fontshift", 2);
-        AFTERFONT = settings.Get("afterfont", 4);
-        DENSE = settings.Get("dense", true);
-        D3 = settings.Get("d3", true);
-        BACKGROUND = (255 << 24) + Convert.ToInt32(settings.Get("background", "222222"), 16);
-        INACTIVE = (255 << 24) + Convert.ToInt32(settings.Get("inactive", "666666"), 16);
-        ACTIVE = (255 << 24) + Convert.ToInt32(settings.Get("active", "ffffff"), 16);
+        using (Stream s = Svarog.Instance.FileSystem.GetStream("resourcesprocgen\\settings.xml"))
+        {
+            XElement settings = XDocument.Load(s).Root;
+            S = settings.Get("squareSize", 7);
+            SMALL = settings.Get("smallSquareSize", 3);
+            MAXWIDTH = settings.Get("maxwidth", 10);
+            ZSHIFT = settings.Get("zshift", 2);
+            HINDENT = settings.Get("hindent", 30);
+            HGAP = settings.Get("hgap", 2);
+            HARROW = settings.Get("harrow", 10);
+            HLINE = settings.Get("hline", 14);
+            VSKIP = settings.Get("vskip", 2);
+            SMALLVSKIP = settings.Get("smallvskip", 2);
+            FONTSHIFT = settings.Get("fontshift", 2);
+            AFTERFONT = settings.Get("afterfont", 4);
+            DENSE = settings.Get("dense", true);
+            D3 = settings.Get("d3", true);
+            BACKGROUND = (255 << 24) + Convert.ToInt32(settings.Get("background", "222222"), 16);
+            INACTIVE = (255 << 24) + Convert.ToInt32(settings.Get("inactive", "666666"), 16);
+            ACTIVE = (255 << 24) + Convert.ToInt32(settings.Get("active", "ffffff"), 16);
+        }
     }
 
     public static void Draw(string name, Branch root, Branch current, int[] bitmap, int WIDTH, int HEIGHT, Dictionary<char, int> palette)

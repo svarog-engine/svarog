@@ -14,8 +14,6 @@ function InventoryRender.Render(ui)
 				ui.Label(ItemLibrary[v.itemId].name .. " (" .. tostring(v.quantity) .. ")")
 			end )
 		ui.PopOrder()
-
-
 	ui.PopBox()
 
 	ui.ClearBox(45, 35, 20, 2)
@@ -24,14 +22,14 @@ function InventoryRender.Render(ui)
 			local selection = InventoryEntity[Selection].value
 			for i, item in ipairs(PlayerEntity[Contents].items) do
 				if i == selection then
-					ui.Label("[D]rop")
+					ui.Label("[D] Drop")
 
 					if CanConsume(item.itemId) then
-						ui.Label("[C]onsume")
+						ui.Label("[C] Consume")
 					end
 
 					if CanCast(item.itemId) then
-						ui.Label("[C]ast")
+						ui.Label("[Z] Cast")
 					end
 				end
 			end

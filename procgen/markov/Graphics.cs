@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
+using svarog.runner;
 
 static class Graphics
 {
@@ -12,11 +13,14 @@ static class Graphics
     {
         try
         {
-            using var image = Image.Load<Bgra32>(filename);
-            int width = image.Width, height = image.Height;
-            int[] result = new int[width * height];
-            image.CopyPixelDataTo(MemoryMarshal.Cast<int, Bgra32>(result));
-            return (result, width, height, 1);
+            using (Stream s = Svarog.Instance.FileSystem.GetStream(filename))
+            {
+                using var image = Image.Load<Bgra32>(s);
+                int width = image.Width, height = image.Height;
+                int[] result = new int[width * height];
+                image.CopyPixelDataTo(MemoryMarshal.Cast<int, Bgra32>(result));
+                return (result, width, height, 1);
+            }
         }
         catch (Exception) { return (null, -1, -1, -1); }
     }

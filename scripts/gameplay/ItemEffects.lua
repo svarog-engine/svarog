@@ -68,7 +68,7 @@ end
 
 function Cast(x, y, itemId)
 	local component = ItemCast[itemId]
-	local compName = ItemCastNames[itemId]
+	local compName = ItemCastNames[itemId]()
 	if component == nil then
 		return
 	end

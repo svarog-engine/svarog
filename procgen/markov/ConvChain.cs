@@ -26,7 +26,7 @@ class ConvChainNode : Node
         }
 
         string name = xelem.Get<string>("sample");
-        string filename = $"resources/procgen/samples/{name}.png";
+        string filename = $"resources\\procgen\\samples\\{name}.png";
         int[] bitmap;
         (bitmap, SMX, SMY, _) = Graphics.LoadBitmap(filename);
         if (bitmap == null)
