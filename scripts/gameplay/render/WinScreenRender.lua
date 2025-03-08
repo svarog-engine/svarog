@@ -56,6 +56,9 @@ function WinScreenRenderSystem:Render()
 
 	if WinScreenWay == "up" and WinScreenFrame > 60 then
 		WinScreenFrame = 60
+		if PlayerEntity[Win] ~= nil then
+			Svarog.Instance:Reload()
+		end
 	end
 
 	if WinScreenWay == "down" and WinScreenFrame == 0 then

@@ -75,8 +75,10 @@ Glossary.Default = {
 	ogre = { x = 14, y = 9, fg = Colors.LightRed, bg = Colors.Black },
 	blob = { x = 1, y = 3,  fg = Colors.LightRed, bg = Colors.Black },
 	gelly = { x = 1, y = 3, fg = Colors.Magenta, bg = Colors.Black },
+	djinn = { x = 4, y = 1, fg = Colors.LightRed, bg = Colors.Black },
 	throne = { x = 7, y = 8, fg = Colors.DarkYellow, bg = Colors.Black },
 	skeleton = { x = 5, y = 0, fg = Colors.Gray, bg = Colors.Black },
+	restless = { x = 5, y = 0, fg = Colors.Gray, bg = Colors.Black },
 }
 
 InsertSpriteCharRanges(Glossary.Default, 1, 1, "ABCDEFGHIJKLMNOPQRSTUVWXYZ[ ]^_")

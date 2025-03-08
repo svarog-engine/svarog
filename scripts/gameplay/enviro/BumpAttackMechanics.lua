@@ -12,7 +12,7 @@ end
 local function PerformAttack(attackerEntity, targetEntity)
 		local totalDamage = CalculateDamage(attackerEntity, targetEntity)
 
-		if targetEntity[Endure] ~= nil and Chances[8 + targetEntity[Endure].level]:MakeGuess() then
+		if targetEntity[Endure] ~= nil and Chances[5 + targetEntity[Endure].level]:MakeGuess() then
 			if targetEntity == PlayerEntity then
 				Diary.Write("You felt nothing. Your [ENDURE] glyph quivers.")
 				targetEntity[Tension]:Up()

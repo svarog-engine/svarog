@@ -74,6 +74,9 @@ function SpawnChallengeEntities(x, y, n, challenge)
 					end
 
 					PlayerEntity:Set(Win{})
+					WinScreenFrame = 0
+					WinScreenWay = "up"
+					FIN = true
 				end
 			end
 		end

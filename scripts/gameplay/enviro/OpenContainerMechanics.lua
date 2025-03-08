@@ -15,9 +15,7 @@ function OpenCrateSystem:Tick()
 
 			entity[Glyph].name =  entity[Glyph].name .. "_empty"
 			entity:Unset(Shelve)
-		end
-
-		if who[Contents] ~= nil then
+		elseif who[Contents] ~= nil then
 			if entity[Locked] ~= nil then 
 				if who[Open] ~= nil then
 					Contents.Remove(who, "key")
