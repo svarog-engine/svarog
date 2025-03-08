@@ -11,12 +11,12 @@ local Actions = {
 		local itemMeta = ItemLibrary[item.itemId]
 
 		World:Entity(
-			Item{ id = item.itemId, quantity = 1},
+			Item{ id = item.itemId, quantity = item.quantity},
 			Position{ x = x, y = y },
 			Name { value = itemMeta.name },
 			Glyph{ name = itemMeta.glyph })
 
-		Contents.Remove(PlayerEntity, item.itemId, 1)
+		Contents.Remove(PlayerEntity, item.itemId, item.quantity)
 		Diary.Write("You drop a " .. itemMeta.name .. ".")
 		while selection > #contents do
 			selection = selection - 1

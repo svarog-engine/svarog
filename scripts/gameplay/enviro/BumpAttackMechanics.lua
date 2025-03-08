@@ -128,6 +128,11 @@ function BumpAttackMechanicsSystem:Tick()
 				entity:Unset(Bumped)
 
 				if entity[Health].current <= 0 then
+					if entity == PlayerEntity then
+						Svarog.Instance:Reload()
+						return
+					end
+
 					entity[InLevel].value = entity[InLevel].value - 1
 					local x, y = entity[Position].x, entity[Position].y
 
