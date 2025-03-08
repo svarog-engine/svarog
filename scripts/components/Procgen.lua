@@ -1,4 +1,4 @@
-﻿
+﻿Win = ECS.Component{ value = 0 }
 InLevel = ECS.Component{ value = 0 }
 Name = ECS.Component("")
 Burnable = ECS.Component()
@@ -123,6 +123,7 @@ function CompNameToComp(comp)
 	if comp == "Calm" then return Calm end
 	if comp == "Open" then return Open end
 	if comp == "Light" then return Light end
+	if comp == "Hate" then return Hate end
 end
 
 function CompToShardic(comp)
@@ -135,6 +136,7 @@ function CompToShardic(comp)
 	if comp == "Calm" then return "Calm" end
 	if comp == "Open" then return "Openess" end
 	if comp == "Light" then return "Light" end
+	if comp == "Hate" then return "Hate" end
 	print("NOT FOUND: ", comp)
 end
 
@@ -192,6 +194,19 @@ function Procgen.Table(e, x, y)
 	Procgen.IsFurniture(e)
 	Procgen.IsWooden(e)
 	e:Set(Glyph{ name = "table" })
+end
+
+function Procgen.Throne(e, x, y)
+	Procgen.IsFurniture(e)
+	Procgen.IsWooden(e)
+	e:Set(Glyph{ name = "throne" })
+	e:Set(Name("Throne"))
+end
+
+function Procgen.Skeleton(e, x, y)
+	e:Set(Glyph{ name = "skeleton" })
+	e:Unset(Name)
+	e:Set(Name("What remains of the queen"))
 end
 
 function Procgen.Key(e, x, y)

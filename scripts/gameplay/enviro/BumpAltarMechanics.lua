@@ -16,6 +16,7 @@ TakenBoon["Heal"] = "You embraced the [HEAL] glyph. It replaces your heart."
 TakenBoon["Calm"] = "You've taken the [CALM] glyph. It mellows within." 
 TakenBoon["Open"] = "You feel the [OPEN] glyph behind your eyes. It expands."
 TakenBoon["Light"] = "The [LIGHT] glyph makes your eyes leave trails in the air."
+TakenBoon["Hate"] = "The enemy. The [HATE] glyph desires a stronger host."
 
 function BumpAltarMechanicsSystem:Tick()
 	for _, entity in World:Exec(ECS.Query.All(Bumped, Altar, Satiated)):Iterator() do

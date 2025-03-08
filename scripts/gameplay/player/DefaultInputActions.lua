@@ -3,6 +3,10 @@
 LoadScriptIfExists "debug\\DebugInputActions"
 
 Engine.RegisterInputSystem({ Action_Default_Wait }, function(input)
+	if FIN and WinScreenFrame >= 30 and WinScreenWay == "up" then
+		WinScreenWay = "down"
+	end
+
 	World:Exec(ECS.Query.All(Player, Stamina, Tension, Pause)):ForEach(function(entity)
 		local stam = entity[Stamina]
 		local pause = entity[Pause]
@@ -41,12 +45,6 @@ Engine.RegisterInputSystem({ Action_Default_JumpOff }, function(input)
 	end)
 end)
 
-Engine.RegisterInputSystem({ Action_Default_Tension }, function(input)
-	World:Exec(ECS.Query.All(Player, Tension)):ForEach(function(entity)
-		entity[Tension]:Up(2)
-	end)
-end)
-
 Engine.RegisterInputSystem(
 	{
 		Action_Default_Left, 
@@ -76,8 +74,8 @@ Engine.RegisterInputSystem(
 		if entity[Endure] ~= nil then mult = 0.5 end
 		if entity[Endure] ~= nil and speed == 1 and stam.current < stam.maximum and Chances[1 + entity[Endure].level]:MakeGuess() then
 			stam.current = stam.current + 1
-			PlayerEntity[Tension]:Up()
-			Diary.Write("You regain stamina. Your [ENDURE] glyph quivers.")
+			PlayerEntity[Tension]:Up(0.25)
+			Diary.Write("You regain stamina. Your [ENDURE] glyph quivers slightly.")
 		end
 
 		local moved = 0
@@ -90,7 +88,7 @@ Engine.RegisterInputSystem(
 				if Dungeon.passable:Has(x, y) and not Dungeon.passable:Get(x, y) then
 					cost = 4
 					if stam.current >= cost * mult and PerformBump(entity, pos.x, pos.y, dx * speed, dy * speed) then
-						PlayerEntity[Tension]:Up()
+						PlayerEntity[Tension]:Up(1)
 						Diary.Write("You phase through solid matter! Your [FLOW] glyph quivers.")
 						moved = moved + 1
 						entity[Stamina].current = entity[Stamina].current - cost * mult
@@ -99,7 +97,10 @@ Engine.RegisterInputSystem(
 					local name = Dungeon.entities[id][1][Name].value
 					cost = 3
 					if stam.current >= cost * mult and PerformBump(entity, pos.x, pos.y, dx * speed, dy * speed) then
-						PlayerEntity[Tension]:Up()
+						PlayerEntity[Tension]:Up(1)
+						if Dungeon.entities[id][1][Health] ~= nil then
+							Dungeon.entities[id][1][Health] = Dungeon.entities[id][1][Health] - 1
+						end
 						Diary.Write("You phase through the " .. name .. "! Your [FLOW] glyph quivers.")
 						entity[Stamina].current = entity[Stamina].current - cost * mult
 					end
@@ -122,6 +123,10 @@ Engine.RegisterInputSystem(
 					entity[Stamina].current = entity[Stamina].current - cost * mult
 				end
 			end
+		end
+
+		if entity[Stamina].current > entity[Stamina].maximum then
+			entity[Stamina].current = entity[Stamina].maximum
 		end
 
 		if moved > 0 then

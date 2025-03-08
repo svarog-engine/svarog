@@ -81,20 +81,22 @@ local function GenerateSpecificShape(l, w, h)
 		local m2 = Markov:Or(m1, "DijkstraDungeon", w, h)
 		local m3 = Markov:Or(m2, "SelectLargeCaves", w, h, 2000, 2)
 		return Map:From(m3, w)
-	else
+	elseif l == 5 then
+		local m1 = Markov:Run("StrangeDungeon", w, h)
+		return Map:From(Markov:Or(m1, "Growth", w, h, 800), w)
+	elseif l == 6 then
 		return Map:From(Markov:Run("Growth", w, h, 1000), w)
 	end
 end
 
 local function SpecificRoomSetup(l, w, h)
-	if l == 1 then
-		
+	if l == 1 then		
 		local bucketIndex = Dungeon.wallDistances:GetHighestBucket()
 		local bucket = Dungeon.wallDistances:GetAt(bucketIndex)
 		r = Rand:Range(1, #bucket)
 		local rx, ry = math.floor(bucket[r].x), math.floor(bucket[r].y)
 		local comps = OtherComps({})
-		Procgen.MakeObject("SatiatedAltar", rx, ry, comps[Rand:Range(1, #comps)])
+		Procgen.MakeObject("SatiatedAltar", rx, ry, "Endure")
 
 		local messages = {
 			"My people only prowl around slowlike. You also <SHIFT>!",
@@ -115,7 +117,7 @@ local function SpecificRoomSetup(l, w, h)
 			"There is none who survived the RIFTS and what they BRING.",
 			"The magics of the GLYPHs are varied and unmeasurable.",
 			"Satiate the ALTARS in a RELEASE OF TENSION to open them.",
-			"This one ALTAR we have readied for you, dear savior.",
+			"This one ALTAR we have readied for you, dear savior. ENDURE.",
 			"May our LIBRARIES be useful to your efforts...",
 		}
 		
@@ -188,8 +190,21 @@ local function SpecificRoomSetup(l, w, h)
 		end
 
 		return centers
-	else
+	elseif l == 5 then
+		local bucketIndex = Dungeon.wallDistances:GetHighestBucket()
+		local bucket = Dungeon.wallDistances:GetAt(bucketIndex)
+		r = Rand:Range(1, #bucket)
+		local rx, ry = math.floor(bucket[r].x), math.floor(bucket[r].y)
+		Procgen.MakeObject("SatiatedAltar", rx, ry, "Hate")
+		Procgen.MakeObject("Throne", rx, ry + 2)
+		
 		return { { math.floor(w / 2), math.floor(h / 2) } }
+	elseif l == 6 then
+		local bucketIndex = Dungeon.wallDistances:GetHighestBucket()
+		local bucket = Dungeon.wallDistances:GetAt(bucketIndex)
+		r = Rand:Range(1, #bucket)
+		local rx, ry = math.floor(bucket[r].x), math.floor(bucket[r].y)
+		Procgen.MakeObject("Skeleton", rx + 1, ry + 1)
 	end
 end
 

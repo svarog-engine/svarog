@@ -16,7 +16,7 @@ local Actions = {
 			Glyph{ name = itemMeta.glyph })
 
 		Contents.Remove(PlayerEntity, item.itemId, 1)
-		Diary.Write("Dropped " .. itemMeta.name .. ".")
+		Diary.Write("You drop a " .. itemMeta.name .. ".")
 		while selection > #contents do
 			selection = selection - 1
 		end
@@ -34,14 +34,12 @@ local Actions = {
 
 		local actionDone = false
 		if CanCast(item.itemId) then
-			print("cast")
 			Cast(x, y, item.itemId)
 			actionDone = true
 		end
 
 		if actionDone then 
 			Contents.Remove(PlayerEntity, item.itemId, 1)
-			Diary.Write("Dropped " .. itemMeta.name .. ".")
 			while selection > #contents do
 				selection = selection - 1
 			end
@@ -55,6 +53,7 @@ local Actions = {
 		local selection = InventoryEntity[Selection].value
 		local contents = PlayerEntity[Contents].items
 		local item = contents[selection]
+		if item == nil then return end
 		local itemMeta = ItemLibrary[item.itemId]
 
 		local actionDone = false
@@ -69,6 +68,7 @@ local Actions = {
 
 		if actionDone then 
 			Contents.Remove(PlayerEntity, item.itemId, 1)
+			Diary.Write("You consume the " .. itemMeta.name .. ".")
 			while selection > #contents do
 				selection = selection - 1
 			end

@@ -44,8 +44,10 @@
     <None Remove="scripts\gameplay\enviro\BumpAltarMechanics.lua" />
     <None Remove="scripts\gameplay\enviro\DelayedDamageMechanics.lua" />
     <None Remove="scripts\gameplay\enviro\FireSpreadingMechanics.lua" />
+    <None Remove="scripts\gameplay\enviro\HateMechanics.lua" />
     <None Remove="scripts\gameplay\enviro\HealingMechanics.lua" />
     <None Remove="scripts\gameplay\enviro\InflictStatusMechanics.lua" />
+    <None Remove="scripts\gameplay\enviro\LightFireSystem.lua" />
     <None Remove="scripts\gameplay\enviro\StatusEffectUpdate.lua" />
     <None Remove="scripts\gameplay\player\InventoryInputActions.lua" />
     <None Remove="scripts\gameplay\player\InventoryUpdate.lua" />
@@ -57,6 +59,7 @@
     <None Remove="scripts\gameplay\render\UIRender.lua" />
     <None Remove="scripts\gameplay\render\UITestRender.lua" />
     <None Remove="scripts\gameplay\render\VFXRender.lua" />
+    <None Remove="scripts\gameplay\render\WinScreenRender.lua" />
     <None Remove="scripts\gameplay\Wheels.lua" />
   </ItemGroup>
 

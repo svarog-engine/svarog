@@ -27,7 +27,7 @@ SpawnDeltaLocations[3] = { {  0,  3 }, { -4, -2 }, {  4, -2 } }
 SpawnDeltaLocations[4] = { { -3, -3 }, { -3,  3 }, {  3, -3 }, {  3, 3 } }
 SpawnDeltaLocations[5] = { {  0, -5 }, {  5, -2 }, { -5, -2 }, { -4, 4 }, { 4, 4 } }
 
-local function SpawnChallengeEntities(x, y, n, challenge)
+function SpawnChallengeEntities(x, y, n, challenge)
 	PCExplode(7, Colors.White, Colors.Magenta, function()
 		local c = Geometry.Boundary(Geometry.MakeCircle(x, y, 6))
 		local e = c.Points:GetEnumerator()
@@ -48,6 +48,34 @@ local function SpawnChallengeEntities(x, y, n, challenge)
 
 		if satiation then
 			Diary.Write("At least one altar has been satiated! You can proceed.")
+		end
+
+		if PlayerEntity[Hate] ~= nil then
+			if Distance(PlayerEntity[Position].x, PlayerEntity[Position].y, x, y) < 7 then
+				PlayerEntity[Hate].chance = PlayerEntity[Hate].chance - 1
+				if PlayerEntity[Hate].chance > 7 then
+					Diary.Write("The other GLYPHS resonate. HATE rules.")
+				elseif PlayerEntity[Hate].chance > 4 then
+					Diary.Write("The other GLYPHS build up. HATE falls silent... for a moment.")
+				elseif PlayerEntity[Hate].chance > 2 then
+					Diary.Write("The other GLYPHS swoon. HATE dwindles.")
+				elseif PlayerEntity[Hate].chance > 0 then
+					Diary.Write("The other GLYPHS enclose. HATE has no force.")
+				else
+					Diary.Write("Your HATE is now forever sealed.")
+				end
+
+				if PlayerEntity[Hate].chance <= 0 then
+					PlayerEntity[Hate].chance = 0
+
+					for _, en in World:Exec(ECS.Query.All(Creature)):Iterator() do
+						RemoveEntityFromDungeon(en)
+						World:Remove(en)
+					end
+
+					PlayerEntity:Set(Win{})
+				end
+			end
 		end
 
 		while e:MoveNext() do
@@ -102,8 +130,7 @@ end
 
 function ChallengeSystem:Tick()
 	for _, entity in World:Exec(ECS.Query.All(Challenged, Position, Player)):Iterator() do
-		local challengeLevel = ActiveWordsCount(entity)
-		
+		local challengeLevel = ActiveWordsCount(entity)		
 		local position = entity[Position]
 
 		local challengeEntity = World:Entity(MagicChallenge { time = 0, difficulty = challengeLevel })

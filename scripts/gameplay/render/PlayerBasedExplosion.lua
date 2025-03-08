@@ -2,7 +2,7 @@
 local PlayerBasedExplosionSystem = Engine.RegisterRenderSystem("Player Explosion Render")
 
 function PlayerBasedExplosionSystem:ShouldRender()
-	return Dungeon.playerDistance ~= nil
+	return Dungeon ~= nil and Dungeon.playerDistance ~= nil
 end
 
 function PlayerBasedExplosionSystem:Render()

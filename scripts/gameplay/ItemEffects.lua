@@ -59,6 +59,7 @@ CompColors = {
 	Calm = { Colors.LightCyan, Colors.Cyan },
 	Flow = { Colors.Cyan , Colors.DarkCyan },
 	Open = { Colors.LightMagenta , Colors.Magenta },
+	Hate = { Colors.White, Colors.Black },
 }
 
 function CanCast(itemId)
@@ -88,6 +89,7 @@ function Cast(x, y, itemId)
 				World:Remove(e)
 			else
 				e:Set(comp(), Magic{ colors = CompColors[compName] })
+				Diary.Write("You enchant the " .. e[Name].value .. " with the essence of " .. compName .. ".")
 			end
 		end
 	end

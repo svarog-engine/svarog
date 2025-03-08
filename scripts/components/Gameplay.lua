@@ -58,6 +58,7 @@ end
 
 function Tension:Down(n)
 	self.current = self.current - (n or 1)
+	if self.current < 0 then self.current = 0 end
 end
 
 -- Inventory
