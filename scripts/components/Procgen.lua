@@ -11,6 +11,7 @@ Weapon = ECS.Component()
 Amulet = ECS.Component()
 Small = ECS.Component()
 Paper = ECS.Component()
+Shelve = ECS.Component()
 
 Lifetime = ECS.Component{ value = 5 }
 Spread = ECS.Component{ value = 5 }
@@ -160,7 +161,7 @@ function Procgen.Shelf(e, x, y)
 	Procgen.IsFurniture(e)
 	Procgen.IsWooden(e)
 	Procgen.IsContainer(e)
-	Procgen.GenerateContents(e, Books)
+	e:Set(Shelve())
 	e:Set(Glyph{ name = "shelf" })
 end
 
@@ -496,7 +497,6 @@ Rooms[Fade] = { "warehouse1", "common1", "common2" }
 
 ContentsItems = {"diamond", "topaz", "obsidian", "malachite", "lapis_lazuli", "onyx", "smoky_quartz",
 	"sapphire", "garnet", "ash", "frankincense", "blackthorn", "willow", "sage", "foxglove", "mandrake", "eye_of_newt", "honey" }
-Books = { "book" }
 
 Monsters = {}
 Monsters["Endure"] = { "Hobgob", "Mimic" }
@@ -508,3 +508,17 @@ Monsters["Heal"] = { "Kobold", "Phantasm" }
 Monsters["Calm"] = { "Banshee", "Nightmare" }
 Monsters["Steal"] = { "Hobgob", "Mimic" }
 Monsters["Light"] = { "Wisp", "Djinn" }
+
+Messages = { "a", "b", "c", "d" }
+Messages.index = 1
+
+function GetNextMessage()
+	local message = Messages[Messages.index]
+	Messages.index = Messages.index + 1
+
+	if Messages.index > #Messages then
+		Messages.index = 1
+	end
+
+	return message
+end

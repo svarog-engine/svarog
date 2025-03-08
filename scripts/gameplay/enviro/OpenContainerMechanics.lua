@@ -8,6 +8,15 @@ function OpenCrateSystem:Tick()
 	for _, entity in World:Exec(ECS.Query.All(Bumped, CanHaveContent)):Iterator() do
 		local who = World:FetchEntityById(entity[Bumped].by)
 
+		local shelveComp = entity[Shelve]
+		if shelveComp ~= nil then
+			Diary.Write(GetNextMessage())
+			Diary.Write(" ")
+
+			entity[Glyph].name =  entity[Glyph].name .. "_empty"
+			entity:Unset(Shelve)
+		end
+
 		if who[Contents] ~= nil then
 			if entity[Locked] ~= nil then 
 				if Contents.HasItem(who, "key") then 
