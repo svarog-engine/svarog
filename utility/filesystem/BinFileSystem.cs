@@ -1,5 +1,6 @@
 ﻿using svarog.runner;
 using System.IO.Compression;
+using System.Xml.Linq;
 
 namespace svarog.utility.filesystem
 {
@@ -64,6 +65,13 @@ namespace svarog.utility.filesystem
             }
 
             return filteredFiles;
+        }
+
+        public Stream GetStream(string path)
+        {
+            var entry = Archive.GetEntry(path);
+
+            return entry.Open();
         }
     }
 }

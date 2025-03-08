@@ -69,7 +69,6 @@ local Actions = {
 
 		if actionDone then 
 			Contents.Remove(PlayerEntity, item.itemId, 1)
-			Diary.Write("You consume the " .. itemMeta.name .. ".")
 			while selection > #contents do
 				selection = selection - 1
 			end

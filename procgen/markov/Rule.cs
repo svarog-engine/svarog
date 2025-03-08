@@ -171,8 +171,8 @@ class Rule
         int lineNumber = xelem.LineNumber();
         string filepath(string name)
         {
-            string result = "resources/procgen/rules/";
-            if (gout.folder != null) result += gout.folder + "/";
+            string result = "resources\\procgen\\rules\\";
+            if (gout.folder != null) result += gout.folder + "\\";
             result += name;
             result += gin.MZ == 1 ? ".png" : ".vox";
             return result;

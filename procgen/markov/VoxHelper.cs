@@ -4,6 +4,8 @@ using System;
 using System.IO;
 using System.Text;
 using System.Collections.Generic;
+using svarog.runner;
+using System.Xml.Linq;
 
 static class VoxHelper
 {
@@ -11,8 +13,8 @@ static class VoxHelper
     {
         try
         {
-            using FileStream file = File.Open(filename, FileMode.Open);
-            var stream = new BinaryReader(file);
+            Stream s = Svarog.Instance.FileSystem.GetStream(filename);
+            var stream = new BinaryReader(s);
 
             int[] result = null;
             int MX = -1, MY = -1, MZ = -1;
@@ -63,7 +65,7 @@ static class VoxHelper
                     }
                 }
             }
-            file.Close();
+            s.Close();
             return (result, MX, MY, MZ);
         }
         catch (Exception) { return (null, -1, -1, -1); }

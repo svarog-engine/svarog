@@ -33,5 +33,11 @@
 
             return filteredFiles;
         }
+
+        public Stream GetStream(string path)
+        {
+            FileStream SourceStream = File.Open(path, FileMode.Open);
+            return SourceStream;
+        }
     }
 }

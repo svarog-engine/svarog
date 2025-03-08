@@ -71,9 +71,14 @@ public class Markov
         int MY = height;
         int MZ = 1;
 
-        string filename = $"resources/procgen/models/{name}.xml";
+        string filename = $"resources\\procgen\\models\\{name}.xml";
         XDocument modeldoc;
-        try { modeldoc = XDocument.Load(filename, LoadOptions.SetLineInfo); }
+        try {
+            using (Stream s = Svarog.Instance.FileSystem.GetStream(filename))
+            {
+                modeldoc = XDocument.Load(s, LoadOptions.SetLineInfo);
+            }
+        }
         catch (Exception)
         {
             Console.WriteLine($"ERROR: couldn't open xml file {filename}");
