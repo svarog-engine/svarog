@@ -144,7 +144,7 @@ local function SpecificRoomSetup(l, w, h)
 		table.remove(halfsteps, Rand:Range(1, #halfsteps))
 		table.remove(halfsteps, Rand:Range(1, #halfsteps))
 
-		local specials = 2
+		local specials = 1
 		local rest = OtherComps(PlayerEntity[Boons].value)
 		local w3, h3 = math.ceil(w / 3), math.ceil(h / 3)
 		while bucketIndex > 0 do
@@ -170,11 +170,13 @@ local function SpecificRoomSetup(l, w, h)
 
 					if specials > 0 then
 						local ri = Rand:Range(1, #rest)
-						Procgen.MakeObject("Altar", rx, ry, rest[ri])
+						Procgen.MakeObject("Altar", rx - 1, ry, rest[ri])
+						table.remove(rest, ri)
+						local ri = Rand:Range(1, #rest)
+						Procgen.MakeObject("Altar", rx + 1, ry, rest[ri])
 						table.remove(rest, ri)
 						specials = specials - 1
 					else
-
 						local name, comp = Wheels:GetMajor(halfsteps[(Snail(cx, cy) or 1 + i) % 9 + 1])
 						local roomTemplates = Rooms[comp]
 						local roomTemplate = roomTemplates[Rand:Range(0, #roomTemplates)]
@@ -189,6 +191,8 @@ local function SpecificRoomSetup(l, w, h)
 			bucketIndex = bucketIndex - 1
 		end
 
+		print(Dungeon.creatureCount)
+		
 		return centers
 	elseif l == 5 then
 		local bucketIndex = Dungeon.wallDistances:GetHighestBucket()
@@ -196,7 +200,7 @@ local function SpecificRoomSetup(l, w, h)
 		r = Rand:Range(1, #bucket)
 		local rx, ry = math.floor(bucket[r].x), math.floor(bucket[r].y)
 		Procgen.MakeObject("SatiatedAltar", rx, ry, "Hate")
-		Procgen.MakeObject("Throne", rx, ry + 2)
+		Procgen.MakeObject("Throne", rx - 1, ry + 3)
 		
 		return { { math.floor(w / 2), math.floor(h / 2) } }
 	elseif l == 6 then
@@ -205,6 +209,7 @@ local function SpecificRoomSetup(l, w, h)
 		r = Rand:Range(1, #bucket)
 		local rx, ry = math.floor(bucket[r].x), math.floor(bucket[r].y)
 		Procgen.MakeObject("Skeleton", rx + 1, ry + 1)
+		return { { math.floor(w / 2), math.floor(h / 2) } }
 	end
 end
 
@@ -225,7 +230,8 @@ function MakeDungeon()
 	Level = Level + 1
 	Dungeons.maps[Level] = {}
 	Dungeon = Dungeons.maps[Level]
-
+	
+	Dungeon.creatureCount = 0
 	Dungeon.index = Level
 	Dungeon.name = "Level" .. Level
 	Dungeon.entities = {}

@@ -40,7 +40,12 @@ Procgen = {}
 
 function Procgen.MakeObject(what, x, y, ...)
 	local e = World:Entity(Position{ x = x, y = y })
-		
+	if what == "Goblin" or what == "Hobgob" or what == "Kobold" 
+	   or what == "Mimic" or what == "Djinn" or what == "FlamingSphere" 
+	   or what == "RestlessDead" or what == "Ogre" then
+	   Dungeon.creatureCount = Dungeon.creatureCount + 1
+	end
+
 	e:Set(Name { value = what })
 	e:Set(ID(IDS))
 	e:Set(InLevel{ value = Level })

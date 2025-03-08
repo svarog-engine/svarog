@@ -74,7 +74,7 @@ Engine.RegisterInputSystem(
 		if entity[Endure] ~= nil then mult = 0.5 end
 		if entity[Endure] ~= nil and speed == 1 and stam.current < stam.maximum and Chances[1 + entity[Endure].level]:MakeGuess() then
 			stam.current = stam.current + 1
-			PlayerEntity[Tension]:Up(0.25)
+			PlayerEntity[Tension]:Up(1)
 			Diary.Write("You regain stamina. Your [ENDURE] glyph quivers slightly.")
 		end
 
