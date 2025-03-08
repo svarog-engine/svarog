@@ -41,7 +41,7 @@ Procgen = {}
 function Procgen.MakeObject(what, x, y, ...)
 	local e = World:Entity(Position{ x = x, y = y })
 	if what == "Goblin" or what == "Hobgob" or what == "Kobold" 
-	   or what == "Mimic" or what == "Djinn" or what == "FlamingSphere" 
+	   or what == "Mimic" or what == "Djinn" or what == "Flamos" 
 	   or what == "RestlessDead" or what == "Ogre" then
 	   Dungeon.creatureCount = Dungeon.creatureCount + 1
 	end
@@ -379,7 +379,7 @@ function Procgen.Ogre(e, x, y)
 	)
 end
 
-function Procgen.FlamingSphere(e, x, y)
+function Procgen.Flamos(e, x, y)
 	e:Set(
 		Creature{}, 
 		Break{},
@@ -448,8 +448,8 @@ end
 --Monsters["Flow"] = { "RestlessDead", "GelatinousCube" }
 --Monsters["Heal"] = { "Kobold", "Phantasm" }
 --Monsters["Calm"] = { "Banshee", "Nightmare" }
---Monsters["Open"] = { "FlamingSphere", "Ogre" }
---Monsters["Light"] = { "FlamingSphere", "Djinn" }
+--Monsters["Open"] = { "Flamos", "Ogre" }
+--Monsters["Light"] = { "Flamos", "Djinn" }
 
 
 
@@ -677,8 +677,9 @@ Monsters["Darken"] = { "Kobold", "Kobold" }
 Monsters["Flow"] = { "RestlessDead", "GelatinousCube" }
 Monsters["Heal"] = { "Kobold", "Phantasm" }
 Monsters["Calm"] = { "Banshee", "Nightmare" }
-Monsters["Open"] = { "FlamingSphere", "Ogre" }
-Monsters["Light"] = { "FlamingSphere", "Djinn" }
+Monsters["Open"] = { "Flamos", "Ogre" }
+Monsters["Light"] = { "Flamos", "Djinn" }
+Monsters["Hate"] = { "Flamos", "Djinn", "Ogre", "Kobold", "Hobgob", "Mimic", "Goblin" }
 
 Messages = { 
 	"You read: DIAMONDS serve the OPEN sky",
