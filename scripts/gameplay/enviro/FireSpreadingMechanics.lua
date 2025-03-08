@@ -56,6 +56,11 @@ function FireSpreadingMechanicsSystem:Tick()
 			Contents.DropAll(entity, x, y)
 		end
 
+		if entity == PlayerEntity then
+			Svarog.Instance:Reload()
+			return
+		end
+
 		RemoveEntityFromDungeon(entity)
 		World:Remove(entity)
 

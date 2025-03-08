@@ -54,6 +54,10 @@ function WinScreenRenderSystem:Render()
 		end
 	end
 
+	if WinScreenWay == "up" and WinScreenFrame > 60 then
+		WinScreenFrame = 60
+	end
+
 	if WinScreenWay == "down" and WinScreenFrame == 0 then
 		FIN = false
 		WinScreenWay = "up"
