@@ -25,7 +25,11 @@ local function PerformAttack(attackerEntity, targetEntity)
 			targetEntity[Health].current = targetEntity[Health].current - totalDamage
 			Fade(targetEntity, Colors.Red, Colors.Black, 0.5)
 
-			Diary.Write(attackerEntity[Name].value .. " hits " .. targetEntity[Name].value .. ".")
+			if attackerEntity == PlayerEntity then
+				Diary.Write("You hit the " .. targetEntity[Name].value .. ".")
+			else
+				Diary.Write("The " .. attackerEntity[Name].value .. " hits " .. targetEntity[Name].value .. ".")
+			end
 		end
 end
 
