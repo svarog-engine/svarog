@@ -81,7 +81,8 @@ namespace svarog.presentation
 
             m_Window.MouseButtonPressed += (object? _, MouseButtonEventArgs args) =>
             {
-                Svarog.Instance.EnqueueInput(new InputAction(EInputActionType.Press, $"Mouse: {args.Button}", 1, args.X, args.Y));
+                var relative = GetRelativeMousePosition(args.X, args.Y);
+                Svarog.Instance.EnqueueInput(new InputAction(EInputActionType.Press, $"Mouse: {args.Button}", 1, relative.Item1 + 1, relative.Item2 + 1));
             };
 
             m_Window.MouseButtonReleased += (object? _, MouseButtonEventArgs args) =>

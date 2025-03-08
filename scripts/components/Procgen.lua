@@ -41,7 +41,7 @@ Procgen = {}
 function Procgen.MakeObject(what, x, y, ...)
 	local e = World:Entity(Position{ x = x, y = y })
 		
-	e:Set(Name(what))
+	e:Set(Name { value = what })
 	e:Set(ID(IDS))
 	e:Set(InLevel{ value = Level })
 	IDS = IDS + 1

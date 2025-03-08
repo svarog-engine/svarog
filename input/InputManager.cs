@@ -11,10 +11,10 @@ namespace svarog.input
         MouseMove,
     }
 
-    public record struct InputAction(EInputActionType Action, string Input, float? Length, int X = 0, int Y = 0)
+    public record struct InputAction(EInputActionType Action, string Input, float? Length, int? X = null, int? Y = null)
     {
         public InputAction(EInputActionType action, string input) : this(action, input, null) { }
-        public InputAction(EInputActionType action, string input, float length) : this(action, input, length, 0, 0) { }
+        public InputAction(EInputActionType action, string input, float length) : this(action, input, length, null, null) { }
     }
 
     public record struct InputContext(Dictionary<string, List<InputAction>> Actions);
@@ -194,12 +194,19 @@ namespace svarog.input
                                 || input.Action == EInputActionType.Release)
                             {
                                 foundActionTrigger = true;
+
+                                if (inputAction.X != null && inputAction.Y != null)
+                                {
+                                    MouseX = inputAction.X.GetValueOrDefault();
+                                    MouseY = inputAction.Y.GetValueOrDefault();
+                                }
+
                                 break;
                             }
                             else if (input.Action == EInputActionType.MouseMove)
                             {
-                                MouseX = inputAction.X;
-                                MouseY = inputAction.Y;
+                                MouseX = inputAction.X.GetValueOrDefault();
+                                MouseY = inputAction.Y.GetValueOrDefault();
 
                                 foundActionTrigger = true;
                                 break;

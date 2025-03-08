@@ -14,6 +14,7 @@ Actions.Default = {
 	ZoomOut = { Input.Press("Key: PageDown") },
 	Inventory = { Input.Press("Key: I") },
 	Tension = { Input.Press("Key: T") },
+	Info = { Input.Press("Mouse: Left") },
 }
 
 Actions.Inventory = {
