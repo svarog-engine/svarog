@@ -59,6 +59,19 @@ DebugSpawnLibrary = {
 	},
 
 	{ 
+		name = "book",
+		callback = function(x, y)
+			AddEntityToDungeon(x, y, World:Entity(
+				Item{id = "book", quantity = 1},
+				Position{ x = x, y = y },
+				Glyph{ name = "treasure" },
+				Name("Book"),
+				Text {text = "This is book! This is book! This is book! This is book! This is book!"}
+			))
+		end
+	},
+
+	{ 
 		name = "crate",
 		callback = function(x, y)
 			AddEntityToDungeon(x, y, World:Entity(

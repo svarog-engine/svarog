@@ -28,6 +28,8 @@ BumpAttack = ECS.Component { damage = 1 }
 
 Stamina = ECS.Component(Range(9, 9))
 
+Text = ECS.Component { text = "" }
+
 -- Challenge
 
 Challenged = ECS.Component()

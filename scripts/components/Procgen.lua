@@ -79,7 +79,7 @@ function Procgen.Crate(e, x, y)
 	Procgen.IsFurniture(e)
 	Procgen.IsWooden(e)
 	Procgen.IsContainer(e)
-	Procgen.GenerateContents(e, Minerals)
+	Procgen.GenerateContents(e, ContentsItems)
 	e:Set(Glyph{ name = "crate" })
 end
 
@@ -98,7 +98,7 @@ end
 function Procgen.Chest(e, x, y)
 	Procgen.IsFurniture(e)
 	Procgen.IsContainer(e)
-	Procgen.GenerateContents(e, Minerals)
+	Procgen.GenerateContents(e, ContentsItems)
 	e:Set(Locked{})
 	e:Set(Glyph{ name = "chest" })
 end
@@ -466,8 +466,7 @@ Rooms[Endure] = { "workshop1", "workshop2" } -- training room
 Rooms[Luck] = { "common1", "common2" } -- market
 Rooms[Fade] = { "warehouse1", "common1", "common2" }
 
-Minerals = {"diamond", "topaz", "obsidian", "malachite", "lapis_lazuli", "onyx", "smoky_quartz" }
-Plants = {"ash", "frankincense", "blackthorn", "willow", "sage", "foxglove", "mandrake" }
+ContentsItems = {"diamond", "topaz", "obsidian", "malachite", "lapis_lazuli", "onyx", "smoky_quartz", "ash", "frankincense", "blackthorn", "willow", "sage", "foxglove", "mandrake" }
 Books = { "book" }
 
 Monsters = {}
