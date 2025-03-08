@@ -229,6 +229,7 @@ local function MakeDungeon()
 
 	PlayerEntity = World:Entity(
 		Player(),
+		Boons{ value = {} },
 		MoveMode("Walk"),
 		Sight(5),
 		Pause(),

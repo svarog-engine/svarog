@@ -38,13 +38,14 @@ local function SpawnChallengeEntities(x, y, n, challenge)
 
 		local locs = SpawnDeltaLocations[n]
 		local ko = 0
-		for _, l in ipairs(locs) do
+
+		for i, l in ipairs(locs) do
 			local lx, ly = x + l[1], y + l[2]
 			local lid = Dungeon.floor:ID(lx, ly)
 			if Dungeon.floor:Has(lx, ly) and Dungeon.passable:Get(lx, ly) then
 				local entts = Dungeon.entities[lid] or {}
-				if #entts == 0 then
-					Procgen.MakeObject("Portal", lx, ly, challenge)
+				if #entts == 0 then					
+					Procgen.MakeObject("Portal", lx, ly, challenge, Rand:Range(8, 9), PlayerEntity[Boons].value[i])
 				else 
 					ko = ko + 1
 				end
@@ -101,6 +102,9 @@ function ChallengeSystem:Tick()
 		timeout.value = timeout.value - 0.5
 
 		if timeout.value < 0 then
+			
+			Fade(entity, Colors.Red, Colors.White, 0.5)
+
 			RemoveEntityFromDungeon(entity)
 			World:Remove(entity)
 		end

@@ -49,12 +49,13 @@ function PlayerInfoRenderSystem.Render(ui)
 	ui.PushBox(47, 2, 20, 20)
 		ui.PushOrder("|")
 			ui.PushStyle(Colors.Yellow, Colors.Black)
-			for _, wheelItem in pairs(GetWheelsEntries()) do
-				local v = player[wheelItem.component]
-				if v ~= nil then
-					ui.Label(wheelItem.name)
-				end
+
+			for _, name in ipairs(PlayerEntity[Boons].value) do
+				ui.PushStyle(CompColors[name][1], Colors.Black)
+				ui.Label(name)
+				ui.PopStyle()
 			end
+
 			ui.PopStyle()
 			
 			ui.Space(1)

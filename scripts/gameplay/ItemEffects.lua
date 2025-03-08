@@ -23,14 +23,40 @@ function Consume(itemId)
 	end
 end
 
+ItemCastNames = {
+	diamond = function() return "Break" end,
+	sapphire = function() return "Light" end,
+	obsidian = function() return "Darken" end,
+	malachite = function() return "Luck" end,
+	lapis_lazuli = function() return "Endure" end,
+	onyx = function() return "Heal" end,
+	smoky_quartz = function() return "Calm" end,
+	garnet = function() return "Flow" end,
+	topaz = function() return "Steal" end,
+}
+
 ItemCast = {
 	diamond = function() return Break end,
-	topaz = function() return Light end,
+	sapphire = function() return Light end,
 	obsidian = function() return Darken end,
 	malachite = function() return Luck end,
 	lapis_lazuli = function() return Endure end,
 	onyx = function() return Heal end,
-	smoky_quartz = function() return Luck end,
+	smoky_quartz = function() return Calm end,
+	garnet = function() return Flow end,
+	topaz = function() return Steal end,
+}
+
+CompColors = {
+	Break = { Colors.LightBlue, Colors.Blue },
+	Light = { Colors.LightYellow, Colors.Yellow },
+	Darken = { Colors.DarkRed, Colors.Black },
+	Luck = { Colors.LightYellow, Colors.Yellow },
+	Endure = { Colors.Blue, Colors.DarkBlue },
+	Heal = { Colors.LightRed, Colors.Red },
+	Calm = { Colors.LightCyan, Colors.Cyan },
+	Flow = { Colors.Cyan , Colors.DarkCyan },
+	Steal = { Colors.LightMagenta , Colors.Magenta },
 }
 
 function CanCast(itemId)
@@ -39,6 +65,7 @@ end
 
 function Cast(x, y, itemId)
 	local component = ItemCast[itemId]
+	local compName = ItemCastNames[itemId]
 	if component == nil then
 		return
 	end
@@ -58,7 +85,7 @@ function Cast(x, y, itemId)
 				RemoveEntityFromDungeon(e)
 				World:Remove(e)
 			else
-				e:Set(comp(), Magic{})
+				e:Set(comp(), Magic{ colors = CompColors[compName] })
 			end
 		end
 	end

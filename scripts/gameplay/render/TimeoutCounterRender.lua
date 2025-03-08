@@ -10,12 +10,12 @@ function TimeoutCounterRenderSystem:Render()
 		local pos = entity[Position]
 		local x, y = pos.x, pos.y
 
-		if Time < 20 then
+		if Time < 10 then
 			Engine.Glyph(x, y, tostring(math.ceil(entity[Timeout].value)))
 		end
 	end
 	
-	if Time > 40 then
+	if Time >= 20 then
 		Time = 0
 	end
 end
