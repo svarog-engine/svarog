@@ -242,6 +242,19 @@ function Procgen.Goblin(e, x, y)
 	)
 end
 
+function Procgen.Kobold(e, x, y)
+	e:Set(
+		Creature{}, 
+		Sight{ radius = 10 },
+		AIMoveTowardsPlayer{ distance = 2, chance = 10 }, 
+		Health{ value = Range(1) }, 
+		BumpAttack { damage = 3 }, 
+		Glyph{ name = "kobold" },
+		Burnable{},
+		Contents{ items = { { itemId = "gold", quantity = 10 } } }
+	)
+end
+
 function Procgen.AlarmTrap(e, x, y)
 	e:Set(Invisible(Range(100)), Alarm{})
 	e:Set(Glyph{ name = "alarmTrap" })
@@ -341,7 +354,7 @@ function Procgen.Mimic(e, x, y)
 		BumpAttack { damage = 3 }, 
 		Glyph{ name = "chest" },
 		Burnable{},
-		Contents{ items = {} }
+		Contents{ items = { { itemId = "gold", quantity = 50 } } }
 	)
 end
 
@@ -350,14 +363,14 @@ function Procgen.Ogre(e, x, y)
 		Creature{}, 
 		Break{},
 		Sight{ radius = 10 },
-		Magic{ value = Rand:F01(), colors = CompColors[Break] },
+		Magic{ value = Rand:F01(), colors = CompColors[Open] },
 		AIMoveTowardsPlayer{ distance = 0, chance = 9 },
 		AIRest{ chance = 8 },
 		AIBreakThroughToPlayer{ chance = 5, distance = 9 },
 		Health{ value = Range(3) }, 
 		BumpAttack { damage = 3 }, 
 		Glyph{ name = "ogre" },
-		Contents{ items = {} }
+		Contents{ items = { { itemId = "gold", quantity = 50 } } }
 	)
 end
 
@@ -368,15 +381,61 @@ function Procgen.FlamingSphere(e, x, y)
 		Sight{ radius = 10 },
 		OldPosition{},
 		ExplodeFireOnDeath{},
-		Magic{ value = Rand:F01(), colors = CompColors[Break] },
+		Magic{ value = Rand:F01(), colors = CompColors[Light] },
 		AIKeepDistanceFromPlayer{ distance = 3, chance = 9 },
 		AIRest{ chance = 1 },
 		Health{ value = Range(1) },
 		Burning{},
 		Glyph{ name = "sphere" },
+		Contents{ items = { { itemId = "gold", quantity = 100 } } }
+	)
+end
+
+function Procgen.Djinn(e, x, y)
+	e:Set(
+		Creature{},
+		Sight{ radius = 10 },
+		OldPosition{},
+		ExplodeFireOnDeath{},
+		Magic{ value = Rand:F01(), colors = CompColors[Open] },
+		AIMoveTowardsPlayer{ distance = 1, chance = 9 },
+		Health{ value = Range(20) },
+		Burning{},
+		Spread{ chance = 4 },
+		Glyph{ name = "djinn" },
 		Contents{ items = {} }
 	)
 end
+
+function Procgen.RestlessDead(e, x, y)
+	e:Set(
+		Creature{},
+		Name{ value = "Restless Dead" },
+		Sight{ radius = 5 },
+		Magic{ value = Rand:F01(), colors = CompColors[Flow] },
+		AIForcedRandomWalk{},
+		Health{ value = Range(2) },
+		Burning{},
+		Spread{ chance = 4 },
+		Glyph{ name = "restless" },
+		Contents{ items = {} }
+	)
+end
+
+function Procgen.GelatinousCube(e, x, y)
+	e:Set(
+		Creature{},
+		Name{ value = "Gelatinous Cube" },
+		Sight{ radius = 20 },
+		Magic{ value = Rand:F01(), colors = CompColors[Flow] },
+		AIMoveTowardsPlayer{ distance = 0, chance = 6 },
+		AIBreakThroughToPlayer{ chance = 4, distance = 9 },
+		Health{ value = Range(8) },
+		Glyph{ name = "gelly" },
+		Contents{ items = {} }
+	)
+end
+
 
 --Monsters["Endure"] = { "Hobgob", "Mimic" }
 --Monsters["Luck"] = { "PlagueRats", "Vampire" }
@@ -385,7 +444,7 @@ end
 --Monsters["Heal"] = { "Kobold", "Phantasm" }
 --Monsters["Calm"] = { "Banshee", "Nightmare" }
 --Monsters["Open"] = { "FlamingSphere", "Ogre" }
---Monsters["Light"] = { "Wisp", "Djinn" }
+--Monsters["Light"] = { "FlamingSphere", "Djinn" }
 
 
 
@@ -608,16 +667,32 @@ ContentsItems = {"diamond", "topaz", "obsidian", "malachite", "lapis_lazuli", "o
 
 Monsters = {}
 Monsters["Endure"] = { "Hobgob", "Mimic" }
---Monsters["Break"] = {  }
-Monsters["Luck"] = { "PlagueRats", "Vampire" }
-Monsters["Darken"] = { "Shade", "Wraith" }
+Monsters["Luck"] = { "Goblin", "Goblin" }
+Monsters["Darken"] = { "Kobold", "Kobold" }
 Monsters["Flow"] = { "RestlessDead", "GelatinousCube" }
 Monsters["Heal"] = { "Kobold", "Phantasm" }
 Monsters["Calm"] = { "Banshee", "Nightmare" }
 Monsters["Open"] = { "FlamingSphere", "Ogre" }
-Monsters["Light"] = { "Wisp", "Djinn" }
+Monsters["Light"] = { "FlamingSphere", "Djinn" }
 
-Messages = { "a", "b", "c", "d" }
+Messages = { 
+	"You read: DIAMONDS serve the OPEN sky",
+	"You read: Spheres and Ogres formed an OPEN alliance...",
+	"You read: SAPPHIRE splits the LIGHT in two",
+	"You read: Roses are for silence, OBSIDIAN for to DARKEN",
+	"You read: MALACHITE is what makes good fortune",
+	"You read: Gobs are immune. HOBGOBs suffer SKYSTONES.",
+	"You read: Beware djinn, stomp the portals quickly lest burn...",
+	"You read: There were once many more gods and monsters!",
+	"You read: SKYSTONES can ENDURE forever",
+	"You read: ...Kill with elements aligned and fit",
+	"You read: ONYX figures into HEALING",
+	"You read: A CALMing influence, QUARTZ is...",
+	"You read: We attach GARNETs for the FLOW to increase.",
+	"You read: TOPAZ is known to LIGHT whatever darkness.",
+	"You read: ...Herbs give, stones take. Or at least so we learn."
+}
+
 Messages.index = 1
 
 function GetNextMessage()

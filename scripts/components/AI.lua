@@ -12,3 +12,4 @@ AIAttackIfStandingNextTo = ECS.Component{}
 
 AIRest = ECS.Component{ chance = 9 }
 AIBreakThroughToPlayer = ECS.Component{ distance = 9 }
+AIForcedRandomWalk = ECS.Component{}
