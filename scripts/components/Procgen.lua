@@ -3,16 +3,20 @@ InLevel = ECS.Component{ value = 0 }
 Name = ECS.Component("")
 Burnable = ECS.Component()
 Burning = ECS.Component{value = 0.0}
-Acidic = ECS.Component{value = 0.0}
+ExplodeFireOnDeath = ECS.Component{}
 Unburnable = ECS.Component()
 
 Dissolvable = ECS.Component()
+OldPosition = ECS.Component()
 
 Weapon = ECS.Component()
 Amulet = ECS.Component()
 Small = ECS.Component()
 Paper = ECS.Component()
 Shelve = ECS.Component()
+
+Altar = ECS.Component({ type = nil })
+Satiated = ECS.Component()
 
 Lifetime = ECS.Component{ value = 5 }
 Spread = ECS.Component{ value = 5 }
@@ -81,6 +85,76 @@ function Procgen.Glass(e)
 	e:Set(Glyph{ name = "alarmTrap" }) 
 end
 
+---------------------------------------------------------------------------------------------------------
+
+local comps = { 
+	"Endure", 
+	--"Break", 
+	"Luck", 
+	"Darken", 
+	"Flow", 
+	"Heal", 
+	"Calm", 
+	"Open", 
+	"Light", 
+}
+
+function OtherComps(have)
+	local t = {}
+	for i, h in ipairs(have) do
+		t[h] = h
+	end
+
+	local cs = {}	
+	for i, c in ipairs(comps) do
+		if t[c] == nil then table.insert(cs, c) end
+	end
+
+	return cs
+end
+
+function CompNameToComp(comp)
+	if comp == "Endure" then return Endure end
+	if comp == "Break" then return Break end
+	if comp == "Luck" then return Luck end
+	if comp == "Darken" then return Darken end
+	if comp == "Flow" then return Flow end
+	if comp == "Heal" then return Heal end
+	if comp == "Calm" then return Calm end
+	if comp == "Open" then return Open end
+	if comp == "Light" then return Light end
+end
+
+function CompToShardic(comp)
+	if comp == "Endure" then return "Endurance" end
+	if comp == "Break" then return "Fracture" end
+	if comp == "Luck" then return "Luck" end
+	if comp == "Darken" then return "Darkness" end
+	if comp == "Flow" then return "Mists" end
+	if comp == "Heal" then return "Healing" end
+	if comp == "Calm" then return "Calm" end
+	if comp == "Open" then return "Openess" end
+	if comp == "Light" then return "Light" end
+	print("NOT FOUND: ", comp)
+end
+
+function Procgen.SatiatedAltar(e, x, y, comp)
+	e:Set(Glyph{ name = "altar" })
+	e:Set(Item{})
+	e:Set(Name{ value = "Altar of " .. CompToShardic(comp) })
+	e:Set(Altar{ type = comp })
+	e:Set(Satiated{})
+	e:Set(Magic{ value = Rand:F01(), colors = CompColors[comp] })
+end
+
+function Procgen.Altar(e, x, y, comp)
+	e:Set(Glyph{ name = "altar" })
+	e:Set(Item{})
+	e:Set(Name{ value = "Altar of " .. CompToShardic(comp) })
+	e:Set(Altar{ type = comp })
+	e:Set(UnMagic{ value = Rand:F01(), colors = CompColors[comp] })
+end
+
 function Procgen.Crate(e, x, y)
 	Procgen.IsFurniture(e)
 	Procgen.IsWooden(e)
@@ -98,6 +172,11 @@ end
 
 function Procgen.Cinders(e, x, y)
 	e:Set(Glyph{ name = "cinders" })
+	e:Set(Unburnable{})
+end
+
+function Procgen.Dust(e, x, y)
+	e:Set(Glyph{ name = "dust" })
 	e:Set(Unburnable{})
 end
 
@@ -138,8 +217,8 @@ end
 function Procgen.Goblin(e, x, y)
 	e:Set(
 		Creature{}, 
-		AIMoveTowardsPlayer{ distance = 0, chance = 8 }, 
-		AIKeepDistanceFromPlayer{ distance = 3, chance = 5 },
+		Sight{ radius = 15 },
+		AIMoveTowardsPlayer{ distance = 0, chance = 10 }, 
 		Health{ value = Range(2) }, 
 		BumpAttack { damage = 1 }, 
 		Glyph{ name = "goblin" },
@@ -153,10 +232,11 @@ function Procgen.AlarmTrap(e, x, y)
 	e:Set(Glyph{ name = "alarmTrap" })
 end
 
-function Procgen.Book(e, x, y)
+function Procgen.Book(e, x, y, contents)
 	Procgen.IsPaper(e)
 	e:Set(Item{})
 	e:Set(Glyph{ name = "book" })
+	e:Set(Text(contents))
 end
 
 function Procgen.Shelf(e, x, y)
@@ -220,16 +300,6 @@ function Procgen.Rift(e, x, y, owner)
 	e:Set(BlockingSight{})
 end
 
---Monsters[Endure] = { "Hobgob", "Mimic" }
---Monsters[Break] = { "Acid Cube", "Ogre" }
---Monsters[Luck] = { "Plague Rats", "Vampire" }
---Monsters[Darken] = { "Shade", "Wraith" }
---Monsters[Flow] = { "Restless Dead", "Gelatinous Cube" }
---Monsters[Heal] = { "Kobold", "Phantasm" }
---Monsters[Calm] = { "Banshee", "Nightmare" }
---Monsters[Steal] = { "Hobgob", "Mimic" }
---Monsters[Light] = { "Wisp", "Djinn" }
-
 function Procgen.Hobgob(e, x, y)
 	e:Set(
 		Creature{}, 
@@ -276,20 +346,37 @@ function Procgen.Ogre(e, x, y)
 	)
 end
 
-function Procgen.AcidCube(e, x, y)
+function Procgen.FlamingSphere(e, x, y)
 	e:Set(
 		Creature{}, 
 		Break{},
 		Sight{ radius = 10 },
+		OldPosition{},
+		ExplodeFireOnDeath{},
 		Magic{ value = Rand:F01(), colors = CompColors[Break] },
-		AIMoveTowardsPlayer{ distance = 4, chance = 9 },
+		AIKeepDistanceFromPlayer{ distance = 3, chance = 9 },
 		AIRest{ chance = 1 },
-		Health{ value = Range(3) }, 
-		Acidic{},
-		Glyph{ name = "blob" },
+		Health{ value = Range(1) },
+		Burning{},
+		Glyph{ name = "sphere" },
 		Contents{ items = {} }
 	)
 end
+
+--Monsters["Endure"] = { "Hobgob", "Mimic" }
+--Monsters["Luck"] = { "PlagueRats", "Vampire" }
+--Monsters["Darken"] = { "Shade", "Wraith" }
+--Monsters["Flow"] = { "RestlessDead", "GelatinousCube" }
+--Monsters["Heal"] = { "Kobold", "Phantasm" }
+--Monsters["Calm"] = { "Banshee", "Nightmare" }
+--Monsters["Open"] = { "FlamingSphere", "Ogre" }
+--Monsters["Light"] = { "Wisp", "Djinn" }
+
+
+
+
+
+
 
 function Procgen.GenerateContents(e, itemList)
 -- mika
@@ -304,11 +391,15 @@ function Templates.LibraryRoom(cx, cy)
 		room:Flood()
 
 		local w, h = Dungeon.floor:Size()
-		for i = 1, w, 2 do
-			for j = 1, h, 2 do
-				if room:Has(i, j) and room:Get(i, j) >= 0 and room:Get(i, j) < 10 then
-					Dungeon.zones:Set(i, j, -1)
-					Procgen.MakeObject("Shelf", i, j)
+		for i = 1, w do
+			for j = 1, h do
+				Dungeon.zones:Set(i, j, -1)
+				if i % 2 == 0 and j % 2 == 0 then
+					if room:Has(i, j) and room:Get(i, j) >= 0 and room:Get(i, j) < 10 then
+						if Chances[5]:MakeGuess() then
+							Procgen.MakeObject("Shelf", i, j)
+						end
+					end
 				end
 			end
 		end
@@ -370,47 +461,47 @@ MakeTemplate("common2", 4, 3,
 MakeTemplate("warehouse1", 5, 3,
 [[
 .1.1.
-.1.1.
-.1.1.
-]], { nil, "Crate", "Crate", "Crate", "Crate" }, { nil, nil, nil, "Book", "Key", "AlarmTrap", "Goblin" }
+21.12
+21212
+]], { nil, "Crate", "Crate", "Crate", "Crate" }, { nil, "Goblin" }
 )
 
 MakeTemplate("warehouse2", 4, 4,
 [[
-1111
+1221
 1...
 1..1
-1111
-]], { "Crate", "Table", "Shelf" }, { nil, nil, "Chest", "Chest", "Crate" })
+1112
+]], { "Crate", "Table", "Shelf" }, { "Goblin", "Crate", "Goblin" })
 
 MakeTemplate("warehouse3", 4, 4,
 [[
-1111
-....
+1121
+...2
 1..1
-1.11
-]], { "Crate", "Table", "Shelf" }, { nil, nil, "Chest", "Chest", "Crate" })
+2.11
+]], { "Crate", "Table", "Shelf" }, { nil, "Goblin", "Chest", "Chest", "Crate" })
 
 MakeTemplate("library1", 3, 3,
 [[
-...
+..2
 .1.
 ...
-]], { "Shelf" })
+]], { "Shelf" }, { nil, "Goblin" })
 
 MakeTemplate("library2", 3, 3,
 [[
 1..
-...
+.22
 ..1
-]], { "Shelf" })
+]], { "Shelf" }, { nil, "Goblin" })
 
 MakeTemplate("library3", 5, 3,
 [[
-1...1
+1.221
 .....
 1...1
-]], { "Shelf" })
+]], { "Shelf" },  { nil, "Goblin" })
 
 MakeTemplate("exhibit1", 5, 5,
 [[
@@ -447,16 +538,16 @@ MakeTemplate("workshop2", 3, 3,
 MakeTemplate("shrine1", 3, 3,
 [[
 1..
-...
+.2.
 ..1
-]], { "Candle" })
+]], { "Candle" }, { "Goblin", "Statue" })
 
 MakeTemplate("shrine1", 5, 3,
 [[
 1...1
+1.2.1
 1...1
-1...1
-]], { nil, "Candle" })
+]], { nil, "Candle" }, { "Goblin", "Hobgob" })
 
 MakeTemplate("shrine2", 6, 6,
 [[
@@ -465,7 +556,7 @@ MakeTemplate("shrine2", 6, 6,
 .124.
 3...1
 .3.1.
-]], { "Candle" }, { "Statue" }, { nil, nil, nil, nil, nil, "Book", "Candle" }, { nil, nil, nil, "Artifact" })
+]], { "Candle" }, { "Statue" }, { nil, nil, nil, nil, nil, "Book", "Candle" }, { nil, nil, nil, "Hobgob" })
 
 MakeTemplate("forge1", 5, 5,
 [[
@@ -498,17 +589,17 @@ Rooms[Luck] = { "common1", "common2" } -- market
 Rooms[Fade] = { "warehouse1", "common1", "common2" }
 
 ContentsItems = {"diamond", "topaz", "obsidian", "malachite", "lapis_lazuli", "onyx", "smoky_quartz",
-	"sapphire", "garnet", "ash", "frankincense", "blackthorn", "willow", "sage", "foxglove", "mandrake", "eye_of_newt", "honey" }
+	"sapphire", "garnet", "ash", "rosebud", "blackthorn", "willow", "sage", "foxglove", "mandrake", "eye_of_newt", "honey" }
 
 Monsters = {}
 Monsters["Endure"] = { "Hobgob", "Mimic" }
-Monsters["Break"] = { "AcidCube", "Ogre" }
+--Monsters["Break"] = {  }
 Monsters["Luck"] = { "PlagueRats", "Vampire" }
 Monsters["Darken"] = { "Shade", "Wraith" }
 Monsters["Flow"] = { "RestlessDead", "GelatinousCube" }
 Monsters["Heal"] = { "Kobold", "Phantasm" }
 Monsters["Calm"] = { "Banshee", "Nightmare" }
-Monsters["Steal"] = { "Hobgob", "Mimic" }
+Monsters["Open"] = { "FlamingSphere", "Ogre" }
 Monsters["Light"] = { "Wisp", "Djinn" }
 
 Messages = { "a", "b", "c", "d" }

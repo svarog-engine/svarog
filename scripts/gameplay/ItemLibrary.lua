@@ -13,15 +13,15 @@ ItemLibrary = {
 	topaz = { name = "Topaz", description = "", glyph = "mineral"},
 	obsidian = { name = "Obsidian", description = "", glyph = "mineral"},
 	malachite = { name = "Malachite", description = "", glyph = "mineral"},
-	lapis_lazuli = { name = "Lapis Lazuli", description = "", glyph = "mineral"},
+	lapis_lazuli = { name = "Skystone", description = "", glyph = "mineral"},
 	onyx = { name = "Onyx", description = "", glyph = "mineral"},
-	smoky_quartz = { name = "Smoky Quartz", description = "", glyph = "mineral"},
+	smoky_quartz = { name = "Quartz", description = "", glyph = "mineral"},
 	sapphire = { name = "Sapphire", description = "", glyph = "mineral"},
 	garnet = { name = "Garnet", description = "", glyph = "mineral"},
 
 -- Plants
 	ash = { name = "Ash", description = "", glyph = "plant"},
-	frankincense = { name = "Frankincense", description = "", glyph = "plant"},
+	rosebud = { name = "Rosebud", description = "", glyph = "plant"},
 	blackthorn = { name = "Blackthorn", description = "", glyph = "plant"},
 	willow = { name = "Willow", description = "", glyph = "plant"},
 	sage = { name = "Sage", description = "", glyph = "plant"},

@@ -59,15 +59,16 @@ local Actions = {
 
 		local actionDone = false
 		if CanConsume(item.itemId) then
-			print("consume")
-			Consume(item.itemId)
+			if Consume(item.itemId) then
+				Diary.Write("You consume the " .. itemMeta.name .. ". It alleviates some tension.")
+			else
+				Diary.Write("You consume the " .. itemMeta.name .. ", but it doesn't sate your glyphs.")
+			end
 			actionDone = true
 		end
 
 		if actionDone then 
 			Contents.Remove(PlayerEntity, item.itemId, 1)
-			-- MIKA
-			Diary.Write("Dropped " .. itemMeta.name .. ".")
 			while selection > #contents do
 				selection = selection - 1
 			end

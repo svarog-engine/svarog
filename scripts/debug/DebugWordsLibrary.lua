@@ -22,9 +22,9 @@ DebugWordsLibrary = {
 	},
 
 	{
-		name = "steal",
+		name = "open",
 		callback = function (x, y)
-			TryApplyComponent(x, y, Steal { level = 1, chances = 8 }, "Steal")
+			TryApplyComponent(x, y, Open { level = 1, chances = 8 }, "Open")
 		end
 	},
 

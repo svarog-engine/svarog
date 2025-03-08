@@ -66,6 +66,9 @@ Glossary.Default = {
 	mineral = { x = 5, y = 0, fg = Colors.Green, bg = Colors.Black },
 	plant = { x = 6, y = 0, fg = Colors.Blue, bg = Colors.Black },
 	
+	sphere = { x = 2, y = 3, fg = Colors.White, bg = Colors.Black },
+	dust = { x = 30, y = 3, fg = Colors.Gray, bg = Colors.Black },
+	altar = { x = 3, y = 3, fg = Colors.Blue, bg = Colors.Black },
 	goblin = { x = 7, y = 2, fg = Colors.LightGreen, bg = Colors.Black },
 	kobold = { x = 11, y = 2, fg = Colors.LightRed, bg = Colors.Black },
 	hobgob = { x = 7, y = 1, fg = Colors.DarkGreen, bg = Colors.Black },

@@ -41,6 +41,7 @@
     <None Remove="scripts\gameplay\algorithms\Range.lua" />
     <None Remove="scripts\gameplay\algorithms\Stack.lua" />
     <None Remove="scripts\gameplay\Chances.lua" />
+    <None Remove="scripts\gameplay\enviro\BumpAltarMechanics.lua" />
     <None Remove="scripts\gameplay\enviro\DelayedDamageMechanics.lua" />
     <None Remove="scripts\gameplay\enviro\FireSpreadingMechanics.lua" />
     <None Remove="scripts\gameplay\enviro\HealingMechanics.lua" />

@@ -56,7 +56,7 @@ function PlayerInfoRenderSystem.Render(ui)
 
 			for _, name in ipairs(PlayerEntity[Boons].value) do
 				ui.PushStyle(CompColors[name][1], Colors.Black)
-				ui.Label(name)
+				ui.Label("[" .. name .. "]")
 				ui.PopStyle()
 			end
 

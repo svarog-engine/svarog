@@ -18,7 +18,7 @@ function PickUpMechanicsSystem:Tick()
 
 		local textComp = entity[Text]
 		if textComp ~= nil then
-			Diary.Write(textComp.text)
+			Diary.Write(textComp.value)
 			Diary.Write(" ")
 			shouldRemove = true
 

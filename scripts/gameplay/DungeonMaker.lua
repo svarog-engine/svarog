@@ -75,7 +75,7 @@ Level = 0
 
 local function GenerateSpecificShape(l, w, h)
 	if l == 1 then
-		return Map:From(Markov:Run("Growth", w, h, 500), w)
+		return Map:From(Markov:Run("Growth", w, h, 200), w)
 	elseif l < 5 then
 		local m1 = Markov:Run("StrangeDungeon", w, h)
 		local m2 = Markov:Or(m1, "DijkstraDungeon", w, h)
@@ -88,7 +88,51 @@ end
 
 local function SpecificRoomSetup(l, w, h)
 	if l == 1 then
+		
+		local bucketIndex = Dungeon.wallDistances:GetHighestBucket()
+		local bucket = Dungeon.wallDistances:GetAt(bucketIndex)
+		r = Rand:Range(1, #bucket)
+		local rx, ry = math.floor(bucket[r].x), math.floor(bucket[r].y)
+		local comps = OtherComps({})
+		Procgen.MakeObject("SatiatedAltar", rx, ry, comps[Rand:Range(1, #comps)])
+
+		local messages = {
+			"My people only prowl around slowlike. You also <SHIFT>!",
+			"There were NINE shards that we held before the curse.",
+			"If you tire, find <SPACE> to RECOUP, to take VANTAGE.",
+			"FOUR breaths snap the TENSION, our forefathers have said.",
+			"SHARDs give us GLYPHs of power. They do as they please.",
+			"My sorry people has to burden you so... Do as we couldn't.",
+			"There are FOUR ALTARS to cross before the one we HATE.",
+			"Go and seal what lies BENEATH THE THRONE OF OUR QUEEN.",
+			"PLANTS alleviate TENSION from the GLYPH they are bound to.",
+			"Each MINERAL refracts a GLYPH: throw it to bestow essences.",
+			"Due to the TENSION of the GLYPHS, the RELEASE mana, satia...",
+			"...ting the ALTAR should open a path to new powers!",
+			"Rift PORTALS are easy to close -- make any physical contact!",
+			"We have seen patterns, patterns persist even when we don't.",
+			"Each GLYPH is a boon, their balance cradles our world.",
+			"There is none who survived the RIFTS and what they BRING.",
+			"The magics of the GLYPHs are varied and unmeasurable.",
+			"Satiate the ALTARS in a RELEASE OF TENSION to open them.",
+			"This one ALTAR we have readied for you, dear savior.",
+			"May our LIBRARIES be useful to your efforts...",
+		}
+		
+		local bucket = Dungeon.wallDistances:GetAt(3)
+		for _, v in ipairs(Dungeon.wallDistances:GetAt(2)) do
+			table.insert(bucket, v)
+		end 
+
+		for _, message in ipairs(messages) do
+			r = Rand:Range(1, #bucket)
+			local rx, ry = math.floor(bucket[r].x), math.floor(bucket[r].y)
+			table.remove(bucket, r)
+			Procgen.MakeObject("Book", rx, ry, message)
+		end
+
 		return { { math.floor(w / 2), math.floor(h / 2) } }
+
 	elseif l < 5 then
 		local centers = {}
 		local bucketIndex = Dungeon.wallDistances:GetHighestBucket()
@@ -98,9 +142,12 @@ local function SpecificRoomSetup(l, w, h)
 		table.remove(halfsteps, Rand:Range(1, #halfsteps))
 		table.remove(halfsteps, Rand:Range(1, #halfsteps))
 
+		local specials = 2
+		local rest = OtherComps(PlayerEntity[Boons].value)
 		local w3, h3 = math.ceil(w / 3), math.ceil(h / 3)
 		while bucketIndex > 0 do
 			local usedRs = {}
+
 			for i = 0, 100 do
 				local bucket = Dungeon.wallDistances:GetAt(bucketIndex)
 				if bucket ~= nil then
@@ -118,12 +165,21 @@ local function SpecificRoomSetup(l, w, h)
 					local rx, ry = math.floor(bucket[r].x), math.floor(bucket[r].y)
 					table.insert(centers, { rx, ry })
 					local cx, cy = math.floor(rx / w3), math.floor(ry / h3)
-					local name, comp = Wheels:GetMajor(halfsteps[(Snail(cx, cy) or 1 + i) % 9 + 1])
-					local roomTemplates = Rooms[comp]
-					local roomTemplate = roomTemplates[Rand:Range(0, #roomTemplates)]
+
+					if specials > 0 then
+						local ri = Rand:Range(1, #rest)
+						Procgen.MakeObject("Altar", rx, ry, rest[ri])
+						table.remove(rest, ri)
+						specials = specials - 1
+					else
+
+						local name, comp = Wheels:GetMajor(halfsteps[(Snail(cx, cy) or 1 + i) % 9 + 1])
+						local roomTemplates = Rooms[comp]
+						local roomTemplate = roomTemplates[Rand:Range(0, #roomTemplates)]
 				
-					if roomTemplate ~= nil then
-						Templates[roomTemplate](rx, ry)
+						if roomTemplate ~= nil then
+							Templates[roomTemplate](rx, ry)
+						end
 					end
 				end
 			end

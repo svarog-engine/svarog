@@ -8,7 +8,7 @@ LoadScriptIfExists("components\\Status")
 LoadScriptIfExists("components\\Diary")
 LoadScriptIfExists("components\\UI")
 LoadScriptIfExists("components\\AI")
+LoadScriptIfExists("components\\Procgen")
 
 LoadScriptIfExists("debug\\DebugLibrary")
 LoadScriptIfExists("debug\\DebugWordsLibrary")
-LoadScriptIfExists("components\\Procgen")

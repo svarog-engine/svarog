@@ -22,6 +22,7 @@ LoadEnviroSystem "UpdateDistances"
 LoadEnviroSystem "PlatformMechanics"
 LoadEnviroSystem "HealingMechanics"
 LoadEnviroSystem "OpenContainerMechanics"
+LoadEnviroSystem "BumpAltarMechanics"
 LoadEnviroSystem "BumpAttackMechanics"
 LoadEnviroSystem "DelayedDamageMechanics"
 LoadEnviroSystem "StatusEffectUpdate"
@@ -47,4 +48,4 @@ LoadScriptIfExists "debug\\render\\DebugDistancesRender"
 LoadScriptIfExists "debug\\render\\DebugEntitySpawnRender"
 
 World:Entity(MakeDungeonRequest)
-Diary.Write("7DRL PANIC")
+Diary.Write("Welcome, brave soujourn.")

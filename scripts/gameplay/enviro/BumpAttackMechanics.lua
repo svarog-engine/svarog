@@ -128,13 +128,27 @@ function BumpAttackMechanicsSystem:Tick()
 				entity:Unset(Bumped)
 
 				if entity[Health].current <= 0 then
+					entity[InLevel].value = entity[InLevel].value - 1
+					local x, y = entity[Position].x, entity[Position].y
+
 					if entity[Contents] ~= nil then 
-						local position = entity[Position]
-						Contents.DropAll(entity, position.x, position.y)
+						Contents.DropAll(entity, x, y)
 					end
 
+					local explodesFire = entity[ExplodeFireOnDeath] ~= nil
+					
 					RemoveEntityFromDungeon(entity)
 					World:Remove(entity)
+
+					if explodesFire then
+						for i = -2, 2 do
+							for j = -2, 2 do
+								if Chances[5]:MakeGuess() then
+									Procgen.MakeObject("Flame", x + i, y + j)
+								end
+							end
+						end
+					end
 				end
 			end
 		end

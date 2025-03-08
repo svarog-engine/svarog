@@ -19,17 +19,27 @@ function OpenCrateSystem:Tick()
 
 		if who[Contents] ~= nil then
 			if entity[Locked] ~= nil then 
-				if Contents.HasItem(who, "key") then 
+				if who[Open] ~= nil then
 					Contents.Remove(who, "key")
 					entity:Unset(Locked)
+					
+					if who == PlayerEntity then 
+						Diary.Write("The " .. entity[Name].value .. " unlocks. Your [OPEN] glyph quivers.")
+						who[Tension]:Up(1)
+					end
+				elseif Contents.HasItem(who, "key") then 
+					Contents.Remove(who, "key")
+					entity:Unset(Locked)
+					
+					if who == PlayerEntity then 
+						Diary.Write("You use a key to unlock the " .. entity[Name].value .. ".")
+					end
 				else
-					if who == playerEntity then 
-						Diary.Write("mika")
+					if who == PlayerEntity then 
+						Diary.Write("You don't have the right key for this " .. entity[Name].value .. ".")
 					end
 				end
-			end
-
-			if entity[Locked] == nil then
+			else
 				if entity[Contents] ~= nil then
 					Contents.MoveItems(entity, who)
 					entity:Unset(Contents)
@@ -37,8 +47,8 @@ function OpenCrateSystem:Tick()
 					entity[Glyph].name =  entity[Glyph].name .. "_empty"
 				end
 
-				if who == playerEntity then 
-					Diary.Write("mika")
+				if who == PlayerEntity then 
+					Diary.Write("You pick up stuff from the " .. entity[Name].value .. ".")
 				end
 			end
 		end

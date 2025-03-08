@@ -1,6 +1,6 @@
 ItemConsume = { 
 	ash = function() return Break end,
-	frankincense = function() return Light end,
+	rosebud = function() return Light end,
 	blackthorn = function() return Darken end,
 	willow = function() return Luck end,
 	sage = function() return Endure end,
@@ -19,8 +19,10 @@ function Consume(itemId)
 	end
 
 	if PlayerEntity[component()] then
-		PlayerEntity[Tension]:Down(1)
+		PlayerEntity[Tension]:Down(5)
 	end
+
+	return true
 end
 
 ItemCastNames = {
@@ -32,7 +34,7 @@ ItemCastNames = {
 	onyx = function() return "Heal" end,
 	smoky_quartz = function() return "Calm" end,
 	garnet = function() return "Flow" end,
-	topaz = function() return "Steal" end,
+	topaz = function() return "Open" end,
 }
 
 ItemCast = {
@@ -44,7 +46,7 @@ ItemCast = {
 	onyx = function() return Heal end,
 	smoky_quartz = function() return Calm end,
 	garnet = function() return Flow end,
-	topaz = function() return Steal end,
+	topaz = function() return Open end,
 }
 
 CompColors = {
@@ -56,7 +58,7 @@ CompColors = {
 	Heal = { Colors.LightRed, Colors.Red },
 	Calm = { Colors.LightCyan, Colors.Cyan },
 	Flow = { Colors.Cyan , Colors.DarkCyan },
-	Steal = { Colors.LightMagenta , Colors.Magenta },
+	Open = { Colors.LightMagenta , Colors.Magenta },
 }
 
 function CanCast(itemId)

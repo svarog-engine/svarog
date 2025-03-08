@@ -121,6 +121,8 @@ end
 function AIBehavioursSystem:Tick()
 	local p = PlayerEntity[Position]
 	local px, py = p.x, p.y
+	local CalmInfluencedAtLeastOneAI = 0
+	local DarkInfluencedAtLeastOneAI = 0
 
 	for _, entity in World:Exec(ECS.Query.All(Creature, Position)):Iterator() do
 		local pos = entity[Position]
@@ -139,12 +141,14 @@ function AIBehavioursSystem:Tick()
 			if Chances[entity[Calm].chance]:MakeGuess() then
 				CheckAIRest(entity)
 				CheckAIRest(entity)
-				CheckAIRest(entity)
+				CheckAIRest(entity)		
+				CalmInfluencedAtLeastOneAI = CalmInfluencedAtLeastOneAI + 1
 			end
 		end
 
-		if entity[Darken] ~= nil then
+		if entity[Darken] ~= nil and Chances[entity[Darken].chance]:MakeGuess() then
 			sight = 0
+			DarkInfluencedAtLeastOneAI = DarkInfluencedAtLeastOneAI + 1
 		end
 
 		if Dungeon.playerDistance:Get(ex, ey) < sight then
@@ -153,10 +157,20 @@ function AIBehavioursSystem:Tick()
 			CheckAIRest(entity)
 			CheckAttackIfStandingNextTo(entity)
 			CheckBreakThroughToPlayer(entity)
-			CheckRandomWalk(entity)
 		else
 			CheckAIRest(entity)
 			CheckRandomWalk(entity)
 		end
+	end
+
+	if CalmInfluencedAtLeastOneAI > 0 and DarkInfluencedAtLeastOneAI > 0 then
+		Diary.Write("Your enemies seem confused. Your [CALM] and [DARKEN] glyphs resonate.")
+		PlayerEntity[Tension]:Up(1)
+	elseif CalmInfluencedAtLeastOneAI > 0 then
+		Diary.Write("Your enemies calmed a bit. Your [CALM] glyph tingles.")
+		PlayerEntity[Tension]:Up(0.5)
+	elseif DarkInfluencedAtLeastOneAI > 0 then
+		Diary.Write("Your enemies are blind. Your [DARKEN] glyph tincts.")
+		PlayerEntity[Tension]:Up(0.5)
 	end
 end
