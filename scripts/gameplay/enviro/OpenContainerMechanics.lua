@@ -15,7 +15,7 @@ function OpenCrateSystem:Tick()
 					entity:Unset(Locked)
 				else
 					if who == playerEntity then 
-						Diary.Write("PLAYER MESSAGE")
+						Diary.Write("mika")
 					end
 				end
 			end
@@ -29,7 +29,7 @@ function OpenCrateSystem:Tick()
 				end
 
 				if who == playerEntity then 
-					Diary.Write("PLAYER MESSAGE")
+					Diary.Write("mika")
 				end
 			end
 		end
