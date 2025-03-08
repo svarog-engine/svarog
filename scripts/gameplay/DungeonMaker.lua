@@ -118,6 +118,70 @@ end
 
 Level = 0
 
+local function GenerateSpecificShape(l, w, h)
+	if l == 1 then
+		return Map:From(Markov:Run("Growth", w, h, 500), w)
+	elseif l < 5 then
+		local m1 = Markov:Run("StrangeDungeon", w, h)
+		local m2 = Markov:Or(m1, "DijkstraDungeon", w, h)
+		local m3 = Markov:Or(m2, "SelectLargeCaves", w, h, 2000, 2)
+		return Map:From(m3, w)
+	else
+		return Map:From(Markov:Run("Growth", w, h, 1000), w)
+	end
+end
+
+local function SpecificRoomSetup(l, w, h)
+	if l == 1 then
+		return { { math.floor(w / 2), math.floor(h / 2) } }
+	elseif l < 5 then
+		local centers = {}
+		local bucketIndex = Dungeon.wallDistances:GetHighestBucket()
+		local halfsteps = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 }
+	
+		table.remove(halfsteps, Rand:Range(1, #halfsteps))
+		table.remove(halfsteps, Rand:Range(1, #halfsteps))
+		table.remove(halfsteps, Rand:Range(1, #halfsteps))
+
+		local w3, h3 = math.ceil(w / 3), math.ceil(h / 3)
+		while bucketIndex > 0 do
+			local usedRs = {}
+			for i = 0, 100 do
+				local bucket = Dungeon.wallDistances:GetAt(bucketIndex)
+				if bucket ~= nil then
+					local r = 1
+					local attempts = 0
+					repeat 
+						r = Rand:Range(1, #bucket)
+						attempts = attempts + 1
+						if attempts > #bucket then
+							break
+						end
+					until usedRs[r] == nil
+					usedRs[r] = true
+
+					local rx, ry = math.floor(bucket[r].x), math.floor(bucket[r].y)
+					table.insert(centers, { rx, ry })
+					local cx, cy = math.floor(rx / w3), math.floor(ry / h3)
+					local name, comp = Wheels:GetMajor(halfsteps[(Snail(cx, cy) or 1 + i) % 9 + 1])
+					local roomTemplates = Rooms[comp]
+					local roomTemplate = roomTemplates[Rand:Range(0, #roomTemplates)]
+				
+					if roomTemplate ~= nil then
+						Templates[roomTemplate](rx, ry)
+					end
+				end
+			end
+
+			bucketIndex = bucketIndex - 1
+		end
+
+		return centers
+	else
+		return { { math.floor(w / 2), math.floor(h / 2) } }
+	end
+end
+
 function MakeDungeon()
 	local w, h = Config.Width - 16, Config.Height - 4
 
@@ -146,10 +210,7 @@ function MakeDungeon()
 	Dungeon.visibility = Map:New(w, h, false)
 	Dungeon.visited = Map:New(w, h, false)
 	
-	local m1 = Markov:Run("StrangeDungeon", w, h)
-	local m2 = Markov:Or(m1, "DijkstraDungeon", w, h)
-	local m3 = Markov:Or(m2, "SelectLargeCaves", w, h, 2000, 2)
-	local m = Map:From(m3, w)
+	local m = GenerateSpecificShape(Level, w, h)
 
 	for i = 1, w - 1 do
 		m:Set(i, 1, 0)
@@ -188,59 +249,19 @@ function MakeDungeon()
 	-- ROOM SETUP
 
 	Dungeon.zones = Map:New(w, h, 0)
-
-	local centers = {}
-	local bucketIndex = Dungeon.wallDistances:GetHighestBucket()
-	local halfsteps = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 }
-	
-	table.remove(halfsteps, Rand:Range(1, #halfsteps))
-	table.remove(halfsteps, Rand:Range(1, #halfsteps))
-	table.remove(halfsteps, Rand:Range(1, #halfsteps))
-
-	local w3, h3 = math.ceil(w / 3), math.ceil(h / 3)
-	while bucketIndex > 0 do
-		local usedRs = {}
-		for i = 0, 100 do
-			local bucket = Dungeon.wallDistances:GetAt(bucketIndex)
-			if bucket ~= nil then
-				local r = 1
-				local attempts = 0
-				repeat 
-					r = Rand:Range(1, #bucket)
-					attempts = attempts + 1
-					if attempts > #bucket then
-						break
-					end
-				until usedRs[r] == nil
-				usedRs[r] = true
-
-				local rx, ry = math.floor(bucket[r].x), math.floor(bucket[r].y)
-				table.insert(centers, { rx, ry })
-				local cx, cy = math.floor(rx / w3), math.floor(ry / h3)
-				local name, comp = Wheels:GetMajor(halfsteps[(Snail(cx, cy) or 1 + i) % 9 + 1])
-				local roomTemplates = Rooms[comp]
-				local roomTemplate = roomTemplates[Rand:Range(0, #roomTemplates)]
-				
-				if roomTemplate ~= nil then
-					Templates[roomTemplate](rx, ry)
-				end
-			end
-		end
-
-		bucketIndex = bucketIndex - 1
-	end
+	local centers = SpecificRoomSetup(Level, w, h)
 
 	-- QUIET ZONES
 
 	Dungeon.quiet = DistanceMap:From(Dungeon.floor, centers, 0)
 	Dungeon.quiet:AddCondition(DistanceMap.IS_FLOOR)
 	Dungeon.quiet:Flood()
-
 	local mostQuiet = Dungeon.quiet:GetHighestBucket()
 	local ok = Dungeon.quiet:GetAt(mostQuiet)
 	local xy = ok[Rand:Range(1, #ok)]
 	local x, y = xy.x, xy.y
 	Dungeon.start = { x , y }
+
 	-- PLAYER SETUP
 
 	if old then
@@ -267,6 +288,7 @@ function MakeDungeon()
 	
 		Dungeon.visited:Set(x, y, true)
 		SelectDungeonLevel(Level)
+		print("!!!!")
 	end
 end
 
