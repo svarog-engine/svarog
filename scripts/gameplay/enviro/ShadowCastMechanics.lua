@@ -19,7 +19,7 @@ function IsTransparent(x, y)
 end
 
 function ShadowcastSystem:ShouldTick()
-	return PlayerEntity ~= nil and Dungeons.created and DebugToggle_FOV
+	return PlayerEntity ~= nil and Dungeons.created
 end
 
 function ShadowcastSystem:Tick()
