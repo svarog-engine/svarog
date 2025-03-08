@@ -50,37 +50,6 @@ function SpawnChallengeEntities(x, y, n, challenge)
 			Diary.Write("At least one altar has been satiated! You can proceed.")
 		end
 
-		if PlayerEntity[Hate] ~= nil then
-			if Distance(PlayerEntity[Position].x, PlayerEntity[Position].y, x, y) < 7 then
-				PlayerEntity[Hate].chance = PlayerEntity[Hate].chance - 1
-				if PlayerEntity[Hate].chance > 7 then
-					Diary.Write("The other GLYPHS resonate. HATE rules.")
-				elseif PlayerEntity[Hate].chance > 4 then
-					Diary.Write("The other GLYPHS build up. HATE falls silent... for a moment.")
-				elseif PlayerEntity[Hate].chance > 2 then
-					Diary.Write("The other GLYPHS swoon. HATE dwindles.")
-				elseif PlayerEntity[Hate].chance > 0 then
-					Diary.Write("The other GLYPHS enclose. HATE has no force.")
-				else
-					Diary.Write("Your HATE is now forever sealed.")
-				end
-
-				if PlayerEntity[Hate].chance <= 0 then
-					PlayerEntity[Hate].chance = 0
-
-					for _, en in World:Exec(ECS.Query.All(Creature)):Iterator() do
-						RemoveEntityFromDungeon(en)
-						World:Remove(en)
-					end
-
-					PlayerEntity:Set(Win{})
-					WinScreenFrame = 0
-					WinScreenWay = "up"
-					FIN = true
-				end
-			end
-		end
-
 		while e:MoveNext() do
 			local cx, cy = e.Current.X, e.Current.Y
 			if Dungeon.floor:Has(cx, cy) and Dungeon.floor:Get(cx, cy).type == Floor then

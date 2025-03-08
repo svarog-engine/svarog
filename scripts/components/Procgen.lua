@@ -566,7 +566,7 @@ MakeTemplate("library1", 3, 3,
 ..2
 .1.
 ...
-]], { "Shelf" }, { nil, "Goblin" })
+]], { "Shelf" }, { "Goblin" })
 
 MakeTemplate("library2", 3, 3,
 [[
@@ -580,16 +580,16 @@ MakeTemplate("library3", 5, 3,
 1.221
 .....
 1...1
-]], { "Shelf" },  { nil, "Goblin" })
+]], { "Shelf" },  { nil, "Goblin", "Kobold" })
 
 MakeTemplate("exhibit1", 5, 5,
 [[
 .....
 .....
 ..1..
+..2..
 .....
-.....
-]], { "Artifact" })
+]], { "Artifact" }, {"Goblin", "Kobold", "Goblin", "Kobold", "Hobgob" })
 
 MakeTemplate("exhibit2", 3, 3,
 [[
@@ -605,14 +605,14 @@ MakeTemplate("workshop1", 5, 5,
 ..23.
 .4...
 .....
-]], { nil, "Shelf", "Shelf", "Shelf", "Crate" }, { "Anvil" }, { nil, "Table" }, { "Artifact" })
+]], { nil, "Shelf", "Shelf", "Shelf", "Crate" }, { "Anvil" }, { nil, "Table" }, { "Kobold", "Goblin" })
 
 MakeTemplate("workshop2", 3, 3,
 [[
-111
+131
 .21
 ...
-]], { nil, "Shelf", "Shelf", "Shelf", "Crate" }, { "Anvil", "Cauldron" })
+]], { nil, "Shelf", "Shelf", "Shelf", "Crate" }, { "Anvil", "Cauldron" }, { "Goblin", "Kobold" })
 
 MakeTemplate("shrine1", 3, 3,
 [[
@@ -635,7 +635,7 @@ MakeTemplate("shrine2", 6, 6,
 .124.
 3...1
 .3.1.
-]], { "Candle" }, { "Statue" }, { nil, nil, nil, nil, nil, "Book", "Candle" }, { nil, nil, nil, "Hobgob" })
+]], { "Candle" }, { "Statue" }, { nil, nil, nil, nil, nil, "Book", "Candle" }, { "Kobold", "Hobgob" })
 
 MakeTemplate("forge1", 5, 5,
 [[
@@ -644,7 +644,7 @@ MakeTemplate("forge1", 5, 5,
 32332
 3.1.3
 32332
-]], { "Furnace" }, { nil, "Furnace" }, { "Grate" })
+]], { "Furnace" }, { nil, "Furnace" }, { "Grate", "Kobold" })
 
 MakeTemplate("forge2", 3, 3,
 [[

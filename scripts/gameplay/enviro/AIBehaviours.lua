@@ -121,7 +121,10 @@ local function CheckForcedRandomWalk(entity)
 		local dx = Rand:Range(-1, 2)
 		local dy = Rand:Range(-1, 2)
 		if not (dx == 0 and dy == 0) then
-			table.insert(entity[Creature].goals, { "Random Walk", 1, function() PerformBump(entity, pos.x, pos.y, pos.x + dx, pos.y + dy) end })
+			table.insert(entity[Creature].goals, { "Random Walk", 1, function() 
+				print("RW!")
+				PerformBump(entity, pos.x, pos.y, pos.x + dx, pos.y + dy) 
+			end })
 		end
 	end
 end
@@ -169,8 +172,8 @@ function AIBehavioursSystem:Tick()
 			CheckAIRest(entity)
 			CheckAttackIfStandingNextTo(entity)
 			CheckBreakThroughToPlayer(entity)
+			CheckForcedRandomWalk(entity)
 		else
-			CheckAIRest(entity)
 			CheckRandomWalk(entity)
 		end
 	end

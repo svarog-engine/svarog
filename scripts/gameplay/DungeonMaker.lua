@@ -136,6 +136,7 @@ local function SpecificRoomSetup(l, w, h)
 		return { { math.floor(w / 2), math.floor(h / 2) } }
 
 	elseif l < 5 then
+
 		local centers = {}
 		local bucketIndex = Dungeon.wallDistances:GetHighestBucket()
 		local halfsteps = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 }
@@ -190,8 +191,6 @@ local function SpecificRoomSetup(l, w, h)
 
 			bucketIndex = bucketIndex - 1
 		end
-
-		print(Dungeon.creatureCount)
 		
 		return centers
 	elseif l == 5 then
@@ -288,6 +287,16 @@ function MakeDungeon()
 	Dungeon.quiet = DistanceMap:From(Dungeon.floor, centers, 0)
 	Dungeon.quiet:AddCondition(DistanceMap.IS_FLOOR)
 	Dungeon.quiet:Flood()
+
+	if Level > 1 and Level < 6 then
+		local crs = { "Goblin", "Kobold", "Hobgob" }
+		while Dungeon.creatureCount < 8 do
+			local x, y = Rand:Range(1, w), Rand:Range(1, h)
+			if Dungeon.floor:Has(x, y) and Dungeon.floor:Get(x, y).type == Floor then
+				Procgen.MakeObject(crs[Rand:Range(1, #crs)], x, y)
+			end
+		end
+	end
 	local mostQuiet = Dungeon.quiet:GetHighestBucket()
 	local ok = Dungeon.quiet:GetAt(mostQuiet)
 	local xy = ok[Rand:Range(1, #ok)]

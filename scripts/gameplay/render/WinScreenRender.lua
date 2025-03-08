@@ -10,6 +10,8 @@ WinScreenFrame = 60
 WinScreenWay = "up"
 FIN = true
 
+local secretUp = 0
+
 function WinScreenRenderSystem:Render()
 	if not FIN then return end
 	
@@ -56,7 +58,9 @@ function WinScreenRenderSystem:Render()
 
 	if WinScreenWay == "up" and WinScreenFrame > 60 then
 		WinScreenFrame = 60
-		if PlayerEntity[Win] ~= nil then
+		secretUp = secretUp + 1
+		if secretUp > 60 and PlayerEntity[Win] ~= nil then
+			secretUp = 0
 			Svarog.Instance:Reload()
 		end
 	end

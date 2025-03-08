@@ -16,6 +16,15 @@ function TurnOrderSystem:Tick()
 				action()
 				creature.actions = creature.actions - cost
 			end
+		else
+			local pos = entity[Position]
+			local dx = Rand:Range(0, 2) - 1
+			local dy = Rand:Range(0, 2) - 1
+			if not (dx == 0 and dy == 0) then
+				if Chances[5]:MakeGuess() then
+					PerformBump(entity, pos.x, pos.y, pos.x + dx, pos.y + dy)
+				end
+			end
 		end
 	end
 end
