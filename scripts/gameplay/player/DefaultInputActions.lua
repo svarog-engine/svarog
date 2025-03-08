@@ -164,3 +164,30 @@ Engine.RegisterInputSystem({ Action_Default_ZoomOut }, function()
 end)
 
 Engine.RegisterInputSystem({ Action_Default_Reload }, function() Svarog.Instance:Reload() end)
+
+Engine.RegisterInputSystem({ Action_Default_Info }, function() 
+	local x = InputStack.MouseX
+	local y = InputStack.MouseY
+
+	if not Dungeon.visibility:Get(x, y) then
+		return
+	end
+
+	local id = Dungeon.floor:ID(x, y)
+	local entities = Dungeon.entities[id] or {}
+
+	if #entities > 0 then
+		for _, e in ipairs(entities) do
+			local name = e[Name]
+			if name ~= nil then
+				Diary.Write("You look at " .. name.value .. ".")
+			end
+		end
+	elseif Dungeon.floor:Has(x, y) and Dungeon.floor.tiles[x][y].entity ~= nil then
+		local e = Dungeon.floor.tiles[x][y].entity
+		local name = e[Name]
+		if name ~= nil then
+			Diary.Write("You look at " .. name.value .. ".")
+		end
+	end
+end)

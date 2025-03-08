@@ -13,6 +13,7 @@ local Actions = {
 		World:Entity(
 			Item{ id = item.itemId, quantity = 1},
 			Position{ x = x, y = y },
+			Name { value = itemMeta.name },
 			Glyph{ name = itemMeta.glyph })
 
 		Contents.Remove(PlayerEntity, item.itemId, 1)

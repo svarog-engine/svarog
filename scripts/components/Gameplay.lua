@@ -130,6 +130,7 @@ function Contents.DropAll(entity, x, y)
 		local itemEntity = World:Entity(
 			Item{ id = item.itemId, quantity = item.quantity},
 			Position{ x = x, y = y },
+			Name { value = itemMeta.name},
 			Glyph{ name = itemMeta.glyph })
 
 		AddEntityToDungeon(x, y, itemEntity)
@@ -149,6 +150,7 @@ function Contents.DropOne(entity, x, y)
 			local itemEntity = World:Entity(
 				Item{ id = item.itemId, quantity = item.quantity},
 				Position{ x = x, y = y },
+				Name { value = itemMeta.name },
 				Glyph{ name = itemMeta.glyph })
 
 			AddEntityToDungeon(x, y, itemEntity)
