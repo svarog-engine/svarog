@@ -45,7 +45,7 @@ local function SpawnChallengeEntities(x, y, n, challenge)
 			if Dungeon.floor:Has(lx, ly) and Dungeon.passable:Get(lx, ly) then
 				local entts = Dungeon.entities[lid] or {}
 				if #entts == 0 then					
-					Procgen.MakeObject("Portal", lx, ly, challenge, Rand:Range(8, 9), PlayerEntity[Boons].value[i])
+					Procgen.MakeObject("Portal", lx, ly, challenge, Rand:Range(6, 9), PlayerEntity[Boons].value[i])
 				else 
 					ko = ko + 1
 				end
@@ -97,16 +97,21 @@ function ChallengeSystem:Tick()
 		end
 	end
 
-	for _, entity in World:Exec(ECS.Query.All(Timeout)):Iterator() do
+	for _, entity in World:Exec(ECS.Query.All(Portal, Timeout)):Iterator() do
 		local timeout = entity[Timeout]
 		timeout.value = timeout.value - 0.5
 
 		if timeout.value < 0 then
-			
-			Fade(entity, Colors.Red, Colors.White, 0.5)
-
+			local portal = entity[Portal]
+			print(Monsters, portal.type)
+			local monsters = Monsters[portal.type]
+			local x, y = entity[Position].x, entity[Position].y
 			RemoveEntityFromDungeon(entity)
 			World:Remove(entity)
+
+			if monsters ~= nil and #monsters > 0 then
+				local m = Procgen.MakeObject(monsters[Rand:Range(1, #monsters)], x, y)
+			end
 		end
 	end
 end

@@ -44,6 +44,7 @@ end)
 Engine.RegisterInputSystem({ Action_Default_Tension }, function(input)
 	World:Exec(ECS.Query.All(Player, Tension)):ForEach(function(entity)
 		entity[Tension]:Up(2)
+		MakeDungeon()
 	end)
 end)
 

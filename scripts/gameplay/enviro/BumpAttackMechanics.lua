@@ -24,6 +24,8 @@ local function PerformAttack(attackerEntity, targetEntity)
 		else
 			targetEntity[Health].current = targetEntity[Health].current - totalDamage
 			Fade(targetEntity, Colors.Red, Colors.Black, 0.5)
+
+			Diary.Write(attackerEntity[Name].value .. " hits " .. targetEntity[Name].value .. ".")
 		end
 end
 
