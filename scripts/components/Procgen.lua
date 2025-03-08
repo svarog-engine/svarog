@@ -2,6 +2,7 @@
 Name = ECS.Component("")
 Burnable = ECS.Component()
 Burning = ECS.Component{value = 0.0}
+Acidic = ECS.Component{value = 0.0}
 Unburnable = ECS.Component()
 
 Dissolvable = ECS.Component()
@@ -40,8 +41,10 @@ function Procgen.MakeObject(what, x, y, ...)
 
 	if Procgen[what] == nil then
 		Svarog.Instance:LogError("PROCGEN: Generator " .. what .. " not found. Check your spelling.")
+		return e
+	else
+		Procgen[what](e, x, y, ...)
 	end
-	Procgen[what](e, x, y, ...)
 	AddEntityToDungeon(x, y, e)
 	return e
 end
@@ -132,7 +135,8 @@ end
 function Procgen.Goblin(e, x, y)
 	e:Set(
 		Creature{}, 
-		AIMoveTowardsPlayer{ distance = 0, chance = 6 }, 
+		AIMoveTowardsPlayer{ distance = 0, chance = 8 }, 
+		AIKeepDistanceFromPlayer{ distance = 3, chance = 5 },
 		Health{ value = Range(2) }, 
 		BumpAttack { damage = 1 }, 
 		Glyph{ name = "goblin" },
@@ -198,7 +202,7 @@ end
 function Procgen.Portal(e, x, y, owner, time, comp)
 	e:Set(Name("Portal"))
 	e:Set(Dependent(owner))
-	e:Set(Portal{ challenge = owner })
+	e:Set(Portal{ challenge = owner, type = comp })
 	e:Set(Magic{ value = Rand:F01(), colors = CompColors[comp] })
 	e:Set(Timeout{ value = time or 9 })
 	e:Set(Glyph{ name = "portal" })
@@ -226,8 +230,11 @@ end
 function Procgen.Hobgob(e, x, y)
 	e:Set(
 		Creature{}, 
-		AIMoveTowardsPlayer{ distance = 0, chance = 3 }, 
-		Health{ value = Range(5) }, 
+		Endure{},
+		Sight{ radius = 6 },
+		Magic{ value = Rand:F01(), colors = CompColors[Endure] },
+		AIMoveTowardsPlayer{ distance = 0, chance = 6 }, 
+		Health{ value = Range(1) }, 
 		BumpAttack { damage = 1 }, 
 		Glyph{ name = "hobgob" },
 		Contents{ items = {} }
@@ -237,9 +244,12 @@ end
 function Procgen.Mimic(e, x, y)
 	e:Set(
 		Creature{}, 
+		Endure{},
+		Sight{ radius = 15 },
+		Magic{ value = Rand:F01(), colors = CompColors[Endure] },
 		AIAttackIfStandingNextTo{}, 
-		AIMoveTowardsPlayer{ distance = 10, chance = 1 }, 
-		Health{ value = Range(7) }, 
+		AIMoveTowardsPlayer{ distance = 10, chance = 3 }, 
+		Health{ value = Range(2) }, 
 		BumpAttack { damage = 3 }, 
 		Glyph{ name = "chest" },
 		Burnable{},
@@ -250,12 +260,30 @@ end
 function Procgen.Ogre(e, x, y)
 	e:Set(
 		Creature{}, 
-		AIMoveTowardsPlayer{ distance = 0, chance = 8 },
-		AIRest{ chance = 9 },
+		Break{},
+		Sight{ radius = 10 },
+		Magic{ value = Rand:F01(), colors = CompColors[Break] },
+		AIMoveTowardsPlayer{ distance = 0, chance = 9 },
+		AIRest{ chance = 8 },
 		AIBreakThroughToPlayer{ chance = 5, distance = 9 },
 		Health{ value = Range(3) }, 
 		BumpAttack { damage = 3 }, 
 		Glyph{ name = "ogre" },
+		Contents{ items = {} }
+	)
+end
+
+function Procgen.AcidCube(e, x, y)
+	e:Set(
+		Creature{}, 
+		Break{},
+		Sight{ radius = 10 },
+		Magic{ value = Rand:F01(), colors = CompColors[Break] },
+		AIMoveTowardsPlayer{ distance = 4, chance = 9 },
+		AIRest{ chance = 1 },
+		Health{ value = Range(3) }, 
+		Acidic{},
+		Glyph{ name = "blob" },
 		Contents{ items = {} }
 	)
 end
@@ -471,12 +499,12 @@ ContentsItems = {"diamond", "topaz", "obsidian", "malachite", "lapis_lazuli", "o
 Books = { "book" }
 
 Monsters = {}
-Monsters[Endure] = { "Hobgob", "Mimic" }
-Monsters[Break] = { "Acid Cube", "Ogre" }
-Monsters[Luck] = { "Plague Rats", "Vampire" }
-Monsters[Darken] = { "Shade", "Wraith" }
-Monsters[Flow] = { "Restless Dead", "Gelatinous Cube" }
-Monsters[Heal] = { "Kobold", "Phantasm" }
-Monsters[Calm] = { "Banshee", "Nightmare" }
-Monsters[Steal] = { "Hobgob", "Mimic" }
-Monsters[Light] = { "Wisp", "Djinn" }
+Monsters["Endure"] = { "Hobgob", "Mimic" }
+Monsters["Break"] = { "AcidCube", "Ogre" }
+Monsters["Luck"] = { "PlagueRats", "Vampire" }
+Monsters["Darken"] = { "Shade", "Wraith" }
+Monsters["Flow"] = { "RestlessDead", "GelatinousCube" }
+Monsters["Heal"] = { "Kobold", "Phantasm" }
+Monsters["Calm"] = { "Banshee", "Nightmare" }
+Monsters["Steal"] = { "Hobgob", "Mimic" }
+Monsters["Light"] = { "Wisp", "Djinn" }

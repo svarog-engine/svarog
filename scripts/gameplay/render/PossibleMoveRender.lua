@@ -1,7 +1,7 @@
 ﻿local PossibleMoveRenderSystem = Engine.RegisterRenderSystem("Possible Move Render")
 
 function PossibleMoveRenderSystem:ShouldRender()
-	return Dungeon ~= nil and PlayerEntity ~= nil
+	return Dungeon ~= nil and PlayerEntity ~= nil and PlayerEntity[Position] ~= nil and PlayerEntity[MoveMode] ~= nil
 end
 
 local normalNeighbors = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } }

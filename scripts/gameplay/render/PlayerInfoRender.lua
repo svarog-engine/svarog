@@ -38,6 +38,10 @@ local function GetWheelsEntries()
 	return entries
 end
 
+function PlayerInfoRenderSystem:ShouldRender(ui)
+	return PlayerEntity ~= nil and PlayerEntity[Boons] ~= nil
+end
+
 function PlayerInfoRenderSystem.Render(ui)
 	local player = PlayerEntity
 	if player == nil then

@@ -94,6 +94,8 @@ end
 
 function SelectDungeonLevel(index)
 	Dungeon = Dungeons.maps[index]
+	PlayerEntity[Position].x = Dungeon.start[1]
+	PlayerEntity[Position].y = Dungeon.start[2]
 	Dungeon.playerDistance = DistanceMap:From(Dungeon.floor, { { PlayerEntity[Position].x, PlayerEntity[Position].y } }, 0)
 	Dungeon.playerDistance:AddCondition(function(map, x, y) return Dungeon.passable:Has(x, y) and Dungeon.passable:Get(x, y) end)
 	Dungeon.playerDistance:Flood()
@@ -114,14 +116,28 @@ local function Snail(x, y)
     return lookup[x] and lookup[x][y] or nil
 end
 
-local function MakeDungeon()
+Level = 0
+
+function MakeDungeon()
 	local w, h = Config.Width - 16, Config.Height - 4
 
-	Dungeons.maps[1] = {}
-	Dungeon = Dungeons.maps[1]
+	local old = false
+	if Dungeon ~= nil then
+		old = true
+		for _, e in ipairs(Dungeon.entitiesList) do
+			if e ~= PlayerEntity then
+				RemoveEntityFromDungeon(e)
+				World:Remove(e)
+			end
+		end
+	end
 
-	Dungeon.index = 1
-	Dungeon.name = "Room" .. 1
+	Level = Level + 1
+	Dungeons.maps[Level] = {}
+	Dungeon = Dungeons.maps[Level]
+
+	Dungeon.index = n
+	Dungeon.name = "Level" .. Level
 	Dungeon.entities = {}
 	Dungeon.entitiesList = {}
 	Dungeon.passable = Map:New(w, h)
@@ -184,7 +200,7 @@ local function MakeDungeon()
 	local w3, h3 = math.ceil(w / 3), math.ceil(h / 3)
 	while bucketIndex > 0 do
 		local usedRs = {}
-		for i = 0, 400 do
+		for i = 0, 100 do
 			local bucket = Dungeon.wallDistances:GetAt(bucketIndex)
 			if bucket ~= nil then
 				local r = 1
@@ -224,29 +240,34 @@ local function MakeDungeon()
 	local ok = Dungeon.quiet:GetAt(mostQuiet)
 	local xy = ok[Rand:Range(1, #ok)]
 	local x, y = xy.x, xy.y
-
+	Dungeon.start = { x , y }
 	-- PLAYER SETUP
 
-	PlayerEntity = World:Entity(
-		Player(),
-		Boons{ value = {} },
-		MoveMode("Walk"),
-		Sight(5),
-		Pause(),
-		ID(-1),
-		Position{ x = x, y = y },
-		Glyph{ name = "mage" },
-		Contents{ items = {} },
-		Health(Range(9, 9)),
-		BumpAttack { damage = 2 },
-		Name("you"),
-		Stamina(Range(9, 9)),
-		Tension(Range(0, 9)),
-		Burnable()
-	)
+	if old then
+		SelectDungeonLevel(Level)
+		PlayerDone = true
+	else
+		PlayerEntity = World:Entity(
+			Player(),
+			Boons{ value = {} },
+			MoveMode("Walk"),
+			Sight(5),
+			Pause(),
+			ID(-1),
+			Position{ x = x, y = y },
+			Glyph{ name = "mage" },
+			Contents{ items = {} },
+			Health(Range(9, 9)),
+			BumpAttack { damage = 2 },
+			Name("you"),
+			Stamina(Range(9, 9)),
+			Tension(Range(0, 9)),
+			Burnable()
+		)
 	
-	Dungeon.visited:Set(x, y, true)
-	SelectDungeonLevel(1)
+		Dungeon.visited:Set(x, y, true)
+		SelectDungeonLevel(Level)
+	end
 end
 
 local function MakeWheels()
@@ -261,6 +282,15 @@ local function MakeWheels()
 end
 
 OnStartup(function() 
+	Level = 0
+
+	if PlayerEntity ~= nil then
+		Dungeon = nil
+		RemoveEntityFromDungeon(PlayerEntity)
+		World:Remove(PlayerEntity)
+		PlayerEntity = nil
+	end
+
 	Dungeons = {}
 	Dungeons.maps = {}
 	Dungeons.created = true

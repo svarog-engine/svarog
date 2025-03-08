@@ -23,15 +23,16 @@ local function CheckBreakThroughToPlayer(entity)
 
 		if Chances[ai.chance]:MakeGuess() then
 			local pd, bx, by = Distance(px, py, ex, ey), ex, ey
-			if pd <= ai.distance then
+			local realDist = Dungeon.playerDistance:Get(ex, ey)
+			if pd <= ai.distance and realDist > pd + 3 then
 				table.insert(entity[Creature].goals, { "Breakthrough", 1, function()
-					local pts = Geometry:Boundary(Geometry:MakeLine(px, py, ex, ey)).Points:GetEnumerator()
+					local pts = Geometry.Boundary(Geometry.MakeLine(px, py, ex, ey)).Points:GetEnumerator()
 					while pts:MoveNext() do
-						local pt = pts:Current()
+						local pt = pts.Current
 						if Dungeon.floor:Get(pt.X, pt.Y).type == Wall then
 							Dungeon.floor:Get(pt.X, pt.Y).type = Floor
+							Dungeon.passable:Set(pt.X, pt.Y, true)
 							local dust = Procgen.MakeObject("dust", pt.X, pt.Y)
-							Fade(dust, Colors.White, Colors.DarkGray, 0.33 * (Rand:F01() + 0.5))
 						end
 						local d = Distance(px, py, pt.X, ptY)
 						if d > 0 and d < pd then
@@ -40,6 +41,8 @@ local function CheckBreakThroughToPlayer(entity)
 							by = pt.Y
 						end
 					end
+
+					PerformBump(entity, pos.x, pos.y, bx - pos.x, by - pos.y)
 				end })
 			end
 		end
@@ -85,7 +88,7 @@ local function CheckMoveTowardsPlayer(entity)
 end
 
 local function CheckKeepDistanceFromPlayer(entity)
-	local ai = entity[KeepDistanceFromPlayer]
+	local ai = entity[AIKeepDistanceFromPlayer]
 	if ai ~= nil then
 		local pos = entity[Position]
 		local current = Dungeon.playerDistance:Get(pos.x, pos.y)

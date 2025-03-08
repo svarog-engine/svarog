@@ -33,7 +33,7 @@ function VFXRenderSystem:Render()
 		end
 	end
 
-	for _, entity in World:Exec(ECS.Query.All(Magic, Position)):Iterator() do
+	for _, entity in World:Exec(ECS.Query.All(Magic, Position, Glyph)):Iterator() do
 		local magic = entity[Magic]
 		if magic.speed == nil then magic.speed = 0.6 + (Rand:F01() - 0.5) / 10.0 end
 		local d = (Rand:F01() - 0.5) / 10.0

@@ -47,7 +47,7 @@ Glossary.Default = {
 	alarmTrap = { x = 13, y = 20, fg = Colors.LightRed, bg = Colors.DarkRed },
 	shelf = { x = 27, y = 2, fg = Colors.Green, bg = Colors.Black },
 	shelf_empty = { x = 27, y = 1, fg = Colors.Green, bg = Colors.Black },
-	book = { x = 1, y = 4, fg = Colors.LightBrown, bg = Colors.Black },
+	book = { x = 0, y = 3, fg = Colors.LightBrown, bg = Colors.Black },
 	anvil = { x = 25, y = 1, fg = Colors.LightGray, bg = Colors.Black },
 	cauldron = { x = 21, y = 1, fg = Colors.Black, bg = Colors.LightBlue },
 	statue = { x = 0, y = 1, fg = Colors.LightGray, bg = Colors.DarkGray },
@@ -70,6 +70,8 @@ Glossary.Default = {
 	kobold = { x = 11, y = 2, fg = Colors.LightRed, bg = Colors.Black },
 	hobgob = { x = 7, y = 1, fg = Colors.DarkGreen, bg = Colors.Black },
 	ogre = { x = 14, y = 9, fg = Colors.LightRed, bg = Colors.Black },
+	blob = { x = 1, y = 3,  fg = Colors.LightRed, bg = Colors.Black },
+	gelly = { x = 1, y = 3, fg = Colors.Magenta, bg = Colors.Black },
 }
 
 InsertSpriteCharRanges(Glossary.Default, 1, 1, "ABCDEFGHIJKLMNOPQRSTUVWXYZ[ ]^_")
