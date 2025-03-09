@@ -51,4 +51,4 @@ LoadScriptIfExists "debug\\render\\DebugDistancesRender"
 LoadScriptIfExists "debug\\render\\DebugEntitySpawnRender"
 
 World:Entity(MakeDungeonRequest)
-Diary.Write("Welcome, brave soujourn.")
+Diary.Write("Welcome, brave sojourner.")
