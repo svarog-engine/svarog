@@ -46,38 +46,66 @@ local Measurements = {
 
 local function ProcessLayer(changelist, matrix, pres)
     local glos = Glossary[pres]
-    local type = Glossary.Meta[pres].Type
-	for i, c in ipairs(changelist) do
-        if matrix[c.X] ~= nil and matrix[c.X][c.Y] ~= nil then
-            local item = matrix[c.X][c.Y]
+	for i, c in pairs(changelist) do
+            local x = c.X or -1        
+            local y = c.Y or -1
+            
+            local tileX = -1
+            local tileY = -1
+            local bg = Colors.Black
+            local fg = Colors.White
+
             if c.Tile ~= nil then 
                 local tile = glos[c.Tile]
                 if tile ~= nil then
-                    item.TileX = tile.x
-                    item.TileY = tile.y
-                    item.Foreground = tile.fg
-                    item.Background = tile.bg
+                    tileX = tile.x
+                    tileY = tile.y
+                    fg = tile.fg
+                    bg = tile.bg
                 end
             end
 
-		    if c.Foreground ~= nil then item.Foreground = c.Foreground end
-		    if c.Background ~= nil then item.Background = c.Background end
-        end
+		    if c.Foreground ~= nil then fg = c.Foreground end
+		    if c.Background ~= nil then bg = c.Background end
+
+            Svarog:UpdateGlyphs(x, y, tileX, tileY, fg, bg, matrix)
 	end
 end
 
 local function RenderPass()
     local pres = Config.Presentation or "Default"
-    ProcessLayer(RenderChangelist["Game"], Glyphs, pres)
-    ProcessLayer(RenderChangelist["UI"], UIGlyphs, pres)
+    ProcessLayer(RenderChangelist["Game"], "Game", pres)
+    ProcessLayer(RenderChangelist["UI"], "UI", pres)
 
     RenderChangelist["Game"] = {}
     RenderChangelist["UI"] = {}
 end
 
+local function CoordinateHash(x, y)
+    return (y * Config.Width) + x
+end
+
+local function MergeRequests(existing, incoming)
+    if incoming.Tile ~= nil then existing.Tile = incoming.Tile end
+    if incoming.Background ~= nil then existing.Background = incoming.Background end
+    if incoming.Foreground ~= nil then existing.Foreground = incoming.Foreground end
+end
+
 local function Draw(change, layer)
     local renderlayer = layer or "Game"
-    table.insert(RenderChangelist[renderlayer], change)
+
+    local x = change.X
+    local y = change.Y
+
+    local hash = CoordinateHash(x, y)
+
+    local changelist = RenderChangelist[renderlayer]
+    
+    if changelist[hash] ~= nil then
+        MergeRequests(changelist[hash], change)
+    else
+        changelist[hash] = change
+    end
 end
 
 local function Fg(x, y, change, layer)

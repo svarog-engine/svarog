@@ -9,16 +9,9 @@ using SFML.System;
 using svarog.input;
 using svarog.presentation;
 using svarog.utility;
-
-using System.Diagnostics;
-using System;
-using System.Web;
 using svarog.procgen.rewriting;
 using svarog.utility.filesystem;
-using System.Reflection;
-using System.Reflection.PortableExecutable;
-using Universal.Common.Collections;
-using System.Runtime.InteropServices;
+using SFML.Graphics;
 
 namespace svarog.runner
 {
@@ -49,7 +42,7 @@ namespace svarog.runner
             if (options.Logging)
             {
                 m_Logger = new LoggerConfiguration()
-                    .MinimumLevel.Information()
+                    .MinimumLevel.Verbose()
                     .WriteTo.Console()
                     .WriteTo.Debug()
                     .WriteTo.File("log.txt", Serilog.Events.LogEventLevel.Debug)
@@ -284,6 +277,19 @@ namespace svarog.runner
                 }
             }
             m_Lua["UIGlyphs"] = m_UIGlyphs;
+        }
+
+        public void UpdateGlyphs(int x, int y, int tileX, int tileY, Color fg, Color bg, string layer)
+        {
+            var matrix = layer == "UI" ? m_UIGlyphs : m_Glyphs;
+            if (x < matrix.Length && y < matrix[x].Length)
+            {
+                var item = matrix[x][y];
+                item.TileX = tileX;
+                item.TileY = tileY;
+                item.Background = bg;
+                item.Foreground = fg;
+            }
         }
 
         public void ReloadPresenter()
