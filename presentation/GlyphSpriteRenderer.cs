@@ -54,23 +54,25 @@ namespace svarog.presentation
         public int OffsetX { get; set; } = 0;
         public int OffsetY { get; set; } = 0;
 
-
-
         public void Draw(Glyph[][] gameGlyphs, Glyph[][] UIGlyphs, RenderTexture target)
         {
+            var scaledFontSize = m_FontSize * m_Scale;
             var scale = new SFML.System.Vector2f(m_Scale, m_Scale);
+
+            m_BackgroundRect.Scale = scale;
             for (int i = 0; i < gameGlyphs.Length; i++)
             {
                 for (int j = 0; j < gameGlyphs[i].Length; j++)
                 {
                     var item = UIGlyphs[i][j].IsValid ? UIGlyphs[i][j] : gameGlyphs[i][j];
-                    m_BackgroundRect.Position = new SFML.System.Vector2f(m_FontSize * i * m_Scale, m_FontSize * j * m_Scale);
-                    m_BackgroundRect.Scale = scale;
+                    m_BackgroundRect.Position = new SFML.System.Vector2f(scaledFontSize * i, scaledFontSize * j);
+
                     m_BackgroundRect.FillColor = item.Background;
                     m_BackgroundRect.Draw(target, RenderStates.Default);
                 }
             }
 
+            m_Sprite.Scale = scale;
             for (int i = 0; i < gameGlyphs.Length; i++)
             {
                 for (int j = 0; j < gameGlyphs[i].Length; j++)
@@ -78,8 +80,8 @@ namespace svarog.presentation
                     var item = UIGlyphs[i][j].IsValid ? UIGlyphs[i][j] : gameGlyphs[i][j];
 
                     m_Sprite.Color = item.Foreground;
-                    m_Sprite.Scale = scale;
-                    m_Sprite.Position = new SFML.System.Vector2f(m_FontSize * i * m_Scale, m_FontSize * j * m_Scale);
+
+                    m_Sprite.Position = new SFML.System.Vector2f(scaledFontSize * i, scaledFontSize * j);
                     m_Sprite.TextureRect = new((int)(item.TileX * (m_FontSize + PaddingX)) + OffsetX, (int)(item.TileY * (m_FontSize + PaddingY)) + OffsetY, (int)m_FontSize, (int)m_FontSize);
                     m_Sprite.Draw(target, RenderStates.Default);                    
                 }

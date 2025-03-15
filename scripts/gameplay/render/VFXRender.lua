@@ -5,13 +5,15 @@ local neighbors = { { -1, -1 }, { -1, 0 }, { -1, 1 }, { 0, -1 }, { 0, 1 }, { 1, 
 local defaultBurnColors = { Colors.Yellow, Colors.Red }
 local defaultMagicColors = { Colors.LightMagenta, Colors.DarkMagenta }
 
+local sin = math.sin
+
 function VFXRenderSystem:Render()
 	for _, entity in World:Exec(ECS.Query.All(Burning, Position)):Iterator() do
 		local burn = entity[Burning]
 		if burn.speed == nil then burn.speed = 0.6 + (Rand:F01() - 0.5) / 10.0 end
 		
 		local pos = entity[Position]
-		local f = (math.sin(burn.value) + 1.0) * 0.5
+		local f = (sin(burn.value) + 1.0) * 0.5
 		local burnColors = burn.colors or defaultBurnColors
 
 		local bg = Colors:Lerp(burnColors[1], burnColors[2], f)
@@ -38,7 +40,7 @@ function VFXRenderSystem:Render()
 		if magic.speed == nil then magic.speed = 0.6 + (Rand:F01() - 0.5) / 10.0 end
 		local d = (Rand:F01() - 0.5) / 10.0
 		local pos = entity[Position]
-		local f = (math.sin(magic.value) + 1.0) * 0.5
+		local f = (sin(magic.value) + 1.0) * 0.5
 		local magicColors = magic.colors or defaultMagicColors
 		local fg = Colors:Lerp(defaultBurnColors[1], defaultBurnColors[2], f + d)
 		local bg = Colors:Lerp(magicColors[1], magicColors[2], f - d)

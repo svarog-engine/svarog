@@ -22,22 +22,6 @@ local ComponentColors = {
 	Stamina = Colors.Green
 }
 
--- optimize this crap
-local function GetWheelsEntries()
-	local entries = {}
-	for i = 1, 12 do
-		name, component = Wheels:GetMajor(i)
-		table.insert(entries, {name = name, component = component})
-	end
-
-	for i = 1, 12 do
-		name, component = Wheels:GetMinor(i)
-		table.insert(entries, {name = name, component = component})
-	end
-
-	return entries
-end
-
 function PlayerInfoRenderSystem:ShouldRender(ui)
 	return PlayerEntity ~= nil and PlayerEntity[Boons] ~= nil
 end

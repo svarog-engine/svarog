@@ -18,17 +18,19 @@ local FV = function(dx, dy) UISettings.y = UISettings.y + dy end
 
 UIRenderer = {
 	Clear = function()
-		for i = 0, Config.Width do
-			for j = 0, Config.Height do
-				Engine.Glyph(i, j, "invalid", { fg = Colors.Red, bg = Colors.Black }, "UI")
+		local overrides = { fg = Colors.Red, bg = Colors.Black }
+		for i = 1, Config.Width do
+			for j = 1, Config.Height do
+				Engine.Glyph(i, j, "invalid", overrides, "UI")
 			end
 		end
 	end,
 
 	ClearBox = function(x, y, width, height)
+		local overrides = { fg = Colors.Red, bg = Colors.Black }
 		for i = x, x + width do
 			for j = y, y + height do
-				Engine.Glyph(i, j, "invalid", { fg = Colors.Red, bg = Colors.Black }, "UI")
+				Engine.Glyph(i, j, "invalid", overrides, "UI")
 			end
 		end
 	end,

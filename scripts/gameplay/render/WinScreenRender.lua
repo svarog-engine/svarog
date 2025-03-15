@@ -12,9 +12,11 @@ FIN = true
 
 local secretUp = 0
 
+local floor = math.floor
+
 function WinScreenRenderSystem:Render()
 	if not FIN then return end
-	
+
 	local w, h = Dungeon.floor:Size()
 	if space == nil then
 		space = Map:New(w, h)
@@ -32,26 +34,29 @@ function WinScreenRenderSystem:Render()
 		WinScreenFrame = WinScreenFrame + 1
 	end
 	
+	local override =  { bg = Colors.Black, fg = Colors.White }
+
 	for i = 1, w do
 		for j = 1, h do 
 			if space:Get(i, j) < WinScreenFrame then
-				Engine.Glyph(i, j, "empty", { bg = Colors.Black, fg = Colors.Black })
+				Engine.Glyph(i, j, "empty", override)
 			end
 		end
 	end
 
 	if WinScreenFrame > 30 then
-		Engine.Write(math.floor(w / 2) - 4, 15, "B E N E A T H")
-		Engine.Write(math.floor(w / 2) - 4, 17, " THE  THRONE ")
-		Engine.Write(math.floor(w / 2) - 4, 18, "    of the   ")
-		Engine.Write(math.floor(w / 2) - 4, 20, "GOBLIN  QUEEN")
-		Engine.Write(math.floor(w / 2) - 4, 22,     "     ----    ")
+		local x = floor(w / 2) - 4
+		Engine.Write(x, 15, "B E N E A T H")
+		Engine.Write(x, 17, " THE  THRONE ")
+		Engine.Write(x, 18, "    of the   ")
+		Engine.Write(x, 20, "GOBLIN  QUEEN")
+		Engine.Write(x, 22,     "     ----    ")
 		if WinScreenFrame > 40 then
-			Engine.Write(math.floor(w / 2) - 4, 25, "Team   SVAROG ")
+			Engine.Write(x, 25, "Team   SVAROG ")
 		end
 		if WinScreenFrame > 50 then
-			if math.floor(WinScreenFrame / 10) % 2 == 0 then
-				Engine.Write(math.floor(w / 2) - 8, 31, "P R E S S   S P A C E")
+			if floor(WinScreenFrame / 10) % 2 == 0 then
+				Engine.Write(x - 4, 31, "P R E S S   S P A C E")
 			end
 		end
 	end
