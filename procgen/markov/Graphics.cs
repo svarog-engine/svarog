@@ -3,8 +3,8 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
+
+using SFML.Graphics;
 using svarog.runner;
 
 static class Graphics
@@ -13,16 +13,27 @@ static class Graphics
     {
         try
         {
-            using (Stream s = Svarog.Instance.FileSystem.GetStream(filename))
+            using Stream s = Svarog.Instance.FileSystem.GetStream(filename);
+            var image = new Image(s);
+
+            int width = (int)image.Size.X, height = (int)image.Size.Y;
+            int[] result = new int[width * height];
+            byte[] buffer = new byte[4];
+            for (int i = 0; i < width * height; i++)
             {
-                using var image = Image.Load<Bgra32>(s);
-                int width = image.Width, height = image.Height;
-                int[] result = new int[width * height];
-                image.CopyPixelDataTo(MemoryMarshal.Cast<int, Bgra32>(result));
-                return (result, width, height, 1);
+                buffer[0] = (byte)image.Pixels[i * 4 + 2];
+                buffer[1] = (byte)image.Pixels[i * 4 + 1];
+                buffer[2] = (byte)image.Pixels[i * 4 + 0];
+                buffer[3] = (byte)image.Pixels[i * 4 + 3];
+                result[i] = BitConverter.ToInt32(buffer);
             }
+            return (result, width, height, 1);
         }
-        catch (Exception) { return (null, -1, -1, -1); }
+        catch (Exception e) 
+        {
+            Svarog.Instance.LogError(e.Message);
+            return (null, -1, -1, -1); 
+        }
     }
 
     public static (int[], int, int) Render(byte[] state, int MX, int MY, int MZ, int[] colors, int pixelsize, int MARGIN) => MZ == 1 ? BitmapRender(state, MX, MY, colors, pixelsize, MARGIN) : IsometricRender(state, MX, MY, MZ, colors, pixelsize, MARGIN);
