@@ -66,19 +66,23 @@ Glossary.Default = {
 	mineral = { x = 5, y = 0, fg = Colors.Green, bg = Colors.Black },
 	plant = { x = 6, y = 0, fg = Colors.Blue, bg = Colors.Black },
 	
-	sphere = { x = 2, y = 3, fg = Colors.White, bg = Colors.Black },
+	sphere = { x = 4, y = 4, fg = Colors.White, bg = Colors.Black },
 	dust = { x = 30, y = 3, fg = Colors.Gray, bg = Colors.Black },
 	altar = { x = 3, y = 3, fg = Colors.Blue, bg = Colors.Black },
 	goblin = { x = 7, y = 2, fg = Colors.LightGreen, bg = Colors.Black },
 	kobold = { x = 11, y = 2, fg = Colors.LightRed, bg = Colors.Black },
 	hobgob = { x = 7, y = 1, fg = Colors.DarkGreen, bg = Colors.Black },
 	ogre = { x = 14, y = 9, fg = Colors.LightRed, bg = Colors.Black },
-	blob = { x = 1, y = 3,  fg = Colors.LightRed, bg = Colors.Black },
-	gelly = { x = 1, y = 3, fg = Colors.Magenta, bg = Colors.Black },
-	djinn = { x = 4, y = 1, fg = Colors.LightRed, bg = Colors.Black },
+	blob = { x = 3, y = 1,  fg = Colors.LightRed, bg = Colors.Black },
+	gelly = { x = 3, y = 1, fg = Colors.Magenta, bg = Colors.Black },
+	djinn = { x = 16, y = 5, fg = Colors.LightRed, bg = Colors.Black },
 	throne = { x = 7, y = 8, fg = Colors.DarkYellow, bg = Colors.Black },
 	skeleton = { x = 5, y = 0, fg = Colors.Gray, bg = Colors.Black },
 	restless = { x = 5, y = 0, fg = Colors.Gray, bg = Colors.Black },
+	third_eye_closed = { x = 1, y = 3, fg = Colors.Red, bg = Colors.Black },
+	third_eye_opened = { x = 2, y = 3, fg = Colors.White, bg = Colors.Black },
+	up_arrow = { x = 5, y = 3, fg = Colors.White, bg = Colors.Black },
+	down_arrow = { x = 6, y = 3, fg = Colors.White, bg = Colors.Black },
 }
 
 InsertSpriteCharRanges(Glossary.Default, 1, 1, "ABCDEFGHIJKLMNOPQRSTUVWXYZ[ ]^_")

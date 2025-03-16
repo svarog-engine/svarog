@@ -1,5 +1,6 @@
 ﻿
 Player = ECS.Component()
+Death = ECS.Component{ reason = "" }
 Boons = ECS.Component{ value = {} }
 
 MoveMode = ECS.Component{value = ""}
@@ -23,7 +24,7 @@ Bumped = ECS.Component{ by = 0 }
 Floor = ECS.Component()
 Wall = ECS.Component()
 
-Health = ECS.Component(Range(9, 9))
+Health = ECS.Component{ value = Range(1, 1) }
 BumpAttack = ECS.Component { damage = 1 }
 
 Stamina = ECS.Component(Range(9, 9))

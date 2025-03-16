@@ -61,6 +61,23 @@ function PlayerInfoRenderSystem.Render(ui)
 					end
 				end
 			end
+
+			if PlayerEntity[Hate] ~= nil then
+				local colorFill = { Colors.Magenta, Colors.Red, Colors.Yellow, Colors.Cyan }
+				ui.PushStyle(colorFill[Rand:Range(1, #colorFill)], Colors.Black)
+					ui.Bar("SPITEFUL", PlayerEntity[Hate].chance, 100, { width = 9 })
+				ui.PopStyle()
+					ui.Space(1)
+				ui.PushStyle(colorFill[Rand:Range(1, #colorFill)], Colors.Black)
+					ui.Label(" SURVIVE ")
+				ui.PopStyle()
+				ui.PushStyle(colorFill[Rand:Range(1, #colorFill)], Colors.Black)
+					ui.Label(" THROUGH ")
+				ui.PopStyle()
+				ui.PushStyle(colorFill[Rand:Range(1, #colorFill)], Colors.Black)
+					ui.Label("  SPITE ")
+				ui.PopStyle()
+			end
 		ui.PopOrder()
 	ui.PopBox()
 end

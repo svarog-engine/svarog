@@ -20,11 +20,13 @@ TakenBoon["Hate"] = "The enemy. The [HATE] glyph desires a stronger host."
 
 function BumpAltarMechanicsSystem:Tick()
 	for _, entity in World:Exec(ECS.Query.All(Bumped, Altar, Satiated)):Iterator() do
-		local t = CompNameToComp(entity[Altar].type)
-		PlayerEntity:Set(t())
-		table.insert(PlayerEntity[Boons].value, entity[Altar].type)
-		Diary.Write(TakenBoon[entity[Altar].type])
-		entity:Unset(Bumped)
-		MakeDungeon()
+		if World:FetchEntityById(entity[Bumped].by) == PlayerEntity then
+			local t = CompNameToComp(entity[Altar].type)
+			PlayerEntity:Set(t())
+			table.insert(PlayerEntity[Boons].value, entity[Altar].type)
+			Diary.Write(TakenBoon[entity[Altar].type])
+			entity:Unset(Bumped)
+			MakeDungeon()
+		end
 	end
 end

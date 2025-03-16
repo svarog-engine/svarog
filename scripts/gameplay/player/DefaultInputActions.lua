@@ -99,7 +99,7 @@ Engine.RegisterInputSystem(
 					if stam.current >= cost * mult and PerformBump(entity, pos.x, pos.y, dx * speed, dy * speed) then
 						PlayerEntity[Tension]:Up(1)
 						if Dungeon.entities[id][1][Health] ~= nil then
-							Dungeon.entities[id][1][Health] = Dungeon.entities[id][1][Health] - 1
+							Dungeon.entities[id][1][Health].current = Dungeon.entities[id][1][Health].current - 1
 						end
 						Diary.Write("You phase through the " .. name .. "! Your [FLOW] glyph quivers.")
 						entity[Stamina].current = entity[Stamina].current - cost * mult
@@ -168,6 +168,22 @@ Engine.RegisterInputSystem({ Action_Default_ZoomOut }, function()
 end)
 
 Engine.RegisterInputSystem({ Action_Default_Reload }, function() Svarog.Instance:Reload() end)
+Engine.RegisterInputSystem({ Action_Death_Reload }, function() 
+	if PlayerEntity[Death] ~= nil then
+		Svarog.Instance:Reload()
+	else
+		WinScreenFrame = 0
+		WinScreenWay = "up"
+		FIN = true
+	end
+end)
+
+ScanningMode = false
+Engine.RegisterInputSystem({ Action_Default_ScanOn }, function() ScanningMode = true end)
+Engine.RegisterInputSystem({ Action_Default_ScanOff }, function() 
+	ScanningMode = false
+	UIRenderer.Clear()
+end)
 
 Engine.RegisterInputSystem({ Action_Default_Info }, function() 
 	local x = InputStack.MouseX

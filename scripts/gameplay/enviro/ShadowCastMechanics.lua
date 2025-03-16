@@ -27,16 +27,14 @@ function ShadowcastSystem:Tick()
 	local playerPosition = PlayerEntity[Position]
 	Dungeon.visibility:Reset(false)
 
-	local blindness = PlayerEntity[Blindness]
-	if blindness ~= nil then
-		if PlayerEntity[Light] ~= nil then
-			Diary.Write("Blindness failed to take root. Your [LIGHT] glyph quivers.")
-			PlayerEntity[Tension]:Up()
-		else
-			radius = 1
-		end
+	local blindness = PlayerEntity[Blindness]	
+	if PlayerEntity[Light] ~= nil then
+		radius = math.ceil(2 * radius)
 	end
 
 	FOV = {}
-	FOV_algorithm(playerPosition.x, playerPosition.y, radius, IsTransparent, OnVisible, 0, arc)
+
+	if blindness == nil then
+		FOV_algorithm(playerPosition.x, playerPosition.y, radius, IsTransparent, OnVisible, 0, arc)
+	end
 end

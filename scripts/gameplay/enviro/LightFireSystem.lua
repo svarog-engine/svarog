@@ -20,7 +20,7 @@ function LightFireSystem:Tick()
 		
 		if d < 10 then
 			if Chances[d]:MakeGuess() and Chances[PlayerEntity[Light].chance]:MakeGuess() then
-				entity:Set(Health{ value = 5 })
+				entity:Set(Health(Range(5)))
 				entity:Set(Spread{ chance = 6 })
 				helped = helped + 1
 			end

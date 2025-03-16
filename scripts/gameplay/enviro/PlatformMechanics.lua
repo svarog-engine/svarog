@@ -35,21 +35,7 @@ function PlatformSystem:Tick()
 				if e ~= entity then
 					if e == PlayerEntity or e[Creature] ~= nil then
 						if e == PlayerEntity then
-							PlayerEntity[Tension]:Down(2)
-							PlayerEntity[Hate].chance = PlayerEntity[Hate].chance - 1
-
-							if PlayerEntity[Hate].chance > 7 then
-								Diary.Write("The other GLYPHS resonate. HATE rules.")
-							elseif PlayerEntity[Hate].chance > 4 then
-								Diary.Write("The other GLYPHS build up. HATE falls silent for a moment.")
-							elseif PlayerEntity[Hate].chance > 2 then
-								Diary.Write("The other GLYPHS swoon. HATE dwindles.")
-							elseif PlayerEntity[Hate].chance > 0 then
-								Diary.Write("The other GLYPHS enclose. HATE has no force.")
-							else
-								Diary.Write("Your HATE is now forever sealed.")
-								Diary.Write("Congratulations! You won.")
-							end
+							PlayerEntity[Tension]:Down(7)
 
 							if PlayerEntity[Hate].chance <= 0 then
 								PlayerEntity[Hate].chance = 0
@@ -60,9 +46,7 @@ function PlatformSystem:Tick()
 								end
 
 								PlayerEntity:Set(Win{})
-								WinScreenFrame = 0
-								WinScreenWay = "up"
-								FIN = true
+								Input.Push(Death)
 							end
 						elseif e[Creature] ~= nil then
 							Diary.Write("The " .. e[Name].value .. " disturbs the portal. The [HATE] glyph curses!")

@@ -35,6 +35,16 @@ UIRenderer = {
 		end
 	end,
 
+	FillRect = function(x, y, width, height, color)
+		local color = color or Colors.Black
+		for i = x, x + width do
+			for j = y, y + height do
+				Engine.Glyph(i, j, " ", {}, "UI")
+				Engine.Bg(i, j, color, "UI")
+			end
+		end
+	end,
+
 	Line = function(x1, y1, x2, y2, color, isVisibleFn)
 		if color == nil then color = Colors.White end
 		PlotLine(x1, y1, x2, y2, color, isVisibleFn)

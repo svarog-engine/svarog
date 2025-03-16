@@ -1,6 +1,8 @@
 ﻿-- Define your input actions here
 
 Actions.Default = {
+	ScanOn	= { Input.Press("Key: LAlt") },
+	ScanOff	= { Input.Release("Key: LAlt") },
 	Wait	= { Input.Press("Key: Space") },
 	Left	= { Input.Press("Key: Left") },
 	Right	= { Input.Press("Key: Right") },
@@ -15,6 +17,10 @@ Actions.Default = {
 	Inventory = { Input.Press("Key: I") },
 	Tension = { Input.Press("Key: T") },
 	Info = { Input.Press("Mouse: Left") },
+}
+
+Actions.Death = {
+	Reload = { Input.Hold("Key: Space", 500) }
 }
 
 Actions.Inventory = {

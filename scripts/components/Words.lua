@@ -28,7 +28,7 @@ Steal = ECS.Component { level = 1 }
 Learn = ECS.Component { level = 1 }
 Weaken = ECS.Component { level = 1 }
 Break = ECS.Component { level = 1, chance = 8 }
-Hate = ECS.Component { chance = 10 }
+Hate = ECS.Component { chance = 100 }
 
 -- Metals
 

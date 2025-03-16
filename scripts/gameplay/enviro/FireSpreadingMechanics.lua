@@ -57,7 +57,8 @@ function FireSpreadingMechanicsSystem:Tick()
 		end
 
 		if entity == PlayerEntity then
-			Svarog.Instance:Reload()
+			PlayerEntity:Set(Death{ reason = "Burnt to death" })
+			Input.Push("Death")
 			return
 		end
 

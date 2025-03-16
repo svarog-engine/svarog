@@ -136,7 +136,7 @@ function CompToShardic(comp)
 	if comp == "Break" then return "Fracture" end
 	if comp == "Luck" then return "Luck" end
 	if comp == "Darken" then return "Darkness" end
-	if comp == "Flow" then return "Mists" end
+	if comp == "Flow" then return "Flow" end
 	if comp == "Heal" then return "Healing" end
 	if comp == "Calm" then return "Calm" end
 	if comp == "Open" then return "Openess" end
@@ -172,7 +172,7 @@ end
 
 function Procgen.Flame(e, x, y, lifetime, spread)
 	e:Set(Burning{ value = Rand:F01() })
-	e:Set(Health{ value = lifetime or 20 })
+	e:Set(Health(Range(lifetime or 20)))
 	e:Set(Spread{ chance = spread or 4 })
 	e:Set(Glyph{ name = "flame" })
 end
@@ -237,12 +237,13 @@ end
 function Procgen.Goblin(e, x, y)
 	e:Set(
 		Creature{}, 
-		Sight{ radius = 15 },
-		AIMoveTowardsPlayer{ distance = 0, chance = 10 }, 
-		Health{ value = Range(2) }, 
+		Sight{ radius = 6 },
+		AIMoveTowardsPlayer{ distance = 0, chance = 9 }, 
+		Health(Range(2, 2)), 
 		BumpAttack { damage = 1 }, 
 		Glyph{ name = "goblin" },
 		Burnable{},
+		Luck{},
 		Contents{ items = { { itemId = "gold", quantity = 20 } } }
 	)
 end
@@ -252,8 +253,8 @@ function Procgen.Kobold(e, x, y)
 		Creature{}, 
 		Sight{ radius = 10 },
 		AIMoveTowardsPlayer{ distance = 2, chance = 10 }, 
-		Health{ value = Range(1) }, 
-		BumpAttack { damage = 3 }, 
+		Health(Range(1, 1)),
+		BumpAttack { damage = 2 }, 
 		Glyph{ name = "kobold" },
 		Burnable{},
 		Contents{ items = { { itemId = "gold", quantity = 10 } } }
@@ -316,11 +317,13 @@ function Procgen.Grate(e, x, y)
 end
 
 function Procgen.Portal(e, x, y, owner, time, comp)
+	local time = time or 9
+	if time > 9 then time = 9 end
 	e:Set(Name("Portal"))
 	e:Set(Dependent(owner))
 	e:Set(Portal{ challenge = owner, type = comp })
 	e:Set(Magic{ value = Rand:F01(), colors = CompColors[comp] })
-	e:Set(Timeout{ value = time or 9 })
+	e:Set(Timeout{ value = time })
 	e:Set(Glyph{ name = "portal" })
 end
 
@@ -337,10 +340,10 @@ function Procgen.Hobgob(e, x, y)
 	e:Set(
 		Creature{}, 
 		Endure{},
-		Sight{ radius = 6 },
+		Sight{ radius = 8 },
 		Magic{ value = Rand:F01(), colors = CompColors[Endure] },
 		AIMoveTowardsPlayer{ distance = 0, chance = 6 }, 
-		Health{ value = Range(1) }, 
+		Health(Range(2, 2)), 
 		BumpAttack { damage = 1 }, 
 		Glyph{ name = "hobgob" },
 		Contents{ items = {} }
@@ -355,7 +358,7 @@ function Procgen.Mimic(e, x, y)
 		Magic{ value = Rand:F01(), colors = CompColors[Endure] },
 		AIAttackIfStandingNextTo{}, 
 		AIMoveTowardsPlayer{ distance = 10, chance = 3 }, 
-		Health{ value = Range(2) }, 
+		Health(Range(1)), 
 		BumpAttack { damage = 3 }, 
 		Glyph{ name = "chest" },
 		Burnable{},
@@ -370,9 +373,8 @@ function Procgen.Ogre(e, x, y)
 		Sight{ radius = 10 },
 		Magic{ value = Rand:F01(), colors = CompColors[Open] },
 		AIMoveTowardsPlayer{ distance = 0, chance = 9 },
-		AIRest{ chance = 8 },
 		AIBreakThroughToPlayer{ chance = 5, distance = 9 },
-		Health{ value = Range(3) }, 
+		Health(Range(3)), 
 		BumpAttack { damage = 3 }, 
 		Glyph{ name = "ogre" },
 		Contents{ items = { { itemId = "gold", quantity = 50 } } }
@@ -389,7 +391,7 @@ function Procgen.Flamos(e, x, y)
 		Magic{ value = Rand:F01(), colors = CompColors[Light] },
 		AIKeepDistanceFromPlayer{ distance = 3, chance = 9 },
 		AIRest{ chance = 1 },
-		Health{ value = Range(1) },
+		Health(Range(1)),
 		Burning{},
 		Glyph{ name = "sphere" },
 		Contents{ items = { { itemId = "gold", quantity = 100 } } }
@@ -403,9 +405,10 @@ function Procgen.Djinn(e, x, y)
 		OldPosition{},
 		ExplodeFireOnDeath{},
 		Magic{ value = Rand:F01(), colors = CompColors[Open] },
-		AIMoveTowardsPlayer{ distance = 1, chance = 9 },
-		Health{ value = Range(20) },
+		AIMoveTowardsPlayer{ distance = 0, chance = 9 },
+		Health(Range(20)),
 		Burning{},
+		Darken{},
 		Spread{ chance = 4 },
 		Glyph{ name = "djinn" },
 		Contents{ items = {} }
@@ -419,9 +422,7 @@ function Procgen.RestlessDead(e, x, y)
 		Sight{ radius = 5 },
 		Magic{ value = Rand:F01(), colors = CompColors[Flow] },
 		AIForcedRandomWalk{},
-		Health{ value = Range(2) },
-		Burning{},
-		Spread{ chance = 4 },
+		Health(Range(4)),
 		Glyph{ name = "restless" },
 		Contents{ items = {} }
 	)
@@ -435,7 +436,7 @@ function Procgen.GelatinousCube(e, x, y)
 		Magic{ value = Rand:F01(), colors = CompColors[Flow] },
 		AIMoveTowardsPlayer{ distance = 0, chance = 6 },
 		AIBreakThroughToPlayer{ chance = 4, distance = 9 },
-		Health{ value = Range(8) },
+		Health(Range(8)),
 		Glyph{ name = "gelly" },
 		Contents{ items = {} }
 	)

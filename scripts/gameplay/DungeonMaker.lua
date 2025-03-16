@@ -199,15 +199,16 @@ local function SpecificRoomSetup(l, w, h)
 		r = Rand:Range(1, #bucket)
 		local rx, ry = math.floor(bucket[r].x), math.floor(bucket[r].y)
 		Procgen.MakeObject("SatiatedAltar", rx, ry, "Hate")
-		Procgen.MakeObject("Throne", rx - 1, ry + 3)
-		
+		Procgen.MakeObject("Skeleton", rx + 1, ry + 2)
+		Procgen.MakeObject("Throne", rx - 1, ry)
 		return { { math.floor(w / 2), math.floor(h / 2) } }
 	elseif l == 6 then
 		local bucketIndex = Dungeon.wallDistances:GetHighestBucket()
 		local bucket = Dungeon.wallDistances:GetAt(bucketIndex)
-		r = Rand:Range(1, #bucket)
-		local rx, ry = math.floor(bucket[r].x), math.floor(bucket[r].y)
-		Procgen.MakeObject("Skeleton", rx + 1, ry + 1)
+		for i, f in ipairs(bucket) do
+			local rx, ry = math.floor(bucket[i].x), math.floor(bucket[i].y)	
+			Procgen.MakeObject("Portal", rx, ry, 5, Rand:Range(2, 4), PlayerEntity[Boons].value[Rand:Range(1, #PlayerEntity[Boons].value)])
+		end		
 		return { { math.floor(w / 2), math.floor(h / 2) } }
 	end
 end
@@ -288,15 +289,16 @@ function MakeDungeon()
 	Dungeon.quiet:AddCondition(DistanceMap.IS_FLOOR)
 	Dungeon.quiet:Flood()
 
-	if Level > 1 and Level < 6 then
+	if Level ~= 1 and Level ~= 5 then
 		local crs = { "Goblin", "Kobold", "Hobgob" }
-		while Dungeon.creatureCount < 8 do
+		while Dungeon.creatureCount < 20 do
 			local x, y = Rand:Range(1, w), Rand:Range(1, h)
 			if Dungeon.floor:Has(x, y) and Dungeon.floor:Get(x, y).type == Floor then
 				Procgen.MakeObject(crs[Rand:Range(1, #crs)], x, y)
 			end
 		end
 	end
+
 	local mostQuiet = Dungeon.quiet:GetHighestBucket()
 	local ok = Dungeon.quiet:GetAt(mostQuiet)
 	local xy = ok[Rand:Range(1, #ok)]

@@ -134,7 +134,7 @@ function ChallengeSystem:Tick()
 
 	for _, entity in World:Exec(ECS.Query.All(Portal, Timeout)):Iterator() do
 		local timeout = entity[Timeout]
-		timeout.value = timeout.value - 0.5
+		timeout.value = timeout.value - 1
 
 		if timeout.value < 0 then
 			local portal = entity[Portal]

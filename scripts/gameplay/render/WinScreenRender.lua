@@ -29,9 +29,9 @@ function WinScreenRenderSystem:Render()
 	end
 	
 	if WinScreenWay == "down" then
-		WinScreenFrame = WinScreenFrame - 1
+		WinScreenFrame = WinScreenFrame - 2
 	elseif WinScreenWay == "up" then
-		WinScreenFrame = WinScreenFrame + 1
+		WinScreenFrame = WinScreenFrame + 2
 	end
 	
 	local override =  { bg = Colors.Black, fg = Colors.White }

@@ -6,13 +6,15 @@ local function CalculateDamage(attackerEntity, targetEntity)
 
 	local totalDamage = baseDamage
 
+	print(attackerEntity[Name].value .. " deals " .. totalDamage .. " to " .. targetEntity[Name].value .. " (" .. targetEntity[Health].current .. ")")
+
 	return totalDamage
 end
 
 local function PerformAttack(attackerEntity, targetEntity)
 		local totalDamage = CalculateDamage(attackerEntity, targetEntity)
 
-		if targetEntity[Endure] ~= nil and Chances[5 + targetEntity[Endure].level]:MakeGuess() then
+		if targetEntity[Endure] ~= nil and Chances[3 + targetEntity[Endure].level]:MakeGuess() then
 			if targetEntity == PlayerEntity then
 				Diary.Write("You felt nothing. Your [ENDURE] glyph quivers.")
 				targetEntity[Tension]:Up()
@@ -23,6 +25,7 @@ local function PerformAttack(attackerEntity, targetEntity)
 			Fade(targetEntity, Colors.Magenta, Colors.Black, 0.5)
 		else
 			targetEntity[Health].current = targetEntity[Health].current - totalDamage
+			if targetEntity[Tension] ~= nil then targetEntity[Tension]:Up() end
 			Fade(targetEntity, Colors.Red, Colors.Black, 0.5)
 
 			if attackerEntity == PlayerEntity then
@@ -37,7 +40,6 @@ local function TryBreak(attackerEntity, targetEntity)
 	if targetEntity[Breakable] ~= nil and attackerEntity[Break] ~= nil then
 
 		if Chances[attackerEntity[Break].chance]:MakeGuess() then
-			-- print("Broke entity -> ID: " .. targetEntity)
 
 			if attackerEntity == PlayerEntity then 
 				Diary.Write("You broke " .. targetEntity[Name].value .. "! Your [BREAK] glyph quivers.")
@@ -129,7 +131,8 @@ function BumpAttackMechanicsSystem:Tick()
 
 				if entity[Health].current <= 0 then
 					if entity == PlayerEntity then
-						Svarog.Instance:Reload()
+						PlayerEntity:Set(Death{ reason = "Mortally wounded in combat" })
+						Input.Push("Death")
 						return
 					end
 
