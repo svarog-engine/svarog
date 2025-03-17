@@ -1,11 +1,23 @@
 ItemConsume = { 
-	ash = "Break",
+	ash = "Open",
 	rosebud = "Light",
 	blackthorn = "Darken",
 	willow = "Luck",
 	sage = "Endure",
 	foxglove = "Heal",
 	mandrake = "Luck",
+}
+
+local ItemCastNames = {
+	diamond = "Break",
+	sapphire = "Light",
+	obsidian = "Darken",
+	malachite = "Luck",
+	lapis_lazuli = "Endure",
+	onyx = "Heal",
+	smoky_quartz = "Calm",
+	garnet = "Flow",
+	topaz = "Open",
 }
 
 function CanConsume(itemId)
@@ -56,17 +68,6 @@ local ItemPrefix = {
 	garnet = "a ",
 	topaz = "a ",
 }
-local ItemCastNames = {
-	diamond = "Break",
-	sapphire = "Light",
-	obsidian = "Darken",
-	malachite = "Luck",
-	lapis_lazuli = "Endure",
-	onyx = "Heal",
-	smoky_quartz = "Calm",
-	garnet = "Flow",
-	topaz = "Open",
-}
 
 CompColors = {
 	Break = { Colors.LightBlue, Colors.Blue },
@@ -83,6 +84,11 @@ CompColors = {
 
 function CanCast(itemId)
 	return ItemCastNames[itemId] ~= nil
+end
+
+local function Distance(x1, y1, x2, y2)
+	local dx, dy = x1 - x2, y1 - y2
+	return math.sqrt(dx * dx + dy * dy)
 end
 
 function Cast(itemId)
@@ -126,13 +132,13 @@ function Cast(itemId)
 	for i = -5, 5 do
 		for j = -5, 5 do
 			local nx, ny = x + i, y + j
-			if dungeon.floor:Has(nx, ny) and dungeon.passable:Get(nx, ny) and dungeon.playerDistance:Get(nx, ny) <= 5 then
-				local t = 6 - dungeon.playerDistance:Get(nx, ny)
-				local e = Procgen.MakeObject("Mist", nx, ny, ItemCastNames[itemId], t)
-				Fade(e, Colors.Black, Colors.White, 0.1 * t)
-
+			if dungeon.floor:Has(nx, ny) and Distance(x, y, nx, ny) <= 5 then
+				local t = 6 - Distance(x, y, nx, ny)
+				
 				local id = dungeon.floor:ID(nx, ny)
-				for _, e in pairs(dungeon.entities[id]) do 
+				for _, e in ipairs(dungeon.entities[id] or {}) do 
+					print(i, j, e[Name].value, e[Breakable] ~= nil)
+
 					if e[Creature] ~= nil then
 						if e[compFrom(ItemCastNames[itemId])] == nil then
 							local duration = 7
@@ -147,14 +153,18 @@ function Cast(itemId)
 					end
 
 					if element == "Light" and e[Burnable] ~= nil then
+						e:Set(Burning{})
 						e:Set(Health(Range(10)))
-						e:Set(Spread{ chance = 10 })
+						e:Set(Spread{ chance = 6 })
 					end
 
 					if element == "Break" and e[Breakable] ~= nil then
 						RemoveEntityFromDungeon(e)
 						World:Remove(e)
-						Procgen.MakeObject("Dust", nx, ny)
+					end
+
+					if element == "Open" and e[Locked] ~= nil then
+						e:Unset(Locked)
 					end
 
 					if element == "Heal" and e[Health] ~= nil then
@@ -164,6 +174,9 @@ function Cast(itemId)
 						end
 					end
 				end
+
+				local e = Procgen.MakeObject("Mist", nx, ny, ItemCastNames[itemId], t)
+				Fade(e, Colors.Black, Colors.White, 0.1 * t)
 			end
 		end
 	end
