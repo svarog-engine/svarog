@@ -167,4 +167,15 @@ function ChallengeSystem:Tick()
 			World:Remove(entity)
 		end
 	end
+
+	for _, entity in World:Exec(ECS.Query.All(Mist, Timeout)):Iterator() do
+		local timeout = entity[Timeout]
+		timeout.value = timeout.value - 1
+
+		local player = PlayerEntity
+		if timeout.value < 0 then
+			local name = entity[Mist].type
+			World:Remove(entity)
+		end
+	end
 end

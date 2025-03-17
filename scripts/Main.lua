@@ -31,6 +31,7 @@ LoadEnviroSystem "InflictStatusMechanics"
 LoadEnviroSystem "PickUpMechanics"
 LoadEnviroSystem "ShadowCastMechanics"
 LoadEnviroSystem "ChallengeMechanics"
+LoadEnviroSystem "ParalyzedResolveMechanics"
 LoadEnviroSystem "TurnOrder"
 
 LoadRenderSystem "DungeonRender"

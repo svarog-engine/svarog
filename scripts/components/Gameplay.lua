@@ -42,7 +42,7 @@ TempBoon = ECS.Component{ type = nil }
 Timeout = ECS.Component{ value = 0.0 }
 Portal = ECS.Component { challenge = nil, type = nil }
 VFXExplosion = ECS.Component(Range(0, 10))
-
+Mist = ECS.Component { type = nil }
 -- Tension
 
 Tension = ECS.Component(Range(9, 9))

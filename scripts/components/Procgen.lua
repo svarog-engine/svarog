@@ -341,7 +341,7 @@ function Procgen.Hobgob(e, x, y)
 		Creature{}, 
 		Endure{},
 		Sight{ radius = 8 },
-		Magic{ value = Rand:F01(), colors = CompColors[Endure] },
+		Magic{ value = Rand:F01(), colors = CompColors["Endure"] },
 		AIMoveTowardsPlayer{ distance = 0, chance = 6 }, 
 		Health(Range(2, 2)), 
 		BumpAttack { damage = 1 }, 
@@ -355,7 +355,7 @@ function Procgen.Mimic(e, x, y)
 		Creature{}, 
 		Endure{},
 		Sight{ radius = 15 },
-		Magic{ value = Rand:F01(), colors = CompColors[Endure] },
+		Magic{ value = Rand:F01(), colors = CompColors["Endure"] },
 		AIAttackIfStandingNextTo{}, 
 		AIMoveTowardsPlayer{ distance = 10, chance = 3 }, 
 		Health(Range(1)), 
@@ -371,7 +371,7 @@ function Procgen.Ogre(e, x, y)
 		Creature{}, 
 		Break{},
 		Sight{ radius = 10 },
-		Magic{ value = Rand:F01(), colors = CompColors[Open] },
+		Magic{ value = Rand:F01(), colors = CompColors["Open"] },
 		AIMoveTowardsPlayer{ distance = 0, chance = 9 },
 		AIBreakThroughToPlayer{ chance = 5, distance = 9 },
 		Health(Range(3)), 
@@ -388,7 +388,7 @@ function Procgen.Flamos(e, x, y)
 		Sight{ radius = 10 },
 		OldPosition{},
 		ExplodeFireOnDeath{},
-		Magic{ value = Rand:F01(), colors = CompColors[Light] },
+		Magic{ value = Rand:F01(), colors = CompColors["Light"] },
 		AIKeepDistanceFromPlayer{ distance = 3, chance = 9 },
 		AIRest{ chance = 1 },
 		Health(Range(1)),
@@ -404,7 +404,7 @@ function Procgen.Djinn(e, x, y)
 		Sight{ radius = 10 },
 		OldPosition{},
 		ExplodeFireOnDeath{},
-		Magic{ value = Rand:F01(), colors = CompColors[Open] },
+		Magic{ value = Rand:F01(), colors = CompColors["Open"] },
 		AIMoveTowardsPlayer{ distance = 0, chance = 9 },
 		Health(Range(20)),
 		Burning{},
@@ -420,7 +420,7 @@ function Procgen.RestlessDead(e, x, y)
 		Creature{},
 		Name{ value = "Restless Dead" },
 		Sight{ radius = 5 },
-		Magic{ value = Rand:F01(), colors = CompColors[Flow] },
+		Magic{ value = Rand:F01(), colors = CompColors["Flow"] },
 		AIForcedRandomWalk{},
 		Health(Range(4)),
 		Glyph{ name = "restless" },
@@ -433,12 +433,22 @@ function Procgen.GelatinousCube(e, x, y)
 		Creature{},
 		Name{ value = "Gelatinous Cube" },
 		Sight{ radius = 20 },
-		Magic{ value = Rand:F01(), colors = CompColors[Flow] },
+		Magic{ value = Rand:F01(), colors = CompColors["Flow"] },
 		AIMoveTowardsPlayer{ distance = 0, chance = 6 },
 		AIBreakThroughToPlayer{ chance = 4, distance = 9 },
 		Health(Range(8)),
 		Glyph{ name = "gelly" },
 		Contents{ items = {} }
+	)
+end
+
+function Procgen.Mist(e, x, y, type, duration)
+	e:Set(
+		Name{ value = "Mist" },
+		Glyph{ name = "mist" },
+		Magic{ value = Rand:F01(), colors = CompColors[type] },
+		Timeout{ value = duration },
+		Mist{ type = type }
 	)
 end
 

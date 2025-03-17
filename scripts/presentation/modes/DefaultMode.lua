@@ -35,6 +35,7 @@ Glossary.Default = {
 	treasure = { x = 4, y =0, fg = Colors.LightYellow, bg = Colors.Black },
 	item = { x = 15, y = 0, fg = Colors.Yellow, bg = Colors.Black },
 	key = { x = 16, y = 4, fg = Colors.Yellow, bg = Colors.Black },
+	mist = { x = 17, y = 4, fg = Colors.Yellow, bg = Colors.Black },
 
 	empty = { x = 0, y = 0, fg = Colors.DarkGray, bg = Colors.Black },
 	invalid = { x = -1, y = -1, fg = Colors.Transparent, bg = Colors.Transparent },
@@ -78,7 +79,8 @@ Glossary.Default = {
 	djinn = { x = 16, y = 5, fg = Colors.LightRed, bg = Colors.Black },
 	throne = { x = 7, y = 8, fg = Colors.DarkYellow, bg = Colors.Black },
 	skeleton = { x = 5, y = 0, fg = Colors.Gray, bg = Colors.Black },
-	restless = { x = 5, y = 0, fg = Colors.Gray, bg = Colors.Black },
+	restless = { x = 6, y = 2, fg = Colors.DarkRed, bg = Colors.Black },
+	rat = { x = 18, y = 2, fg = Colors.DarkRed, bg = Colors.Black },
 	third_eye_closed = { x = 1, y = 3, fg = Colors.Red, bg = Colors.Black },
 	third_eye_opened = { x = 2, y = 3, fg = Colors.White, bg = Colors.Black },
 	up_arrow = { x = 5, y = 3, fg = Colors.White, bg = Colors.Black },
