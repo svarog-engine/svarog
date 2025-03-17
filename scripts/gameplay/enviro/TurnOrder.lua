@@ -6,6 +6,7 @@ function TurnOrderSystem:ShouldTick()
 end
 
 function TurnOrderSystem:Tick()
+	local perfBump = PerformBump
 	for _, entity in World:Exec(ECS.Query.All(Creature)):Iterator() do
 		local creature = entity[Creature]
 		
@@ -19,11 +20,11 @@ function TurnOrderSystem:Tick()
 				end
 			else
 				local pos = entity[Position]
-				local dx = Rand:Range(0, 2) - 1
-				local dy = Rand:Range(0, 2) - 1
+				local dx = Rand:Range(-1, 3)
+				local dy = Rand:Range(-1, 3)
 				if not (dx == 0 and dy == 0) then
 					if Chances[5]:MakeGuess() then
-						PerformBump(entity, pos.x, pos.y, pos.x + dx, pos.y + dy)
+						local mov = perfBump(entity, pos.x, pos.y, dx, dy)	
 					end
 				end
 			end

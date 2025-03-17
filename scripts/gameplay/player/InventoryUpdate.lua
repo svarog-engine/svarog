@@ -59,11 +59,7 @@ local Actions = {
 
 		local actionDone = false
 		if CanConsume(item.itemId) then
-			if Consume(item.itemId) then
-				Diary.Write("You consume the " .. itemMeta.name .. ". It alleviates some tension.")
-			else
-				Diary.Write("You consume the " .. itemMeta.name .. ", but it doesn't sate your glyphs.")
-			end
+			Consume(item.itemId)
 			actionDone = true
 		end
 

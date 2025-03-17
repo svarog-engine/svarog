@@ -19,16 +19,16 @@ Fade = ECS.Component { level = 1 }
 Alarm = ECS.Component { level = 1 }
 Identify = ECS.Component { level = 1 }
 Stop = ECS.Component { level = 1 }
-Darken = ECS.Component { level = 1 ,chance = 8 }
+Darken = ECS.Component { level = 1, chance = 5 }
 Frighten = ECS.Component { level = 1 }
 Store = ECS.Component { level = 1 }
-Light = ECS.Component { level = 1, chance = 8, bonusRadius = 5 }
+Light = ECS.Component { level = 1, chance = 5 }
 Strengthen = ECS.Component { level = 1 }
 Steal = ECS.Component { level = 1 }
 Learn = ECS.Component { level = 1 }
 Weaken = ECS.Component { level = 1 }
-Break = ECS.Component { level = 1, chance = 8 }
-Hate = ECS.Component { chance = 100 }
+Break = ECS.Component { level = 1, chance = 5 }
+Hate = ECS.Component { level = 1, chance = 100 }
 
 -- Metals
 

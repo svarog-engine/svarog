@@ -59,7 +59,7 @@ DebugWordsLibrary = {
 	{
 		name = "light",
 		callback = function (x, y)
-			TryApplyComponent(x, y, Light { level = 1, chance = 8, bonusRadius = 5 }, "Light")
+			TryApplyComponent(x, y, Light { level = 1, chance = 8 }, "Light")
 		end
 	},
 

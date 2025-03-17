@@ -32,6 +32,16 @@ function PlayerInfoRenderSystem.Render(ui)
 		return
 	end
 
+	local times = {}
+	for _, e in World:Exec(ECS.Query.All(TempBoon, Timeout)):Iterator() do
+		local type = e[TempBoon].type
+		if times[type] == nil then
+			times[type] = e[Timeout].value
+		else
+			times[type] = times[type] + e[Timeout].value
+		end
+	end
+
 	UIRenderer.ClearBox(47, 2, 20, 20)
 
 	ui.PushBox(47, 2, 20, 20)
@@ -40,7 +50,14 @@ function PlayerInfoRenderSystem.Render(ui)
 
 			for _, name in ipairs(PlayerEntity[Boons].value) do
 				ui.PushStyle(CompColors[name][1], Colors.Black)
-				ui.Label("[" .. name .. "]")
+				
+				local label = "[" .. name .. "]"
+					
+				if times[name] ~= nil then
+					label = label .. " (" .. times[name] .. ")"
+				end
+
+				ui.Label(label)
 				ui.PopStyle()
 			end
 
@@ -78,6 +95,8 @@ function PlayerInfoRenderSystem.Render(ui)
 					ui.Label("  SPITE ")
 				ui.PopStyle()
 			end
+
+
 		ui.PopOrder()
 	ui.PopBox()
 end

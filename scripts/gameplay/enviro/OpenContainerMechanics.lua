@@ -9,11 +9,11 @@ function OpenCrateSystem:Tick()
 		local who = World:FetchEntityById(entity[Bumped].by)
 
 		local shelveComp = entity[Shelve]
-		if shelveComp ~= nil then
+		if shelveComp ~= nil and who == PlayerEntity then
 			Diary.Write(GetNextMessage())
 			Diary.Write(" ")
 
-			entity[Glyph].name =  entity[Glyph].name .. "_empty"
+			entity[Glyph].name = entity[Glyph].name .. "_empty"
 			entity:Unset(Shelve)
 		elseif who[Contents] ~= nil then
 			if entity[Locked] ~= nil then 

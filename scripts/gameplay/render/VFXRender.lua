@@ -50,10 +50,6 @@ function VFXRenderSystem:Render()
 			Engine.Glyph(pos.x, pos.y, entity[Glyph].glyph)
 			Engine.Bg(pos.x, pos.y, bg)
 			Engine.Fg(pos.x, pos.y, fg)
-		else
-			Engine.Glyph(pos.x, pos.y, entity[Glyph].glyph)
-			Engine.Bg(pos.x, pos.y, Colors:Lerp(bg, Colors.Black, 0.5))
-			Engine.Fg(pos.x, pos.y, Colors:Lerp(fg, Colors.Black, 0.5))
 		end
 
 		for _, neighbor in ipairs(neighbors) do

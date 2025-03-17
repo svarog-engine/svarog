@@ -36,9 +36,10 @@ Text = ECS.Component { text = "" }
 Challenged = ECS.Component()
 Dependent = ECS.Component{value = nil}
 MagicChallenge = ECS.Component { time = 0, difficulty = 0 }
-Magic = ECS.Component{value = 0.0}
-UnMagic = ECS.Component{value = 0.0}
-Timeout = ECS.Component{value = 0.0}
+Magic = ECS.Component{ value = 0.0 }
+UnMagic = ECS.Component{ value = 0.0 }
+TempBoon = ECS.Component{ type = nil }
+Timeout = ECS.Component{ value = 0.0 }
 Portal = ECS.Component { challenge = nil, type = nil }
 VFXExplosion = ECS.Component(Range(0, 10))
 

@@ -149,4 +149,22 @@ function ChallengeSystem:Tick()
 			end
 		end
 	end
+
+	for _, entity in World:Exec(ECS.Query.All(TempBoon, Timeout)):Iterator() do
+		local timeout = entity[Timeout]
+		timeout.value = timeout.value - 1
+
+		local player = PlayerEntity
+		if timeout.value < 0 then
+			local name = entity[TempBoon].type
+			player:Unset(CompNameToComp(name))
+			for i, v in ipairs(player[Boons].value) do
+				if v == name then
+					table.remove(player[Boons].value, i)
+					break
+				end
+			end
+			World:Remove(entity)
+		end
+	end
 end

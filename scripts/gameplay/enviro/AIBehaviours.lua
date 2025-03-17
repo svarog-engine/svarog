@@ -107,10 +107,10 @@ end
 
 local function CheckRandomWalk(entity)
 	local pos = entity[Position]
-	local dx = Rand:Range(-1, 2)
-	local dy = Rand:Range(-1, 2)
+	local dx = Rand:Range(-1, 3)
+	local dy = Rand:Range(-1, 3)
 	if not (dx == 0 and dy == 0) then
-		table.insert(entity[Creature].goals, { "Random Walk", 1, function() PerformBump(entity, pos.x, pos.y, pos.x + dx, pos.y + dy) end })
+		table.insert(entity[Creature].goals, { "Random Walk", 1, function() PerformBump(entity, pos.x, pos.y, dx, dy) end })
 	end
 end
 
@@ -118,12 +118,11 @@ local function CheckForcedRandomWalk(entity)
 	local ai = entity[AIForcedRandomWalk]
 	if ai ~= nil then
 		local pos = entity[Position]
-		local dx = Rand:Range(-1, 2)
-		local dy = Rand:Range(-1, 2)
+		local dx = Rand:Range(-1, 3)
+		local dy = Rand:Range(-1, 3)
 		if not (dx == 0 and dy == 0) then
 			table.insert(entity[Creature].goals, { "Random Walk", 1, function() 
-				print("RW!")
-				PerformBump(entity, pos.x, pos.y, pos.x + dx, pos.y + dy) 
+				PerformBump(entity, pos.x, pos.y, dx, dy) 
 			end })
 		end
 	end

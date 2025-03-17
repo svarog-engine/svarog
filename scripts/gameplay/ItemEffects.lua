@@ -1,11 +1,11 @@
 ItemConsume = { 
-	ash = function() return Break end,
-	rosebud = function() return Light end,
-	blackthorn = function() return Darken end,
-	willow = function() return Luck end,
-	sage = function() return Endure end,
-	foxglove = function() return Heal end,
-	mandrake = function() return Luck end,
+	ash = "Break",
+	rosebud = "Light",
+	blackthorn = "Darken",
+	willow = "Luck",
+	sage = "Endure",
+	foxglove = "Heal",
+	mandrake = "Luck",
 }
 
 function CanConsume(itemId)
@@ -13,13 +13,21 @@ function CanConsume(itemId)
 end
 
 function Consume(itemId)
-	local component = ItemConsume[itemId]
-	if component == nil then
+	Diary.Write("You consume " .. itemId .. ".")
+	local name = ItemConsume[itemId]
+	if name == nil then
 		return
 	end
 
-	if PlayerEntity[component()] then
-		PlayerEntity[Tension]:Down(5)
+	local comp = CompNameToComp(name)
+	if PlayerEntity[comp] ~= nil then
+		Diary.Write("Your [" .. string.upper(name) .. "] glyph reacts to the " .. itemId .. ".")
+		PlayerEntity[Tension]:Down(8)
+	else
+		Diary.Write("Consuming " .. itemId .. " gives you a sliver of " .. string.upper(name) .. ".")
+		PlayerEntity:Set((comp){ level = 1, chance = 5 })
+		table.insert(PlayerEntity[Boons].value, name)
+		World:Entity(TempBoon{ type = name }, Timeout{ value = 10 })
 	end
 
 	return true
