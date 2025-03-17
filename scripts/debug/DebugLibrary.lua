@@ -66,7 +66,7 @@ DebugSpawnLibrary = {
 				Position{ x = x, y = y },
 				Glyph{ name = "treasure" },
 				Name("Book"),
-				Text {text = "This is book! This is book! This is book! This is book! This is book!"}
+				Text {text = "This is a book!"}
 			))
 		end
 	},

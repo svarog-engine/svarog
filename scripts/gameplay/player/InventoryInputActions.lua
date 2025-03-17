@@ -18,15 +18,6 @@ Engine.RegisterInputSystem({ Action_Inventory_Drop }, function()
 	InventoryEntity:Set(DoInventoryAction{ action = "drop" })
 end)
 
-Engine.RegisterInputSystem({ Action_Inventory_Consume }, function()
-	InventoryEntity:Set(DoInventoryAction{ action = "consume" })
-end)
-
-Engine.RegisterInputSystem({ Action_Inventory_Cast }, function()
-	Diary.Write("You grasp the item and focus on casting its essence.")
-	TargetOverlayEntity:Set(ActivateTargetOverlay{ 
-		callback = function(x, y)
-			InventoryEntity:Set(DoInventoryAction{ action = "cast", details = { x = x, y = y }})
-		end
-	})
+Engine.RegisterInputSystem({ Action_Inventory_ConsumeOrCast }, function()
+	InventoryEntity:Set(DoInventoryAction{ action = "consume_or_cast" })
 end)

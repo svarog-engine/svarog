@@ -67,6 +67,24 @@ end
 
 Contents = ECS.Component{ items = {} }
 
+function Contents.HasSpace(entity, itemId)
+	local inventory = entity[Contents].items
+
+	local itemInInventory = false
+	for _, item in ipairs(inventory) do
+		if item.itemId == itemId then
+			itemInInventory = true
+			break
+		end
+	end
+
+	if itemInInventory then
+		return true
+	else
+		return #entity[Contents].items <= 6
+	end
+end
+
 function Contents.Add(entity, itemId, quantity)
 	quantity = quantity or 1
 	local inventory = entity[Contents].items

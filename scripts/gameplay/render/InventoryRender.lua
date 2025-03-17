@@ -1,38 +1,46 @@
 
 InventoryRender = Engine.RegisterUIRenderSystem("Inventory Render")
 
-function InventoryRender:ShouldRender()
-	return InventoryEntity[Open] ~= nil
-end
+local canConsume = CanConsume
+local canCast = CanCast
 
 function InventoryRender.Render(ui)
-	ui.PushBox(46, 25, 20, 10)
-		ui.PushOrder("|")
-			ui.Label("= INVENTORY =")
-			ui.Space(1)
-			ui.List(PlayerEntity[Contents].items, InventoryEntity[Selection].value, function(v) 
-				ui.Label(ItemLibrary[v.itemId].name .. " (" .. tostring(v.quantity) .. ")")
-			end )
-		ui.PopOrder()
-	ui.PopBox()
+	local fg = Colors.Gray
+	if InventoryEntity[Open] then fg = Colors.White end
+	ui.PushStyle(fg, Colors.Black)
+		ui.ClearBox(46, 25, 20, 10)
+		ui.PushBox(46, 25, 20, 10)
+			ui.PushOrder("|")
+				ui.Label("= INVENTORY =")
+				ui.Space(1)
+				ui.List(PlayerEntity[Contents].items, InventoryEntity[Selection].value, function(v) 
+					ui.Label(ItemLibrary[v.itemId].name .. " (" .. tostring(v.quantity) .. ")")
+				end )
+			ui.PopOrder()
+		ui.PopBox()
 
-	ui.ClearBox(45, 35, 20, 2)
-	ui.PushBox(45, 35, 20, 2)
-		ui.PushOrder("|")
-			local selection = InventoryEntity[Selection].value
-			for i, item in ipairs(PlayerEntity[Contents].items) do
-				if i == selection then
-					ui.Label("[D] Drop")
-
-					if CanConsume(item.itemId) then
-						ui.Label("[C] Consume")
+		ui.ClearBox(45, 34, 20, 5)
+		ui.PushBox(45, 34, 20, 5)
+			ui.PushOrder("|")
+				ui.Label(" ------------- ")
+				if not InventoryEntity[Open] then
+					ui.Label(" [I] Inventory")
+				else
+					local selection = InventoryEntity[Selection].value
+					for i, item in ipairs(PlayerEntity[Contents].items) do
+						if i == selection then
+							ui.Label(" [D] Drop")
+							if CanConsume(item.itemId) then
+								ui.Label(" [C] Consume")
+							elseif CanCast(item.itemId) then
+								ui.Label(" [C] Cast")
+							end
+						end
 					end
-
-					if CanCast(item.itemId) then
-						ui.Label("[Z] Cast")
-					end
+				
+					ui.Label(" [ESC] Back")
 				end
-			end
-		ui.PopOrder()
-	ui.PopBox()
+			ui.PopOrder()
+		ui.PopBox()
+	ui.PopStyle()
 end

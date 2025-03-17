@@ -18,18 +18,28 @@ function PickUpMechanicsSystem:Tick()
 
 		local textComp = entity[Text]
 		if textComp ~= nil then
-			Diary.Write(textComp.value)
-			Diary.Write(" ")
+			if entity[Name].value == "Book" then
+				Diary.Write("")
+				Diary.Write("You open the book and read...")
+			end
+			Diary.Write("   \"" .. textComp.value .. "\"")
 			shouldRemove = true
 
 		elseif who[Contents] ~= nil and ItemLibrary[item.id] ~= nil then
-			Contents.Add(who, item.id, item.quantity)
+			if Contents.HasSpace(who, item.id) then
+				Contents.Add(who, item.id, item.quantity)
 
-			if who == PlayerEntity then 
-				Diary.Write("Picked up " .. ItemLibrary[item.id].name .. ".")
+				if who == PlayerEntity then 
+					Diary.Write("Picked up " .. ItemLibrary[item.id].name .. ".")
+				end
+
+				shouldRemove = true
+			else
+				if who == PlayerEntity then
+					Diary.Write("Can't pick up " .. ItemLibrary[item.id].name .. ".")
+					Fade(entity, Colors.Red, Colors.Black, 0.2)
+				end
 			end
-
-			shouldRemove = true
 		end
 
 		if shouldRemove then

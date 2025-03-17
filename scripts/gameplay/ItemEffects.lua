@@ -21,7 +21,7 @@ function Consume(itemId)
 
 	local comp = CompNameToComp(name)
 	if PlayerEntity[comp] ~= nil then
-		Diary.Write("Your [" .. string.upper(name) .. "] glyph reacts to the " .. itemId .. ".")
+		Diary.Write("The taste of " .. itemId .. " relaxes you greatly.")
 		PlayerEntity[Tension]:Down(8)
 	else
 		Diary.Write("Consuming " .. itemId .. " gives you a sliver of " .. string.upper(name) .. ".")
@@ -33,28 +33,28 @@ function Consume(itemId)
 	return true
 end
 
-ItemCastNames = {
-	diamond = function() return "Break" end,
-	sapphire = function() return "Light" end,
-	obsidian = function() return "Darken" end,
-	malachite = function() return "Luck" end,
-	lapis_lazuli = function() return "Endure" end,
-	onyx = function() return "Heal" end,
-	smoky_quartz = function() return "Calm" end,
-	garnet = function() return "Flow" end,
-	topaz = function() return "Open" end,
+local ItemNames = {
+	diamond = "Diamond",
+	sapphire = "Sapphire",
+	obsidian = "Obsidian",
+	malachite = "Malachite",
+	lapis_lazuli = "Skystone",
+	onyx = "Onyx",
+	smoky_quartz = "Quartz",
+	garnet = "Garnet",
+	topaz = "Topaz",
 }
 
-ItemCast = {
-	diamond = function() return Break end,
-	sapphire = function() return Light end,
-	obsidian = function() return Darken end,
-	malachite = function() return Luck end,
-	lapis_lazuli = function() return Endure end,
-	onyx = function() return Heal end,
-	smoky_quartz = function() return Calm end,
-	garnet = function() return Flow end,
-	topaz = function() return Open end,
+local ItemCastNames = {
+	diamond = "Break",
+	sapphire = "Light",
+	obsidian = "Darken",
+	malachite = "Luck",
+	lapis_lazuli = "Endure",
+	onyx = "Heal",
+	smoky_quartz = "Calm",
+	garnet = "Flow",
+	topaz = "Open",
 }
 
 CompColors = {
@@ -71,34 +71,11 @@ CompColors = {
 }
 
 function CanCast(itemId)
-	return ItemCast[itemId] ~= nil
+	return ItemCastNames[itemId] ~= nil
 end
 
-function Cast(x, y, itemId)
-	local component = ItemCast[itemId]
-	local compName = ItemCastNames[itemId]()
-	if component == nil then
-		return
-	end
-
-	local id = Dungeon.floor:ID(x, y)
-	local entities = Dungeon.entities[id] or {}
-
-	for _, e in ipairs(entities) do
-		if e[Creature] ~= nil then
-			local comp = component()
-			if e[comp] ~= nil then
-				if e[Contents] ~= nil then 
-					local position = e[Position]
-					Contents.DropAll(e, position.x, position.y)
-				end
-
-				RemoveEntityFromDungeon(e)
-				World:Remove(e)
-			else
-				e:Set(comp(), Magic{ colors = CompColors[compName] })
-				Diary.Write("You enchant the " .. e[Name].value .. " with the essence of " .. compName .. ".")
-			end
-		end
-	end
+function Cast(itemId)
+	Diary.Write("Grabbing " .. ItemNames[itemId] .. ", you cast it to the ground!")
+	
+	return true
 end

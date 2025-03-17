@@ -25,32 +25,7 @@ local Actions = {
 		InventoryEntity:Set(DeactivateInventoryOverlay())
 	end,
 
-	cast = function(details)
-		local x = details.x or PlayerEntity[Position].x
-		local y = details.y or PlayerEntity[Position].y
-		local selection = InventoryEntity[Selection].value
-		local contents = PlayerEntity[Contents].items
-		local item = contents[selection]
-		local itemMeta = ItemLibrary[item.itemId]
-
-		local actionDone = false
-		if CanCast(item.itemId) then
-			Cast(x, y, item.itemId)
-			actionDone = true
-		end
-
-		if actionDone then 
-			Contents.Remove(PlayerEntity, item.itemId, 1)
-			while selection > #contents do
-				selection = selection - 1
-			end
-
-			InventoryEntity:Set(DeactivateInventoryOverlay())
-			PlayerDone = true
-		end
-	end,
-
-	consume = function(details)
+	consume_or_cast = function(details)
 		local selection = InventoryEntity[Selection].value
 		local contents = PlayerEntity[Contents].items
 		local item = contents[selection]
@@ -60,6 +35,9 @@ local Actions = {
 		local actionDone = false
 		if CanConsume(item.itemId) then
 			Consume(item.itemId)
+			actionDone = true
+		elseif CanCast(item.itemId) then
+			Cast(item.itemId)
 			actionDone = true
 		end
 

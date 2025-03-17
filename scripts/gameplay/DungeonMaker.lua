@@ -99,26 +99,18 @@ local function SpecificRoomSetup(l, w, h)
 		Procgen.MakeObject("SatiatedAltar", rx, ry, "Endure")
 
 		local messages = {
-			"My people only prowl around slowlike. You also <SHIFT>!",
-			"There were NINE shards that we held before the curse.",
-			"If you tire, find <SPACE> to RECOUP, to take VANTAGE.",
-			"FOUR breaths snap the TENSION, our forefathers have said.",
-			"SHARDs give us GLYPHs of power. They do as they please.",
-			"My sorry people has to burden you so... Do as we couldn't.",
-			"There are FOUR ALTARS to cross before the one we HATE.",
-			"Go and seal what lies BENEATH THE THRONE OF OUR QUEEN.",
-			"PLANTS alleviate TENSION from the GLYPH they are bound to.",
-			"Each MINERAL refracts a GLYPH: throw it to bestow essences.",
-			"Due to the TENSION of the GLYPHS, the RELEASE mana, satia...",
-			"...ting the ALTAR should open a path to new powers!",
-			"Rift PORTALS are easy to close -- make any physical contact!",
-			"We have seen patterns, patterns persist even when we don't.",
-			"Each GLYPH is a boon, their balance cradles our world.",
-			"There is none who survived the RIFTS and what they BRING.",
-			"The magics of the GLYPHs are varied and unmeasurable.",
-			"Satiate the ALTARS in a RELEASE OF TENSION to open them.",
-			"This one ALTAR we have readied for you, dear savior. ENDURE.",
-			"May our LIBRARIES be useful to your efforts...",
+			"My people prowl around slowlike. You can <SHIFT>!",
+			"Tired? Find <SPACE> to RECOUP, to OBSERVE.",
+			"FOUR breaths snap the TENSION! <SPACE> to breathe.",
+			"GLYPHs of power. They do as they please.",
+			"FOUR ALTARS to cross before the one we HATE.",
+			"PLANTS give us slivers of the boons of GLYPHs.",
+			"MINERALs paralyze what isn't bound.",
+			"Rift PORTALS are easy to close: just touch them!",
+			"Patterns persist even when we don't.",
+			"Satiate the ALTARS in TENSION to open them.",
+			"One ALTAR we have readied for you. ENDURE.",
+			"Our libraries will tell you of the many bindings!",
 		}
 		
 		local bucket = Dungeon.wallDistances:GetAt(3)
