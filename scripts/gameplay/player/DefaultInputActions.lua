@@ -213,3 +213,13 @@ Engine.RegisterInputSystem({ Action_Default_Info }, function()
 		end
 	end
 end)
+
+Engine.RegisterInputSystem({ Action_Default_ExpandDiary }, function() 
+	Input.Push("Diary")
+	DiaryEntity:Set(Expanded())
+end)
+
+Engine.RegisterInputSystem({ Action_Diary_Exit }, function() 
+	Input.Pop()
+	DiaryEntity:Unset(Expanded)
+end)

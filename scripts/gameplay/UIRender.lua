@@ -37,10 +37,10 @@ UIRenderer = {
 
 	FillRect = function(x, y, width, height, color)
 		local color = color or Colors.Black
-		for i = x, x + width do
-			for j = y, y + height do
-				Engine.Glyph(i, j, " ", {}, "UI")
-				Engine.Bg(i, j, color, "UI")
+		local overrides = { bg = color }
+		for i = x, x + width - 1 do
+			for j = y, y + height - 1 do
+				Engine.Glyph(i, j, " ", overrides, "UI")
 			end
 		end
 	end,

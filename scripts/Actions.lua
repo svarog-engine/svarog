@@ -17,6 +17,7 @@ Actions.Default = {
 	Inventory = { Input.Press("Key: I") },
 	Tension = { Input.Press("Key: T") },
 	Info = { Input.Press("Mouse: Left") },
+	ExpandDiary = { Input.Press("Key: Tab") },
 }
 
 Actions.Death = {
@@ -41,6 +42,10 @@ Actions.TargetOverlay = {
 	MouseCofirm = { Input.Press("Mouse: Left")},
 	Confirm	= { Input.Press("Key: Enter") },
 	Exit	= { Input.Press("Key: Escape") },
+}
+
+Actions.Diary = {
+	Exit	= { Input.Press("Key: Tab") },
 }
 
 LoadScriptIfExists("debug\\DebugActions")
