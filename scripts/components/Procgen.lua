@@ -484,10 +484,36 @@ function Templates.LibraryRoom(cx, cy)
 		for i = 1, w do
 			for j = 1, h do
 				Dungeon.zones:Set(i, j, -1)
-				if i % 2 == 0 and j % 2 == 0 then
-					if room:Has(i, j) and room:Get(i, j) >= 0 and room:Get(i, j) < 10 then
-						if Chances[5]:MakeGuess() then
-							Procgen.MakeObject("Shelf", i, j)
+				if Dungeon.floor:Get(i, j).type == Floor then
+					if i % 2 == 0 and j % 2 == 0 then
+						if room:Has(i, j) and room:Get(i, j) >= 0 and room:Get(i, j) < 10 then
+							if Chances[5]:MakeGuess() then
+								Procgen.MakeObject("Shelf", i, j)
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+function Templates.StoreRoom(cx, cy)
+	if Dungeon.wallDistances:Get(cx, cy) >= 2 then
+		local room = DistanceMap:From(Dungeon.floor, { { cx, cy } }, 0, 7)
+		room:AddCondition(function(map, x, y) return Dungeon.wallDistances:Has(x, y) and Dungeon.wallDistances:Get(x, y) >= 2 end)
+		room:Flood()
+
+		local w, h = Dungeon.floor:Size()
+		for i = 1, w do
+			for j = 1, h do
+				Dungeon.zones:Set(i, j, -1)
+				if Dungeon.floor:Get(i, j).type == Floor then
+					if i % 2 == 0 and j % 2 == 0 and Chances[5]:MakeGuess() then
+						if room:Has(i, j) and room:Get(i, j) >= 0 and room:Get(i, j) < 10 then
+							if Chances[5]:MakeGuess() then
+								Procgen.MakeObject("Crate", i, j)
+							end
 						end
 					end
 				end
@@ -665,17 +691,17 @@ MakeTemplate("forge2", 3, 3,
 ]], { "Furnace" }, { nil, "Furnace" }, { "Grate", nil })
 
 Rooms = {}
-Rooms[Open] = { "common1", "common2", "warehouse1", "warehouse2" }
+Rooms[Open] = { "StoreRoom", "common1", "common2", "warehouse1", "warehouse2" }
 Rooms[Uncover] = { "LibraryRoom", "exhibit1", "exhibit2" }
 Rooms[Enlarge] = { "workshop1", "workshop2", "shrine1", "shrine2" }
-Rooms[Flow] = { "common1", "common2" }
+Rooms[Flow] = { "StoreRoom", "common1", "common2" }
 Rooms[Calm] = { "common1", "common2", "shrine1" }
 Rooms[Rage] = { "forge1", "forge2", "warehouse1", "warehouse2", "common1" }
 Rooms[Yearn] = { "exhibit1", "exhibit2", "shrine2" }
-Rooms[Discover] = { "library2", "workshop2", "common1", "common2" }
+Rooms[Discover] = { "StoreRoom", "library2", "workshop2", "common1", "common2" }
 Rooms[Heal] = { "common1", "common2" } --market, medic
 Rooms[Endure] = { "workshop1", "workshop2" } -- training room
-Rooms[Luck] = { "common1", "common2" } -- market
+Rooms[Luck] = { "StoreRoom", "common1", "common2" } -- market
 Rooms[Fade] = { "warehouse1", "common1", "common2" }
 
 ContentsItems = { "diamond", "topaz", "obsidian", "malachite", "lapis_lazuli", "onyx", "smoky_quartz",
@@ -694,20 +720,18 @@ Monsters["Hate"] = { "Flamos", "Djinn", "Ogre", "Kobold", "Hobgob", "Mimic", "Go
 
 Messages = { 
 	"You read: DIAMONDS serve the OPEN sky",
-	"You read: Spheres and Ogres formed an OPEN alliance...",
+	"You read: Ogres and Flamosi form an OPEN alliance...",
 	"You read: SAPPHIRE splits the LIGHT in two",
-	"You read: Roses are for silence, OBSIDIAN for to DARKEN",
+	"You read: Roses for silence, OBSIDIAN for DARKNESS",
 	"You read: MALACHITE is what makes good fortune",
-	"You read: Gobs are immune. HOBGOBs suffer SKYSTONES.",
-	"You read: Beware djinn, stomp the portals quickly lest burn...",
-	"You read: There were once many more gods and monsters!",
+	"You read: HOBGOBs are immune to SKYSTONES.",
+	"You read: Beware DJINN, they blaze ALIGHT...",
 	"You read: SKYSTONES can ENDURE forever",
-	"You read: ...Kill with elements aligned and fit",
 	"You read: ONYX figures into HEALING",
 	"You read: A CALMing influence, QUARTZ is...",
-	"You read: We attach GARNETs for the FLOW to increase.",
-	"You read: TOPAZ is known to LIGHT whatever darkness.",
-	"You read: ...Herbs give, stones take. Or at least so we learn."
+	"You read: GARNETs for a steady FLOW.",
+	"You read: TOPAZ to LIGHT the darkness.",
+	"You read: Herbs give, stones solidify."
 }
 
 Messages.index = 1

@@ -12,6 +12,7 @@ function PassabilityUpdateSystem:Tick()
 		Dungeon.floor:Get(x, y).type = BlockingPassage
 		Dungeon.floor:Get(x, y).entity = entity
 		Dungeon.passable:Set(x, y, false)
+		table.insert(SetDressing, entity)
 		entity:Unset(BlockingPassage)
 	end
 
@@ -38,12 +39,16 @@ function PassabilityUpdateSystem:Tick()
 	Dungeon.entities = {}
 
 	AddEntityToDungeon(PlayerEntity[Position].x, PlayerEntity[Position].y, PlayerEntity)
-		
+	
 	for _, entity in World:Exec(ECS.Query.All(Creature, Position)):Iterator() do
 		AddEntityToDungeon(entity[Position].x, entity[Position].y, entity)
 	end
 
 	for _, entity in World:Exec(ECS.Query.All(Item, Position)):Iterator() do
+		AddEntityToDungeon(entity[Position].x, entity[Position].y, entity)
+	end
+
+	for _, entity in ipairs(SetDressing) do
 		AddEntityToDungeon(entity[Position].x, entity[Position].y, entity)
 	end
 end

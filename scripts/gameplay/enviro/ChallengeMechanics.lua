@@ -175,6 +175,7 @@ function ChallengeSystem:Tick()
 		local player = PlayerEntity
 		if timeout.value < 0 then
 			local name = entity[Mist].type
+			RemoveEntityFromDungeon(entity)
 			World:Remove(entity)
 		end
 	end
