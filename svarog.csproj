@@ -38,6 +38,7 @@
     <None Remove="scripts\components\World.lua" />
     <None Remove="scripts\debug\DebugWordsLibrary.lua" />
     <None Remove="scripts\gameplay\algorithms\Bresenham.lua" />
+    <None Remove="scripts\gameplay\algorithms\Lerp.lua" />
     <None Remove="scripts\gameplay\algorithms\Range.lua" />
     <None Remove="scripts\gameplay\algorithms\Stack.lua" />
     <None Remove="scripts\gameplay\Chances.lua" />
@@ -61,6 +62,7 @@
     <None Remove="scripts\gameplay\render\VFXRender.lua" />
     <None Remove="scripts\gameplay\render\WinScreenRender.lua" />
     <None Remove="scripts\gameplay\Wheels.lua" />
+    <None Remove="scripts\presentation\Colors.lua" />
   </ItemGroup>
 
   <ItemGroup>

@@ -7,7 +7,7 @@ function FadeOutRenderSystem:Render()
 		local fadeout = entity[FadeOut]
 		local pos = entity[Position]
 
-		bg = Colors:Lerp(fadeout.start, fadeout.target, fadeout.time)
+		bg = LerpColor(fadeout.start, fadeout.target, fadeout.time)
 		fadeout.time = fadeout.time + fadeout.speed
 
 		Engine.Glyph(pos.x, pos.y, glyph.name, { bg = bg })

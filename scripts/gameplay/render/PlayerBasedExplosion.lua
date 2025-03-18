@@ -27,8 +27,8 @@ function PlayerBasedExplosionSystem:Render()
 					if d < vfx.current then
 						local v = 1 - vfx.current / vfx.maximum
 						local eased = v * v * v
-						Engine.Fg(i, j, Colors:Lerp(fg, Colors.LightGray, eased + (Rand:F01() - 0.5) * 0.5 ))
-						Engine.Bg(i, j, Colors:Lerp(bg, Colors.Black, eased + (Rand:F01() - 0.5) * 0.5 ))
+						Engine.Fg(i, j, LerpColor(fg, Colors.LightGray, eased + (Rand:F01() - 0.5) * 0.5 ))
+						Engine.Bg(i, j, LerpColor(bg, Colors.Black, eased + (Rand:F01() - 0.5) * 0.5 ))
 					elseif d == vfx.current then
 						Engine.Fg(i, j, Colors.White)
 						Engine.Bg(i, j, Colors.White)

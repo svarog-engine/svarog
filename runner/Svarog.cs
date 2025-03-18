@@ -231,7 +231,7 @@ namespace svarog.runner
             RunScript("Glossary = {}");
             RunScript("Glossary.Meta = {}");
             m_Colors = new();
-            m_Lua["Colors"] = m_Colors;
+            RunScriptFile("scripts\\presentation\\Colors");
             if (m_Lua["Config.Palette"] is string palette)
             {
                 RunScriptFile($"scripts\\presentation\\palettes\\{palette}");
@@ -259,7 +259,6 @@ namespace svarog.runner
                     m_Glyphs[i][j] = new Glyph(Colors.Black, Colors.Black);
                 }
             }
-            m_Lua["Glyphs"] = m_Glyphs;
         }
 
         public void ReloadUIGlyphs()
@@ -276,7 +275,6 @@ namespace svarog.runner
                     m_UIGlyphs[i][j] = new Glyph();
                 }
             }
-            m_Lua["UIGlyphs"] = m_UIGlyphs;
         }
 
         public void UpdateGlyphs(int x, int y, int tileX, int tileY, Color fg, Color bg, string layer)
@@ -292,6 +290,10 @@ namespace svarog.runner
             }
         }
 
+        public SFML.Graphics.Color ToEngineColor(byte r, byte g, byte b, byte a)
+        {
+            return new Color(r, g, b, a);
+        }
         public void ReloadPresenter()
         {
             m_PresentationLayer?.Reload();

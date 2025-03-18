@@ -24,6 +24,7 @@
 --		Config.FOVRadius = 10
 
 IncludeGameplay "algorithms\\Range"
+IncludeGameplay "algorithms\\Lerp"
 IncludeGameplay "algorithms\\Stack"
 IncludeGameplay "algorithms\\Bresenham"
 IncludeGameplay "algorithms\\RecursiveShadowcast"

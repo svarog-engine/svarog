@@ -16,7 +16,7 @@ function VFXRenderSystem:Render()
 		local f = (sin(burn.value) + 1.0) * 0.5
 		local burnColors = burn.colors or defaultBurnColors
 
-		local bg = Colors:Lerp(burnColors[1], burnColors[2], f)
+		local bg = LerpColor(burnColors[1], burnColors[2], f)
 		burn.value = burn.value + burn.speed
 		if Dungeon.visibility:Get(pos.x, pos.y) then
 			Engine.Bg(pos.x, pos.y, bg)
@@ -27,9 +27,9 @@ function VFXRenderSystem:Render()
 			if Dungeon.floor:Has(x, y) and Dungeon.visibility:Get(x, y) then
 				local tile = Dungeon.floor:Get(x, y)
 				if tile.type == Wall then
-					Engine.Bg(x, y, Colors:Lerp(bg, Colors.Black, 0.5))
+					Engine.Bg(x, y, LerpColor(bg, Colors.Black, 0.5))
 				elseif tile.type == Floor then
-					Engine.Fg(x, y, Colors:Lerp(bg, Colors.White, 0.5))
+					Engine.Fg(x, y, LerpColor(bg, Colors.White, 0.5))
 				end
 			end
 		end
@@ -42,8 +42,8 @@ function VFXRenderSystem:Render()
 		local pos = entity[Position]
 		local f = (sin(magic.value) + 1.0) * 0.5
 		local magicColors = magic.colors or defaultMagicColors
-		local fg = Colors:Lerp(defaultBurnColors[1], defaultBurnColors[2], f + d)
-		local bg = Colors:Lerp(magicColors[1], magicColors[2], f - d)
+		local fg = LerpColor(defaultBurnColors[1], defaultBurnColors[2], f + d)
+		local bg = LerpColor(magicColors[1], magicColors[2], f - d)
 		magic.value = magic.value + magic.speed
 		
 		if Dungeon.visibility:Get(pos.x, pos.y) then
@@ -57,9 +57,9 @@ function VFXRenderSystem:Render()
 			if Dungeon.floor:Has(x, y) and Dungeon.visibility:Get(x, y) then
 				local tile = Dungeon.floor:Get(x, y)
 				if tile.type == Wall then
-					Engine.Bg(x, y, Colors:Lerp(bg, Colors.Black, 0.5))
+					Engine.Bg(x, y, LerpColor(bg, Colors.Black, 0.5))
 				elseif tile.type == Floor then
-					Engine.Fg(x, y, Colors:Lerp(bg, Colors.White, 0.5))
+					Engine.Fg(x, y, LerpColor(bg, Colors.White, 0.5))
 				end
 			end
 		end
