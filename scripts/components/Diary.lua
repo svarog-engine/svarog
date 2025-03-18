@@ -1,5 +1,6 @@
 ﻿
 Diary = ECS.Component{ log = {}, index = 0 }
+Expanded = ECS.Component()
 DiaryEntity = World:Entity(Diary{ log = {}, index = 0 })
 
 function Diary.Write(message)
@@ -16,8 +17,10 @@ function Diary.Messages(n)
 	local messages = {}
 	
 	for i = n - 1, 0, -1 do
-		if index - i >= 0 then
-			table.insert(messages, diary.log[index - i])		
+		if index - i > 0 then
+			table.insert(messages, diary.log[index - i])
+		else
+			table.insert(messages, "")
 		end
 	end
 

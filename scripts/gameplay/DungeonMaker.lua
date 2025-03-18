@@ -157,7 +157,7 @@ local function SpecificRoomSetup(l, w, h)
 end
 
 function MakeDungeon()
-	local w, h = Config.Width - 16, Config.Height - 4
+	local w, h = Config.Width - 16, Config.Height - 5
 
 	local old = false
 	if Dungeon ~= nil then
