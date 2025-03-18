@@ -10,11 +10,12 @@ local Components = {
 	Delayed = Delayed,
 	Blindness = Blindness,
 	Paralyzed = Paralyzed,
+	Silenced = Silenced,
 }
 
 local ComponentsInOrder = {
 	"Health", "Stamina", "Tension",
-	"Telepathic", "Invisible", "Delayed", "Blind", "Paralyzed"
+	"Silenced", "Telepathic", "Invisible", "Delayed", "Blind", "Paralyzed",
 }
 
 local ComponentColors = {

@@ -52,6 +52,7 @@ end
 local function CheckSpawnWhenDistantFromPlayer(entity)
 	local ai = entity[AISpawnWhenDistantFromPlayer]
 	if ai ~= nil then
+		local num = ai.num or 1
 		local pos = entity[Position]
 		local current = Dungeon.playerDistance:Get(pos.x, pos.y)
 		if current >= ai.min and current <= ai.max and Dungeon.visibility:Get(pos.x, pos.y) and Chances[ai.chance]:MakeGuess() then
@@ -180,7 +181,7 @@ function AIBehavioursSystem:Tick()
 			if Chances[entity[Calm].chance]:MakeGuess() then
 				CheckAIRest(entity)
 				CheckAIRest(entity)
-				CheckAIRest(entity)		
+				CheckAIRest(entity)
 				CalmInfluencedAtLeastOneAI = CalmInfluencedAtLeastOneAI + 1
 			end
 		end
@@ -207,14 +208,16 @@ function AIBehavioursSystem:Tick()
 		end
 	end
 
-	if CalmInfluencedAtLeastOneAI > 0 and DarkInfluencedAtLeastOneAI > 0 then
-		Diary.Write("Your enemies seem confused. Your [CALM] and [DARKEN] glyphs resonate.")
-		PlayerEntity[Tension]:Up(1)
-	elseif CalmInfluencedAtLeastOneAI > 0 then
-		Diary.Write("Your enemies calmed a bit. Your [CALM] glyph tingles.")
-		PlayerEntity[Tension]:Up(0.5)
-	elseif DarkInfluencedAtLeastOneAI > 0 then
-		Diary.Write("Your enemies are blind. Your [DARKEN] glyph tincts.")
-		PlayerEntity[Tension]:Up(0.5)
+	if PlayerEntity[Silenced] == nil then
+		if CalmInfluencedAtLeastOneAI > 0 and DarkInfluencedAtLeastOneAI > 0 then
+			Diary.Write("Your enemies seem confused. Your [CALM] and [DARKEN] glyphs resonate.")
+			PlayerEntity[Tension]:Up(1)
+		elseif CalmInfluencedAtLeastOneAI > 0 then
+			Diary.Write("Your enemies calmed a bit. Your [CALM] glyph tingles.")
+			PlayerEntity[Tension]:Up(0.5)
+		elseif DarkInfluencedAtLeastOneAI > 0 then
+			Diary.Write("Your enemies are blind. Your [DARKEN] glyph tincts.")
+			PlayerEntity[Tension]:Up(0.5)
+		end
 	end
 end

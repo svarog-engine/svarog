@@ -29,6 +29,7 @@ SpawnDeltaLocations[5] = { {  0, -5 }, {  5, -2 }, { -5, -2 }, { -4, 4 }, { 4, 4
 
 function SpawnChallengeEntities(x, y, n, challenge)
 	PCExplode(7, Colors.White, Colors.Magenta, function()
+		PlayerEntity:Set(Silenced{ current = 9, maximum = 9 })
 		local c = Geometry.Boundary(Geometry.MakeCircle(x, y, 6))
 		local e = c.Points:GetEnumerator()
 
@@ -72,7 +73,7 @@ function SpawnChallengeEntities(x, y, n, challenge)
 				local entts = Dungeon.entities[lid] or {}
 				if #entts == 0 then					
 					local lower = 5
-					if PlayerEntity[Luck] ~= nil and Chances[PlayerEntity[Luck].chance]:MakeGuess() then 
+					if PlayerEntity[Silenced] == nil and PlayerEntity[Luck] ~= nil and Chances[PlayerEntity[Luck].chance]:MakeGuess() then 
 						lower = 9
 						useLuck = true
 					end 

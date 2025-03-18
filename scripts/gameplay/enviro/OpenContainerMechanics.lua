@@ -17,7 +17,7 @@ function OpenCrateSystem:Tick()
 			entity:Unset(Shelve)
 		elseif who[Contents] ~= nil then
 			if entity[Locked] ~= nil then 
-				if who[Open] ~= nil then
+				if who[Silenced] == nil and who[Open] ~= nil then
 					Contents.Remove(who, "key")
 					entity:Unset(Locked)
 					

@@ -21,12 +21,17 @@ TakenBoon["Hate"] = "The enemy. The [HATE] glyph desires a stronger host."
 function BumpAltarMechanicsSystem:Tick()
 	for _, entity in World:Exec(ECS.Query.All(Bumped, Altar, Satiated)):Iterator() do
 		if World:FetchEntityById(entity[Bumped].by) == PlayerEntity then
-			local t = CompNameToComp(entity[Altar].type)
-			PlayerEntity:Set(t())
-			table.insert(PlayerEntity[Boons].value, entity[Altar].type)
-			Diary.Write(TakenBoon[entity[Altar].type])
-			entity:Unset(Bumped)
-			MakeDungeon()
+			if PlayerEntity[Silenced] ~= nil then
+				Diary.Write("Your silenced mind can't accept the glyph. " .. tostring(PlayerEntity[Silenced].current) .. " more turns.")
+				Fade(PlayerEntity, Colors.Red, Colors.Black, 0.25)
+			else
+				local t = CompNameToComp(entity[Altar].type)
+				PlayerEntity:Set(t())
+				table.insert(PlayerEntity[Boons].value, entity[Altar].type)
+				Diary.Write(TakenBoon[entity[Altar].type])
+				entity:Unset(Bumped)
+				MakeDungeon()
+			end
 		end
 	end
 end

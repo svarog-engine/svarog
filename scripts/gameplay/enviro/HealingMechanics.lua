@@ -24,12 +24,12 @@ function HealingSystem:Tick()
 
 		local shouldHeal = Chances[heal.chance + heal.level]:MakeGuess()
 
-		if shouldHeal then
+		if entity[Silenced] == nil and shouldHeal then
 			local healingAmount = 1
 
 			local gotLucky = false
 			local luck = entity[Luck]
-			if luck ~= nil then
+			if entity[Silenced] == nil and luck ~= nil then
 				if Chances[luck.chance]:MakeGuess() then
 					healingAmount = healingAmount * luck.multiplier
 					gotLucky = true

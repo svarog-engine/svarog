@@ -17,13 +17,13 @@ function PlatformSystem:Tick()
 			for _, e in ipairs(entities) do
 				if e ~= entity then
 					if e == PlayerEntity or e[Creature] ~= nil then					
-						if e == PlayerEntity then
-							Diary.Write("You dispell the arcane gate. The tension subsides.")
-							PlayerEntity[Tension]:Down(8)
-						elseif e[Creature] ~= nil then
-							Diary.Write("The " .. e[Name].value .. " disturbs the magics of the portal. The tension wavers.")
-							PlayerEntity[Tension]:Down(5)
-						end
+						--if e == PlayerEntity then
+						--	Diary.Write("You dispell the arcane gate. The tension subsides.")
+						--	PlayerEntity[Tension]:Down(8)
+						--elseif e[Creature] ~= nil then
+						--	Diary.Write("The " .. e[Name].value .. " disturbs the magics of the portal. The tension wavers.")
+						--	PlayerEntity[Tension]:Down(5)
+						--end
 					
 						RemoveEntityFromDungeon(entity)
 						World:Remove(entity)

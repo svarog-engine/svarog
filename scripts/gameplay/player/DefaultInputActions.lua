@@ -72,8 +72,8 @@ Engine.RegisterInputSystem(
 			local cost = speed - 1
 			local mult = 1
 
-			if entity[Endure] ~= nil then mult = 0.5 end
-			if entity[Endure] ~= nil and speed == 1 and stam.current < stam.maximum and Chances[1 + entity[Endure].level]:MakeGuess() then
+			if entity[Silenced] == nil and entity[Endure] ~= nil then mult = 0.5 end
+			if entity[Silenced] == nil and entity[Endure] ~= nil and speed == 1 and stam.current < stam.maximum and Chances[1 + entity[Endure].level]:MakeGuess() then
 				stam.current = stam.current + 1
 				PlayerEntity[Tension]:Up(1)
 				Diary.Write("You regain stamina. Your [ENDURE] glyph quivers slightly.")
@@ -81,7 +81,7 @@ Engine.RegisterInputSystem(
 
 			local moved = 0
 
-			if entity[Flow] ~= nil then
+			if entity[Silenced] == nil and entity[Flow] ~= nil then
 				if speed == 2 then
 					local x, y = pos.x + dx, pos.y + dy	
 					local id = Dungeon.floor:ID(x, y)

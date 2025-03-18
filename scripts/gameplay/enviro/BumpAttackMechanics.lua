@@ -12,7 +12,7 @@ end
 local function PerformAttack(attackerEntity, targetEntity)
 		local totalDamage = CalculateDamage(attackerEntity, targetEntity)
 
-		if targetEntity[Endure] ~= nil and Chances[3 + targetEntity[Endure].level]:MakeGuess() then
+		if targetEntity[Silenced] == nil and targetEntity[Endure] ~= nil and Chances[3 + targetEntity[Endure].level]:MakeGuess() then
 			if targetEntity == PlayerEntity then
 				Diary.Write("You felt nothing. Your [ENDURE] glyph quivers.")
 				targetEntity[Tension]:Up()
@@ -37,8 +37,7 @@ end
 local function TryBreak(attackerEntity, targetEntity)
 	if targetEntity[Breakable] ~= nil and attackerEntity[Break] ~= nil then
 
-		if Chances[attackerEntity[Break].chance]:MakeGuess() then
-
+		if attackerEntity[Silenced] == nil and Chances[attackerEntity[Break].chance]:MakeGuess() then
 			if attackerEntity == PlayerEntity then 
 				Diary.Write("You broke " .. targetEntity[Name].value .. "! Your [BREAK] glyph quivers.")
 				attackerEntity[Tension]:Up()
@@ -49,8 +48,8 @@ local function TryBreak(attackerEntity, targetEntity)
 				Contents.DropOne(entity, position.x, position.y)
 			end
 
-			RemoveEntityFromDungeon(targetEntity)
 			targetEntity:Unset(Bumped)
+			RemoveEntityFromDungeon(targetEntity)
 			World:Remove(targetEntity)
 
 			return true
@@ -62,7 +61,7 @@ end
 
 local function TryCalm(attackerEntity, targetEntity)
 	local calm = targetEntity[Calm]
-	if calm ~= nil and Chances[calm.chance]:MakeGuess() then
+	if targetEntity[Silenced] == nil and calm ~= nil and Chances[calm.chance]:MakeGuess() then
 		if targetEntity == PlayerEntity then
 			Diary.Write("The " .. attackerEntity[Name].value .. " stops! Your [CALM] glyph quivers.")
 			targetEntity[Tension]:Up()
@@ -76,9 +75,28 @@ local function TryCalm(attackerEntity, targetEntity)
 	return false
 end
 
+local function TryLuck(attackerEntity, targetEntity)
+	if targetEntity[Silenced] == nil and targetEntity[Luck] ~= nil and Chances[targetEntity[Luck].chance]:MakeGuess() then
+		if targetEntity == PlayerEntity then
+			Diary.Write("The " .. attackerEntity[Name].value .. " misses! Your [LUCK] glyph quivers.")
+			targetEntity[Tension]:Up()
+		end
+
+		if attackerEntity == PlayerEntity then
+			Diary.Write("The " .. targetEntity[Name].value .. " got lucky. You miss.")
+		end
+
+		targetEntity:Unset(Bumped)
+
+		return true
+	end
+
+	return false
+end
+
 local function TryYearn(attackerEntity, targetEntity)
 	local yearn = targetEntity[Yearn]
-	if yearn ~= nil and Chances[yearn.chance]:MakeGuess() then
+	if targetEntity[Silenced] == nil and yearn ~= nil and Chances[yearn.chance]:MakeGuess() then
 		if targetEntity == PlayerEntity then
 			Diary.Write("The " .. attackerEntity[Name].value .. " stops! Your [YEARN] glyph quivers.")
 			attackerEntity:Set(Yearn{})
@@ -95,7 +113,7 @@ end
 
 local function CheckInflictStatus(entity, target)
 	local darken = entity[Darken]
-	if darken ~= nil and Chances[darken.chance]:MakeGuess() then
+	if entity[Silenced] == nil and darken ~= nil and Chances[darken.chance]:MakeGuess() then
 		target:Set(InflictStatus{ component = function() return Blindness { current = 3, maximum = 3 } end })
 	end
 end
@@ -108,19 +126,12 @@ function BumpAttackMechanicsSystem:Tick()
 	for _, entity in World:Exec(ECS.Query.All(Bumped, Position).Any(Health, Breakable)):Iterator() do
 		local who = World:FetchEntityById(entity[Bumped].by)
 		if entity ~= nil and who ~= nil then
-
-			if TryYearn(who, entity) then
-				return
-			end
-
-			if TryCalm(who, entity) then
-				return
-			end
+			if TryLuck(who, entity) then return end
+			if TryYearn(who, entity) then return end
+			if TryCalm(who, entity) then return end
 
 			CheckInflictStatus(who, entity)
-			if TryBreak(who, entity) then
-				return
-			end
+			if TryBreak(who, entity) then return end
 
 			if entity[Health] ~= nil then
 				PerformAttack(who, entity)

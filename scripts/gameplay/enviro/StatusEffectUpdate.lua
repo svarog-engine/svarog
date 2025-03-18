@@ -9,6 +9,9 @@ function StatusEffectUpdateSystem:UpdateDuration(entity, statusEffect)
 
 	if effect ~= nil then
 		effect.current = effect.current - 1
+		if statusEffect == Silenced and entity[Tension] ~= nil then
+			entity[Tension]:Down(0.5)
+		end
 		if effect.current == 0 then
 			entity:Unset(statusEffect)
 		end
@@ -16,10 +19,11 @@ function StatusEffectUpdateSystem:UpdateDuration(entity, statusEffect)
 end
 
 function StatusEffectUpdateSystem:Tick()
-	for _, entity in World:Exec(ECS.Query.Any(Telepathic, Invisible, Delayed, Blindness)):Iterator() do
+	for _, entity in World:Exec(ECS.Query.Any(Telepathic, Invisible, Delayed, Blindness, Silenced)):Iterator() do
 		StatusEffectUpdateSystem:UpdateDuration(entity, Telepathic)
 		StatusEffectUpdateSystem:UpdateDuration(entity, Invisible)
 		StatusEffectUpdateSystem:UpdateDuration(entity, Delayed)
 		StatusEffectUpdateSystem:UpdateDuration(entity, Blindness)
+		StatusEffectUpdateSystem:UpdateDuration(entity, Silenced)
 	end
 end

@@ -50,7 +50,7 @@ function Procgen.MakeObject(what, x, y, ...)
 		local e = World:Entity(Position{ x = x, y = y })
 		if what == "Goblin" or what == "Hobgob" or what == "Kobold" 
 		   or what == "Mimic" or what == "Djinn" or what == "Flamos" 
-		   or what == "RestlessDead" or what == "Ogre" then
+		   or what == "RestlessDead" or what == "Ogre" or what == "Rat" then
 		   Dungeon.creatureCount = Dungeon.creatureCount + 1
 		end
 
@@ -255,7 +255,6 @@ function Procgen.Goblin(e, x, y)
 		BumpAttack { damage = 1 }, 
 		Glyph{ name = "goblin" },
 		Burnable{},
-		Luck{},
 		Contents{ items = { { itemId = "gold", quantity = 20 } } }
 	)
 end
@@ -351,11 +350,11 @@ end
 function Procgen.Rat(e, x, y)
 	e:Set(
 		Creature{}, 
-		Endure{},
 		Sight{ radius = 16 },
 		AIMoveTowardsPlayer{ distance = 0, chance = 10 }, 
 		Health(Range(1, 1)), 
-		BumpAttack { damage = 3 }, 
+		BumpAttack { damage = 1 },
+		Luck{ chance = 3 },
 		Glyph{ name = "rat" }
 	)
 end
@@ -366,8 +365,9 @@ function Procgen.Hobgob(e, x, y)
 		Endure{},
 		Sight{ radius = 8 },
 		Magic{ value = Rand:F01(), colors = CompColors["Endure"] },
-		AIKeepDistanceFromPlayer{ distance = 4, chance = 10 },
-		AISpawnWhenDistantFromPlayer{ min = 4, max = 7, chance = 5, what = "Rat" },
+		AIKeepDistanceFromPlayer{ distance = 5, chance = 10 },
+		AISpawnWhenDistantFromPlayer{ min = 5, max = 9, chance = 7, what = "Rat" },
+		AIMoveTowardsPlayer{ distance = 0, chance = 2 }, 
 		Health(Range(2, 2)), 
 		BumpAttack { damage = 1 }, 
 		Glyph{ name = "hobgob" },
