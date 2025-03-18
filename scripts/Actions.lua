@@ -32,6 +32,19 @@ Actions.Inventory = {
 	ConsumeOrCast	= { Input.Press("Key: C") },
 }
 
+Actions.Loot = {
+	Exit			= { Input.Press("Key: Escape") },
+	A				= { Input.Press("Key: A") },
+	B				= { Input.Press("Key: B") },
+	C				= { Input.Press("Key: C") },
+	D				= { Input.Press("Key: D") },
+	E				= { Input.Press("Key: E") },
+	F				= { Input.Press("Key: F") },
+	G				= { Input.Press("Key: G") },
+	H				= { Input.Press("Key: H") },
+	I				= { Input.Press("Key: I") },
+}
+
 Actions.TargetOverlay = {
 	Left	= { Input.Press("Key: Left") },
 	Right	= { Input.Press("Key: Right") },

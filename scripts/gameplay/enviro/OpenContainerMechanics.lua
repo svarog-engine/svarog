@@ -39,14 +39,21 @@ function OpenCrateSystem:Tick()
 				end
 			else
 				if entity[Contents] ~= nil then
-					Contents.MoveItems(entity, who)
-					entity:Unset(Contents)
-
-					entity[Glyph].name =  entity[Glyph].name .. "_empty"
-				end
-
-				if who == PlayerEntity then 
-					Diary.Write("You pick up stuff from the " .. entity[Name].value .. ".")
+					if who ~= PlayerEntity then
+						local moved, total = Contents.MoveItems(entity, who)
+						if #moved == total then
+							entity:Unset(Contents)
+							entity[Glyph].name =  entity[Glyph].name .. "_empty"
+						end
+					else
+						if #entity[Contents].items == 0 then
+							entity:Unset(Contents)
+							entity[Glyph].name = entity[Glyph].name .. "_empty"
+						else
+							LootTable[LootInventory].target = entity
+							Input.Push("Loot")
+						end
+					end
 				end
 			end
 		end

@@ -6,8 +6,6 @@ local function CalculateDamage(attackerEntity, targetEntity)
 
 	local totalDamage = baseDamage
 
-	print(attackerEntity[Name].value .. " deals " .. totalDamage .. " to " .. targetEntity[Name].value .. " (" .. targetEntity[Health].current .. ")")
-
 	return totalDamage
 end
 

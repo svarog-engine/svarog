@@ -39,26 +39,37 @@ IDS = 1
 Procgen = {}
 
 function Procgen.MakeObject(what, x, y, ...)
-	local e = World:Entity(Position{ x = x, y = y })
-	if what == "Goblin" or what == "Hobgob" or what == "Kobold" 
-	   or what == "Mimic" or what == "Djinn" or what == "Flamos" 
-	   or what == "RestlessDead" or what == "Ogre" then
-	   Dungeon.creatureCount = Dungeon.creatureCount + 1
-	end
+	local dungeon = Dungeon
+	local tile = dungeon.floor:Get(x, y)
+	local isTF = tile.type == Floor
+	local isEN = tile.entity == nil
+	local id = dungeon.floor:ID(x, y)
+	local es = dungeon.entities[id] or {}
+	local isEE = #es == 0
+	if isTF and isEE and isEN then
+		local e = World:Entity(Position{ x = x, y = y })
+		if what == "Goblin" or what == "Hobgob" or what == "Kobold" 
+		   or what == "Mimic" or what == "Djinn" or what == "Flamos" 
+		   or what == "RestlessDead" or what == "Ogre" then
+		   Dungeon.creatureCount = Dungeon.creatureCount + 1
+		end
 
-	e:Set(Name { value = what })
-	e:Set(ID(IDS))
-	e:Set(InLevel{ value = Level })
-	IDS = IDS + 1
+		e:Set(Name { value = what })
+		e:Set(ID(IDS))
+		e:Set(InLevel{ value = Level })
+		IDS = IDS + 1
 
-	if Procgen[what] == nil then
-		Svarog.Instance:LogError("PROCGEN: Generator " .. what .. " not found. Check your spelling.")
+		if Procgen[what] == nil then
+			Svarog.Instance:LogError("PROCGEN: Generator " .. what .. " not found. Check your spelling.")
+			return e
+		else
+			Procgen[what](e, x, y, ...)
+		end
+		AddEntityToDungeon(x, y, e)
 		return e
-	else
-		Procgen[what](e, x, y, ...)
+	else	
+		return nil
 	end
-	AddEntityToDungeon(x, y, e)
-	return e
 end
 
 function Procgen.IsFurniture(e)
@@ -342,7 +353,7 @@ function Procgen.Hobgob(e, x, y)
 		Endure{},
 		Sight{ radius = 8 },
 		Magic{ value = Rand:F01(), colors = CompColors["Endure"] },
-		AIMoveTowardsPlayer{ distance = 0, chance = 6 }, 
+		AIKeepDistanceFromPlayer{ distance = 4, chance = 10 },
 		Health(Range(2, 2)), 
 		BumpAttack { damage = 1 }, 
 		Glyph{ name = "hobgob" },
@@ -462,15 +473,24 @@ end
 --Monsters["Open"] = { "Flamos", "Ogre" }
 --Monsters["Light"] = { "Flamos", "Djinn" }
 
-
-
-
-
-
-
 function Procgen.GenerateContents(e, itemList)
--- mika
-    local items = { { itemId = itemList[Rand:Range(1, #itemList)], quantity = 1} }
+	local itemSet = {}
+
+	if Chances[3]:MakeGuess() then
+		repeat
+			local item, quantity = itemList[Rand:Range(1, #itemList)], Rand:Range(1, 3)
+			if itemSet[item] == nil then
+				itemSet[item] = quantity
+			else
+				itemSet[item] = itemSet[item] + quantity
+			end
+		until not Chances[5]:MakeGuess()
+	end
+	
+	local items = {}
+	for item, quantity in pairs(itemSet) do
+		table.insert(items, { itemId = item, quantity = quantity })
+	end
     e:Set(Contents { items = items })
 end
 
@@ -509,7 +529,7 @@ function Templates.StoreRoom(cx, cy)
 			for j = 1, h do
 				Dungeon.zones:Set(i, j, -1)
 				if Dungeon.floor:Get(i, j).type == Floor then
-					if i % 2 == 0 and j % 2 == 0 and Chances[5]:MakeGuess() then
+					if i % 2 == 0 and j % 2 == 0 and Chances[2]:MakeGuess() then
 						if room:Has(i, j) and room:Get(i, j) >= 0 and room:Get(i, j) < 10 then
 							if Chances[5]:MakeGuess() then
 								Procgen.MakeObject("Crate", i, j)
@@ -721,7 +741,7 @@ Monsters["Hate"] = { "Flamos", "Djinn", "Ogre", "Kobold", "Hobgob", "Mimic", "Go
 Messages = { 
 	"You read: DIAMONDS serve the OPEN sky",
 	"You read: Ogres and Flamosi form an OPEN alliance...",
-	"You read: SAPPHIRE splits the LIGHT in two",
+	"You read: SAPPHIRE splits LIGHT in two",
 	"You read: Roses for silence, OBSIDIAN for DARKNESS",
 	"You read: MALACHITE is what makes good fortune",
 	"You read: HOBGOBs are immune to SKYSTONES.",

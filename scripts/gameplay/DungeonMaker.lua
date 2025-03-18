@@ -273,6 +273,8 @@ function MakeDungeon()
 			Burnable()
 		)
 	
+		LootTable = World:Entity(LootInventory{ target = nil })
+
 		Dungeon.visited:Set(x, y, true)
 		SelectDungeonLevel(Level)
 	end

@@ -138,7 +138,6 @@ function ChallengeSystem:Tick()
 
 		if timeout.value < 0 then
 			local portal = entity[Portal]
-			print(Monsters, portal.type)
 			local monsters = Monsters[portal.type]
 			local x, y = entity[Position].x, entity[Position].y
 			RemoveEntityFromDungeon(entity)

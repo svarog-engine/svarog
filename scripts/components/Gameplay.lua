@@ -1,4 +1,5 @@
-﻿
+﻿InventorySize = 6
+
 Player = ECS.Component()
 Death = ECS.Component{ reason = "" }
 Boons = ECS.Component{ value = {} }
@@ -66,6 +67,7 @@ end
 -- Inventory
 
 Contents = ECS.Component{ items = {} }
+LootInventory = ECS.Component{ target = nil }
 
 function Contents.HasSpace(entity, itemId)
 	local inventory = entity[Contents].items
@@ -81,7 +83,7 @@ function Contents.HasSpace(entity, itemId)
 	if itemInInventory then
 		return true
 	else
-		return #entity[Contents].items <= 6
+		return #entity[Contents].items <= InventorySize
 	end
 end
 
@@ -137,11 +139,21 @@ function Contents.HasItem(entity, itemId, quantity)
 end
 
 function Contents.MoveItems(source, target)
+	local movedList = {}
 	local inventoryList = source[Contents].items
+	local total = #inventoryList
+
 	for _, item in ipairs(inventoryList) do
-		Contents.Add(target, item.itemId, item.quantity)
-		Contents.Remove(source, item.itemId, item.quantity)
+		if Contents.HasSpace(target, item.itemId) then
+			table.insert(movedList, { item.itemId, item.quantity })
+			Contents.Add(target, item.itemId, item.quantity)
+			Contents.Remove(source, item.itemId, item.quantity)
+		else
+			return movedList, total
+		end
 	end
+
+	return movedList, total
 end
 
 function Contents.DropAll(entity, x, y)

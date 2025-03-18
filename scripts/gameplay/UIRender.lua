@@ -57,6 +57,27 @@ UIRenderer = {
 		UIRenderer.Line(x1, y2, x2, y2, color, isVisibleFn)
 	end,
 
+	Glyphs = function(glyphs)
+		local dx, dy = 0, 0 
+		local order = UISettings.order or FID
+		for _, glyph in ipairs(glyphs) do
+			Engine.Symbol(
+				UISettings.x + dx, UISettings.y + dy, glyph, 
+				UISettings.fg or Colors.White,
+				UISettings.bg or Colors.Black,
+				"UI")
+
+			dx = dx + 1
+			if dx > UISettings.width then
+				dx = 0
+				dy = dy + 1
+			end
+		end
+		dy = dy + 1
+
+		if order ~= nil then order(dx, dy) end
+	end,
+
 	Label = function(text)
 		if not (type(text) == 'string') then text = tostring(text) end
 		local dx, dy = 0, 0 

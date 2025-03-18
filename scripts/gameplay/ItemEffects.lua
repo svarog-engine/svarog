@@ -136,9 +136,7 @@ function Cast(itemId)
 				local t = 6 - Distance(x, y, nx, ny)
 				
 				local id = dungeon.floor:ID(nx, ny)
-				for _, e in ipairs(dungeon.entities[id] or {}) do 
-					print(i, j, e[Name].value, e[Breakable] ~= nil)
-
+				for _, e in ipairs(dungeon.entities[id] or {}) do
 					if e[Creature] ~= nil then
 						if e[compFrom(ItemCastNames[itemId])] == nil then
 							local duration = 7
@@ -165,6 +163,13 @@ function Cast(itemId)
 
 					if element == "Open" and e[Locked] ~= nil then
 						e:Unset(Locked)
+					end
+
+					if element == "Open" and e[Contents] ~= nil then
+						if #e[Contents].items == 0 then
+							e:Unset(Contents)
+							e[Glyph].name = e[Glyph].name .. "_empty"
+						end
 					end
 
 					if element == "Heal" and e[Health] ~= nil then
