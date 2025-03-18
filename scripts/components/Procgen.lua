@@ -177,7 +177,7 @@ function Procgen.Crate(e, x, y)
 	Procgen.IsFurniture(e)
 	Procgen.IsWooden(e)
 	Procgen.IsContainer(e)
-	Procgen.GenerateContents(e, ContentsItems)
+	Procgen.GenerateContents(e, ContentsItems, 3)
 	e:Set(Glyph{ name = "crate" })
 end
 
@@ -201,9 +201,10 @@ end
 function Procgen.Chest(e, x, y)
 	Procgen.IsFurniture(e)
 	Procgen.IsContainer(e)
-	Procgen.GenerateContents(e, ContentsItems)
+	Procgen.GenerateContents(e, ContentsItems, 10)
 	e:Set(Locked{})
 	e:Set(Glyph{ name = "chest" })
+	Dungeon.numberOfChests = Dungeon.numberOfChests + 1
 end
 
 function Procgen.Table(e, x, y)
@@ -347,6 +348,18 @@ function Procgen.Rift(e, x, y, owner)
 	e:Set(BlockingSight{})
 end
 
+function Procgen.Rat(e, x, y)
+	e:Set(
+		Creature{}, 
+		Endure{},
+		Sight{ radius = 16 },
+		AIMoveTowardsPlayer{ distance = 0, chance = 10 }, 
+		Health(Range(1, 1)), 
+		BumpAttack { damage = 3 }, 
+		Glyph{ name = "rat" }
+	)
+end
+
 function Procgen.Hobgob(e, x, y)
 	e:Set(
 		Creature{}, 
@@ -354,6 +367,7 @@ function Procgen.Hobgob(e, x, y)
 		Sight{ radius = 8 },
 		Magic{ value = Rand:F01(), colors = CompColors["Endure"] },
 		AIKeepDistanceFromPlayer{ distance = 4, chance = 10 },
+		AISpawnWhenDistantFromPlayer{ min = 4, max = 7, chance = 5, what = "Rat" },
 		Health(Range(2, 2)), 
 		BumpAttack { damage = 1 }, 
 		Glyph{ name = "hobgob" },
@@ -473,10 +487,10 @@ end
 --Monsters["Open"] = { "Flamos", "Ogre" }
 --Monsters["Light"] = { "Flamos", "Djinn" }
 
-function Procgen.GenerateContents(e, itemList)
+function Procgen.GenerateContents(e, itemList, chance)
 	local itemSet = {}
 
-	if Chances[3]:MakeGuess() then
+	if Chances[chance]:MakeGuess() then
 		repeat
 			local item, quantity = itemList[Rand:Range(1, #itemList)], Rand:Range(1, 3)
 			if itemSet[item] == nil then

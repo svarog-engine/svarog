@@ -49,6 +49,31 @@ local function CheckBreakThroughToPlayer(entity)
 	end
 end
 
+local function CheckSpawnWhenDistantFromPlayer(entity)
+	local ai = entity[AISpawnWhenDistantFromPlayer]
+	if ai ~= nil then
+		local pos = entity[Position]
+		local current = Dungeon.playerDistance:Get(pos.x, pos.y)
+		if current >= ai.min and current <= ai.max and Dungeon.visibility:Get(pos.x, pos.y) and Chances[ai.chance]:MakeGuess() then
+			table.insert(entity[Creature].goals, { "SpawnWhenDistantFromPlayer", 1, function() 
+				for i = -1, 2 do
+					for j = -1, 2 do
+						local nx, ny = pos.x + i, pos.y + j
+						if Dungeon.floor:Get(nx, ny).type == Floor then
+							local id = Dungeon.floor:ID(nx, ny)
+							local entities = Dungeon.entities[id] or {}
+							if #entities == 0 then
+								Procgen.MakeObject(ai.what, nx, ny)
+								return
+							end
+						end
+					end
+				end
+			end })
+		end
+	end
+end
+
 local function CheckAttackIfStandingNextTo(entity)
 	local ai = entity[AIAttackIfStandingNextTo]
 	if ai ~= nil then
@@ -172,8 +197,13 @@ function AIBehavioursSystem:Tick()
 			CheckAttackIfStandingNextTo(entity)
 			CheckBreakThroughToPlayer(entity)
 			CheckForcedRandomWalk(entity)
+			CheckSpawnWhenDistantFromPlayer(entity)
 		else
+			CheckAttackIfStandingNextTo(entity)
 			CheckRandomWalk(entity)
+			CheckAIRest(entity)
+			CheckBreakThroughToPlayer(entity)
+			CheckSpawnWhenDistantFromPlayer(entity)
 		end
 	end
 

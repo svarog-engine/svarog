@@ -79,7 +79,6 @@ local function SpecificRoomSetup(l, w, h)
 		return { { math.floor(w / 2), math.floor(h / 2) } }
 
 	elseif l < 5 then
-
 		local centers = {}
 		local bucketIndex = Dungeon.wallDistances:GetHighestBucket()
 		local halfsteps = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 }
@@ -91,6 +90,10 @@ local function SpecificRoomSetup(l, w, h)
 		local specials = 1
 		local rest = OtherComps(PlayerEntity[Boons].value)
 		local w3, h3 = math.ceil(w / 3), math.ceil(h / 3)
+
+		local numberOfKeys = math.ceil(Dungeon.numberOfChests / 2)
+		if numberOfKeys <= 0 then numberOfKeys = 1 end
+		print("Generating " .. numberOfKeys .. " for " .. Dungeon.numberOfChests .. " chests")
 		while bucketIndex > 0 do
 			local usedRs = {}
 
@@ -120,6 +123,9 @@ local function SpecificRoomSetup(l, w, h)
 						Procgen.MakeObject("Altar", rx + 1, ry, rest[ri])
 						table.remove(rest, ri)
 						specials = specials - 1
+					elseif numberOfKeys > 0 then
+						Procgen.MakeObject("Key", rx, ry)
+						numberOfKeys = numberOfKeys - 1
 					else
 						local name, comp = Wheels:GetMajor(halfsteps[(Snail(cx, cy) or 1 + i) % 9 + 1])
 						local roomTemplates = Rooms[comp]
@@ -174,7 +180,7 @@ function MakeDungeon()
 	Dungeons.maps[Level] = {}
 	SetDressing = {}
 	Dungeon = Dungeons.maps[Level]
-	
+	Dungeon.numberOfChests = 0
 	Dungeon.creatureCount = 0
 	Dungeon.index = Level
 	Dungeon.name = "Level" .. Level
