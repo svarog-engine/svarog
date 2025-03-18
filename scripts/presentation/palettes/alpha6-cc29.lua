@@ -34,3 +34,5 @@ Colors.DarkGray = Hex("#45444f")
 
 Colors.Black = Hex("#212123")
 Colors.White = Hex("#f2f0e5")
+
+Colors.Transparent = Hex("#ffffff00")

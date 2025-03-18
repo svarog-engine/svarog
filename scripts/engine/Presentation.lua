@@ -1,6 +1,5 @@
 ﻿import ('svarog', 'svarog.presentation')
 import ('svarog', 'svarog.procgen.geometry')
-import ('SFML', 'SFML.Graphics')
 
 Glossary = {}
 Glossary.Meta = {}

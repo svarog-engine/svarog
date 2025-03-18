@@ -68,7 +68,7 @@ local function ProcessLayer(changelist, matrix, pres)
 		    if c.Foreground ~= nil then fg = c.Foreground end
 		    if c.Background ~= nil then bg = c.Background end
 
-            Svarog:UpdateGlyphs(x, y, tileX, tileY, fg, bg, matrix)
+            Svarog:UpdateGlyphs(x, y, tileX, tileY, fg.engineColor, bg.engineColor, matrix)
 	end
 end
 
@@ -461,7 +461,7 @@ function LoadScriptIfExists(name)
 end
 
 function Hex(rgb)
-    return Colors:Hex(rgb)
+    return HexToColor(rgb)
 end
 
 return {

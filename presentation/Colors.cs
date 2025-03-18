@@ -67,8 +67,8 @@ namespace svarog.presentation
         public Color LightGray = new(166, 169, 164);
         public Color DarkGray = new(48, 45, 46);
 
-        public Color Black = Color.Black;
-        public Color White = Color.White;
+        public Color Black = new(33, 33, 35);
+        public Color White = new(242, 240, 229);
         public Color Transparent = Color.Transparent;
 
         public Color Random
