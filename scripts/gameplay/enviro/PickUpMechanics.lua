@@ -37,8 +37,19 @@ function PickUpMechanicsSystem:Tick()
 			else
 				if who == PlayerEntity then
 					Diary.Write("Can't pick up " .. ItemLibrary[item.id].name .. ".")
-					Fade(entity, Colors.Red, Colors.Black, 0.2)
 				end
+
+				Fade(who, Colors.Red, Colors.Black, 0.2)
+
+				entity:Unset(FadeOut)
+
+				local whoPosition = who[Position]
+				RemoveEntityFromDungeon(who)
+
+				whoPosition.x = pos.x
+				whoPosition.y = pos.y
+
+				AddEntityToDungeon(pos.x, pos.y, who)
 			end
 		end
 
