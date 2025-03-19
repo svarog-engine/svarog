@@ -47,6 +47,14 @@ function LootRender.Render(ui)
 		ui.PopBox()
 	end
 
+	for i = x + 1, x + 19 do
+		ui.PushBox(i, y + 10, 1, 1)
+			ui.PushStyle(Colors.DarkGray, Colors.DarkGray)
+				ui.Glyphs({ "full_tile" })
+			ui.PopStyle()
+		ui.PopBox()
+	end
+
 	ui.PushBox(x + 1, y, 20, 10)
 		ui.PushStyle(Colors.DarkGray, Colors.LightGray)
 			ui.Label("Loot")
