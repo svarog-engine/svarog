@@ -29,6 +29,18 @@ function InventoryRender.Render(ui)
 					local selection = InventoryEntity[Selection].value
 					for i, item in ipairs(PlayerEntity[Contents].items) do
 						if i == selection then
+							local know = PlayerKnowledge[item.itemId]
+							if (CanConsume(item.itemId) or CanCast(item.itemId)) then
+								if know ~= nil then
+									local color = CompColors[know]
+									ui.PushStyle(color.fg, color.bg)
+										ui.Label(" " .. know)
+									ui.PopStyle()
+								else
+									ui.Label(" ???")
+								end
+								ui.Label(" ------------- ")
+							end
 							ui.Label(" [D] Drop")
 							if CanConsume(item.itemId) then
 								ui.Label(" [C] Consume")

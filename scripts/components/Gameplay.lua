@@ -1,6 +1,8 @@
 ﻿InventorySize = 6
 
 Player = ECS.Component()
+PlayerKnowledge = {}
+
 Death = ECS.Component{ reason = "" }
 Boons = ECS.Component{ value = {} }
 
@@ -9,6 +11,7 @@ Sight = ECS.Component{ radius = 5 }
 Pause = ECS.Component{ duration = 0 }
 Friendly = ECS.Component()
 Creature = ECS.Component{ goals = {}, actions = 0, timestamp = 0 }
+SplitOnHit = ECS.Component{ what = nil }
 
 function TickCreature(entity)
 	if Engine.Tick() > entity[Creature].timestamp then

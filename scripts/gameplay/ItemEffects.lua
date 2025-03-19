@@ -34,9 +34,11 @@ function Consume(itemId)
 	local comp = CompNameToComp(name)
 	if PlayerEntity[comp] ~= nil then
 		Diary.Write("The taste of " .. itemId .. " relaxes you greatly.")
+		PlayerKnowledge[itemId] = name
 		PlayerEntity[Tension]:Down(8)
 	else
 		Diary.Write("Consuming " .. itemId .. " gives you a sliver of " .. string.upper(name) .. ".")
+		PlayerKnowledge[itemId] = name
 		PlayerEntity:Set((comp){ level = 1, chance = 5 })
 		table.insert(PlayerEntity[Boons].value, name)
 		World:Entity(TempBoon{ type = name }, Timeout{ value = 10 })
@@ -77,7 +79,7 @@ CompColors = {
 	Endure = { Colors.Blue, Colors.DarkBlue },
 	Heal = { Colors.LightRed, Colors.Red },
 	Calm = { Colors.LightCyan, Colors.Cyan },
-	Flow = { Colors.Cyan , Colors.DarkCyan },
+	Flow = { Colors.Black , Colors.DarkCyan },
 	Open = { Colors.LightMagenta , Colors.Magenta },
 	Hate = { Colors.White, Colors.Black },
 }
@@ -101,6 +103,7 @@ function Cast(itemId)
 	
 	local element = ItemCastNames[itemId]
 	Diary.Write("It stuns those unaligned with [" .. element .. "].")
+	PlayerKnowledge[itemId] = element
 	if PlayerEntity[compFrom(element)] == nil then
 		local duration = 5
 		if PlayerEntity[Endure] then duration = duration - 2 end

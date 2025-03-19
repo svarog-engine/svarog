@@ -57,8 +57,8 @@ local function CheckSpawnWhenDistantFromPlayer(entity)
 		local current = Dungeon.playerDistance:Get(pos.x, pos.y)
 		if current >= ai.min and current <= ai.max and Dungeon.visibility:Get(pos.x, pos.y) and Chances[ai.chance]:MakeGuess() then
 			table.insert(entity[Creature].goals, { "SpawnWhenDistantFromPlayer", 1, function() 
-				for i = -1, 2 do
-					for j = -1, 2 do
+				for i = -1, 1 do
+					for j = -1, 1 do
 						local nx, ny = pos.x + i, pos.y + j
 						if Dungeon.floor:Get(nx, ny).type == Floor then
 							local id = Dungeon.floor:ID(nx, ny)

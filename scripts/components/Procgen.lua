@@ -50,7 +50,7 @@ function Procgen.MakeObject(what, x, y, ...)
 		local e = World:Entity(Position{ x = x, y = y })
 		if what == "Goblin" or what == "Hobgob" or what == "Kobold" 
 		   or what == "Mimic" or what == "Djinn" or what == "Flamos" 
-		   or what == "RestlessDead" or what == "Ogre" or what == "Rat" then
+		   or what == "Illusion" or what == "Ogre" or what == "Rat" then
 		   Dungeon.creatureCount = Dungeon.creatureCount + 1
 		end
 
@@ -397,7 +397,6 @@ function Procgen.Ogre(e, x, y)
 		Break{},
 		Sight{ radius = 10 },
 		Magic{ value = Rand:F01(), colors = CompColors["Open"] },
-		AIMoveTowardsPlayer{ distance = 0, chance = 9 },
 		AIBreakThroughToPlayer{ chance = 5, distance = 9 },
 		Health(Range(3)), 
 		BumpAttack { damage = 3 }, 
@@ -414,7 +413,7 @@ function Procgen.Flamos(e, x, y)
 		OldPosition{},
 		ExplodeFireOnDeath{},
 		Magic{ value = Rand:F01(), colors = CompColors["Light"] },
-		AIKeepDistanceFromPlayer{ distance = 3, chance = 9 },
+		AIKeepDistanceFromPlayer{ distance = 1, chance = 9 },
 		AIRest{ chance = 1 },
 		Health(Range(1)),
 		Burning{},
@@ -440,13 +439,15 @@ function Procgen.Djinn(e, x, y)
 	)
 end
 
-function Procgen.RestlessDead(e, x, y)
+function Procgen.Illusion(e, x, y)
 	e:Set(
 		Creature{},
-		Name{ value = "Restless Dead" },
+		Name{ value = "Illusion" },
 		Sight{ radius = 5 },
 		Magic{ value = Rand:F01(), colors = CompColors["Flow"] },
 		AIForcedRandomWalk{},
+		AIAttackIfStandingNextTo{},
+		AISpawnWhenDistantFromPlayer{ min = 3, max = 3, chance = 9, what = "Illusion" },
 		Health(Range(4)),
 		Glyph{ name = "restless" },
 		Contents{ items = {} }
@@ -461,9 +462,10 @@ function Procgen.GelatinousCube(e, x, y)
 		Magic{ value = Rand:F01(), colors = CompColors["Flow"] },
 		AIMoveTowardsPlayer{ distance = 0, chance = 6 },
 		AIBreakThroughToPlayer{ chance = 4, distance = 9 },
-		Health(Range(8)),
+		Health(Range(20)),
 		Glyph{ name = "gelly" },
-		Contents{ items = {} }
+		Contents{ items = {} },
+		SplitOnHit{ what = "GelatinousCube" }
 	)
 end
 
@@ -481,7 +483,7 @@ end
 --Monsters["Endure"] = { "Hobgob", "Mimic" }
 --Monsters["Luck"] = { "PlagueRats", "Vampire" }
 --Monsters["Darken"] = { "Shade", "Wraith" }
---Monsters["Flow"] = { "RestlessDead", "GelatinousCube" }
+--Monsters["Flow"] = { "Illusion", "GelatinousCube" }
 --Monsters["Heal"] = { "Kobold", "Phantasm" }
 --Monsters["Calm"] = { "Banshee", "Nightmare" }
 --Monsters["Open"] = { "Flamos", "Ogre" }
@@ -743,10 +745,10 @@ ContentsItems = { "diamond", "topaz", "obsidian", "malachite", "lapis_lazuli", "
 
 Monsters = {}
 Monsters["Endure"] = { "Hobgob", "Mimic" }
-Monsters["Luck"] = { "Goblin", "Goblin" }
+Monsters["Luck"] = { "Goblin", "Kobold" }
 Monsters["Darken"] = { "Kobold", "Kobold" }
-Monsters["Flow"] = { "RestlessDead", "GelatinousCube" }
-Monsters["Heal"] = { "Kobold", "Phantasm" }
+Monsters["Flow"] = { "Illusion", "GelatinousCube" }
+Monsters["Heal"] = { "Hobgob", "Phantasm" }
 Monsters["Calm"] = { "Banshee", "Nightmare" }
 Monsters["Open"] = { "Flamos", "Ogre" }
 Monsters["Light"] = { "Flamos", "Djinn" }

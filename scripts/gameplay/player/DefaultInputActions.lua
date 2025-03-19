@@ -102,6 +102,7 @@ Engine.RegisterInputSystem(
 							if Dungeon.entities[id][1][Health] ~= nil then
 								Dungeon.entities[id][1][Health].current = Dungeon.entities[id][1][Health].current - 1
 							end
+							moved = moved + 1
 							Diary.Write("You phase through the " .. name .. "! Your [FLOW] glyph quivers.")
 							entity[Stamina].current = entity[Stamina].current - cost * mult
 						end
@@ -109,6 +110,7 @@ Engine.RegisterInputSystem(
 						cost = 2
 						if stam.current >= cost * mult and PerformBump(entity, pos.x, pos.y, dx * speed, dy * speed) then
 							entity[Stamina].current = entity[Stamina].current - cost * mult
+							moved = moved + 1
 						end
 					end
 				else
