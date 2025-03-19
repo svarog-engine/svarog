@@ -53,4 +53,24 @@ Input.Update = function()
 	end
 end
 
+Input.HoldRatio = function(input)
+	local maxHold = 0
+	local currentHold = 0
+	local context = Actions[InputStack:Peek()]
+	if context ~= nil then
+		local action = context[input]
+		if action ~= nil then
+			for _, definition in ipairs(action) do
+				if definition.input ~= nil then
+					maxHold = definition.length or 0
+					currentHold = InputStack:GetHoldRatio(definition.input)
+					break
+				end
+			end
+		end
+	end
+
+	return { maximum = maxHold, current = currentHold}
+end
+
 return Input
