@@ -15,7 +15,7 @@ ItemLibrary = {
 	malachite = { name = "Malachite", description = "", glyph = "mineral"},
 	lapis_lazuli = { name = "Skystone", description = "", glyph = "mineral"},
 	onyx = { name = "Onyx", description = "", glyph = "mineral"},
-	smoky_quartz = { name = "Quartz", description = "", glyph = "mineral"},
+	--smoky_quartz = { name = "Quartz", description = "", glyph = "mineral"},
 	sapphire = { name = "Sapphire", description = "", glyph = "mineral"},
 	garnet = { name = "Garnet", description = "", glyph = "mineral"},
 

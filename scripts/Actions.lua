@@ -33,6 +33,10 @@ Actions.Inventory = {
 	ConsumeOrCast	= { Input.Press("Key: C") },
 }
 
+Actions.Boon = {
+	Confirm			= { Input.Press("Key: Space") },
+}
+
 Actions.Loot = {
 	Exit			= { Input.Press("Key: Escape") },
 	A				= { Input.Press("Key: A") },

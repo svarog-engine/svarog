@@ -36,7 +36,7 @@ function PlayerBasedExplosionSystem:Render()
 				end
 			end
 			vfx.current = vfx.current + 1
-			if vfx.current == vfx.maximum - 1 then
+			if vfx.current == vfx.maximum then
 				callback()
 			end
 		end

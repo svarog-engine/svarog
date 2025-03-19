@@ -145,7 +145,7 @@ function BumpAttackMechanicsSystem:Tick()
 			local shouldEnd = false
 			shouldEnd = shouldEnd or TryLuck(who, entity)
 			shouldEnd = shouldEnd or TryYearn(who, entity)
-			shouldEnd = shouldEnd or TryCalm(who, entity)
+			--shouldEnd = shouldEnd or TryCalm(who, entity)
 
 			CheckInflictStatus(who, entity)
 			shouldEnd = shouldEnd or TryBreak(who, entity)

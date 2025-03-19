@@ -14,12 +14,12 @@ local function TryApplyComponent(x, y, component, name)
 end
 
 DebugWordsLibrary = {
-	{
-		name = "calm",
-		callback = function (x, y)
-			TryApplyComponent(x, y, Calm { level = 1, chance = 8 }, "Calm")
-		end
-	},
+	--{
+	--	name = "calm",
+	--	callback = function (x, y)
+	--		TryApplyComponent(x, y, Calm { level = 1, chance = 8 }, "Calm")
+	--	end
+	--},
 
 	{
 		name = "open",

@@ -15,7 +15,7 @@ local ItemCastNames = {
 	malachite = "Luck",
 	lapis_lazuli = "Endure",
 	onyx = "Heal",
-	smoky_quartz = "Calm",
+	--smoky_quartz = "Calm",
 	garnet = "Flow",
 	topaz = "Open",
 }
@@ -54,7 +54,7 @@ local ItemNames = {
 	malachite = "Malachite",
 	lapis_lazuli = "Skystone",
 	onyx = "Onyx",
-	smoky_quartz = "Quartz",
+	--smoky_quartz = "Quartz",
 	garnet = "Garnet",
 	topaz = "Topaz",
 }
@@ -66,7 +66,7 @@ local ItemPrefix = {
 	malachite = "a ",
 	lapis_lazuli = "a ",
 	onyx = "an ",
-	smoky_quartz = "a ",
+	--smoky_quartz = "a ",
 	garnet = "a ",
 	topaz = "a ",
 }
@@ -78,7 +78,7 @@ CompColors = {
 	Luck = { Colors.LightYellow, Colors.Yellow },
 	Endure = { Colors.Blue, Colors.DarkBlue },
 	Heal = { Colors.LightRed, Colors.Red },
-	Calm = { Colors.LightCyan, Colors.Cyan },
+	--Calm = { Colors.LightCyan, Colors.Cyan },
 	Flow = { Colors.Black , Colors.DarkCyan },
 	Open = { Colors.LightMagenta , Colors.Magenta },
 	Hate = { Colors.White, Colors.Black },
@@ -128,9 +128,9 @@ function Cast(itemId)
 		PlayerEntity[Stamina].current = PlayerEntity[Stamina].maximum
 	end
 
-	if element == "Calm" then
-		PlayerEntity[Tension]:Down(8)
-	end
+	--if element == "Calm" then
+--		PlayerEntity[Tension]:Down(8)
+	--end
 
 	for i = -5, 5 do
 		for j = -5, 5 do

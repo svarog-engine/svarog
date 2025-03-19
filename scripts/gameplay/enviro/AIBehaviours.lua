@@ -161,7 +161,7 @@ end
 function AIBehavioursSystem:Tick()
 	local p = PlayerEntity[Position]
 	local px, py = p.x, p.y
-	local CalmInfluencedAtLeastOneAI = 0
+	--local CalmInfluencedAtLeastOneAI = 0
 	local DarkInfluencedAtLeastOneAI = 0
 
 	for _, entity in World:Exec(ECS.Query.All(Creature, Position)):Iterator() do
@@ -177,14 +177,14 @@ function AIBehavioursSystem:Tick()
 		local ex, ey = pos.x, pos.y
 		entity[Creature].goals = {}
 		
-		if entity[Calm] ~= nil then
-			if Chances[entity[Calm].chance]:MakeGuess() then
-				CheckAIRest(entity)
-				CheckAIRest(entity)
-				CheckAIRest(entity)
-				CalmInfluencedAtLeastOneAI = CalmInfluencedAtLeastOneAI + 1
-			end
-		end
+		--if entity[Calm] ~= nil then
+		--	if Chances[entity[Calm].chance]:MakeGuess() then
+		--		CheckAIRest(entity)
+		--		CheckAIRest(entity)
+		--		CheckAIRest(entity)
+		--		CalmInfluencedAtLeastOneAI = CalmInfluencedAtLeastOneAI + 1
+		--	end
+		--end
 
 		if entity[Darken] ~= nil and Chances[entity[Darken].chance]:MakeGuess() then
 			sight = 0
@@ -209,13 +209,14 @@ function AIBehavioursSystem:Tick()
 	end
 
 	if PlayerEntity[Silenced] == nil then
-		if CalmInfluencedAtLeastOneAI > 0 and DarkInfluencedAtLeastOneAI > 0 then
-			Diary.Write("Your enemies seem confused. Your [CALM] and [DARKEN] glyphs resonate.")
-			PlayerEntity[Tension]:Up(1)
-		elseif CalmInfluencedAtLeastOneAI > 0 then
-			Diary.Write("Your enemies calmed a bit. Your [CALM] glyph tingles.")
-			PlayerEntity[Tension]:Up(0.5)
-		elseif DarkInfluencedAtLeastOneAI > 0 then
+		--if CalmInfluencedAtLeastOneAI > 0 and DarkInfluencedAtLeastOneAI > 0 then
+		--	Diary.Write("Your enemies seem confused. Your [CALM] and [DARKEN] glyphs resonate.")
+		--	PlayerEntity[Tension]:Up(1)
+		--elseif CalmInfluencedAtLeastOneAI > 0 then
+		--	Diary.Write("Your enemies calmed a bit. Your [CALM] glyph tingles.")
+		--	PlayerEntity[Tension]:Up(0.5)
+		--else
+		if DarkInfluencedAtLeastOneAI > 0 then
 			Diary.Write("Your enemies are blind. Your [DARKEN] glyph tincts.")
 			PlayerEntity[Tension]:Up(0.5)
 		end

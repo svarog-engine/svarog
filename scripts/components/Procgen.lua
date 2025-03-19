@@ -110,7 +110,7 @@ local comps = {
 	"Darken", 
 	"Flow", 
 	"Heal", 
-	"Calm", 
+	--"Calm", 
 	"Open", 
 	"Light", 
 }
@@ -136,7 +136,7 @@ function CompNameToComp(comp)
 	if comp == "Darken" then return Darken end
 	if comp == "Flow" then return Flow end
 	if comp == "Heal" then return Heal end
-	if comp == "Calm" then return Calm end
+	--if comp == "Calm" then return Calm end
 	if comp == "Open" then return Open end
 	if comp == "Light" then return Light end
 	if comp == "Hate" then return Hate end
@@ -149,7 +149,7 @@ function CompToShardic(comp)
 	if comp == "Darken" then return "Darkness" end
 	if comp == "Flow" then return "Flow" end
 	if comp == "Heal" then return "Healing" end
-	if comp == "Calm" then return "Calm" end
+	--if comp == "Calm" then return "Calm" end
 	if comp == "Open" then return "Openess" end
 	if comp == "Light" then return "Light" end
 	if comp == "Hate" then return "Hate" end
@@ -731,7 +731,7 @@ Rooms[Open] = { "StoreRoom", "common1", "common2", "warehouse1", "warehouse2" }
 Rooms[Uncover] = { "LibraryRoom", "exhibit1", "exhibit2" }
 Rooms[Enlarge] = { "workshop1", "workshop2", "shrine1", "shrine2" }
 Rooms[Flow] = { "StoreRoom", "common1", "common2" }
-Rooms[Calm] = { "common1", "common2", "shrine1" }
+--Rooms[Calm] = { "common1", "common2", "shrine1" }
 Rooms[Rage] = { "forge1", "forge2", "warehouse1", "warehouse2", "common1" }
 Rooms[Yearn] = { "exhibit1", "exhibit2", "shrine2" }
 Rooms[Discover] = { "StoreRoom", "library2", "workshop2", "common1", "common2" }
@@ -740,7 +740,7 @@ Rooms[Endure] = { "workshop1", "workshop2" } -- training room
 Rooms[Luck] = { "StoreRoom", "common1", "common2" } -- market
 Rooms[Fade] = { "warehouse1", "common1", "common2" }
 
-ContentsItems = { "diamond", "topaz", "obsidian", "malachite", "lapis_lazuli", "onyx", "smoky_quartz",
+ContentsItems = { "diamond", "topaz", "obsidian", "malachite", "lapis_lazuli", "onyx", --"smoky_quartz",
 	"sapphire", "garnet", "ash", "rosebud", "blackthorn", "willow", "sage", "foxglove", "mandrake" }
 
 Monsters = {}
@@ -749,7 +749,7 @@ Monsters["Luck"] = { "Goblin", "Kobold" }
 Monsters["Darken"] = { "Kobold", "Kobold" }
 Monsters["Flow"] = { "Illusion", "GelatinousCube" }
 Monsters["Heal"] = { "Hobgob", "Phantasm" }
-Monsters["Calm"] = { "Banshee", "Nightmare" }
+--Monsters["Calm"] = { "Banshee", "Nightmare" }
 Monsters["Open"] = { "Flamos", "Ogre" }
 Monsters["Light"] = { "Flamos", "Djinn" }
 Monsters["Hate"] = { "Flamos", "Djinn", "Ogre", "Kobold", "Hobgob", "Mimic", "Goblin" }
@@ -764,7 +764,7 @@ Messages = {
 	"You read: Beware DJINN, they blaze ALIGHT...",
 	"You read: SKYSTONES can ENDURE forever",
 	"You read: ONYX figures into HEALING",
-	"You read: A CALMing influence, QUARTZ is...",
+	--"You read: A CALMing influence, QUARTZ is...",
 	"You read: GARNETs for a steady FLOW.",
 	"You read: TOPAZ to LIGHT the darkness.",
 	"You read: Herbs give, stones solidify."

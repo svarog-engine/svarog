@@ -40,3 +40,5 @@ DeactivateInventoryOverlay = ECS.Component()
 DoInventoryAction = ECS.Component{ action = nil, details = {} }
 
 InventoryEntity = World:Entity(Selection(0))
+
+BoonWindow = { onDone = function(bw) end, open = false }

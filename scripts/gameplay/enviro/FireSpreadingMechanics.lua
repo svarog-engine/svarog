@@ -14,13 +14,13 @@ function FireSpreadingMechanicsSystem:Tick()
 		
 		local isPlayer = entity == PlayerEntity
 		local chance = 2
-		local usedCalm = false
+		--local usedCalm = false
 		local usedLuck = false
 		if isPlayer then
-			if entity[Calm] ~= nil then
-				chance = entity[Calm].level + chance
-				usedCalm = true
-			end
+			--if entity[Calm] ~= nil then
+			--	chance = entity[Calm].level + chance
+			--	usedCalm = true
+			--end
 
 			if entity[Luck] ~= nil then
 				chance = entity[Luck].level + chance
@@ -30,11 +30,12 @@ function FireSpreadingMechanicsSystem:Tick()
 		if Chances[chance]:MakeGuess()  then
 			entity:Unset(Burning)
 			if isPlayer then
-				if usedCalm and usedLuck then
-					Diary.Write("The fire dissipates quickly. Your [CALM] and [LUCK] glyphs resonate.")
-				elseif usedCalm then 
-					Diary.Write("The fire dissipates. Your [CALM] glyph quivers.")
-				elseif usedLuck then
+				--if usedCalm and usedLuck then
+--					Diary.Write("The fire dissipates quickly. Your [CALM] and [LUCK] glyphs resonate.")
+				--elseif usedCalm then 
+--					Diary.Write("The fire dissipates. Your [CALM] glyph quivers.")
+				--else
+				if usedLuck then
 					Diary.Write("The fire dissipates. Your [LUCK] glyph quivers.")
 				end
 			end
