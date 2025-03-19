@@ -363,6 +363,7 @@ namespace svarog.runner
 
             RequireModule("scripts\\engine\\Map", "Map");
             RequireModule("scripts\\engine\\DistanceMap", "DistanceMap");
+            RequireModule("scripts\\engine\\CompositeDistanceMap", "CompositeDistanceMap");
             RequireModule("scripts\\engine\\Queue", "Queue");
             RequireModule("scripts\\engine\\ecs\\ECS", "ECS");
             RequireModule("scripts\\engine\\Engine", "Engine");

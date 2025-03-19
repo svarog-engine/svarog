@@ -85,7 +85,7 @@ Glossary.Default = {
 	third_eye_opened = { x = 2, y = 3, fg = Colors.White, bg = Colors.Black },
 	up_arrow = { x = 5, y = 3, fg = Colors.White, bg = Colors.Black },
 	down_arrow = { x = 6, y = 3, fg = Colors.White, bg = Colors.Black },
-
+	hallway = { x = 22, y = 15, fg = Colors.DarkYellow, bg = Colors.Black },
 	top_tile = { x = 19, y = 4, fg = Colors.White, bg = Colors.DarkGray },
 	full_tile = { x = 20, y = 4, fg = Colors.White, bg = Colors.DarkGray },
 	full_arrow = { x = 21, y = 4, fg = Colors.White, bg = Colors.DarkGray },

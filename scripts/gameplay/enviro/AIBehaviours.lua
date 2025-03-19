@@ -91,9 +91,9 @@ local function CheckMoveTowardsPlayer(entity)
 	if ai ~= nil then
 		local pos = entity[Position]
 		local current = Dungeon.playerDistance:Get(pos.x, pos.y)
-		local neighbors = Dungeon.playerDistance:Neighbors(pos.x, pos.y)
+		local neighbors = Dungeon.playerDistanceEmpty:Neighbors(pos.x, pos.y)
 		for _, neighbor in ipairs(neighbors) do
-			if Dungeon.playerDistance:Has(neighbor.x, neighbor.y) then
+			if Dungeon.playerDistanceEmpty:Has(neighbor.x, neighbor.y) then
 				local value = Dungeon.playerDistance:Get(neighbor.x, neighbor.y)
 				if value < current and Chances[ai.chance]:MakeGuess() then
 					table.insert(entity[Creature].goals, { "MoveTowardsPlayer", 1, function() PerformBump(entity, pos.x, pos.y, neighbor.x - pos.x, neighbor.y - pos.y) end })
@@ -102,7 +102,7 @@ local function CheckMoveTowardsPlayer(entity)
 		end
 		if #entity[Creature].goals == 0 then
 			for _, neighbor in ipairs(neighbors) do
-				if Dungeon.playerDistance:Has(neighbor.x, neighbor.y) then
+				if Dungeon.playerDistanceEmpty:Has(neighbor.x, neighbor.y) then
 					local value = Dungeon.playerDistance:Get(neighbor.x, neighbor.y)
 					if value <= current and Chances[ai.chance]:MakeGuess() then
 						table.insert(entity[Creature].goals, { "MoveTowardsPlayer", 1, function() PerformBump(entity, pos.x, pos.y, neighbor.x - pos.x, neighbor.y - pos.y) end })
@@ -117,9 +117,9 @@ local function CheckKeepDistanceFromPlayer(entity)
 	local ai = entity[AIKeepDistanceFromPlayer]
 	if ai ~= nil then
 		local pos = entity[Position]
-		local current = Dungeon.playerDistance:Get(pos.x, pos.y)
+		local current = Dungeon.playerDistanceEmpty:Get(pos.x, pos.y)
 		if current <= ai.distance then
-			for _, neighbor in ipairs(Dungeon.playerDistance:Neighbors(pos.x, pos.y)) do
+			for _, neighbor in ipairs(Dungeon.playerDistanceEmpty:Neighbors(pos.x, pos.y)) do
 				if Dungeon.playerDistance:Has(neighbor.x, neighbor.y) then
 					local value = Dungeon.playerDistance:Get(neighbor.x, neighbor.y)
 					if value >= current and Chances[ai.chance]:MakeGuess() then

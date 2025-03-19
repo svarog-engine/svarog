@@ -5,6 +5,20 @@
 	Dungeon.playerDistance = DistanceMap:From(Dungeon.floor, { { PlayerEntity[Position].x, PlayerEntity[Position].y } }, 0)
 	Dungeon.playerDistance:AddCondition(function(map, x, y) return Dungeon.passable:Has(x, y) and Dungeon.passable:Get(x, y) end)
 	Dungeon.playerDistance:Flood()
+
+	Dungeon.playerDistanceEmpty = DistanceMap:From(Dungeon.floor, { { PlayerEntity[Position].x, PlayerEntity[Position].y } }, 0)
+	Dungeon.playerDistanceEmpty:AddCondition(function(map, x, y) 
+		local id = Dungeon.floor:ID(x, y)
+		local entts = Dungeon.entities[id] or {}
+		return #entts == 0 and Dungeon.passable:Has(x, y) and Dungeon.passable:Get(x, y)
+	end)
+	Dungeon.playerDistanceEmpty:Flood()
+
+	Dungeon.creatureDistance = DistanceMap:From(Dungeon.floor, {}, 0)
+	Dungeon.creatureDistance:AddCondition(function(map, x, y) return Dungeon.passable:Has(x, y) and Dungeon.passable:Get(x, y) end)
+	Dungeon.itemDistance = DistanceMap:From(Dungeon.floor, {}, 0)
+	Dungeon.itemDistance:AddCondition(function(map, x, y) return Dungeon.passable:Has(x, y) and Dungeon.passable:Get(x, y) end)
+	
 	Dungeon.created = true
 end
 

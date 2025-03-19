@@ -122,27 +122,52 @@ function BumpAttackMechanicsSystem:ShouldTick()
 	return Dungeons.created
 end
 
+local function Swap(a, b)
+	local x, y = a[Position].x, a[Position].y
+	RemoveEntityFromDungeon(a)
+	a[Position].x = b[Position].x
+	a[Position].y = b[Position].y
+	AddEntityToDungeon(a[Position].x, a[Position].y, a)
+
+	RemoveEntityFromDungeon(b)
+	b[Position].x = x
+	b[Position].y = y
+	AddEntityToDungeon(x, y, b)
+
+	b:Unset(Bumped)
+	b[Creature].actions = -1
+end
+
 function BumpAttackMechanicsSystem:Tick()
 	for _, entity in World:Exec(ECS.Query.All(Bumped, Position).Any(Health, Breakable)):Iterator() do
 		local who = World:FetchEntityById(entity[Bumped].by)
 		if entity ~= nil and who ~= nil then
-			if TryLuck(who, entity) then return end
-			if TryYearn(who, entity) then return end
-			if TryCalm(who, entity) then return end
+			local shouldEnd = false
+			shouldEnd = shouldEnd or TryLuck(who, entity)
+			shouldEnd = shouldEnd or TryYearn(who, entity)
+			shouldEnd = shouldEnd or TryCalm(who, entity)
 
 			CheckInflictStatus(who, entity)
-			if TryBreak(who, entity) then return end
+			shouldEnd = shouldEnd or TryBreak(who, entity)
 
-			if entity[Health] ~= nil then
+			if who[Creature] ~= nil and entity[Creature] ~= nil and who[Blindness] == nil then
+				if Chances[8]:MakeGuess() then Swap(who, entity) end
+				shouldEnd = true
+			end
+
+			if entity[Health] ~= nil and not shouldEnd then
 				PerformAttack(who, entity)
 
 				entity:Unset(Bumped)
 
 				if entity[Health].current <= 0 then
 					if entity == PlayerEntity then
-						PlayerEntity:Set(Death{ reason = "Mortally wounded in combat" })
+						PlayerEntity:Set(Death{ reason = "Killed in combat (" .. who[Name].value .. ")" })
 						Input.Push("Death")
 						return
+					elseif who == PlayerEntity then
+						local killVerbs = { "kill", "dispatch", "deal with", "end" }
+						Diary.Write("You " .. killVerbs[Rand:Range(1, #killVerbs)] .. " the " .. entity[Name].value .. ".")
 					end
 
 					entity[InLevel].value = entity[InLevel].value - 1

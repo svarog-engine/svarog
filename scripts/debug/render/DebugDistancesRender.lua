@@ -23,7 +23,7 @@ end
 
 function DebugDistancesRenderSystem:Render()
 	if DebugToggle_DistanceIndex > 0 then
-		local map = Dungeon.playerDistance
+		local map = Dungeon.playerDistanceEmpty
 		if DebugToggle_DistanceIndex == 2 then
 			map = Dungeon.wallDistances
 		elseif DebugToggle_DistanceIndex == 3 then
