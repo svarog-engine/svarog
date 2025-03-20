@@ -125,6 +125,7 @@ namespace svarog.input
             if (m_ContextStack.Count > 0)
             {
                 m_ContextStack.Pop();
+                m_HeldLengths.Clear();
             }
         }
 
@@ -233,6 +234,16 @@ namespace svarog.input
             {
                 m_HeldLengths.Remove(inputAction.Input);
             }
+        }
+
+        public float GetHoldRatio(string action)
+        {
+            if (m_HeldLengths.ContainsKey(action))
+            {
+                return m_HeldLengths[action];
+            }
+
+            return 0;
         }
     }
 }

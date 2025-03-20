@@ -24,5 +24,11 @@ function DeathRenderSystem.Render(ui)
 				ui.Label("  YOU WIN! Hold <SPACE> to be reborn.  ")
 			ui.PopOrder()
 		end
+
+		ui.PushOrder("-")
+			ui.Label("             ")
+			local holdProgress = Input.HoldRatio("Reload")
+			ui.Bar("", holdProgress.current, holdProgress.maximum, { width = 10 })
+		ui.PopOrder()
 	ui.PopBox()
 end
