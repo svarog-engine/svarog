@@ -1,14 +1,10 @@
 ﻿
 Wheels = {}
 
-local majorNames = { "Open", "Uncover", "Enlarge", "Flow", 
-	--"Calm", 
-	"Rage", "Yearn", "Discover", "Heal", "Endure", "Luck", "Fade" }
+local majorNames = { "Open", "Uncover", "Enlarge", "Flow", "Rage", "Yearn", "Discover", "Heal", "Endure", "Luck", "Fade" }	
 local minorNames = { "Alarm", "Identify", "Stop", "Darken", "Frighten", "Store", "Light", "Strengthen", "Steal", "Learn", "Weaken", "Break" }
 
-local majorWheel = { Open = Open, Uncover = Uncover, Enlarge = Enlarge, Flow = Flow, 
-	--Calm = Calm, 
-	Rage = Rage, Yearn = Yearn, Discover = Discover, Heal = Heal, Endure = Endure, Luck = Luck, Fade = Fade, }
+local majorWheel = { Open = Open, Uncover = Uncover, Enlarge = Enlarge, Flow = Flow, Rage = Rage, Yearn = Yearn, Discover = Discover, Heal = Heal, Endure = Endure, Luck = Luck, Fade = Fade, }
 local minorWheel = { Alarm = Alarm, Identify = Identify, Stop = Stop, Darken = Darken, Frighten = Frighten, Store = Store, Light = Light, Strengthen = Strengthen, Steal = Steal, Learn = Learn, Weaken = Weaken, Break = Break, }
 
 function CreateWheels(major, minor)

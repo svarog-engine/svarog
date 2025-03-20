@@ -25,10 +25,13 @@ function DeathRenderSystem.Render(ui)
 			ui.PopOrder()
 		end
 
-		ui.PushOrder("-")
-			ui.Label("             ")
-			local holdProgress = Input.HoldRatio("Reload")
-			ui.Bar("", holdProgress.current, holdProgress.maximum, { width = 10 })
+		ui.PushOrder("|")
+			ui.Space(1)
+			ui.PushOrder("-")
+				ui.Label("      ")
+				local holdProgress = Input.HoldRatio("Reload")
+				ui.Bar("", holdProgress.current, holdProgress.maximum, { width = 20 })
+			ui.PopOrder()
 		ui.PopOrder()
 	ui.PopBox()
 end

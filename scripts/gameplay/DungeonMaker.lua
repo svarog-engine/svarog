@@ -141,12 +141,16 @@ local function SpecificRoomSetup(l, w, h)
 						Procgen.MakeObject("Key", rx, ry)
 						numberOfKeys = numberOfKeys - 1
 					else
-						local name, comp = Wheels:GetMajor(halfsteps[(Snail(cx, cy) or 1 + i) % 9 + 1])
+						local name, comp = Wheels:GetMajor(halfsteps[(Snail(cx, cy) or 1 + i) % 6 + 1])
 						local roomTemplates = Rooms[comp]
-						local roomTemplate = roomTemplates[Rand:Range(0, #roomTemplates)]
+						if roomTemplates == nil then
+							print("No room found for ", name)
+						else
+							local roomTemplate = roomTemplates[Rand:Range(0, #roomTemplates)]
 				
-						if roomTemplate ~= nil then
-							Templates[roomTemplate](rx, ry)
+							if roomTemplate ~= nil then
+								Templates[roomTemplate](rx, ry)
+							end
 						end
 					end
 				end

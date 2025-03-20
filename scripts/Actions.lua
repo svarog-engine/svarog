@@ -34,6 +34,7 @@ Actions.Inventory = {
 }
 
 Actions.Boon = {
+	Take			= { Input.Hold("Key: Space", 1000) },
 	Confirm			= { Input.Press("Key: Space") },
 }
 
