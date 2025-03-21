@@ -70,7 +70,7 @@ Input.HoldRatio = function(input)
 		end
 	end
 
-	return { maximum = maxHold, current = currentHold}
+	return maxHold, currentHold
 end
 
 return Input

@@ -90,6 +90,7 @@ Glossary.Default = {
 	full_tile = { x = 20, y = 4, fg = Colors.White, bg = Colors.DarkGray },
 	full_arrow = { x = 21, y = 4, fg = Colors.White, bg = Colors.DarkGray },
 	half_tile = { x = 22, y = 4, fg = Colors.White, bg = Colors.DarkGray },
+	uptilde = { x = 29, y = 3, fg = Colors.White, bg = Colors.Black },
 }
 
 InsertSpriteCharRanges(Glossary.Default, 1, 1, "ABCDEFGHIJKLMNOPQRSTUVWXYZ[ ]^_")

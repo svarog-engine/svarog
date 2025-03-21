@@ -48,7 +48,7 @@ function WinScreenRenderSystem:Render()
 		local x = floor(w / 2) - 4
 		Engine.Write(x, 15, "B E N E A T H")
 		Engine.Write(x, 17, " THE  THRONE ")
-		Engine.Write(x, 18, "    of the   ")
+		Engine.Write(x, 18, "   of  the   ")
 		Engine.Write(x, 20, "GOBLIN  QUEEN")
 		Engine.Write(x, 22,     "     ----    ")
 		if WinScreenFrame > 40 then

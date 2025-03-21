@@ -50,6 +50,12 @@ function PlayerInfoRenderSystem.Render(ui)
 		ui.PushOrder("|")
 			ui.PushStyle(Colors.Yellow, Colors.Black)
 
+			if Seals > 0 then
+				ui.PushStyle(Colors.White, Colors.Black)
+				ui.Label("[ROYAL SEAL]")
+				ui.PopStyle()
+			end
+
 			for _, name in ipairs(PlayerEntity[Boons].value) do
 				ui.PushStyle(CompColors[name][1], Colors.Black)
 				

@@ -1,14 +1,23 @@
 
 BoonRender = Engine.RegisterUIRenderSystem("Boon Render")
+local chars = { 'E', 'D', 'F', 'H', '@', 'L', 'H', '.', '/', '%', '&' }
 
 function BoonRender:ShouldRender()
 	return BoonWindow ~= nil and BoonWindow.open
 end
 
+local Min = math.min
+local Max = math.max
+
 function BoonRender.Render(ui)
 	local bw = BoonWindow
 	local colors = CompColors[bw.type]
 	local fg, bg = colors[1], colors[2]
+	
+	if bw.seal then
+		fg, bg = Colors.White, Colors.Black
+	end
+
 	local fgs = {}
 	local bgs = {}
 	fgs[1] = LerpColor(fg, Colors.LightGray, 0.5)
@@ -19,8 +28,23 @@ function BoonRender.Render(ui)
 	bgs[3] = LerpColor(bg, Colors.DarkGray, 0.5)
 	local x, y = 7, 8
 	local w, h = 47, 25
+
+	local max, current = Input.HoldRatio("Take")
+	local norm = current / max
+	local nc = LerpColor(bgs[2], Colors.White, norm * norm)
 	ui.ClearBox(x, y, w, h)
-	ui.FillRect(x, y, w, h, bgs[2])
+	ui.FillRect(x, y, w, h, nc)
+
+	for i = 1, 250 do
+		local c = LerpColor(fg, nc, Max(Rand:F01(), 0.25 + Rand:F01() * 0.5 - norm))
+		local ch = chars[Rand:Range(1, #chars)]
+		Engine.Glyph(x + 1 + Rand:Range(0, w - 1), y + 1 + Rand:Range(0, h - 1), ch, { fg = c, bg = nc }, "UI")
+	end
+	for i = 1, 150 do
+		local c = LerpColor(fg, nc, Max(Rand:F01(), 0 + Rand:F01() * 0.5 - norm))
+		local ch = chars[Rand:Range(1, #chars)]
+		Engine.Glyph(x + 1 + Rand:Range(0, w - 1), y + 1 + Rand:Range(0, h - 1), ch, { fg = c, bg = nc }, "UI")
+	end
 
 	ui.PushBox(x, y, w, h)
 		ui.PushOrder("-")
@@ -77,13 +101,51 @@ function BoonRender.Render(ui)
 
 	ui.PushBox(x + 15, y + 5, w, h)
 		ui.PushOrder("|")
-			ui.PushStyle(Colors.White, bgs[2])
-			ui.Label("THE " .. string.upper(bw.type) .. " GLYPH")
-			ui.Space(4)
-			ui.Label("    GRASP IT!    ")
-			local holdProgress = Input.HoldRatio("Take")
-			ui.Bar("", holdProgress.current, holdProgress.maximum, { width = 20 })
+			if bw.seal then
+				ui.PushStyle(Colors.White, nc)
+				ui.Label(" THE ROYAL SEAL")
+				
+				ui.Space(5)
+				ui.Glyphs({ 
+					"empty", "empty", "empty", "empty", "empty", "empty", "empty", "uptilde"
+				})
+				ui.Label("      ~Q~")
+				ui.Glyphs({ 
+					"empty", "empty", "empty", "empty", 
+					"empty", "empty", "empty", "altar"
+				})
+				ui.Space(4)
+				ui.Label("    GRASP IT")
+				ui.Label("  AND DESCEND!")
+				ui.Bar("", current, max, { width = 14 })
+				ui.PopStyle()
+			else
+				ui.PushStyle(Colors.White, nc)
+				ui.Label("THE " .. string.upper(bw.type) .. " GLYPH")
+				ui.Space(5)
+				ui.Glyphs({ 
+					"empty", "empty", "empty", "empty", "empty", "empty", "empty", "uptilde"
+				})
+				ui.Label("      ~" .. string.sub(bw.type, 1, 1) .. "~")
+				ui.Glyphs({ 
+					"empty", "empty", "empty", "empty", 
+					"empty", "empty", "empty", "altar"
+				})
+				ui.Space(4)
+				ui.Label("    GRASP IT")
+				ui.Label("  AND DESCEND!")
+				ui.Bar("", current, max, { width = 14 })
+				ui.PopStyle()
+			end
+		ui.PopOrder()
+	ui.PopBox()
+
+	ui.PushBox(x + 9, y + 23, w, h)
+		ui.PushOrder("|")
+			ui.PushStyle(LerpColor(Colors.White, fg, Max(norm, 0.2)), nc)
+				ui.Label("HOLD <SPACE> OR PRESS <ESC>")
 			ui.PopStyle()
 		ui.PopOrder()
 	ui.PopBox()
+
 end

@@ -18,7 +18,7 @@ TakenBoon["Open"] = "You feel the [OPEN] glyph behind your eyes. It expands."
 TakenBoon["Light"] = "The [LIGHT] glyph makes your eyes leave trails in the air."
 TakenBoon["Hate"] = "The enemy. The [HATE] glyph desires a stronger host."
 
-Seals = {}
+Seals = 0
 
 function BumpAltarMechanicsSystem:Tick()
 	for _, entity in World:Exec(ECS.Query.All(Bumped, Altar, Satiated)):Iterator() do
@@ -34,7 +34,11 @@ function BumpAltarMechanicsSystem:Tick()
 				BoonWindow.type = entity[Altar].type
 				BoonWindow.onDone = function(bw)
 					if bw.seal then
-						Seals[bw.type] = true
+						Seals = Seals + 1
+						Diary.Write("You take hold of a goblin queen's ROYAL SEAL.")
+						Diary.Write("Go forth and seal the hate...")
+						entity:Unset(Bumped)
+						MakeDungeon()
 					else
 						local t = CompNameToComp(bw.type)
 						PlayerEntity:Set(t())
