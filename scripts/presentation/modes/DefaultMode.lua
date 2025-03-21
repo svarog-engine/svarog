@@ -67,6 +67,7 @@ Glossary.Default = {
 	gold = { x = 4, y = 0, fg = Colors.Yellow, bg = Colors.Black },
 	mineral = { x = 5, y = 0, fg = Colors.Green, bg = Colors.Black },
 	plant = { x = 6, y = 0, fg = Colors.Blue, bg = Colors.Black },
+	pillar = { x = 9, y = 1, fg = Colors.Gray, bg = Colors.Black },
 	
 	sphere = { x = 4, y = 4, fg = Colors.White, bg = Colors.Black },
 	dust = { x = 30, y = 3, fg = Colors.Gray, bg = Colors.Black },

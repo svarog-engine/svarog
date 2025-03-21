@@ -43,33 +43,37 @@ Procgen = {}
 function Procgen.MakeObject(what, x, y, ...)
 	local dungeon = Dungeon
 	local tile = dungeon.floor:Get(x, y)
-	local isTF = tile.type == Floor
-	local isEN = tile.entity == nil
-	local id = dungeon.floor:ID(x, y)
-	local es = dungeon.entities[id] or {}
-	local isEE = #es == 0
-	if isTF and isEE and isEN then
-		local e = World:Entity(Position{ x = x, y = y })
-		if what == "Goblin" or what == "Hobgob" or what == "Kobold" 
-		   or what == "Mimic" or what == "Djinn" or what == "Flamos" 
-		   or what == "Illusion" or what == "Ogre" or what == "Rat" then
-		   Dungeon.creatureCount = Dungeon.creatureCount + 1
-		end
+	if tile ~= nil then
+		local isTF = tile.type == Floor
+		local isEN = tile.entity == nil
+		local id = dungeon.floor:ID(x, y)
+		local es = dungeon.entities[id] or {}
+		local isEE = #es == 0
+		if isTF and isEE and isEN then
+			local e = World:Entity(Position{ x = x, y = y })
+			if what == "Goblin" or what == "Hobgob" or what == "Kobold" 
+			   or what == "Mimic" or what == "Djinn" or what == "Flamos" 
+			   or what == "Illusion" or what == "Ogre" or what == "Rat" then
+			   Dungeon.creatureCount = Dungeon.creatureCount + 1
+			end
 
-		e:Set(Name { value = what })
-		e:Set(ID(IDS))
-		e:Set(InLevel{ value = Level })
-		IDS = IDS + 1
+			e:Set(Name { value = what })
+			e:Set(ID(IDS))
+			e:Set(InLevel{ value = Level })
+			IDS = IDS + 1
 
-		if Procgen[what] == nil then
-			Svarog.Instance:LogError("PROCGEN: Generator " .. what .. " not found. Check your spelling.")
+			if Procgen[what] == nil then
+				Svarog.Instance:LogError("PROCGEN: Generator " .. what .. " not found. Check your spelling.")
+				return e
+			else
+				Procgen[what](e, x, y, ...)
+			end
+			AddEntityToDungeon(x, y, e)
 			return e
-		else
-			Procgen[what](e, x, y, ...)
+		else	
+			return nil
 		end
-		AddEntityToDungeon(x, y, e)
-		return e
-	else	
+	else
 		return nil
 	end
 end
@@ -161,7 +165,13 @@ end
 function Procgen.Seal(e, x, y)
 	e:Set(Item{})
 	e:Set(Glyph{ name = "seal" })
+	e:Set(Name{ value = "Royal Seal" })
 	e:Set(BumpDiary{ text = "The enchanted rock of the ROYAL SEAL holds firm."})
+end
+
+function Procgen.Pillar(e, x, y)
+	e:Set(Item{})
+	e:Set(Glyph{ name = "pillar" })
 end
 
 function Procgen.SatiatedAltar(e, x, y, comp)

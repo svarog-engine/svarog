@@ -171,7 +171,8 @@ local function SpecificRoomSetup(l, w, h)
 		Procgen.MakeObject("Seal", ax - 2, ay)
 		Procgen.MakeObject("Seal", ax + 2, ay)
 		Procgen.MakeObject("Seal", ax - 1, ay - 1)
-		Procgen.MakeObject("Seal", ax, ay - 2)
+		local s = Procgen.MakeObject("Seal", ax, ay - 2)
+		s:Set(ScanEntry{})
 		Procgen.MakeObject("Seal", ax + 1, ay - 1)
 		Procgen.MakeObject("Seal", ax - 1, ay + 1)
 		Procgen.MakeObject("Seal", ax + 1, ay + 1)
@@ -180,6 +181,10 @@ local function SpecificRoomSetup(l, w, h)
 		Procgen.MakeObject("Skeleton", rx - 1, ry + 3)
 		Procgen.MakeObject("Throne", rx, ry + 4)
 
+		for i = -10, 20 do
+			Procgen.MakeObject("Pillar", ax - 4, ay - 10 + i * 2)
+			Procgen.MakeObject("Pillar", ax + 4, ay - 10 + i * 2)
+		end
 		return { { math.floor(w / 2), math.floor(h / 2) } }
 	elseif l == 6 then
 		local bucketIndex = Dungeon.wallDistances:GetHighestBucket()
