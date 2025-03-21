@@ -75,13 +75,13 @@ CompColors = {
 	Break = { Colors.LightBlue, Colors.Blue },
 	Light = { Colors.LightYellow, Colors.Yellow },
 	Darken = { Colors.DarkRed, Colors.Black },
-	Luck = { Colors.LightYellow, Colors.Yellow },
+	Luck = { Colors.Yellow, Colors.LightGreen },
 	Endure = { Colors.Blue, Colors.DarkBlue },
 	Heal = { Colors.LightRed, Colors.Red },
 	--Calm = { Colors.LightCyan, Colors.Cyan },
 	Flow = { Colors.Black , Colors.DarkCyan },
 	Open = { Colors.LightMagenta , Colors.Magenta },
-	Hate = { Colors.White, Colors.Black },
+	Hate = { Colors.Black, Colors.DarkRed },
 }
 
 function CanCast(itemId)

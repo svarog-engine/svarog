@@ -144,7 +144,7 @@ local function SpecificRoomSetup(l, w, h)
 						local name, comp = Wheels:GetMajor(halfsteps[(Snail(cx, cy) or 1 + i) % 6 + 1])
 						local roomTemplates = Rooms[comp]
 						if roomTemplates == nil then
-							print("No room found for ", name)
+							--print("No room found for ", name)
 						else
 							local roomTemplate = roomTemplates[Rand:Range(0, #roomTemplates)]
 				
@@ -165,7 +165,8 @@ local function SpecificRoomSetup(l, w, h)
 		local bucket = Dungeon.wallDistances:GetAt(bucketIndex)
 		r = Rand:Range(1, #bucket)
 		local rx, ry = math.floor(bucket[r].x), math.floor(bucket[r].y)
-		Procgen.MakeObject("SatiatedAltar", rx, ry, "Hate")
+		Procgen.MakeObject("SatiatedAltar", rx, ry - 2, "Hate")
+		Procgen.MakeObject("SealingMechanism", rx, ry)
 		Procgen.MakeObject("Skeleton", rx + 1, ry + 2)
 		Procgen.MakeObject("Throne", rx - 1, ry)
 		return { { math.floor(w / 2), math.floor(h / 2) } }

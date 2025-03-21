@@ -5,7 +5,7 @@ Burnable = ECS.Component()
 Burning = ECS.Component{value = 0.0}
 ExplodeFireOnDeath = ECS.Component{}
 Unburnable = ECS.Component()
-
+CanMeltGold = ECS.Component()
 Dissolvable = ECS.Component()
 OldPosition = ECS.Component()
 
@@ -165,6 +165,12 @@ function Procgen.SatiatedAltar(e, x, y, comp)
 	e:Set(Magic{ value = Rand:F01(), colors = CompColors[comp] })
 end
 
+function Procgen.SealingMechanism(e, x, y, comp)
+	e:Set(Glyph{ name = "hallway" })
+	e:Set(Item{})
+	e:Set(Name{ value = "Sealing mechanism" })
+end
+
 function Procgen.Altar(e, x, y, comp)
 	e:Set(Glyph{ name = "altar" })
 	e:Set(Item{})
@@ -300,6 +306,7 @@ end
 function Procgen.Cauldron(e, x, y)
 	e:Set(BlockingPassage{})
 	e:Set(Glyph{ name = "cauldron" })
+	e:Set(CanMeltGold{})
 	e:Set(Burning{ value = Rand:F01(), colors = { Colors.LightBlue, Colors.Blue } })
 end
 
@@ -371,7 +378,7 @@ function Procgen.Hobgob(e, x, y)
 		Health(Range(2, 2)), 
 		BumpAttack { damage = 1 }, 
 		Glyph{ name = "hobgob" },
-		Contents{ items = {} }
+		Contents{ items = { { itemId = "gold", quantity = 100 } } }
 	)
 end
 
@@ -401,7 +408,7 @@ function Procgen.Ogre(e, x, y)
 		Health(Range(3)), 
 		BumpAttack { damage = 3 }, 
 		Glyph{ name = "ogre" },
-		Contents{ items = { { itemId = "gold", quantity = 50 } } }
+		Contents{ items = { { itemId = "gold", quantity = 150 } } }
 	)
 end
 
@@ -435,7 +442,7 @@ function Procgen.Djinn(e, x, y)
 		Darken{},
 		Spread{ chance = 4 },
 		Glyph{ name = "djinn" },
-		Contents{ items = {} }
+		Contents{ items = { { itemId = "gold", quantity = 80 } } }
 	)
 end
 
@@ -450,7 +457,7 @@ function Procgen.Illusion(e, x, y)
 		AISpawnWhenDistantFromPlayer{ min = 3, max = 3, chance = 9, what = "Illusion" },
 		Health(Range(4)),
 		Glyph{ name = "restless" },
-		Contents{ items = {} }
+		Contents{ items = { { itemId = "gold", quantity = 1 } } }
 	)
 end
 
@@ -465,7 +472,8 @@ function Procgen.GelatinousCube(e, x, y)
 		Health(Range(20)),
 		Glyph{ name = "gelly" },
 		Contents{ items = {} },
-		SplitOnHit{ what = "GelatinousCube" }
+		SplitOnHit{ what = "GelatinousCube" },
+		Contents{ items = { { itemId = "gold", quantity = Rand:Range(1, 20) * 10 } } }
 	)
 end
 

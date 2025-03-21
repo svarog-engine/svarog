@@ -48,7 +48,7 @@ function SpawnChallengeEntities(x, y, n, challenge)
 			end
 
 			if satiation then
-				Diary.Write("At least one altar has been satiated! You can proceed.")
+				Diary.Write("An altar has been satiated! Proceed deeper.")
 			end
 
 			while e:MoveNext() do
@@ -87,7 +87,7 @@ function SpawnChallengeEntities(x, y, n, challenge)
 			end
 
 			if useLuck then 
-				Diary.Write("Luckily, the portals still seem half-open. Your [LUCK] glyph quivers.")
+				Diary.Write("Luckily, the portals' magic is slow. Your [LUCK] glyph quivers.")
 				PlayerEntity[Tension]:Up()
 			end
 

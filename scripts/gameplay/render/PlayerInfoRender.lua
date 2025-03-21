@@ -46,6 +46,12 @@ function PlayerInfoRenderSystem.Render(ui)
 
 	UIRenderer.ClearBox(47, 2, 20, 20)
 
+	if Level ~= nil and not FIN then
+		ui.PushBox(2, 2, 20, 2)
+			ui.Label("LEVEL: " .. tostring(Level) .. "/6")
+		ui.PopBox()
+	end
+
 	ui.PushBox(47, 2, 20, 20)
 		ui.PushOrder("|")
 			ui.PushStyle(Colors.Yellow, Colors.Black)

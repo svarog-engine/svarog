@@ -23,7 +23,7 @@ function FireSpreadingMechanicsSystem:Tick()
 			--end
 
 			if entity[Luck] ~= nil then
-				chance = entity[Luck].level + chance
+				chance = entity[Luck].level * 3 + chance
 				usedLuck = true
 			end
 		end

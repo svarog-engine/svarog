@@ -168,7 +168,9 @@ function Contents.DropAll(entity, x, y)
 			Item{ id = item.itemId, quantity = item.quantity},
 			Position{ x = x, y = y },
 			Name { value = itemMeta.name},
-			Glyph{ name = itemMeta.glyph })
+			Glyph{ name = itemMeta.glyph },
+			InLevel{ value = Level }
+		)
 
 		AddEntityToDungeon(x, y, itemEntity)
 	end
@@ -188,7 +190,8 @@ function Contents.DropOne(entity, x, y)
 				Item{ id = item.itemId, quantity = item.quantity},
 				Position{ x = x, y = y },
 				Name { value = itemMeta.name },
-				Glyph{ name = itemMeta.glyph })
+				Glyph{ name = itemMeta.glyph },
+				InLevel{ value = Level })
 
 			AddEntityToDungeon(x, y, itemEntity)
 			break
