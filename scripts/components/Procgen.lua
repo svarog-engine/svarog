@@ -1,4 +1,6 @@
-﻿Win = ECS.Component{ value = 0 }
+﻿BumpDiary = ECS.Component{ text = "" }
+ScanEntry = ECS.Component{}
+Win = ECS.Component{ value = 0 }
 InLevel = ECS.Component{ value = 0 }
 Name = ECS.Component("")
 Burnable = ECS.Component()
@@ -156,6 +158,12 @@ function CompToShardic(comp)
 	print("NOT FOUND: ", comp)
 end
 
+function Procgen.Seal(e, x, y)
+	e:Set(Item{})
+	e:Set(Glyph{ name = "seal" })
+	e:Set(BumpDiary{ text = "The enchanted rock of the ROYAL SEAL holds firm."})
+end
+
 function Procgen.SatiatedAltar(e, x, y, comp)
 	e:Set(Glyph{ name = "altar" })
 	e:Set(Item{})
@@ -168,7 +176,8 @@ end
 function Procgen.SealingMechanism(e, x, y, comp)
 	e:Set(Glyph{ name = "hallway" })
 	e:Set(Item{})
-	e:Set(Name{ value = "Sealing mechanism" })
+	e:Set(Name{ value = "Sealing Stone" })
+	e:Set(ScanEntry{})
 end
 
 function Procgen.Altar(e, x, y, comp)
@@ -223,13 +232,19 @@ function Procgen.Throne(e, x, y)
 	Procgen.IsFurniture(e)
 	Procgen.IsWooden(e)
 	e:Set(Glyph{ name = "throne" })
-	e:Set(Name("Throne"))
+	e:Set(Name("Goblin Throne"))
+	e:Set(Item{})
+	e:Set(BumpDiary{ text = "The throne of her royal highness, long dead..." })
+	e:Set(ScanEntry{})
 end
 
 function Procgen.Skeleton(e, x, y)
 	e:Set(Glyph{ name = "skeleton" })
 	e:Unset(Name)
-	e:Set(Name("What remains of the queen"))
+	e:Set(Name("The Goblin Queen"))
+	e:Set(Item{})
+	e:Set(BumpDiary{ text = "Died crawling towards the mechanism behind the throne." })
+	e:Set(ScanEntry{})
 end
 
 function Procgen.Key(e, x, y)

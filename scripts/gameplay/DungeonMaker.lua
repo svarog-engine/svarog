@@ -55,7 +55,7 @@ local function GenerateSpecificShape(l, w, h)
 end
 
 local function SpecificRoomSetup(l, w, h)
-	if l == 1 then		
+	if l == 1 then
 		local bucketIndex = Dungeon.wallDistances:GetHighestBucket()
 		local bucket = Dungeon.wallDistances:GetAt(bucketIndex)
 		r = Rand:Range(1, #bucket)
@@ -165,10 +165,21 @@ local function SpecificRoomSetup(l, w, h)
 		local bucket = Dungeon.wallDistances:GetAt(bucketIndex)
 		r = Rand:Range(1, #bucket)
 		local rx, ry = math.floor(bucket[r].x), math.floor(bucket[r].y)
-		Procgen.MakeObject("SatiatedAltar", rx, ry - 2, "Hate")
+		local ax, ay = rx, ry - 4
+
+		Procgen.MakeObject("SatiatedAltar", ax, ay, "Hate")	
+		Procgen.MakeObject("Seal", ax - 2, ay)
+		Procgen.MakeObject("Seal", ax + 2, ay)
+		Procgen.MakeObject("Seal", ax - 1, ay - 1)
+		Procgen.MakeObject("Seal", ax, ay - 2)
+		Procgen.MakeObject("Seal", ax + 1, ay - 1)
+		Procgen.MakeObject("Seal", ax - 1, ay + 1)
+		Procgen.MakeObject("Seal", ax + 1, ay + 1)
+		Procgen.MakeObject("Dust", ax, ay + 2)
 		Procgen.MakeObject("SealingMechanism", rx, ry)
-		Procgen.MakeObject("Skeleton", rx + 1, ry + 2)
-		Procgen.MakeObject("Throne", rx - 1, ry)
+		Procgen.MakeObject("Skeleton", rx - 1, ry + 3)
+		Procgen.MakeObject("Throne", rx, ry + 4)
+
 		return { { math.floor(w / 2), math.floor(h / 2) } }
 	elseif l == 6 then
 		local bucketIndex = Dungeon.wallDistances:GetHighestBucket()

@@ -82,4 +82,21 @@ function ScanScreenRenderSystem.Render(ui)
 		end
 		altarCount = altarCount + 1
 	end
+
+	for _, e in World:Exec(ECS.Query.All(ScanEntry)):Iterator() do
+		local x, y = e[Position].x, e[Position].y
+		
+		local dy = -1
+
+		local name = " " .. e[Name].value
+		if Dungeon.floor:Has(x, y) and Dungeon.visibility:Get(x, y) then
+			local tab = { x, y + dy, #name, 1 }
+			ui.PushBox(table.unpack(tab))
+				ui.PushStyle(Colors.White, Colors.DarkGreen)
+				ui.Label(name)
+				ui.PopStyle()
+				Engine.Glyph(x, y + dy, "down_arrow", {}, "UI")
+			ui.PopBox()
+		end
+	end
 end

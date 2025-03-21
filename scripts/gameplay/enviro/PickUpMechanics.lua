@@ -24,7 +24,16 @@ function PickUpMechanicsSystem:Tick()
 			end
 			Diary.Write("   \"" .. textComp.value .. "\"")
 			shouldRemove = true
-
+		elseif entity[BumpDiary] ~= nil then
+			Diary.Write(entity[BumpDiary].text)
+		elseif entity[CanMeltGold] ~= nil then
+			Diary.Write("This could melt gold. It has a stencil of a royal seal on it...")
+			-- TODO(mg)
+		elseif entity[CanSeal] ~= nil then
+			if Seals > 0 then
+				-- TODO(mg)
+			else
+			end
 		elseif who[Contents] ~= nil and ItemLibrary[item.id] ~= nil then
 			if Contents.HasSpace(who, item.id) then
 				Contents.Add(who, item.id, item.quantity)
