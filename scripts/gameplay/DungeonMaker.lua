@@ -166,7 +166,7 @@ local function SpecificRoomSetup(l, w, h)
 		Procgen.MakeObject("SatiatedAltar", ax, ay, "Hate")
 		Procgen.MakeObject("AltarTrap", ax, ay + 1, function()
 			if Seals > 0 then
-				PCExplode(3, Colors.White, Colors.Green, function()
+				PCExplode(PlayerEntity, 3, Colors.White, Colors.Green, function()
 					Diary.Write("As you cross the threshold, the ROYAL SEAL reacts!")
 					Diary.Write("Thank you, brave soul. Your life is not wasted.")
 					Procgen.MakeObject("Seal", ax, ay + 2)
@@ -196,9 +196,10 @@ local function SpecificRoomSetup(l, w, h)
 	elseif l == 6 then
 		local bucketIndex = Dungeon.wallDistances:GetHighestBucket()
 		local bucket = Dungeon.wallDistances:GetAt(bucketIndex)
+		local p = bucket[1]
 		for i, f in ipairs(bucket) do
 			local rx, ry = math.floor(bucket[i].x), math.floor(bucket[i].y)	
-			Procgen.MakeObject("Portal", rx, ry, 5, Rand:Range(2, 4), PlayerEntity[Boons].value[Rand:Range(1, #PlayerEntity[Boons].value)])
+			Procgen.MakeObject("Sacrifice", rx, ry, 5)
 		end
 		return { { math.floor(w / 2), math.floor(h / 2) } }
 	end

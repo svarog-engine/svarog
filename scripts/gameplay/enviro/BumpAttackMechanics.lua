@@ -193,21 +193,22 @@ function BumpAttackMechanicsSystem:Tick()
 					end
 				else
 					if entity[SplitOnHit] ~= nil then
-						local half = math.floor(entity[Health].current / 2)
-						if half > 1 then
-							local pos = entity[Position]
-							entity[Health].current = half
-							for i = -1, 1 do
-								for j = -1, 1 do
-									local nx, ny = pos.x + i, pos.y + j
-									if Dungeon.floor:Get(nx, ny).type == Floor then
-										local id = Dungeon.floor:ID(nx, ny)
-										local entities = Dungeon.entities[id] or {}
-										if #entities == 0 then
-											local e = Procgen.MakeObject(entity[SplitOnHit].what, nx, ny)
-											Diary.Write("The " .. entity[Name].value .. " splits itself into two!")
-											e[Health].current = half
-											return
+						if Chances[3]:MakeGuess() then
+							local half = math.floor(entity[Health].current / 2)
+							if half > 1 then
+								local pos = entity[Position]
+								entity[Health].current = half
+								for i = -1, 1 do
+									for j = -1, 1 do
+										local nx, ny = pos.x + i, pos.y + j
+										if Dungeon.floor:Get(nx, ny).type == Floor then
+											local id = Dungeon.floor:ID(nx, ny)
+											local entities = Dungeon.entities[id] or {}
+											if #entities == 0 then
+												local e = Procgen.MakeObject(entity[SplitOnHit].what, nx, ny)
+												Diary.Write("The " .. entity[Name].value .. " splits itself into two!")
+												e[Health].current = half
+											end
 										end
 									end
 								end

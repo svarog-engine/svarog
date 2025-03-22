@@ -6,9 +6,14 @@ function TurnOrderSystem:ShouldTick()
 end
 
 function TurnOrderSystem:Tick()
+	if FIN then return end
+
 	local perfBump = PerformBump
 	local ordered = {}
+
+	local creaturesAlive = 0
 	for _, entity in World:Exec(ECS.Query.All(Creature)):Iterator() do
+		creaturesAlive = creaturesAlive + 1
 		if entity[Paralyzed] == nil then 
 			local dist = Dungeon.playerDistance:Get(entity[Position].x, entity[Position].y)
 			if ordered[dist] == nil then 
@@ -18,6 +23,17 @@ function TurnOrderSystem:Tick()
 		end
 	end
 	
+	if creaturesAlive == 0 and Level == 6 then
+		Diary.Write("You finally succeed. You are finally alone.")
+		Diary.Write("You... and your HATE are alone...")
+		PCExplode(PlayerEntity, 10, Colors.White, Colors.Yellow, function()
+			PlayerEntity:Set(Win{})
+			WinScreenFrame = 0
+			WinScreenWay = "up"
+			FIN = true
+		end)
+	end
+
 	for n = 1, 15 do
 		if ordered[n] ~= nil then
 			for _, entity in ipairs(ordered[n]) do

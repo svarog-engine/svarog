@@ -47,8 +47,8 @@ function PlayerInfoRenderSystem.Render(ui)
 	UIRenderer.ClearBox(47, 2, 20, 20)
 
 	if Level ~= nil and not FIN then
-		ui.PushBox(2, 2, 20, 2)
-			ui.Label("LEVEL: " .. tostring(Level) .. "/6")
+		ui.PushBox(1, 1, 20, 2)
+			ui.Label("DEPTH: " .. tostring(Level) .. "/6")
 		ui.PopBox()
 	end
 
@@ -92,25 +92,6 @@ function PlayerInfoRenderSystem.Render(ui)
 					end
 				end
 			end
-
-			if PlayerEntity[Hate] ~= nil then
-				local colorFill = { Colors.Magenta, Colors.Red, Colors.Yellow, Colors.Cyan }
-				ui.PushStyle(colorFill[Rand:Range(1, #colorFill)], Colors.Black)
-					ui.Bar("SPITEFUL", PlayerEntity[Hate].chance, 100, { width = 9 })
-				ui.PopStyle()
-					ui.Space(1)
-				ui.PushStyle(colorFill[Rand:Range(1, #colorFill)], Colors.Black)
-					ui.Label(" SURVIVE ")
-				ui.PopStyle()
-				ui.PushStyle(colorFill[Rand:Range(1, #colorFill)], Colors.Black)
-					ui.Label(" THROUGH ")
-				ui.PopStyle()
-				ui.PushStyle(colorFill[Rand:Range(1, #colorFill)], Colors.Black)
-					ui.Label("  SPITE ")
-				ui.PopStyle()
-			end
-
-
 		ui.PopOrder()
 	ui.PopBox()
 end

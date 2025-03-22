@@ -454,6 +454,7 @@ function Procgen.Ogre(e, x, y)
 		Break{},
 		Sight{ radius = 10 },
 		Magic{ value = Rand:F01(), colors = CompColors["Open"] },
+		AIMoveTowardsPlayer{ distance = 0, chance = 5 },
 		AIBreakThroughToPlayer{ chance = 5, distance = 9 },
 		Health(Range(3)), 
 		BumpAttack { damage = 3 }, 
@@ -505,10 +506,36 @@ function Procgen.Illusion(e, x, y)
 		AIForcedRandomWalk{},
 		AIAttackIfStandingNextTo{},
 		AISpawnWhenDistantFromPlayer{ min = 3, max = 3, chance = 9, what = "Illusion" },
-		Health(Range(4)),
+		Health(Range(2)),
 		Glyph{ name = "restless" },
 		Contents{ items = { { itemId = "gold", quantity = 1 } } }
 	)
+end
+
+function Procgen.Sacrifice(e, x, y)
+	e:Set(
+		Creature{},
+		Name{ value = "Sacrifice" },
+		Sight{ radius = 15 },
+		BumpAttack { damage = 2 },
+		AIForcedRandomWalk{},
+		AIMoveTowardsPlayer{ distance = 0, chance = 9 },
+		AISpawnWhenDistantFromPlayer{ min = 9, max = 12, chance = 2, what = "Goblin" },
+		Health(Range(10)),
+		Glyph{ name = "sacrifice" },
+		Hate{}
+	)
+
+	local i = 0
+	for _, c in ipairs(comps) do
+		if Chances[4]:MakeGuess() then
+			i = i + 1
+			e:Set(CompNameToComp(c))
+			if i == 1 then
+				e:Set(Magic{ value = Rand:F01(), colors = { CompColors[c][1], Colors.Black } })
+			end
+		end
+	end
 end
 
 function Procgen.GelatinousCube(e, x, y)

@@ -8,6 +8,6 @@ function Fade(entity, start, target, speed)
 	entity:Set(FadeOut{ start = start, target = target, time = 0, speed = speed })
 end
 
-function PCExplode(limit, fg, bg, callback)
-	PlayerEntity:Set(VFXExplosion{ current = 0, maximum = limit, fg = fg, bg = bg, callback = callback })
+function PCExplode(entity, limit, fg, bg, callback)
+	entity:Set(VFXExplosion{ current = 0, maximum = limit, fg = fg, bg = bg, callback = callback })
 end

@@ -27,16 +27,13 @@ function FireSpreadingMechanicsSystem:Tick()
 				usedLuck = true
 			end
 		end
-		if Chances[chance]:MakeGuess()  then
+		if Chances[chance]:MakeGuess() or PlayerEntity[Light] ~= nil then
 			entity:Unset(Burning)
 			if isPlayer then
-				--if usedCalm and usedLuck then
---					Diary.Write("The fire dissipates quickly. Your [CALM] and [LUCK] glyphs resonate.")
-				--elseif usedCalm then 
---					Diary.Write("The fire dissipates. Your [CALM] glyph quivers.")
-				--else
 				if usedLuck then
 					Diary.Write("The fire dissipates. Your [LUCK] glyph quivers.")
+				elseif PlayerEntity[Light] ~= nil then
+					Diary.Write("You are light, fire walks with you.")
 				end
 			end
 		else
@@ -58,7 +55,7 @@ function FireSpreadingMechanicsSystem:Tick()
 		end
 
 		if entity == PlayerEntity then
-			PlayerEntity:Set(Death{ reason = "Burnt to death" })
+			PlayerEntity:Set(Death{ reason = "Burnt to a crisp in a fire" })
 			Input.Push("Death")
 			return
 		end

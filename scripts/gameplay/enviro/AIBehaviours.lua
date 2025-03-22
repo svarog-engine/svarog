@@ -20,7 +20,6 @@ local function CheckBreakThroughToPlayer(entity)
 	if ai ~= nil then
 		local px, py = PlayerEntity[Position].x, PlayerEntity[Position].y
 		local ex, ey = entity[Position].x, entity[Position].y
-
 		if Chances[ai.chance]:MakeGuess() then
 			local pd, bx, by = Distance(px, py, ex, ey), ex, ey
 			local realDist = Dungeon.playerDistance:Get(ex, ey)
@@ -32,9 +31,9 @@ local function CheckBreakThroughToPlayer(entity)
 						if Dungeon.floor:Get(pt.X, pt.Y).type == Wall then
 							Dungeon.floor:Get(pt.X, pt.Y).type = Floor
 							Dungeon.passable:Set(pt.X, pt.Y, true)
-							local dust = Procgen.MakeObject("dust", pt.X, pt.Y)
+							local dust = Procgen.MakeObject("Dust", pt.X, pt.Y)
 						end
-						local d = Distance(px, py, pt.X, ptY)
+						local d = Distance(px, py, pt.X, pt.Y)
 						if d > 0 and d < pd then
 							pd = d
 							bx = pt.X
@@ -42,7 +41,14 @@ local function CheckBreakThroughToPlayer(entity)
 						end
 					end
 
-					PerformBump(entity, pos.x, pos.y, bx - pos.x, by - pos.y)
+					RemoveEntityFromDungeon(entity)
+					entity[Position].x = bx
+					entity[Position].y = by
+					AddEntityToDungeon(bx, by, entity)
+
+					PCExplode(PlayerEntity, 3, Colors.Gray, Colors.White, function() 
+						Diary.Write("The " .. entity[Name].value .. " juggernauts through the wall!")
+					end)
 				end })
 			end
 		end
@@ -190,7 +196,6 @@ function AIBehavioursSystem:Tick()
 			sight = 0
 			DarkInfluencedAtLeastOneAI = DarkInfluencedAtLeastOneAI + 1
 		end
-		print(entity[Name].value, sight)
 		if Dungeon.playerDistance:Get(ex, ey) < sight then
 			CheckMoveTowardsPlayer(entity)
 			CheckKeepDistanceFromPlayer(entity)

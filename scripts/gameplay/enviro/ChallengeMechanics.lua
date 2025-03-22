@@ -28,7 +28,7 @@ SpawnDeltaLocations[5] = { {  0, -5 }, {  5, -2 }, { -5, -2 }, { -4, 4 }, { 4, 4
 
 function SpawnChallengeEntities(x, y, n, challenge)
 	if PlayerEntity[Silenced] == nil then
-		PCExplode(7, Colors.White, Colors.Magenta, function()
+		PCExplode(PlayerEntity, 7, Colors.White, Colors.Magenta, function()
 			PlayerEntity:Set(Silenced{ current = 9, maximum = 9 })
 			local c = Geometry.Boundary(Geometry.MakeCircle(x, y, 6))
 			local e = c.Points:GetEnumerator()
@@ -106,7 +106,7 @@ end
 
 function ChallengeSystem:Tick()
 	for _, entity in World:Exec(ECS.Query.All(Challenged, Position, Player)):Iterator() do
-		local challengeLevel = ActiveWordsCount(entity)		
+		local challengeLevel = ActiveWordsCount(entity)
 		local position = entity[Position]
 
 		local challengeEntity = World:Entity(MagicChallenge { time = 0, difficulty = challengeLevel })

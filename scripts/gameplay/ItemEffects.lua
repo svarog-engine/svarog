@@ -142,7 +142,7 @@ function Cast(itemId)
 				for _, e in ipairs(dungeon.entities[id] or {}) do
 					if e[Creature] ~= nil then
 						if e[compFrom(ItemCastNames[itemId])] == nil then
-							local duration = 7
+							local duration = 10
 							if e[Endure] then duration = duration - 1 end
 							if e[Luck] then duration = duration - 1 end
 							e:Set(Paralyzed{ current = duration, maximum = duration })
