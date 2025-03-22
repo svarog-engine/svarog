@@ -137,9 +137,6 @@ local function SpecificRoomSetup(l, w, h)
 						Procgen.MakeObject("Altar", rx + 1, ry, rest[ri])
 						table.remove(rest, ri)
 						specials = specials - 1
-					elseif numberOfKeys > 0 then
-						Procgen.MakeObject("Key", rx, ry)
-						numberOfKeys = numberOfKeys - 1
 					else
 						local name, comp = Wheels:GetMajor(halfsteps[(Snail(cx, cy) or 1 + i) % 6 + 1])
 						local roomTemplates = Rooms[comp]
@@ -167,7 +164,7 @@ local function SpecificRoomSetup(l, w, h)
 		local rx, ry = math.floor(bucket[r].x), math.floor(bucket[r].y)
 		local ax, ay = rx, ry - 4
 
-		Procgen.MakeObject("SatiatedAltar", ax, ay, "Hate")	
+		Procgen.MakeObject("SatiatedAltar", ax, ay, "Hate")
 		Procgen.MakeObject("Seal", ax - 2, ay)
 		Procgen.MakeObject("Seal", ax + 2, ay)
 		Procgen.MakeObject("Seal", ax - 1, ay - 1)
@@ -179,7 +176,7 @@ local function SpecificRoomSetup(l, w, h)
 		Procgen.MakeObject("Dust", ax, ay + 2)
 		Procgen.MakeObject("SealingMechanism", rx, ry)
 		Procgen.MakeObject("Skeleton", rx - 1, ry + 3)
-		Procgen.MakeObject("Throne", rx, ry + 4)
+		Procgen.MakeObject("Throne", rx, ry + 5)
 
 		for i = -10, 20 do
 			Procgen.MakeObject("Pillar", ax - 4, ay - 10 + i * 2)
@@ -192,7 +189,7 @@ local function SpecificRoomSetup(l, w, h)
 		for i, f in ipairs(bucket) do
 			local rx, ry = math.floor(bucket[i].x), math.floor(bucket[i].y)	
 			Procgen.MakeObject("Portal", rx, ry, 5, Rand:Range(2, 4), PlayerEntity[Boons].value[Rand:Range(1, #PlayerEntity[Boons].value)])
-		end		
+		end
 		return { { math.floor(w / 2), math.floor(h / 2) } }
 	end
 end
@@ -289,6 +286,20 @@ function MakeDungeon()
 	local xy = ok[Rand:Range(1, #ok)]
 	local x, y = xy.x, xy.y
 	Dungeon.start = { x , y }
+
+	local attempts = 10
+	while Dungeon.numberOfChests > 0 do
+		local x, y = Rand:Range(1, w), Rand:Range(1, h)
+		local id = Dungeon.floor:ID(x, y)
+		local entts = Dungeon.entities[id] or {}
+		if Dungeon.floor:Has(x, y) and Dungeon.floor:Get(x, y).type == Floor and #entts == 0 then
+			Procgen.MakeObject("Key", x, y)
+			Dungeon.numberOfChests = Dungeon.numberOfChests - 1
+		end
+
+		attempts = attempts - 1
+		if attempts < 0 then break end
+	end
 
 	-- PLAYER SETUP
 

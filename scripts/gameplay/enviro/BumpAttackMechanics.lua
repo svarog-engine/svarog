@@ -185,7 +185,7 @@ function BumpAttackMechanicsSystem:Tick()
 					if explodesFire then
 						for i = -2, 2 do
 							for j = -2, 2 do
-								if Chances[5]:MakeGuess() then
+								if Chances[9]:MakeGuess() then
 									Procgen.MakeObject("Flame", x + i, y + j)
 								end
 							end

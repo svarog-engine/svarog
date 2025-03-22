@@ -224,12 +224,17 @@ function Procgen.Dust(e, x, y)
 end
 
 function Procgen.Chest(e, x, y)
-	Procgen.IsFurniture(e)
-	Procgen.IsContainer(e)
-	Procgen.GenerateContents(e, ContentsItems, 10)
-	e:Set(Locked{})
-	e:Set(Glyph{ name = "chest" })
-	Dungeon.numberOfChests = Dungeon.numberOfChests + 1
+	if Dungeon.numberOfChests < 3 then
+		Procgen.IsFurniture(e)
+		Procgen.IsContainer(e)
+		local index = Procgen.GeneratePairedContents(e)
+		e:Set(Locked{})
+		e:Set(Glyph{ name = "chest" })
+		e:Set(Magic{ value = Rand:F01(), colors = pairColors[index] })
+		Dungeon.numberOfChests = Dungeon.numberOfChests + 1
+	else
+		Procgen.Crate(e, x, y)
+	end
 end
 
 function Procgen.Table(e, x, y)
@@ -397,7 +402,7 @@ function Procgen.Hobgob(e, x, y)
 		Creature{}, 
 		Endure{},
 		Sight{ radius = 8 },
-		Magic{ value = Rand:F01(), colors = CompColors["Endure"] },
+		Magic{ value = Rand:F01(), colors = { CompColors["Endure"][1], Colors.Black } },
 		AIKeepDistanceFromPlayer{ distance = 5, chance = 10 },
 		AISpawnWhenDistantFromPlayer{ min = 4, max = 6, chance = 4, what = "Rat" },
 		Health(Range(2, 2)), 
@@ -412,10 +417,9 @@ function Procgen.Mimic(e, x, y)
 		Creature{}, 
 		Endure{},
 		Sight{ radius = 15 },
-		Magic{ value = Rand:F01(), colors = CompColors["Endure"] },
+		Magic{ value = Rand:F01(), colors = { CompColors["Endure"][1], Colors.Black } },
 		AIAttackIfStandingNextTo{}, 
-		AIMoveTowardsPlayer{ distance = 10, chance = 3 }, 
-		Health(Range(1)), 
+		Health(Range(4)), 
 		BumpAttack { damage = 3 }, 
 		Glyph{ name = "chest" },
 		Burnable{},
@@ -447,7 +451,7 @@ function Procgen.Flamos(e, x, y)
 		Magic{ value = Rand:F01(), colors = CompColors["Light"] },
 		AIKeepDistanceFromPlayer{ distance = 1, chance = 9 },
 		AIRest{ chance = 1 },
-		Health(Range(1)),
+		Health(Range(5)),
 		Burning{},
 		Glyph{ name = "sphere" },
 		Contents{ items = { { itemId = "gold", quantity = 100 } } }
@@ -512,15 +516,43 @@ function Procgen.Mist(e, x, y, type, duration)
 	)
 end
 
+pairColors = {
+	{ Colors.LightBlue, Colors.Blue }, --Break
+	{ Colors.LightMagenta , Colors.Magenta }, --Open
+	{ Colors.LightYellow, Colors.Yellow }, --Light
+	{ Colors.DarkRed, Colors.Black }, --Darken
+	{ Colors.Yellow, Colors.LightGreen }, --Luck
+	{ Colors.Blue, Colors.DarkBlue }, --Endure
+	{ Colors.LightRed, Colors.Red }, --Heal
+	{ Colors.Yellow, Colors.LightGreen }, --Luck
+	{ Colors.Black , Colors.DarkCyan }, --Flow
+	{ Colors.Black, Colors.DarkRed }, --Hate
+}
 
---Monsters["Endure"] = { "Hobgob", "Mimic" }
---Monsters["Luck"] = { "PlagueRats", "Vampire" }
---Monsters["Darken"] = { "Shade", "Wraith" }
---Monsters["Flow"] = { "Illusion", "GelatinousCube" }
---Monsters["Heal"] = { "Kobold", "Phantasm" }
---Monsters["Calm"] = { "Banshee", "Nightmare" }
---Monsters["Open"] = { "Flamos", "Ogre" }
---Monsters["Light"] = { "Flamos", "Djinn" }
+function Procgen.GeneratePairedContents(e)
+	local paired = {
+		{ "diamond", },					-- Break
+		{ "ash", "topaz" },				-- Open
+		{ "rosebud", "sapphire" },		-- Light
+		{ "blackthorn", "obsidian" },	-- Darken
+		{ "willow", "malachite" },		-- Luck
+		{ "sage", "lapis_lazuli" },		-- Endure
+		{ "foxglove", "onyx" },			-- Heal
+		{ "mandrake", "malachite" },	-- Luck
+		{ "garnet" },					-- Flow
+	}
+
+	local itemSet = {}
+
+	local index = Rand:Range(1, #paired)
+	local pair = paired[index]
+	local items = {}
+	for _, item in ipairs(pair) do
+		table.insert(items, { itemId = item, quantity = 1 })
+	end
+    e:Set(Contents { items = items })
+	return index
+end
 
 function Procgen.GenerateContents(e, itemList, chance)
 	local itemSet = {}
@@ -580,8 +612,10 @@ function Templates.StoreRoom(cx, cy)
 				if Dungeon.floor:Get(i, j).type == Floor then
 					if i % 2 == 0 and j % 2 == 0 and Chances[2]:MakeGuess() then
 						if room:Has(i, j) and room:Get(i, j) >= 0 and room:Get(i, j) < 10 then
-							if Chances[5]:MakeGuess() then
+							if Chances[4]:MakeGuess() then
 								Procgen.MakeObject("Crate", i, j)
+							elseif Chances[1]:MakeGuess() then
+								Procgen.MakeObject("Chest", i, j)
 							end
 						end
 					end
@@ -633,7 +667,7 @@ MakeTemplate("common1", 3, 3,
 .23
 .1.
 ...
-]], { nil, nil, nil, nil, nil, nil, "Key", "Goblin" }, { nil, "Crate", "Table", "Crate" }, { nil, nil, "Table", "Crate" })
+]], { nil, nil, nil, nil, nil, nil, "Key", "Goblin" }, { nil, "Crate", "Table", "Chest" }, { nil, nil, "Table", "Crate" })
 
 MakeTemplate("common2", 4, 3,
 [[
@@ -648,7 +682,7 @@ MakeTemplate("warehouse1", 5, 3,
 .1.1.
 21.12
 21212
-]], { nil, "Crate", "Crate", "Crate", "Crate" }, { nil, "Goblin" }
+]], { nil, "Crate", "Crate", "Crate", "Chest" }, { nil, "Goblin" }
 )
 
 MakeTemplate("warehouse2", 4, 4,
@@ -711,7 +745,7 @@ MakeTemplate("workshop1", 5, 5,
 ..23.
 .4...
 .....
-]], { nil, "Shelf", "Shelf", "Shelf", "Crate" }, { "Anvil" }, { nil, "Table" }, { "Kobold", "Goblin" })
+]], { nil, "Shelf", "Shelf", "Chest", "Crate" }, { "Anvil" }, { nil, "Table" }, { "Kobold", "Goblin" })
 
 MakeTemplate("workshop2", 3, 3,
 [[
@@ -741,7 +775,7 @@ MakeTemplate("shrine2", 6, 6,
 .124.
 3...1
 .3.1.
-]], { "Candle" }, { "Statue" }, { nil, nil, nil, nil, nil, "Book", "Candle" }, { "Kobold", "Hobgob" })
+]], { "Candle" }, { "Statue" }, { nil, nil, nil, nil, nil, "Book", "Candle", "Chest" }, { "Kobold", "Hobgob" })
 
 MakeTemplate("forge1", 5, 5,
 [[
