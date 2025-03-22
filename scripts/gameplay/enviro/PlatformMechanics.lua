@@ -60,4 +60,13 @@ function PlatformSystem:Tick()
 			end
 		end
 	end
+
+	local player = PlayerEntity
+	for _, entity in World:Exec(ECS.Query.All(Alarm, Position)):Iterator() do 
+		if player[Position].x == entity[Position].x and player[Position].y == entity[Position].y then
+			if entity[Alarm].callback ~= nil then
+				entity[Alarm].callback()
+			end
+		end
+	end
 end

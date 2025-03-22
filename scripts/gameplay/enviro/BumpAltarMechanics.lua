@@ -54,9 +54,11 @@ function BumpAltarMechanicsSystem:Tick()
 				end
 			end
 		else
-			Fade(entity, Colors.Red, Colors.Black, 0.5)
-			Diary.Write("The cold stone of the altar seems inert.")
-			Diary.Write("A release of tension near it should stir it to life!")
+			if World:FetchEntityById(entity[Bumped].by) == PlayerEntity then
+				Fade(entity, Colors.Red, Colors.Black, 0.5)
+				Diary.Write("The cold stone of the altar seems inert.")
+				Diary.Write("A release of tension near it should stir it to life!")
+			end
 		end
 	end
 end

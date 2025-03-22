@@ -49,7 +49,7 @@ function Procgen.MakeObject(what, x, y, ...)
 		local id = dungeon.floor:ID(x, y)
 		local es = dungeon.entities[id] or {}
 		local isEE = #es == 0
-		if isTF and isEE and isEN then
+		if isTF and (isEE or what == "RoyalSeal") and isEN then
 			local e = World:Entity(Position{ x = x, y = y })
 			if what == "Goblin" or what == "Hobgob" or what == "Kobold" 
 			   or what == "Mimic" or what == "Djinn" or what == "Flamos" 
@@ -70,7 +70,8 @@ function Procgen.MakeObject(what, x, y, ...)
 			end
 			AddEntityToDungeon(x, y, e)
 			return e
-		else	
+		else
+			--print("CANT MAKE: ", what, isTF, isEE, isEN)
 			return nil
 		end
 	else
@@ -161,17 +162,28 @@ function CompToShardic(comp)
 	if comp == "Hate" then return "Hate" end
 	print("NOT FOUND: ", comp)
 end
+function Procgen.RoyalSeal(e, x, y)
+	e:Set(Item{})
+	e:Set(Glyph{ name = "seal" })
+	e:Set(Name{ value = "Royal Seal" })
+	e:Set(ScanEntry{})
+	e:Set(RoyalSeal{})
+	--e:Set(UnMagic{ value = Rand:F01(), colors = { Colors.Gray, Colors.Black } })
+end
 
 function Procgen.Seal(e, x, y)
 	e:Set(Item{})
 	e:Set(Glyph{ name = "seal" })
 	e:Set(Name{ value = "Royal Seal" })
 	e:Set(BumpDiary{ text = "The enchanted rock of the ROYAL SEAL holds firm."})
+	e:Set(UnMagic{ value = Rand:F01(), colors = { Colors.Gray, Colors.Black } })
 end
 
 function Procgen.Pillar(e, x, y)
 	e:Set(Item{})
 	e:Set(Glyph{ name = "pillar" })
+	e:Set(BlockingPassage{})
+	e:Set(BlockingSight{})
 end
 
 function Procgen.SatiatedAltar(e, x, y, comp)
@@ -188,6 +200,7 @@ function Procgen.SealingMechanism(e, x, y, comp)
 	e:Set(Item{})
 	e:Set(Name{ value = "Sealing Stone" })
 	e:Set(ScanEntry{})
+	e:Set(CanSeal{})
 end
 
 function Procgen.Altar(e, x, y, comp)
@@ -224,7 +237,7 @@ function Procgen.Dust(e, x, y)
 end
 
 function Procgen.Chest(e, x, y)
-	if Dungeon.numberOfChests < 3 then
+	if Dungeon.numberOfChests < 1 then
 		Procgen.IsFurniture(e)
 		Procgen.IsContainer(e)
 		local index = Procgen.GeneratePairedContents(e)
@@ -291,7 +304,7 @@ function Procgen.Goblin(e, x, y)
 		BumpAttack { damage = 1 }, 
 		Glyph{ name = "goblin" },
 		Burnable{},
-		Contents{ items = { { itemId = "gold", quantity = 20 } } }
+		Contents{ items = { { itemId = "gold", quantity = 2 } } }
 	)
 end
 
@@ -304,8 +317,12 @@ function Procgen.Kobold(e, x, y)
 		BumpAttack { damage = 2 }, 
 		Glyph{ name = "kobold" },
 		Burnable{},
-		Contents{ items = { { itemId = "gold", quantity = 10 } } }
+		Contents{ items = { { itemId = "gold", quantity = 5 } } }
 	)
+end
+
+function Procgen.AltarTrap(e, x, y, callback)
+	e:Set(Glyph{ name = "back_semi" }, Alarm{ callback = callback })
 end
 
 function Procgen.AlarmTrap(e, x, y)
@@ -333,11 +350,15 @@ function Procgen.Anvil(e, x, y)
 	e:Set(Glyph{ name = "anvil" })
 end
 
+local numberOfCauldrons = 0
 function Procgen.Cauldron(e, x, y)
-	e:Set(BlockingPassage{})
-	e:Set(Glyph{ name = "cauldron" })
-	e:Set(CanMeltGold{})
-	e:Set(Burning{ value = Rand:F01(), colors = { Colors.LightBlue, Colors.Blue } })
+	if numberOfCauldrons < 1 then
+		e:Set(BlockingPassage{})
+		e:Set(Glyph{ name = "cauldron" })
+		e:Set(CanMeltGold{}, Item{})
+		e:Set(Burning{ value = Rand:F01(), colors = { Colors.LightGreen, Colors.Green } })
+		numberOfCauldrons = numberOfCauldrons + 1
+	end
 end
 
 function Procgen.Statue(e, x, y)
@@ -408,7 +429,7 @@ function Procgen.Hobgob(e, x, y)
 		Health(Range(2, 2)), 
 		BumpAttack { damage = 1 }, 
 		Glyph{ name = "hobgob" },
-		Contents{ items = { { itemId = "gold", quantity = 100 } } }
+		Contents{ items = { { itemId = "gold", quantity = 20 } } }
 	)
 end
 
@@ -590,6 +611,8 @@ function Templates.LibraryRoom(cx, cy)
 						if room:Has(i, j) and room:Get(i, j) >= 0 and room:Get(i, j) < 10 then
 							if Chances[5]:MakeGuess() then
 								Procgen.MakeObject("Shelf", i, j)
+							elseif Chances[1]:MakeGuess() then
+								Procgen.MakeObject("Cauldron", i, j)
 							end
 						end
 					end
@@ -601,7 +624,7 @@ end
 
 function Templates.StoreRoom(cx, cy)
 	if Dungeon.wallDistances:Get(cx, cy) >= 2 then
-		local room = DistanceMap:From(Dungeon.floor, { { cx, cy } }, 0, 7)
+		local room = DistanceMap:From(Dungeon.floor, { { cx, cy } }, 0, 5)
 		room:AddCondition(function(map, x, y) return Dungeon.wallDistances:Has(x, y) and Dungeon.wallDistances:Get(x, y) >= 2 end)
 		room:Flood()
 
@@ -614,8 +637,10 @@ function Templates.StoreRoom(cx, cy)
 						if room:Has(i, j) and room:Get(i, j) >= 0 and room:Get(i, j) < 10 then
 							if Chances[4]:MakeGuess() then
 								Procgen.MakeObject("Crate", i, j)
-							elseif Chances[1]:MakeGuess() then
+							elseif Chances[2]:MakeGuess() then
 								Procgen.MakeObject("Chest", i, j)
+							elseif Chances[5]:MakeGuess() then
+								Procgen.MakeObject("Cauldron", i, j)
 							end
 						end
 					end
@@ -674,7 +699,7 @@ MakeTemplate("common2", 4, 3,
 .1..
 ....
 1.1.
-]], { nil, nil, "Crate", "Chest", "Chest" }
+]], { nil, nil, "Crate", "Chest", "Cauldron" }
 )
 
 MakeTemplate("warehouse1", 5, 3,
@@ -682,7 +707,7 @@ MakeTemplate("warehouse1", 5, 3,
 .1.1.
 21.12
 21212
-]], { nil, "Crate", "Crate", "Crate", "Chest" }, { nil, "Goblin" }
+]], { nil, "Crate", "Crate", "Crate", "Cauldron" }, { nil, "Goblin" }
 )
 
 MakeTemplate("warehouse2", 4, 4,

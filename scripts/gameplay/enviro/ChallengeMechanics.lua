@@ -182,4 +182,16 @@ function ChallengeSystem:Tick()
 			World:Remove(entity)
 		end
 	end
+
+	for _, entity in World:Exec(ECS.Query.All(SetTimer, Timeout)):Iterator() do
+		local timeout = entity[Timeout]
+		timeout.value = timeout.value - 1
+
+		if timeout.value < 0 then
+			if entity[SetTimer].callback ~= nil then
+				entity[SetTimer].callback(entity)
+				entity:Unset(SetTimer, Timeout)
+			end
+		end
+	end
 end

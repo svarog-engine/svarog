@@ -44,9 +44,12 @@ Magic = ECS.Component{ value = 0.0 }
 UnMagic = ECS.Component{ value = 0.0 }
 TempBoon = ECS.Component{ type = nil }
 Timeout = ECS.Component{ value = 0.0 }
+SetTimer = ECS.Component{ callback = nil }
 Portal = ECS.Component { challenge = nil, type = nil }
 VFXExplosion = ECS.Component(Range(0, 10))
 Mist = ECS.Component { type = nil }
+RoyalSeal = ECS.Component {}
+CanSeal = ECS.Component {}
 -- Tension
 
 Tension = ECS.Component(Range(9, 9))
@@ -71,6 +74,19 @@ end
 
 Contents = ECS.Component{ items = {} }
 LootInventory = ECS.Component{ target = nil }
+
+function Contents.GetCount(entity, itemId)
+	local inventory = entity[Contents].items
+
+	local itemInInventory = false
+	for _, item in ipairs(inventory) do
+		if item.itemId == itemId then
+			return item.quantity
+		end
+	end
+
+	return 0
+end
 
 function Contents.HasSpace(entity, itemId)
 	local inventory = entity[Contents].items

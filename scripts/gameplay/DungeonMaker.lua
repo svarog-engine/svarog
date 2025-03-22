@@ -107,7 +107,6 @@ local function SpecificRoomSetup(l, w, h)
 
 		local numberOfKeys = math.ceil(Dungeon.numberOfChests / 2)
 		if numberOfKeys <= 0 then numberOfKeys = 1 end
-		print("Generating " .. numberOfKeys .. " for " .. Dungeon.numberOfChests .. " chests")
 		while bucketIndex > 0 do
 			local usedRs = {}
 
@@ -165,6 +164,16 @@ local function SpecificRoomSetup(l, w, h)
 		local ax, ay = rx, ry - 4
 
 		Procgen.MakeObject("SatiatedAltar", ax, ay, "Hate")
+		Procgen.MakeObject("AltarTrap", ax, ay + 1, function()
+			if Seals > 0 then
+				PCExplode(3, Colors.White, Colors.Green, function()
+					Diary.Write("As you cross the threshold, the ROYAL SEAL reacts!")
+					Diary.Write("Thank you, brave soul. Your life is not wasted.")
+					Procgen.MakeObject("Seal", ax, ay + 2)
+					Seals = 0
+				end)
+			end
+		end)
 		Procgen.MakeObject("Seal", ax - 2, ay)
 		Procgen.MakeObject("Seal", ax + 2, ay)
 		Procgen.MakeObject("Seal", ax - 1, ay - 1)
@@ -173,7 +182,8 @@ local function SpecificRoomSetup(l, w, h)
 		Procgen.MakeObject("Seal", ax + 1, ay - 1)
 		Procgen.MakeObject("Seal", ax - 1, ay + 1)
 		Procgen.MakeObject("Seal", ax + 1, ay + 1)
-		Procgen.MakeObject("Dust", ax, ay + 2)
+		Procgen.MakeObject("Dust", ax - 1, ay + 2)
+		Procgen.MakeObject("Dust", ax + 1, ay + 2)
 		Procgen.MakeObject("SealingMechanism", rx, ry)
 		Procgen.MakeObject("Skeleton", rx - 1, ry + 3)
 		Procgen.MakeObject("Throne", rx, ry + 5)

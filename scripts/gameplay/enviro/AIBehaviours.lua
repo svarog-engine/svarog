@@ -190,7 +190,7 @@ function AIBehavioursSystem:Tick()
 			sight = 0
 			DarkInfluencedAtLeastOneAI = DarkInfluencedAtLeastOneAI + 1
 		end
-
+		print(entity[Name].value, sight)
 		if Dungeon.playerDistance:Get(ex, ey) < sight then
 			CheckMoveTowardsPlayer(entity)
 			CheckKeepDistanceFromPlayer(entity)
