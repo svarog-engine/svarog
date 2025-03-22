@@ -444,6 +444,7 @@ function Procgen.Mimic(e, x, y)
 		BumpAttack { damage = 3 }, 
 		Glyph{ name = "chest" },
 		Burnable{},
+		Breakable{},
 		Contents{ items = { { itemId = "gold", quantity = 50 } } }
 	)
 end
@@ -493,7 +494,7 @@ function Procgen.Djinn(e, x, y)
 		Darken{},
 		Spread{ chance = 4 },
 		Glyph{ name = "djinn" },
-		Contents{ items = { { itemId = "gold", quantity = 80 } } }
+		Contents{ items = { { itemId = "gold", quantity = 200 } } }
 	)
 end
 
@@ -508,7 +509,7 @@ function Procgen.Illusion(e, x, y)
 		AISpawnWhenDistantFromPlayer{ min = 3, max = 3, chance = 9, what = "Illusion" },
 		Health(Range(2)),
 		Glyph{ name = "restless" },
-		Contents{ items = { { itemId = "gold", quantity = 1 } } }
+		Contents{ items = { { itemId = "gold", quantity = 25 } } }
 	)
 end
 

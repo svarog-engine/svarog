@@ -140,6 +140,14 @@ function Cast(itemId)
 				
 				local id = dungeon.floor:ID(nx, ny)
 				for _, e in ipairs(dungeon.entities[id] or {}) do
+					if element == "Darken" then
+						e:Unset(Burning)
+						e:Unset(Spread)
+						e:Unset(Burnable)
+						e:Unset(Magic)
+						e:Unset(ExplodeFireOnDeath)
+					end
+
 					if e[Creature] ~= nil then
 						if e[compFrom(ItemCastNames[itemId])] == nil then
 							local duration = 10
@@ -154,12 +162,18 @@ function Cast(itemId)
 					end
 
 					if element == "Light" and e[Burnable] ~= nil then
+						if e[Creature] ~= nil then
+							Diary.Write("The " .. e[Name].value .. " is set ablaze!")
+						end
 						e:Set(Burning{})
 						e:Set(Health(Range(10)))
 						e:Set(Spread{ chance = 6 })
 					end
 
 					if element == "Break" and e[Breakable] ~= nil then
+						if e[Creature] ~= nil then
+							Diary.Write("The " .. e[Name].value .. " shrieks and breaks apart!")
+						end
 						RemoveEntityFromDungeon(e)
 						World:Remove(e)
 					end
