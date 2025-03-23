@@ -382,7 +382,6 @@ function Procgen.Statue(e, x, y)
 end
 
 function Procgen.Candle(e, x, y)
-	e:Set(BlockingPassage{})
 	if Rand:Range(1, 10) < 5 then
 		e:Set(Burning{ value = Rand:F01() })
 	end
@@ -641,7 +640,7 @@ function Procgen.GenerateContents(e, itemList, chance)
 end
 
 function Templates.LibraryRoom(cx, cy)
-	if Dungeon.wallDistances:Get(cx, cy) >= 2 then
+	if Dungeon.wallDistances:Get(cx, cy) >= 2 and Dungeon.zones:Get(cx, cy) >= 0 then
 		local room = DistanceMap:From(Dungeon.floor, { { cx, cy } }, 0, 7)
 		room:AddCondition(function(map, x, y) return Dungeon.wallDistances:Has(x, y) and Dungeon.wallDistances:Get(x, y) >= 2 end)
 		room:Flood()
@@ -667,7 +666,7 @@ function Templates.LibraryRoom(cx, cy)
 end
 
 function Templates.StoreRoom(cx, cy)
-	if Dungeon.wallDistances:Get(cx, cy) >= 2 then
+	if Dungeon.wallDistances:Get(cx, cy) >= 2 and Dungeon.zones:Get(cx, cy) >= 0 then
 		local room = DistanceMap:From(Dungeon.floor, { { cx, cy } }, 0, 5)
 		room:AddCondition(function(map, x, y) return Dungeon.wallDistances:Has(x, y) and Dungeon.wallDistances:Get(x, y) >= 2 end)
 		room:Flood()
@@ -689,6 +688,67 @@ function Templates.StoreRoom(cx, cy)
 						end
 					end
 				end
+			end
+		end
+	end
+end
+
+function Templates.ShrineRoom(cx, cy)
+	local oldDist = Dungeon.wallDistances:Get(cx, cy)
+	local newDist = oldDist
+	if oldDist >= 2 then
+		local x, y = cx, cy
+		local attempts = 100
+		while attempts > 0 do
+			attempts = attempts - 1
+			local startDist = oldDist
+			for _, t in ipairs(Dungeon.wallDistances:Neighbors(x, y)) do
+				newDist = Dungeon.wallDistances:Get(t.x, t.y)
+				if newDist > oldDist and Dungeon.zones:Get(t.x, t.y) >= 0 then
+					oldDist = newDist
+					x, y = t.x, t.y
+				end
+			end
+
+			if startDist == newDist then
+				break
+			end
+		end
+
+		if newDist >= 5 then
+			cx, cy = x, y
+			local c = Geometry.MakeCircle(x, y, newDist - 1)
+			local bound = Geometry.Boundary(c).Points:GetEnumerator()
+			local surf = Geometry.Surface(c).Points:GetEnumerator()
+
+			local i = 0
+			while surf:MoveNext() do
+				local x, y = surf.Current.X, surf.Current.Y
+				if Dungeon.zones:Get(x, y) >= 0 then
+					Dungeon.zones:Set(x, y, -1)
+					local tile = Dungeon.floor:Get(x, y)
+					tile.type = Floor
+					if tile.entity ~= nil then
+						RemoveEntityFromDungeon(tile.entity)
+						tile.entity = nil
+					end
+					i = i + 1
+				else
+					return
+				end
+			end
+
+			if i > 0 then
+				print("SHRINE DONE IN " .. tostring(i) .. " STEPS")
+
+				while bound:MoveNext() do
+					local x, y = bound.Current.X, bound.Current.Y
+					if Chances[5]:MakeGuess() then
+						Procgen.MakeObject("Candle", x, y)
+					end
+				end
+
+				Procgen.MakeObject("Statue", cx, cy)
 			end
 		end
 	end
@@ -863,157 +923,157 @@ MakeTemplate("forge2", 3, 3,
 ]], { "Furnace" }, { nil, "Furnace" }, { "Grate", nil })
 
 Rooms = {}
-Rooms[Open] = { "StoreRoom", "common1", "common2", "warehouse1", "warehouse2" }
+Rooms[Open] = { "StorageRoom", "common1", "common2", "warehouse1", "warehouse2" }
 Rooms[Uncover] = { "LibraryRoom", "exhibit1", "exhibit2" }
 Rooms[Enlarge] = { "workshop1", "workshop2", "shrine1", "shrine2" }
-Rooms[Flow] = { "StoreRoom", "common1", "common2" }
+Rooms[Flow] = { "ShrineRoom", "StoreRoom", "common1", "common2" }
 --Rooms[Calm] = { "common1", "common2", "shrine1" }
 Rooms[Rage] = { "forge1", "forge2", "warehouse1", "warehouse2", "common1" }
-Rooms[Yearn] = { "exhibit1", "exhibit2", "shrine2" }
+Rooms[Yearn] = { "ShrineRoom" }
 Rooms[Discover] = { "StoreRoom", "library2", "workshop2", "common1", "common2" }
-Rooms[Heal] = { "common1", "common2" } --market, medic
+Rooms[Heal] = { "ShrineRoom", "common1", "common2" } --market, medic
 Rooms[Endure] = { "workshop1", "workshop2" } -- training room
-Rooms[Luck] = { "StoreRoom", "common1", "common2" } -- market
+Rooms[Luck] = { "StoreRoom", "ShrineRoom", "common1", "common2" } -- market
 Rooms[Fade] = { "warehouse1", "common1", "common2" }
 
 ContentsItems = { "diamond", "topaz", "obsidian", "malachite", "lapis_lazuli", "onyx", --"smoky_quartz",
 	"sapphire", "garnet", "ash", "rosebud", "blackthorn", "willow", "sage", "foxglove", "mandrake" }
 
 Monsters = {}
-Monsters["Endure"] = { "Illusion" }
-Monsters["Luck"] = { "Mimic" }
-Monsters["Darken"] = { "Djinn" }
-Monsters["Flow"] = { "Ooze" }
-Monsters["Heal"] = { "Phantasm" }
-Monsters["Open"] = { "Ogre" }
-Monsters["Light"] = { "Flamos" }
+Monsters["Endure"] = { "Illusion", "Ogre" }
+Monsters["Luck"] = { "Hobgob", "Mimic" }
+Monsters["Flow"] = { "Mimic", "Ooze" }
+Monsters["Heal"] = { "Ooze", "Phantasm" }
+Monsters["Darken"] = { "Phantasm", "Djinn" }
+Monsters["Light"] = { "Djinn", "Flamos" }
+Monsters["Open"] = { "Flamos", "Ogre" }
 Monsters["Hate"] = { "Flamos", "Djinn", "Ogre", "Kobold", "Hobgob", "Mimic", "Goblin" }
 
 Messages = { 
-	"Endure --S--> Illusion",
-	" Luck  --S-->   Mimic ",
-	"Darken --S-->   Djinn ",
-	" Flow  --S-->   Ooze  ",
-	" Heal  --S--> Phantasm",
-	" Open  --S-->   Ogre  ",
-	" Light --S-->  Flamos ",
+	"Endure --spawns--> Illusion",
+	" Luck  --spawns-->   Mimic ",
+	"Darken --spawns-->   Djinn ",
+	" Flow  --spawns-->   Ooze  ",
+	" Heal  --spawns--> Phantasm",
+	" Open  --spawns-->   Ogre  ",
+	" Light --spawns-->  Flamos ",
 	
-	"Endure --P-->   Sage  ",
-	" Luck  --P-->  Willow ",
-	"Darken --P--> Blackthorn",
-	" Flow  --P-->   ... ",
-	" Heal  --P-->  Foxglove",
-	" Open  --P-->    Ash   ",
-	" Light --P-->  Rosebud ",
+	"Endure <--consume--   Sage  ",
+	" Luck  <--consume--  Willow ",
+	"Darken <--consume-- Blackthorn",
+	" Flow  <--consume--   ... ",
+	" Heal  <--consume--  Foxglove",
+	" Open  <--consume--    Ash   ",
+	" Light <--consume--  Rosebud ",
 
-	" Break --M-->  Diamond",
-	"Endure --M-->  Skystone",
-	" Luck  --M-->  Malachite",
-	"Darken --M-->  Obsidian",
-	" Flow  --M-->   Garnet",
-	" Heal  --M-->    Onyx",
-	" Open  --M-->   Topaz",
-	" Light --M-->  Sapphire",
+	" Break <--cast--  Diamond",
+	"Endure <--cast--  Skystone",
+	" Luck  <--cast--  Malachite",
+	"Darken <--cast--  Obsidian",
+	" Flow  <--cast--   Garnet",
+	" Heal  <--cast--    Onyx",
+	" Open  <--cast--   Topaz",
+	" Light <--cast--  Sapphire",
 
-	"_n___e --S--> Illusion",
-	" _u__  --S-->   Mimic ",
-	"_ar___ --S-->   Djinn ",
-	" _l__  --S-->   Ooze  ",
-	" _e__  --S--> Phantasm",
-	" __e_  --S-->   Ogre  ",
-	" _i___ --S-->  Flamos ",
+	"_n___e --spawns--> Illusion",
+	" _u__  --spawns-->   Mimic ",
+	"_ar___ --spawns-->   Djinn ",
+	" _l__  --spawns-->   Ooze  ",
+	" _e__  --spawns--> Phantasm",
+	" __e_  --spawns-->   Ogre  ",
+	" _i___ --spawns-->  Flamos ",
 	
-	"___u__ --P-->   Sage  ",
-	" __c_  --P-->  Willow ",
-	"____e_ --P--> Blackthorn",
-	" __o_  --P-->   ... ",
-	" __a_  --P-->  Foxglove",
-	" ___n  --P-->    Ash   ",
-	" __gh_ --P-->  Rosebud ",
+	"___u__ <--consume--   Sage  ",
+	" __c_  <--consume--  Willow ",
+	"____e_ <--consume-- Blackthorn",
+	" __o_  <--consume--   ... ",
+	" __a_  <--consume--  Foxglove",
+	" ___n  <--consume--    Ash   ",
+	" __gh_ <--consume--  Rosebud ",
 
-	" ____k --M-->  Diamond",
-	"E_____ --M-->  Skystone",
-	" __ck  --M-->  Malachite",
-	"_a__e_ --M-->  Obsidian",
-	" F___  --M-->   Garnet",
-	" _e_l  --M-->    Onyx",
-	" __en  --M-->   Topaz",
-	" _i__t --M-->  Sapphire",
+	" ____k <--cast--  Diamond",
+	"E_____ <--cast--  Skystone",
+	" __ck  <--cast--  Malachite",
+	"_a__e_ <--cast--  Obsidian",
+	" F___  <--cast--   Garnet",
+	" _e_l  <--cast--    Onyx",
+	" __en  <--cast--   Topaz",
+	" _i__t <--cast--  Sapphire",
 
-	"______ --S--> Illusion",
-	" ____  --S-->   Mimic ",
-	"______ --S-->   Djinn ",
-	" ____  --S-->   Ooze  ",
-	" ____  --S--> Phantasm",
-	" ____  --S-->   Ogre  ",
-	" _____ --S-->  Flamos ",
+	"______ --spawns--> Illusion",
+	" ____  --spawns-->   Mimic ",
+	"______ --spawns-->   Djinn ",
+	" ____  --spawns-->   Ooze  ",
+	" ____  --spawns--> Phantasm",
+	" ____  --spawns-->   Ogre  ",
+	" _____ --spawns-->  Flamos ",
 	
-	"______ --P-->   Sage  ",
-	" ____  --P-->  Willow ",
-	"______ --P--> Blackthorn",
-	" ____  --P-->   ... ",
-	" ____  --P-->  Foxglove",
-	" ____  --P-->    Ash   ",
-	" _____ --P-->  Rosebud ",
+	"______ <--consume--   Sage  ",
+	" ____  <--consume--  Willow ",
+	"______ <--consume-- Blackthorn",
+	" ____  <--consume--   ... ",
+	" ____  <--consume--  Foxglove",
+	" ____  <--consume--    Ash   ",
+	" _____ <--consume--  Rosebud ",
 
-	" _____ --M-->  Diamond",
-	"______ --M-->  Skystone",
-	" ____  --M-->  Malachite",
-	"______ --M-->  Obsidian",
-	" ____  --M-->   Garnet",
-	" ____  --M-->    Onyx",
-	" ____  --M-->   Topaz",
-	" _____ --M-->  Sapphire",
+	" _____ <--cast--  Diamond",
+	"______ <--cast--  Skystone",
+	" ____  <--cast--  Malachite",
+	"______ <--cast--  Obsidian",
+	" ____  <--cast--   Garnet",
+	" ____  <--cast--    Onyx",
+	" ____  <--cast--   Topaz",
+	" _____ <--cast--  Sapphire",
 
-	"Endure --S--> __l____",
-	" Luck  --S-->   ____c ",
-	"Darken --S-->   ____n ",
-	" Flow  --S-->   _o__  ",
-	" Heal  --S--> _______m",
-	" Open  --S-->   _g__  ",
-	" Light --S-->  _l___ ",
+	"Endure --spawns--> __l____",
+	" Luck  --spawns-->   ____c ",
+	"Darken --spawns-->   ____n ",
+	" Flow  --spawns-->   _o__  ",
+	" Heal  --spawns--> _______m",
+	" Open  --spawns-->   _g__  ",
+	" Light --spawns-->  _l___ ",
 	
-	"Endure --P-->   _a__  ",
-	" Luck  --P-->  _i____ ",
-	"Darken --P--> _l_______n",
-	" Flow  --P-->   ... ",
-	" Heal  --P-->  _o______",
-	" Open  --P-->    __h   ",
-	" Light --P-->  _o_____",
+	"Endure <--consume--   _a__  ",
+	" Luck  <--consume--  _i____ ",
+	"Darken <--consume-- _l_______n",
+	" Flow  <--consume--   ... ",
+	" Heal  <--consume--  _o______",
+	" Open  <--consume--    __h   ",
+	" Light <--consume--  _o_____",
 
-	" Break --M-->  _____n_",
-	"Endure --M-->  ______n_",
-	" Luck  --M-->  __l______",
-	"Darken --M-->  _b______",
-	" Flow  --M-->   _a____",
-	" Heal  --M-->    ___x",
-	" Open  --M-->   _o___",
-	" Light --M-->  _a_h____",
+	" Break <--cast--  _____n_",
+	"Endure <--cast--  ______n_",
+	" Luck  <--cast--  __l______",
+	"Darken <--cast--  _b______",
+	" Flow  <--cast--   _a____",
+	" Heal  <--cast--    ___x",
+	" Open  <--cast--   _o___",
+	" Light <--cast--  _a_h____",
 
-	"Endure --S--> _______",
-	" Luck  --S-->   _____ ",
-	"Darken --S-->   _____ ",
-	" Flow  --S-->   ____  ",
-	" Heal  --S--> ________",
-	" Open  --S-->   ____  ",
-	" Light --S-->  _____ ",
+	"Endure --spawns--> _______",
+	" Luck  --spawns-->   _____ ",
+	"Darken --spawns-->   _____ ",
+	" Flow  --spawns-->   ____  ",
+	" Heal  --spawns--> ________",
+	" Open  --spawns-->   ____  ",
+	" Light --spawns-->  _____ ",
 	
-	"Endure --P-->   ____  ",
-	" Luck  --P-->  ______ ",
-	"Darken --P--> __________",
-	" Flow  --P-->   ... ",
-	" Heal  --P-->  ________",
-	" Open  --P-->    ___   ",
-	" Light --P-->  _______",
+	"Endure <--consume--   ____  ",
+	" Luck  <--consume--  ______ ",
+	"Darken <--consume-- __________",
+	" Flow  <--consume--   ... ",
+	" Heal  <--consume--  ________",
+	" Open  <--consume--    ___   ",
+	" Light <--consume--  _______",
 
-	" Break --M-->  _______",
-	"Endure --M-->  ________",
-	" Luck  --M-->  _________",
-	"Darken --M-->  ________",
-	" Flow  --M-->   ______",
-	" Heal  --M-->    ____",
-	" Open  --M-->   _____",
-	" Light --M-->  ________",
+	" Break <--cast--  _______",
+	"Endure <--cast--  ________",
+	" Luck  <--cast--  _________",
+	"Darken <--cast--  ________",
+	" Flow  <--cast--   ______",
+	" Heal  <--cast--    ____",
+	" Open  <--cast--   _____",
+	" Light <--cast--  ________",
 }
 
 local function ShuffleInPlace(t)

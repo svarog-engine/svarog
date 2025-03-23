@@ -54,6 +54,8 @@ local function GenerateSpecificShape(l, w, h)
 	end
 end
 
+local compCache = {}
+
 local function SpecificRoomSetup(l, w, h)
 	if l == 1 then
 		local bucketIndex = Dungeon.wallDistances:GetHighestBucket()
@@ -142,10 +144,19 @@ local function SpecificRoomSetup(l, w, h)
 						if roomTemplates == nil then
 							--print("No room found for ", name)
 						else
-							local roomTemplate = roomTemplates[Rand:Range(0, #roomTemplates)]
+							if compCache[comp] == nil then
+								compCache[comp] = 0
+							end
+							compCache[comp] = compCache[comp] + 1
+							if compCache[comp] > #roomTemplates then
+								compCache[comp] = 1
+							end
+							local roomTemplate = roomTemplates[compCache[comp]]
 				
 							if roomTemplate ~= nil then
 								Templates[roomTemplate](rx, ry)
+							else
+								print(comp, compCache[comp], "NIL")
 							end
 						end
 					end

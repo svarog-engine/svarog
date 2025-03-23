@@ -10,6 +10,7 @@ function OpenCrateSystem:Tick()
 
 		local shelveComp = entity[Shelve]
 		if shelveComp ~= nil and who == PlayerEntity then
+			Diary.Write(" ")
 			Diary.Write("You learn:")
 			Diary.Write("  " .. GetNextMessage())
 			Diary.Write(" ")
