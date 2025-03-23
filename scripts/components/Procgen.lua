@@ -431,14 +431,17 @@ BookNames = {
 	"Mad Notes",
 	"Cyphers",
 	"Psychoanalysis",
-	"COBOL Handbook",
+	"KOBOL Handbook",
 	"Arcane Treaties",
 }
 
 function Procgen.Statue(e, x, y)
 	e:Set(BlockingPassage{})
 	e:Set(Glyph{ name = "statue" })
-	e:Set(Name("Statue of " .. Goblins[Rand:Range(1, #Goblins)] .. ", " .. Attr[Rand:Range(1, #Attr)] .. " " .. Jobs[Rand:Range(1, #Jobs)]))
+	e:Set(Item{})
+	local text = "Statue of " .. Goblins[Rand:Range(1, #Goblins)] .. ", " .. Attr[Rand:Range(1, #Attr)] .. " " .. Jobs[Rand:Range(1, #Jobs)]
+	e:Set(Name(text))
+	e:Set(BumpDiary{ text = text })
 	e:Set(ScanEntry{})
 end
 

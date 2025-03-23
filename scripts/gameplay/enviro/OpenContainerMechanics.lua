@@ -15,10 +15,11 @@ function OpenCrateSystem:Tick()
 				Diary.Write("You learn:")
 				Diary.Write("  " .. GetNextMessage())
 				Diary.Write(" ")
-			elseif Chances[7]:MakeGuess() then
+			else
 				Diary.Write(" ")
-				Diary.Write("You find... ")
-				Diary.Write("  " .. BookNames[Rand:Range(1, #BookNames)] .. " by " .. Goblins[Rand:Range(1, #Goblins)] .. ", " .. Attr[Rand:Range(1, #Attr)] .. " " .. Jobs[Rand:Range(1, #Jobs)])
+				Diary.Write("You find... " .. BookNames[Rand:Range(1, #BookNames)] .. " by " .. Goblins[Rand:Range(1, #Goblins)] .. ", " .. Attr[Rand:Range(1, #Attr)] .. " " .. Jobs[Rand:Range(1, #Jobs)])
+				Diary.Write(" ")
+				Diary.Write(" ")
 			end
 			entity[Glyph].name = entity[Glyph].name .. "_empty"
 			entity:Unset(Shelve)
