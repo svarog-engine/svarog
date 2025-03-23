@@ -192,7 +192,36 @@ function BumpAttackMechanicsSystem:Tick()
 						end
 					end
 				else
-					if entity[SplitOnHit] ~= nil then
+					if entity[HideIfHit] ~= nil then
+						if Chances[7]:MakeGuess() then
+							PCExplode(entity, Colors.Red, Colors.Black, function()
+								local px, py = entity[Position].x, entity[Position].y
+								for i = -5, 5 do
+									for j = -5, 5 do
+										if not (i == 0 and j == 0) then
+											local nx, ny = px + i, py + j
+											if Dungeon.floor:Has(nx, ny) and Dungeon.floor:Get(nx, ny).type == Floor then
+												local id = Dungeon.floor:ID(nx, ny)
+												local entities = Dungeon.entities[id] or {}
+												if #entities == 0 and not Dungeon.visibility:Get(nx, ny) then
+													local dist = Dungeon.playerDistance:Get(nx, ny)
+													if dist > 2 then
+														RemoveEntityFromDungeon(entity)
+														entity[Position].x = nx
+														entity[Position].y = ny
+														AddEntityToDungeon(nx, ny, entity)
+														entity:Set(Hidden{ duration = Rand:Range(2, 4) })
+														Diary.Write("The " .. entity[Name].value .. " disappears in a puff of smoke.")
+														return
+													end
+												end
+											end
+										end
+									end
+								end
+							end)
+						end
+					elseif entity[SplitOnHit] ~= nil then
 						if Chances[3]:MakeGuess() then
 							local half = math.floor(entity[Health].current / 2)
 							if half > 1 then

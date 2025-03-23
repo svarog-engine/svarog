@@ -194,4 +194,22 @@ function ChallengeSystem:Tick()
 			end
 		end
 	end
+
+	for _, entity in World:Exec(ECS.Query.All(Hidden)):Iterator() do
+		local timeout = entity[Hidden]
+		timeout.duration = timeout.duration - 1
+
+		if timeout.duration < 0 then
+			entity:Unset(Hidden)
+		end
+	end
+
+	for _, entity in World:Exec(ECS.Query.All(Creature, Lifetime)):Iterator() do
+		local lifetime = entity[Lifetime]
+		lifetime.value = lifetime.value - 1
+		if lifetime.value < 0 then
+			RemoveEntityFromDungeon(entity)
+			World:Remove(entity)
+		end
+	end
 end

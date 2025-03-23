@@ -321,6 +321,22 @@ function Procgen.Kobold(e, x, y)
 	)
 end
 
+function Procgen.Phantasm(e, x, y)
+	e:Set(
+		Creature{}, 
+		Sight{ radius = 10 },
+		AIMoveTowardsPlayer{ ifLessThanOrEqual = 2, distance = 0, chance = 5 }, 
+		AIMoveTowardsPlayerThroughShadows{ chance = 7 },
+		HideIfHit{ chance = 7 },
+		Health(Range(6, 6)),
+		BumpAttack { damage = 3 }, 
+		Glyph{ name = "phantasm" },
+		Heal{},
+		Darken{},
+		Contents{ items = { { itemId = "gold", quantity = 300 } } }
+	)
+end
+
 function Procgen.AltarTrap(e, x, y, callback)
 	e:Set(Glyph{ name = "back_semi" }, Alarm{ callback = callback })
 end
@@ -504,9 +520,10 @@ function Procgen.Illusion(e, x, y)
 		Name{ value = "Illusion" },
 		Sight{ radius = 5 },
 		Magic{ value = Rand:F01(), colors = CompColors["Flow"] },
+		BumpAttack{ damage = 1 },
 		AIForcedRandomWalk{},
-		AIAttackIfStandingNextTo{},
-		AISpawnWhenDistantFromPlayer{ min = 3, max = 3, chance = 9, what = "Illusion" },
+		AISpawnWhenDistantFromPlayer{ min = 1, max = 3, chance = 5, what = "Illusion" },
+		Lifetime{ value = Rand:Range(5, 10) },
 		Health(Range(2)),
 		Glyph{ name = "restless" },
 		Contents{ items = { { itemId = "gold", quantity = 25 } } }
@@ -539,7 +556,7 @@ function Procgen.Sacrifice(e, x, y)
 	end
 end
 
-function Procgen.GelatinousCube(e, x, y)
+function Procgen.Ooze(e, x, y)
 	e:Set(
 		Creature{},
 		Name{ value = "Gelatinous Cube" },
@@ -550,7 +567,7 @@ function Procgen.GelatinousCube(e, x, y)
 		Health(Range(20)),
 		Glyph{ name = "gelly" },
 		Contents{ items = {} },
-		SplitOnHit{ what = "GelatinousCube" },
+		SplitOnHit{ what = "Ooze" },
 		Contents{ items = { { itemId = "gold", quantity = Rand:Range(1, 20) * 10 } } }
 	)
 end
@@ -864,31 +881,150 @@ ContentsItems = { "diamond", "topaz", "obsidian", "malachite", "lapis_lazuli", "
 	"sapphire", "garnet", "ash", "rosebud", "blackthorn", "willow", "sage", "foxglove", "mandrake" }
 
 Monsters = {}
-Monsters["Endure"] = { "Hobgob", "Mimic" }
-Monsters["Luck"] = { "Goblin", "Kobold" }
-Monsters["Darken"] = { "Kobold", "Kobold" }
-Monsters["Flow"] = { "Illusion", "GelatinousCube" }
-Monsters["Heal"] = { "Hobgob", "Phantasm" }
---Monsters["Calm"] = { "Banshee", "Nightmare" }
-Monsters["Open"] = { "Flamos", "Ogre" }
-Monsters["Light"] = { "Flamos", "Djinn" }
+Monsters["Endure"] = { "Illusion" }
+Monsters["Luck"] = { "Mimic" }
+Monsters["Darken"] = { "Djinn" }
+Monsters["Flow"] = { "Ooze" }
+Monsters["Heal"] = { "Phantasm" }
+Monsters["Open"] = { "Ogre" }
+Monsters["Light"] = { "Flamos" }
 Monsters["Hate"] = { "Flamos", "Djinn", "Ogre", "Kobold", "Hobgob", "Mimic", "Goblin" }
 
 Messages = { 
-	"You read: DIAMONDS serve the OPEN sky",
-	"You read: Ogres and Flamosi form an OPEN alliance...",
-	"You read: SAPPHIRE splits LIGHT in two",
-	"You read: Roses for silence, OBSIDIAN for DARKNESS",
-	"You read: MALACHITE is what makes good fortune",
-	"You read: HOBGOBs are immune to SKYSTONES.",
-	"You read: Beware DJINN, they blaze ALIGHT...",
-	"You read: SKYSTONES can ENDURE forever",
-	"You read: ONYX figures into HEALING",
-	--"You read: A CALMing influence, QUARTZ is...",
-	"You read: GARNETs for a steady FLOW.",
-	"You read: TOPAZ to LIGHT the darkness.",
-	"You read: Herbs give, stones solidify."
+	"Endure --S--> Illusion",
+	" Luck  --S-->   Mimic ",
+	"Darken --S-->   Djinn ",
+	" Flow  --S-->   Ooze  ",
+	" Heal  --S--> Phantasm",
+	" Open  --S-->   Ogre  ",
+	" Light --S-->  Flamos ",
+	
+	"Endure --P-->   Sage  ",
+	" Luck  --P-->  Willow ",
+	"Darken --P--> Blackthorn",
+	" Flow  --P-->   ... ",
+	" Heal  --P-->  Foxglove",
+	" Open  --P-->    Ash   ",
+	" Light --P-->  Rosebud ",
+
+	" Break --M-->  Diamond",
+	"Endure --M-->  Skystone",
+	" Luck  --M-->  Malachite",
+	"Darken --M-->  Obsidian",
+	" Flow  --M-->   Garnet",
+	" Heal  --M-->    Onyx",
+	" Open  --M-->   Topaz",
+	" Light --M-->  Sapphire",
+
+	"_n___e --S--> Illusion",
+	" _u__  --S-->   Mimic ",
+	"_ar___ --S-->   Djinn ",
+	" _l__  --S-->   Ooze  ",
+	" _e__  --S--> Phantasm",
+	" __e_  --S-->   Ogre  ",
+	" _i___ --S-->  Flamos ",
+	
+	"___u__ --P-->   Sage  ",
+	" __c_  --P-->  Willow ",
+	"____e_ --P--> Blackthorn",
+	" __o_  --P-->   ... ",
+	" __a_  --P-->  Foxglove",
+	" ___n  --P-->    Ash   ",
+	" __gh_ --P-->  Rosebud ",
+
+	" ____k --M-->  Diamond",
+	"E_____ --M-->  Skystone",
+	" __ck  --M-->  Malachite",
+	"_a__e_ --M-->  Obsidian",
+	" F___  --M-->   Garnet",
+	" _e_l  --M-->    Onyx",
+	" __en  --M-->   Topaz",
+	" _i__t --M-->  Sapphire",
+
+	"______ --S--> Illusion",
+	" ____  --S-->   Mimic ",
+	"______ --S-->   Djinn ",
+	" ____  --S-->   Ooze  ",
+	" ____  --S--> Phantasm",
+	" ____  --S-->   Ogre  ",
+	" _____ --S-->  Flamos ",
+	
+	"______ --P-->   Sage  ",
+	" ____  --P-->  Willow ",
+	"______ --P--> Blackthorn",
+	" ____  --P-->   ... ",
+	" ____  --P-->  Foxglove",
+	" ____  --P-->    Ash   ",
+	" _____ --P-->  Rosebud ",
+
+	" _____ --M-->  Diamond",
+	"______ --M-->  Skystone",
+	" ____  --M-->  Malachite",
+	"______ --M-->  Obsidian",
+	" ____  --M-->   Garnet",
+	" ____  --M-->    Onyx",
+	" ____  --M-->   Topaz",
+	" _____ --M-->  Sapphire",
+
+	"Endure --S--> __l____",
+	" Luck  --S-->   ____c ",
+	"Darken --S-->   ____n ",
+	" Flow  --S-->   _o__  ",
+	" Heal  --S--> _______m",
+	" Open  --S-->   _g__  ",
+	" Light --S-->  _l___ ",
+	
+	"Endure --P-->   _a__  ",
+	" Luck  --P-->  _i____ ",
+	"Darken --P--> _l_______n",
+	" Flow  --P-->   ... ",
+	" Heal  --P-->  _o______",
+	" Open  --P-->    __h   ",
+	" Light --P-->  _o_____",
+
+	" Break --M-->  _____n_",
+	"Endure --M-->  ______n_",
+	" Luck  --M-->  __l______",
+	"Darken --M-->  _b______",
+	" Flow  --M-->   _a____",
+	" Heal  --M-->    ___x",
+	" Open  --M-->   _o___",
+	" Light --M-->  _a_h____",
+
+	"Endure --S--> _______",
+	" Luck  --S-->   _____ ",
+	"Darken --S-->   _____ ",
+	" Flow  --S-->   ____  ",
+	" Heal  --S--> ________",
+	" Open  --S-->   ____  ",
+	" Light --S-->  _____ ",
+	
+	"Endure --P-->   ____  ",
+	" Luck  --P-->  ______ ",
+	"Darken --P--> __________",
+	" Flow  --P-->   ... ",
+	" Heal  --P-->  ________",
+	" Open  --P-->    ___   ",
+	" Light --P-->  _______",
+
+	" Break --M-->  _______",
+	"Endure --M-->  ________",
+	" Luck  --M-->  _________",
+	"Darken --M-->  ________",
+	" Flow  --M-->   ______",
+	" Heal  --M-->    ____",
+	" Open  --M-->   _____",
+	" Light --M-->  ________",
 }
+
+local function ShuffleInPlace(t)
+    for i = #t, 2, -1 do
+        local j = math.random(i)
+        t[i], t[j] = t[j], t[i]
+    end
+end
+
+ShuffleInPlace(Messages)
 
 Messages.index = 1
 

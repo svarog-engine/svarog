@@ -92,26 +92,81 @@ local function CheckAttackIfStandingNextTo(entity)
 	end
 end
 
+local function CheckMoveTowardsPlayerThroughShadows(entity)
+	local ai = entity[AIMoveTowardsPlayerThroughShadows]
+	if ai ~= nil and entity[Hidden] == nil then
+		local pos = entity[Position]
+		local px, py = pos.x, pos.y
+		if not Dungeon.visibility:Get(px, py) then
+			if Chances[ai.chance]:MakeGuess() then
+				local oldDist = Dungeon.playerDistance:Get(px, py)
+				local cx, cy, cd = -100, -100, oldDist
+				for i = -5, 5 do
+					for j = -5, 5 do
+						if not (i == 0 and j == 0) then
+							local nx, ny = px + i, py + j
+							if Dungeon.floor:Has(nx, ny) and Dungeon.floor:Get(nx, ny).type == Floor then
+								local id = Dungeon.floor:ID(nx, ny)
+								local entities = Dungeon.entities[id] or {}
+								if #entities == 0 and not Dungeon.visibility:Get(nx, ny) then
+									local dist = Dungeon.playerDistance:Get(nx, ny)
+									if dist < cd then
+										cd = dist
+										cx = nx
+										cy = ny
+									end
+								end
+							end
+						end
+					end
+				end
+
+				if cd < oldDist then
+					table.insert(entity[Creature].goals, { "BlinkToPlayerShadow", 1, function() 
+						RemoveEntityFromDungeon(entity)
+						entity[Position].x = cx
+						entity[Position].y = cy
+						AddEntityToDungeon(cx, cy, entity)
+						local current = Dungeon.playerDistanceEmpty:Get(cx, cy)
+						local neighbors = Dungeon.playerDistanceEmpty:Neighbors(pos.x, pos.y)
+						for _, neighbor in ipairs(neighbors) do
+							if Dungeon.playerDistanceEmpty:Has(neighbor.x, neighbor.y) then
+								local value = Dungeon.playerDistance:Get(neighbor.x, neighbor.y)
+								if value < current then
+									PerformBump(entity, cx, cy, neighbor.x - cx, neighbor.y - cy)
+									return
+								end
+							end
+						end
+					end })
+				end
+			end
+		end
+	end
+end
+
 local function CheckMoveTowardsPlayer(entity)
 	local ai = entity[AIMoveTowardsPlayer]
 	if ai ~= nil then
 		local pos = entity[Position]
 		local current = Dungeon.playerDistance:Get(pos.x, pos.y)
-		local neighbors = Dungeon.playerDistanceEmpty:Neighbors(pos.x, pos.y)
-		for _, neighbor in ipairs(neighbors) do
-			if Dungeon.playerDistanceEmpty:Has(neighbor.x, neighbor.y) then
-				local value = Dungeon.playerDistance:Get(neighbor.x, neighbor.y)
-				if value < current and Chances[ai.chance]:MakeGuess() then
-					table.insert(entity[Creature].goals, { "MoveTowardsPlayer", 1, function() PerformBump(entity, pos.x, pos.y, neighbor.x - pos.x, neighbor.y - pos.y) end })
-				end
-			end
-		end
-		if #entity[Creature].goals == 0 then
+		if (ai.ifLessThanOrEqual ~= nil and current <= ai.ifLessThanOrEqual) or ai.ifLessThanOrEqual == nil then
+			local neighbors = Dungeon.playerDistanceEmpty:Neighbors(pos.x, pos.y)
 			for _, neighbor in ipairs(neighbors) do
 				if Dungeon.playerDistanceEmpty:Has(neighbor.x, neighbor.y) then
 					local value = Dungeon.playerDistance:Get(neighbor.x, neighbor.y)
-					if value <= current and Chances[ai.chance]:MakeGuess() then
+					if value < current and Chances[ai.chance]:MakeGuess() then
 						table.insert(entity[Creature].goals, { "MoveTowardsPlayer", 1, function() PerformBump(entity, pos.x, pos.y, neighbor.x - pos.x, neighbor.y - pos.y) end })
+					end
+				end
+			end
+			if #entity[Creature].goals == 0 then
+				for _, neighbor in ipairs(neighbors) do
+					if Dungeon.playerDistanceEmpty:Has(neighbor.x, neighbor.y) then
+						local value = Dungeon.playerDistance:Get(neighbor.x, neighbor.y)
+						if value <= current and Chances[ai.chance]:MakeGuess() then
+							table.insert(entity[Creature].goals, { "MoveTowardsPlayer", 1, function() PerformBump(entity, pos.x, pos.y, neighbor.x - pos.x, neighbor.y - pos.y) end })
+						end
 					end
 				end
 			end
@@ -167,7 +222,6 @@ end
 function AIBehavioursSystem:Tick()
 	local p = PlayerEntity[Position]
 	local px, py = p.x, p.y
-	--local CalmInfluencedAtLeastOneAI = 0
 	local DarkInfluencedAtLeastOneAI = 0
 
 	for _, entity in World:Exec(ECS.Query.All(Creature, Position)):Iterator() do
@@ -182,20 +236,12 @@ function AIBehavioursSystem:Tick()
 
 		local ex, ey = pos.x, pos.y
 		entity[Creature].goals = {}
-		
-		--if entity[Calm] ~= nil then
-		--	if Chances[entity[Calm].chance]:MakeGuess() then
-		--		CheckAIRest(entity)
-		--		CheckAIRest(entity)
-		--		CheckAIRest(entity)
-		--		CalmInfluencedAtLeastOneAI = CalmInfluencedAtLeastOneAI + 1
-		--	end
-		--end
 
 		if entity[Darken] ~= nil and Chances[entity[Darken].chance]:MakeGuess() then
 			sight = 0
 			DarkInfluencedAtLeastOneAI = DarkInfluencedAtLeastOneAI + 1
 		end
+
 		if Dungeon.playerDistance:Get(ex, ey) < sight then
 			CheckMoveTowardsPlayer(entity)
 			CheckKeepDistanceFromPlayer(entity)
@@ -211,16 +257,11 @@ function AIBehavioursSystem:Tick()
 			CheckBreakThroughToPlayer(entity)
 			CheckSpawnWhenDistantFromPlayer(entity)
 		end
+
+		CheckMoveTowardsPlayerThroughShadows(entity)
 	end
 
 	if PlayerEntity[Silenced] == nil then
-		--if CalmInfluencedAtLeastOneAI > 0 and DarkInfluencedAtLeastOneAI > 0 then
-		--	Diary.Write("Your enemies seem confused. Your [CALM] and [DARKEN] glyphs resonate.")
-		--	PlayerEntity[Tension]:Up(1)
-		--elseif CalmInfluencedAtLeastOneAI > 0 then
-		--	Diary.Write("Your enemies calmed a bit. Your [CALM] glyph tingles.")
-		--	PlayerEntity[Tension]:Up(0.5)
-		--else
 		if DarkInfluencedAtLeastOneAI > 0 then
 			Diary.Write("Your enemies are blind. Your [DARKEN] glyph tincts.")
 			PlayerEntity[Tension]:Up(0.5)
