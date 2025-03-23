@@ -50,7 +50,7 @@ function WinScreenRenderSystem:Render()
 		Engine.Write(x, 17, " THE  THRONE ")
 		Engine.Write(x, 18, "   of  the   ")
 		Engine.Write(x, 20, "GOBLIN  QUEEN")
-		Engine.Write(x, 22,     "     ----    ")
+		Engine.Write(x, 22,     "    -----    ")
 		if WinScreenFrame > 40 then
 			Engine.Write(x, 25, "Team   SVAROG ")
 		end

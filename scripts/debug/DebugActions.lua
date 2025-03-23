@@ -1,7 +1,7 @@
-Actions.Default.DebugFOV   = { Input.Press("Key: F1") }
-Actions.Default.DebugDistances = { Input.Press("Key: F2") }
-Actions.Default.DebugPrintDistances = { Input.Press("Key: F3") }
-Actions.Default.DebugSpawn = { Input.Press("Key: F4") }
+Actions.Default.DebugFOV   = { Input.Press("Key: F13") }
+Actions.Default.DebugDistances = { Input.Press("Key: F13") }
+Actions.Default.DebugPrintDistances = { Input.Press("Key: F13") }
+Actions.Default.DebugSpawn = { Input.Press("Key: F13") }
 
 Actions.DebugSpawn = {
 	Up     = { Input.Press("Key: Up") },

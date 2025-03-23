@@ -1,6 +1,7 @@
 ﻿-- Define your input actions here
 
 Actions.Default = {
+	Help	= { Input.Press("Key: F1") },
 	ScanOn	= { Input.Press("Key: LAlt") },
 	ScanOff	= { Input.Release("Key: LAlt") },
 	Wait	= { Input.Press("Key: Space") },
@@ -18,6 +19,10 @@ Actions.Default = {
 	Tension = { Input.Press("Key: T") },
 	Info = { Input.Press("Mouse: Left") },
 	ExpandDiary = { Input.Press("Key: Tab") },
+}
+
+Actions.Help = {
+	Back = { Input.Press("Key: Escape") },
 }
 
 Actions.Death = {

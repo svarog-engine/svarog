@@ -79,9 +79,9 @@ CompColors = {
 	Endure = { Colors.Blue, Colors.DarkBlue },
 	Heal = { Colors.LightRed, Colors.Red },
 	--Calm = { Colors.LightCyan, Colors.Cyan },
-	Flow = { Colors.Black , Colors.DarkCyan },
+	Flow = { Colors.Green , Colors.DarkCyan },
 	Open = { Colors.LightMagenta , Colors.Magenta },
-	Hate = { Colors.Black, Colors.DarkRed },
+	Hate = { Colors.Magenta, Colors.DarkRed },
 }
 
 function CanCast(itemId)
