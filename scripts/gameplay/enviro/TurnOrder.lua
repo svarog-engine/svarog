@@ -42,14 +42,23 @@ function TurnOrderSystem:Tick()
 					if #creature.goals > 0 then
 						creature.actions = creature.actions + 1
 						if creature.actions > 0 then
-							local system, cost, action = table.unpack(creature.goals[Rand:Range(1, #creature.goals)])
-							action()
-							creature.actions = creature.actions - cost
+							if Creature[Blindness] == nil or (Creature[Blindness] ~= nil and Chances[4]:MakeGuess()) then 
+								local system, cost, action = table.unpack(creature.goals[Rand:Range(1, #creature.goals)])
+								action()
+								creature.actions = creature.actions - cost
+							end
 						end
 					else
 						local pos = entity[Position]
-						local dx = Rand:Range(-1, 3)
-						local dy = Rand:Range(-1, 3)
+						local dp = Rand:Range(-1, 3)
+						local dx = 0
+						local dy = 0
+						if Chances[5]:MakeGuess() then
+							dx, dy = dp, 0
+						else
+							dx, dy = 0, dp
+						end
+
 						if not (dx == 0 and dy == 0) then
 							if Chances[5]:MakeGuess() then
 								local mov = perfBump(entity, pos.x, pos.y, dx, dy)	

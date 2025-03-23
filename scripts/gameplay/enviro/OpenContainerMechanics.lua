@@ -17,8 +17,8 @@ function OpenCrateSystem:Tick()
 				Diary.Write(" ")
 			else
 				Diary.Write(" ")
-				Diary.Write("You find... " .. BookNames[Rand:Range(1, #BookNames)] .. " by " .. Goblins[Rand:Range(1, #Goblins)] .. ", " .. Attr[Rand:Range(1, #Attr)] .. " " .. Jobs[Rand:Range(1, #Jobs)])
-				Diary.Write(" ")
+				Diary.Write("You find... " .. BookNames[Rand:Range(1, #BookNames)])
+				Diary.Write("   by " .. Goblins[Rand:Range(1, #Goblins)] .. ", " .. Attr[Rand:Range(1, #Attr)] .. " " .. Jobs[Rand:Range(1, #Jobs)])
 				Diary.Write(" ")
 			end
 			entity[Glyph].name = entity[Glyph].name .. "_empty"

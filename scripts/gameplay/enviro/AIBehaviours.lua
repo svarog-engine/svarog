@@ -238,13 +238,16 @@ function AIBehavioursSystem:Tick()
 		local ex, ey = pos.x, pos.y
 		entity[Creature].goals = {}
 
-		if entity[Blindness] == nil and PlayerEntity[Darken] ~= nil and Chances[PlayerEntity[Darken].chance]:MakeGuess() then
+		if Dungeon.visibility:Get(ex, ey) and entity[Blindness] == nil and PlayerEntity[Darken] ~= nil and 
+		  Chances[PlayerEntity[Darken].chance]:MakeGuess() and Chances[PlayerEntity[Darken].chance]:MakeGuess() then
 			sight = 0
+			entity:Set(Blindness{ current = 5, maximum = 5 })
 			DarkInfluencedAtLeastOneAI = DarkInfluencedAtLeastOneAI + 1
+			Diary.Write("Your [DARKEN] glyph tincts: the " .. entity[Name].value .. " went blind.")
 		end
 
 		if Dungeon.playerDistance:Get(ex, ey) < sight then
-			if not entity[Blindness] then
+			if entity[Blindness] == nil then
 				CheckMoveTowardsPlayer(entity)
 				CheckKeepDistanceFromPlayer(entity)
 				CheckAIRest(entity)
@@ -254,9 +257,7 @@ function AIBehavioursSystem:Tick()
 				CheckSpawnWhenDistantFromPlayer(entity)
 			end
 		else
-			if entity[Blindness] then
-				CheckAIRest(entity)
-			else
+			if entity[Blindness] == nil then
 				CheckAttackIfStandingNextTo(entity)
 				CheckRandomWalk(entity)
 				CheckAIRest(entity)
@@ -270,7 +271,6 @@ function AIBehavioursSystem:Tick()
 
 	if PlayerEntity[Silenced] == nil then
 		if DarkInfluencedAtLeastOneAI > 0 then
-			Diary.Write("Your [DARKEN] glyph tincts: your enemies went blind.")
 			PlayerEntity[Tension]:Up(0.25)
 		end
 	end

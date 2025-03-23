@@ -442,7 +442,6 @@ function Procgen.Statue(e, x, y)
 	local text = "Statue of " .. Goblins[Rand:Range(1, #Goblins)] .. ", " .. Attr[Rand:Range(1, #Attr)] .. " " .. Jobs[Rand:Range(1, #Jobs)]
 	e:Set(Name(text))
 	e:Set(BumpDiary{ text = text })
-	e:Set(ScanEntry{})
 end
 
 function Procgen.Candle(e, x, y)
@@ -621,7 +620,7 @@ end
 function Procgen.Ooze(e, x, y)
 	e:Set(
 		Creature{},
-		Name{ value = "Gelatinous Cube" },
+		Name{ value = "Ooze" },
 		Sight{ radius = 20 },
 		Magic{ value = Rand:F01(), colors = CompColors["Flow"] },
 		AIMoveTowardsPlayer{ distance = 0, chance = 6 },

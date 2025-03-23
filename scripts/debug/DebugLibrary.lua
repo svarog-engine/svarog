@@ -23,7 +23,7 @@ DebugSpawnLibrary = {
 				AIMoveTowardsPlayer{ distance = 0, chance = 9 },
 				Health(Range(3)),
 				BumpAttack { damage = 2 },
-				Darken {level = 1, chance = 8 },
+				Darken {level = 1, chance = 3 },
 				Position{ x = x, y = y },
 				Glyph{ name = "goblin" },
 				Name("goblin")
