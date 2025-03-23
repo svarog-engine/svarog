@@ -221,6 +221,10 @@ Engine.RegisterInputSystem({ Action_Default_ExpandDiary }, function()
 	DiaryEntity:Set(Expanded())
 end)
 
+Engine.RegisterInputSystem({ Action_Default_Exit }, function() 
+	Svarog.Instance:Shutdown()
+end)
+
 Engine.RegisterInputSystem({ Action_Diary_Exit }, function() 
 	Input.Pop()
 	DiaryEntity:Unset(Expanded)

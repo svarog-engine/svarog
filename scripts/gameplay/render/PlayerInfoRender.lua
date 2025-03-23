@@ -47,8 +47,8 @@ function PlayerInfoRenderSystem.Render(ui)
 	UIRenderer.ClearBox(47, 2, 20, 20)
 
 	if Level ~= nil and not FIN then
-		ui.PushBox(1, 1, 20, 2)
-			ui.Label("DEPTH: " .. tostring(Level) .. "/6")
+		ui.PushBox(1, 1, 40, 2)
+			ui.Label(" [F1] Help    |    DEPTH: " .. tostring(Level) .. "/6                  ")
 		ui.PopBox()
 	end
 

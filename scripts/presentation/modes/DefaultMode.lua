@@ -54,7 +54,7 @@ Glossary.Default = {
 	statue = { x = 0, y = 1, fg = Colors.LightGray, bg = Colors.DarkGray },
 	sacrifice = { x = 0, y = 1, fg = Colors.Red, bg = Colors.Black },
 	seal = { x = 17, y = 1, fg = Colors.LightGray, bg = Colors.DarkGray },
-	furnace = { x = 20, y = 15, fg = Colors.Black, bg = Colors.LightRed },
+	furnace = { x = 22, y = 1, fg = Colors.Black, bg = Colors.LightRed },
 	candle = { x = 13, y = 6, fg = Colors.Yellow, bg = Colors.Black },
 	grate1 = { x = 31, y = 1, fg = Colors.DarkBlue, bg = Colors.LightRed },
 	grate2 = { x = 31, y = 1, fg = Colors.LightBlue, bg = Colors.DarkRed },

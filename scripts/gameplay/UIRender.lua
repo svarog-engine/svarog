@@ -11,6 +11,8 @@ local UISettings = {
 	boxes = Stack(),
 	orders = Stack(),
 	styles = Stack(),
+	xs = Stack(),
+	ys = Stack(),
 }
 
 local FH = function(dx, dy) UISettings.x = UISettings.x + dx end
@@ -136,8 +138,10 @@ UIRenderer = {
 	PushOrder = function(order)
 		UISettings.orders:push(UISettings.order)
 		if order == "-" then
+			UISettings.xs:push(UISettings.x)
 			UISettings.order = FH
 		elseif order == "|" then
+			UISettings.ys:push(UISettings.y)
 			UISettings.order = FV
 		else
 			UISettings.order = FID
@@ -145,6 +149,11 @@ UIRenderer = {
 	end,
 
 	PopOrder = function()
+		if UISettings.order == FH then
+			UISettings.x = UISettings.xs:pop()
+		elseif UISettings.order == FV then
+			UISettings.y = UISettings.ys:pop()
+		end
 		UISettings.order = UISettings.orders:pop()
 	end,
 
