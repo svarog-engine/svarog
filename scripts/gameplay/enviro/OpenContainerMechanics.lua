@@ -10,11 +10,16 @@ function OpenCrateSystem:Tick()
 
 		local shelveComp = entity[Shelve]
 		if shelveComp ~= nil and who == PlayerEntity then
-			Diary.Write(" ")
-			Diary.Write("You learn:")
-			Diary.Write("  " .. GetNextMessage())
-			Diary.Write(" ")
-
+			if Chances[5]:MakeGuess() then
+				Diary.Write(" ")
+				Diary.Write("You learn:")
+				Diary.Write("  " .. GetNextMessage())
+				Diary.Write(" ")
+			elseif Chances[7]:MakeGuess() then
+				Diary.Write(" ")
+				Diary.Write("You find... ")
+				Diary.Write("  " .. BookNames[Rand:Range(1, #BookNames)] .. " by " .. Goblins[Rand:Range(1, #Goblins)] .. ", " .. Attr[Rand:Range(1, #Attr)] .. " " .. Jobs[Rand:Range(1, #Jobs)])
+			end
 			entity[Glyph].name = entity[Glyph].name .. "_empty"
 			entity:Unset(Shelve)
 		elseif who[Contents] ~= nil then

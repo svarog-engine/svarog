@@ -376,9 +376,70 @@ function Procgen.Cauldron(e, x, y)
 	end
 end
 
+Goblins = { 
+	"Borkle",   "Marrow",   "Tododon",   "Sparkmack",   "Svish",   "Mogglewog",   "Bendigo",   "Jare",   "Peacho",   "Lock",   
+	"Shock",   "Barrel",   "Snik",   "Snak",   "Gordo",   "Nipmonger",   "Riddle",   "Spip",   "Kaa",   "Bonegrundle",   "Yaxmax",   
+	"Tamborine",   "Riggity",   "Fishspleen",   "Bladder Dan",   "Mumblemorg",   "Piss Jar",   "Kettle",   "Gnogin",   "Eee",   
+	"Rattrap",   "Bigsmalls",   "Pork",   "Fwip",   "Gong",   "Zaza",   "Meeg",   "Meeg Two",   "Meeg Three",   "Spud",   "Uvano",   
+	"Pingpang",   "Bowel",   "Ham",   "Gritgrash",   "Countbean",   "Sap Sam",   "Leek Leek",   "Bwob",   "Parsnip Jr.",   "Parsnip Sr,",   
+	"Fat Cat",   "Eyemasher",   "Quiss",   "Wawa",   "Spork",   "Turnaround",   "Barfknees",   "KnifeyMcFingers",   "Cowshout",   "Spank",   
+	"Stumpy",   "Backwater",   "Crowlaw",   "Clockwind",   "Burtlan",   "Smee",   "Macintosh",   "Sexpants",   "Ol' Crabapple",   "Muckman",   
+	"Dirtwallow",   "Crooknose",   "Beetlepocket",   "Sticky",   "Vraaz",   "Vick",   "Brackish",   "Pondjohn",   "Waxmuncher",   "Wicklicker",   
+	"Candleear",   "Grimm",   "Portho",   "Odo",   "Fleshgutter",   "Slugsnatcher",   "Milksalt",   "Stewslosh",   "Cast Iron",   "Dutch",   
+	"Squirrelskinner",   "Froggrope",   "Topsyturvy",   "Lardmouth",   "Thighflayer",   "Sinew",   "Hypotenoose",   "Gallow",   "Boblin", 
+}
+
+Attr = {
+	"Great",
+	"Destined",
+	"Auld",
+	"Holy",
+	"Our",
+	"Auld",
+	"Holy",
+	"Beloved",
+	"Auld",
+	"Holy",
+	"Our",
+	"Troubled",
+}
+
+Jobs = {
+	"Survivor",
+	"Healer",
+	"Miner",
+	"Builder",
+	"Librarian",
+	"Inventor",
+	"Warrior",
+	"Seamstress",
+	"Queen",
+}
+
+BookNames = {
+	"Grimoire",
+	"Fables",
+	"Fables",
+	"Histories",
+	"Poems",
+	"Poems",
+	"Bundle of Scripts",
+	"Scribbles",
+	"Scribbles",
+	"Scribbles",
+	"Scribbles",
+	"Mad Notes",
+	"Cyphers",
+	"Psychoanalysis",
+	"COBOL Handbook",
+	"Arcane Treaties",
+}
+
 function Procgen.Statue(e, x, y)
 	e:Set(BlockingPassage{})
 	e:Set(Glyph{ name = "statue" })
+	e:Set(Name("Statue of " .. Goblins[Rand:Range(1, #Goblins)] .. ", " .. Attr[Rand:Range(1, #Attr)] .. " " .. Jobs[Rand:Range(1, #Jobs)]))
+	e:Set(ScanEntry{})
 end
 
 function Procgen.Candle(e, x, y)
@@ -696,60 +757,59 @@ end
 function Templates.ShrineRoom(cx, cy)
 	local oldDist = Dungeon.wallDistances:Get(cx, cy)
 	local newDist = oldDist
-	if oldDist >= 2 then
-		local x, y = cx, cy
-		local attempts = 100
-		while attempts > 0 do
-			attempts = attempts - 1
-			local startDist = oldDist
-			for _, t in ipairs(Dungeon.wallDistances:Neighbors(x, y)) do
-				newDist = Dungeon.wallDistances:Get(t.x, t.y)
-				if newDist > oldDist and Dungeon.zones:Get(t.x, t.y) >= 0 then
-					oldDist = newDist
-					x, y = t.x, t.y
-				end
-			end
-
-			if startDist == newDist then
-				break
+	
+	local x, y = cx, cy
+	local attempts = 100
+	while attempts > 0 do
+		attempts = attempts - 1
+		local startDist = oldDist
+		for _, t in ipairs(Dungeon.wallDistances:Neighbors(x, y)) do
+			newDist = Dungeon.wallDistances:Get(t.x, t.y)
+			if newDist > oldDist and Dungeon.zones:Get(t.x, t.y) >= 0 then
+				oldDist = newDist
+				x, y = t.x, t.y
 			end
 		end
 
-		if newDist >= 5 then
-			cx, cy = x, y
-			local c = Geometry.MakeCircle(x, y, newDist - 1)
-			local bound = Geometry.Boundary(c).Points:GetEnumerator()
-			local surf = Geometry.Surface(c).Points:GetEnumerator()
+		if startDist == newDist then
+			break
+		end
+	end
 
-			local i = 0
-			while surf:MoveNext() do
-				local x, y = surf.Current.X, surf.Current.Y
-				if Dungeon.zones:Get(x, y) >= 0 then
-					Dungeon.zones:Set(x, y, -1)
-					local tile = Dungeon.floor:Get(x, y)
-					tile.type = Floor
-					if tile.entity ~= nil then
-						RemoveEntityFromDungeon(tile.entity)
-						tile.entity = nil
-					end
-					i = i + 1
-				else
-					return
+	if newDist >= 5 then
+		cx, cy = x, y
+		local c = Geometry.MakeCircle(x, y, newDist - 1)
+		local bound = Geometry.Boundary(c).Points:GetEnumerator()
+		local surf = Geometry.Surface(c).Points:GetEnumerator()
+
+		local i = 0
+		while surf:MoveNext() do
+			local x, y = surf.Current.X, surf.Current.Y
+			if Dungeon.zones:Get(x, y) >= 0 then
+				Dungeon.zones:Set(x, y, -1)
+				local tile = Dungeon.floor:Get(x, y)
+				tile.type = Floor
+				if tile.entity ~= nil then
+					RemoveEntityFromDungeon(tile.entity)
+					tile.entity = nil
+				end
+				i = i + 1
+			else
+				return
+			end
+		end
+
+		if i > 0 then
+			print("SHRINE DONE IN " .. tostring(i) .. " STEPS")
+
+			while bound:MoveNext() do
+				local x, y = bound.Current.X, bound.Current.Y
+				if Chances[5]:MakeGuess() then
+					Procgen.MakeObject("Candle", x, y)
 				end
 			end
 
-			if i > 0 then
-				print("SHRINE DONE IN " .. tostring(i) .. " STEPS")
-
-				while bound:MoveNext() do
-					local x, y = bound.Current.X, bound.Current.Y
-					if Chances[5]:MakeGuess() then
-						Procgen.MakeObject("Candle", x, y)
-					end
-				end
-
-				Procgen.MakeObject("Statue", cx, cy)
-			end
+			Procgen.MakeObject("Statue", cx, cy)
 		end
 	end
 end
