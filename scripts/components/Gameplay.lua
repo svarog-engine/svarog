@@ -12,7 +12,6 @@ Pause = ECS.Component{ duration = 0 }
 Friendly = ECS.Component()
 Creature = ECS.Component{ goals = {}, actions = 0, timestamp = 0 }
 SplitOnHit = ECS.Component{ what = nil }
-HideIfHit = ECS.Component{}
 Hidden = ECS.Component{ duration = 0 }
 
 function TickCreature(entity)

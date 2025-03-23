@@ -94,6 +94,7 @@ end
 
 local function CheckMoveTowardsPlayerThroughShadows(entity)
 	local ai = entity[AIMoveTowardsPlayerThroughShadows]
+
 	if ai ~= nil and entity[Hidden] == nil then
 		local pos = entity[Position]
 		local px, py = pos.x, pos.y

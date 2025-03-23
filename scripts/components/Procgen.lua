@@ -327,12 +327,11 @@ function Procgen.Phantasm(e, x, y)
 		Creature{}, 
 		Sight{ radius = 10 },
 		AIMoveTowardsPlayer{ ifLessThanOrEqual = 2, distance = 0, chance = 5 }, 
-		AIMoveTowardsPlayerThroughShadows{ chance = 7 },
-		HideIfHit{ chance = 7 },
+		AIMoveTowardsPlayerThroughShadows{ chance = 10 },
 		Health(Range(6, 6)),
 		BumpAttack { damage = 3 }, 
 		Glyph{ name = "phantasm" },
-		Heal{},
+		Heal{ chance = 9 },
 		Contents{ items = { { itemId = "gold", quantity = 300 } } }
 	)
 end

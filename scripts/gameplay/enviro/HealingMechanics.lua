@@ -48,6 +48,8 @@ function HealingSystem:Tick()
 				else
 					Diary.Write("Your wounds heal. Your [HEAL] glyph quivers.")
 				end
+			elseif Dungeon.visibility:Get(entity[Position].x, entity[Position].y) then
+				Diary.Write("You see wounds slowly stitch back together on the " .. entity[Name].value)
 			end
 		end
 
