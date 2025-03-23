@@ -317,6 +317,7 @@ function Procgen.Kobold(e, x, y)
 		BumpAttack { damage = 2 }, 
 		Glyph{ name = "kobold" },
 		Burnable{},
+		Darken{},
 		Contents{ items = { { itemId = "gold", quantity = 5 } } }
 	)
 end
@@ -332,7 +333,6 @@ function Procgen.Phantasm(e, x, y)
 		BumpAttack { damage = 3 }, 
 		Glyph{ name = "phantasm" },
 		Heal{},
-		Darken{},
 		Contents{ items = { { itemId = "gold", quantity = 300 } } }
 	)
 end

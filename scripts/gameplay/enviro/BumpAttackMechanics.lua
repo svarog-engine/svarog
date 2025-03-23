@@ -114,7 +114,17 @@ end
 local function CheckInflictStatus(entity, target)
 	local darken = entity[Darken]
 	if entity[Silenced] == nil and darken ~= nil and Chances[darken.chance]:MakeGuess() then
-		target:Set(InflictStatus{ component = function() return Blindness { current = 3, maximum = 3 } end })
+		if target[Darken] == nil then
+			local r = Rand:Range(1, 3)
+			target:Set(InflictStatus{ component = function() return Blindness { current = r, maximum = r } end })
+			if target == PlayerEntity then
+				Diary.Write("The " .. entity[Name].value .. " blinded you!")
+			end
+		else
+			if target == PlayerEntity then
+				Diary.Write("The " .. entity[Name].value .. " blinded you, but you are the darkness!")
+			end
+		end
 	end
 end
 
