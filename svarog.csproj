@@ -1,13 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <Configurations>Debug;Release;DebugBin;ReleaseBin</Configurations>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <ApplicationIcon>resources\rlrs.ico</ApplicationIcon>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseBin|AnyCPU'">
@@ -63,6 +64,10 @@
     <None Remove="scripts\gameplay\render\WinScreenRender.lua" />
     <None Remove="scripts\gameplay\Wheels.lua" />
     <None Remove="scripts\presentation\Colors.lua" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="resources\rlrs.ico" />
   </ItemGroup>
 
   <ItemGroup>

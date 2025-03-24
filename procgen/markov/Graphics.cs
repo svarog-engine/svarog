@@ -13,8 +13,14 @@ static class Graphics
     {
         try
         {
-            using Stream s = Svarog.Instance.FileSystem.GetStream(filename);
-            var image = new Image(s);
+            byte[] arr = null;
+            using (Stream s = Svarog.Instance.FileSystem.GetStream(filename))
+            using (var memoryStream = new MemoryStream())
+            {
+                s.CopyTo(memoryStream);
+                arr = memoryStream.ToArray();
+            }
+            var image = new Image(arr);
 
             int width = (int)image.Size.X, height = (int)image.Size.Y;
             int[] result = new int[width * height];
