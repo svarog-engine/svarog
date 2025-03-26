@@ -261,13 +261,16 @@ function StartMeasure()
     end
 end
 
+local min = math.min
+local max = math.max
+
 function EndMeasure(name)
     if DoMeasurements then
 	    end_time = os.clock()
         elapsed_time = end_time - start_time
         Measurements.last[name] = elapsed_time
-        Measurements.min[name] = math.min(Measurements.min[name] or 10000, elapsed_time)
-        Measurements.max[name] = math.max(Measurements.max[name] or -1, elapsed_time)
+        Measurements.min[name] = min(Measurements.min[name] or 10000, elapsed_time)
+        Measurements.max[name] = max(Measurements.max[name] or -1, elapsed_time)
         if Measurements.average[name] == nil then
             Measurements.average[name] = elapsed_time
             Measurements.averageCount[name] = 1

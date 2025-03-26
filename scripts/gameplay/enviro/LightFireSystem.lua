@@ -1,9 +1,12 @@
 ﻿
 local LightFireSystem = Engine.RegisterEnviroSystem("Light Fire")
 
+local sqrt = math.sqrt
+local ceil = math.ceil
+
 local function Distance(x1, y1, x2, y2)
 	local dx, dy = x1 - x2, y1 - y2
-	return math.sqrt(dx * dx + dy * dy)
+	return sqrt(dx * dx + dy * dy)
 end
 
 function LightFireSystem:ShouldTick()
@@ -16,7 +19,7 @@ function LightFireSystem:Tick()
 
 	for _, entity in World:Exec(ECS.Query.All(Burning, Position).None(Spread, Health)):Iterator() do
 		local ex, ey = entity[Position].x, entity[Position].y
-		local d = math.ceil(Distance(px, py, ex, ey))
+		local d = ceil(Distance(px, py, ex, ey))
 		
 		if d < 10 then
 			if Chances[d]:MakeGuess() and Chances[PlayerEntity[Light].chance]:MakeGuess() then

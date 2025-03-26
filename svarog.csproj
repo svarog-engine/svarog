@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -27,44 +27,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugBin|AnyCPU'">
     <DebugType>embedded</DebugType>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="scripts\components\ai.lua" />
-    <None Remove="scripts\components\Diary.lua" />
-    <None Remove="scripts\components\Procgen.lua" />
-    <None Remove="scripts\components\Render.lua" />
-    <None Remove="scripts\components\Status.lua" />
-    <None Remove="scripts\components\UI.lua" />
-    <None Remove="scripts\components\Words.lua" />
-    <None Remove="scripts\components\World.lua" />
-    <None Remove="scripts\debug\DebugWordsLibrary.lua" />
-    <None Remove="scripts\gameplay\algorithms\Bresenham.lua" />
-    <None Remove="scripts\gameplay\algorithms\Lerp.lua" />
-    <None Remove="scripts\gameplay\algorithms\Range.lua" />
-    <None Remove="scripts\gameplay\algorithms\Stack.lua" />
-    <None Remove="scripts\gameplay\Chances.lua" />
-    <None Remove="scripts\gameplay\enviro\BumpAltarMechanics.lua" />
-    <None Remove="scripts\gameplay\enviro\DelayedDamageMechanics.lua" />
-    <None Remove="scripts\gameplay\enviro\FireSpreadingMechanics.lua" />
-    <None Remove="scripts\gameplay\enviro\HateMechanics.lua" />
-    <None Remove="scripts\gameplay\enviro\HealingMechanics.lua" />
-    <None Remove="scripts\gameplay\enviro\InflictStatusMechanics.lua" />
-    <None Remove="scripts\gameplay\enviro\LightFireSystem.lua" />
-    <None Remove="scripts\gameplay\enviro\StatusEffectUpdate.lua" />
-    <None Remove="scripts\gameplay\player\InventoryInputActions.lua" />
-    <None Remove="scripts\gameplay\player\InventoryUpdate.lua" />
-    <None Remove="scripts\gameplay\player\TargetingInputActions.lua" />
-    <None Remove="scripts\gameplay\render\PlayerBasedExplosion.lua" />
-    <None Remove="scripts\gameplay\render\PlayerInfoRender.lua" />
-    <None Remove="scripts\gameplay\render\PossibleMoveRender.lua" />
-    <None Remove="scripts\gameplay\render\TimeoutCounterRender.lua" />
-    <None Remove="scripts\gameplay\render\UIRender.lua" />
-    <None Remove="scripts\gameplay\render\UITestRender.lua" />
-    <None Remove="scripts\gameplay\render\VFXRender.lua" />
-    <None Remove="scripts\gameplay\render\WinScreenRender.lua" />
-    <None Remove="scripts\gameplay\Wheels.lua" />
-    <None Remove="scripts\presentation\Colors.lua" />
-  </ItemGroup>
 
   <ItemGroup>
     <Content Include="resources\rlrs.ico" />

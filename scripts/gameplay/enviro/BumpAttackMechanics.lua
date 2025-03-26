@@ -1,5 +1,7 @@
 local BumpAttackMechanicsSystem = Engine.RegisterEnviroSystem("Bump Attack")
 
+local floor = math.floor
+
 local function CalculateDamage(attackerEntity, targetEntity)
 	local baseDamage = (attackerEntity[BumpAttack] ~= nil and attackerEntity[BumpAttack].damage) or 0
 	-- Check for components and add to equation
@@ -206,7 +208,7 @@ function BumpAttackMechanicsSystem:Tick()
 				else
 					if entity[SplitOnHit] ~= nil then
 						if Chances[3]:MakeGuess() then
-							local half = math.floor(entity[Health].current / 2)
+							local half = floor(entity[Health].current / 2)
 							if half > 1 then
 								local pos = entity[Position]
 								entity[Health].current = half

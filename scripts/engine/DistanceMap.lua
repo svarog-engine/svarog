@@ -2,6 +2,9 @@
 
 local MAX = 10001
 
+local floor = math.floor
+local min = math.min
+
 function DistanceMap.IS_FLOOR(map, x, y)
 	return map.origin:Get(x, y).type == Floor
 end
@@ -23,7 +26,7 @@ function DistanceMap:From(map, goals, low, limit)
 	o.limit = limit
 
 	for _, g in ipairs(goals) do
-		table.insert(o.goals, { math.floor(g[1]), math.floor(g[2]) })
+		table.insert(o.goals, { floor(g[1]), floor(g[2]) })
 	end
 
 	o.counts = {}
@@ -142,8 +145,8 @@ function DistanceMap:Flood()
 		self.tiles:Set(xy[1], xy[2], self.low)
 		self:Count(self.low, { xy[1], xy[2] })
 		if DebugToggle_PrintDistances then
-			xy[1] = math.floor(xy[1])
-			xy[2] = math.floor(xy[2])
+			xy[1] = floor(xy[1])
+			xy[2] = floor(xy[2])
 			print("Setting goal to 0 at " .. xy[1] .. ", " .. xy[2])
 		end
 	end	
@@ -153,8 +156,8 @@ function DistanceMap:Flood()
 		if not visited[next] then
 			visited[next] = true
 			local x, y = self.origin:XY(next)
-			x = math.floor(x)
-			y = math.floor(y)
+			x = floor(x)
+			y = floor(y)
 
 			if DebugToggle_PrintDistances then
 				print(" === VALUE ASSIGN ===")
@@ -162,16 +165,16 @@ function DistanceMap:Flood()
 			end
 
 			if self.tiles:Has(x, y) and self.tiles:Get(x, y) == MAX then
-				local min = MAX
+				local minimum = MAX
 				for _, n in ipairs(self.neighbors) do
 					local neighbor = self.tiles:Get(x + n[1], y + n[2]) or MAX
-					min = math.min(min, neighbor)
+					minimum = min(minimum, neighbor)
 				end
-				self.tiles:Set(x, y, min + 1)
-				self:Count(min + 1, x, y)
+				self.tiles:Set(x, y, minimum + 1)
+				self:Count(minimum + 1, x, y)
 
 				if DebugToggle_PrintDistances then
-					print("  Setting new value at " .. x .. ", " .. y .. " to " .. (min + 1))
+					print("  Setting new value at " .. x .. ", " .. y .. " to " .. (minimum + 1))
 				end
 			end
 

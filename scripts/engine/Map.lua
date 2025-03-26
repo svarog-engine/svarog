@@ -1,5 +1,7 @@
 ﻿local Map = {}
 
+local floor = math.floor
+
 function Map:New(w, h, defaultValue)
 	o = { width = w, height = h, tiles = {}, keys = {} }
 	for i = 1, w do
@@ -34,20 +36,20 @@ function Map:ID(x, y)
 end
 
 function Map:XY(k)
-	return k % self.width, math.floor(k / self.width)
+	return k % self.width, floor(k / self.width)
 end
 
 function Map:Set(x, y, value)
-	self.tiles[math.floor(x)][math.floor(y)] = value
+	self.tiles[floor(x)][floor(y)] = value
 end
 
 function Map:Unset(x, y)
-	self.tiles[math.floor(x)][math.floor(y)] = nil
+	self.tiles[floor(x)][floor(y)] = nil
 end
 
 function Map:Get(x, y)
-	x = math.floor(x)
-	y = math.floor(y)
+	x = floor(x)
+	y = floor(y)
 	if self.tiles[x] == nil then 
 		return nil
 	end
@@ -55,15 +57,15 @@ function Map:Get(x, y)
 end
 
 function Map:Has(x, y)
-	x = math.floor(x)
-	y = math.floor(y)
+	x = floor(x)
+	y = floor(y)
 	if self.tiles[x] == nil then return false end
 	return self.tiles[x][y] ~= nil
 end
 
 function Map:Neighbors(x, y)
-	x = math.floor(x)
-	y = math.floor(y)
+	x = floor(x)
+	y = floor(y)
 	if self:Has(x, y) ~= nil then
 		local results = {}
 		if self:Has(x - 1, y) ~= nil then table.insert(results, { x = x - 1, y = y }) end

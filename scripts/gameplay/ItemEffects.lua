@@ -20,6 +20,8 @@ local ItemCastNames = {
 	topaz = "Open",
 }
 
+local sqrt = math.sqrt
+
 function CanConsume(itemId)
 	return ItemConsume[itemId] ~= nil
 end
@@ -90,7 +92,7 @@ end
 
 local function Distance(x1, y1, x2, y2)
 	local dx, dy = x1 - x2, y1 - y2
-	return math.sqrt(dx * dx + dy * dy)
+	return sqrt(dx * dx + dy * dy)
 end
 
 function Cast(itemId)

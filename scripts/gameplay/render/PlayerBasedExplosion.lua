@@ -1,6 +1,9 @@
 ﻿
 local PlayerBasedExplosionSystem = Engine.RegisterRenderSystem("Player Explosion Render")
 
+local min = math.min
+local max = math.max
+
 function PlayerBasedExplosionSystem:ShouldRender()
 	return Dungeon ~= nil and Dungeon.playerDistance ~= nil
 end
@@ -16,10 +19,10 @@ function PlayerBasedExplosionSystem:Render()
 		if vfx.current > vfx.maximum then
 			entity:Unset(VFXExplosion)
 		else
-			local px = math.max(1, x - vfx.maximum)
-			local qx = math.min(w, x + vfx.maximum)			
-			local py = math.max(1, y - vfx.maximum)
-			local qy = math.min(h, y + vfx.maximum)
+			local px = max(1, x - vfx.maximum)
+			local qx = min(w, x + vfx.maximum)			
+			local py = max(1, y - vfx.maximum)
+			local qy = min(h, y + vfx.maximum)
 
 			for i = px, qx do
 				for j = py, qy do

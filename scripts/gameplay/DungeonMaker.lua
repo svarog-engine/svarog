@@ -22,6 +22,9 @@
 	Dungeon.created = true
 end
 
+local ceil = math.ceil
+local floor = math.floor
+
 -- make shell 
 --  012
 --  783
@@ -61,7 +64,7 @@ local function SpecificRoomSetup(l, w, h)
 		local bucketIndex = Dungeon.wallDistances:GetHighestBucket()
 		local bucket = Dungeon.wallDistances:GetAt(bucketIndex)
 		r = Rand:Range(1, #bucket)
-		local rx, ry = math.floor(bucket[r].x), math.floor(bucket[r].y)
+		local rx, ry = floor(bucket[r].x), floor(bucket[r].y)
 		local comps = OtherComps({})
 		Procgen.MakeObject("SatiatedAltar", rx, ry, "Endure")
 
@@ -87,12 +90,12 @@ local function SpecificRoomSetup(l, w, h)
 
 		for _, message in ipairs(messages) do
 			r = Rand:Range(1, #bucket)
-			local rx, ry = math.floor(bucket[r].x), math.floor(bucket[r].y)
+			local rx, ry = floor(bucket[r].x), floor(bucket[r].y)
 			table.remove(bucket, r)
 			Procgen.MakeObject("Book", rx, ry, message)
 		end
 
-		return { { math.floor(w / 2), math.floor(h / 2) } }
+		return { { floor(w / 2), floor(h / 2) } }
 
 	elseif l < 5 then
 		local centers = {}
@@ -105,9 +108,9 @@ local function SpecificRoomSetup(l, w, h)
 
 		local specials = 1
 		local rest = OtherComps(PlayerEntity[Boons].value)
-		local w3, h3 = math.ceil(w / 3), math.ceil(h / 3)
+		local w3, h3 = ceil(w / 3), ceil(h / 3)
 
-		local numberOfKeys = math.ceil(Dungeon.numberOfChests / 2)
+		local numberOfKeys = ceil(Dungeon.numberOfChests / 2)
 		if numberOfKeys <= 0 then numberOfKeys = 1 end
 		while bucketIndex > 0 do
 			local usedRs = {}
@@ -126,9 +129,9 @@ local function SpecificRoomSetup(l, w, h)
 					until usedRs[r] == nil
 					usedRs[r] = true
 
-					local rx, ry = math.floor(bucket[r].x), math.floor(bucket[r].y)
+					local rx, ry = floor(bucket[r].x), floor(bucket[r].y)
 					table.insert(centers, { rx, ry })
-					local cx, cy = math.floor(rx / w3), math.floor(ry / h3)
+					local cx, cy = floor(rx / w3), floor(ry / h3)
 
 					if specials > 0 then
 						local ri = Rand:Range(1, #rest)
@@ -171,7 +174,7 @@ local function SpecificRoomSetup(l, w, h)
 		local bucketIndex = Dungeon.wallDistances:GetHighestBucket()
 		local bucket = Dungeon.wallDistances:GetAt(bucketIndex)
 		r = Rand:Range(1, #bucket)
-		local rx, ry = math.floor(bucket[r].x), math.floor(bucket[r].y)
+		local rx, ry = floor(bucket[r].x), floor(bucket[r].y)
 		local ax, ay = rx, ry - 4
 
 		Procgen.MakeObject("SatiatedAltar", ax, ay, "Hate")
@@ -203,16 +206,16 @@ local function SpecificRoomSetup(l, w, h)
 			Procgen.MakeObject("Pillar", ax - 4, ay - 10 + i * 2)
 			Procgen.MakeObject("Pillar", ax + 4, ay - 10 + i * 2)
 		end
-		return { { math.floor(w / 2), math.floor(h / 2) } }
+		return { { floor(w / 2), floor(h / 2) } }
 	elseif l == 6 then
 		local bucketIndex = Dungeon.wallDistances:GetHighestBucket()
 		local bucket = Dungeon.wallDistances:GetAt(bucketIndex)
 		local p = bucket[1]
 		for i, f in ipairs(bucket) do
-			local rx, ry = math.floor(bucket[i].x), math.floor(bucket[i].y)	
+			local rx, ry = floor(bucket[i].x), floor(bucket[i].y)	
 			Procgen.MakeObject("Sacrifice", rx, ry, 5)
 		end
-		return { { math.floor(w / 2), math.floor(h / 2) } }
+		return { { floor(w / 2), floor(h / 2) } }
 	end
 end
 

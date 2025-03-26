@@ -3,6 +3,8 @@ local ShadowcastSystem = Engine.RegisterEnviroSystem("Shadowcast")
 local FOV_algorithm = Algorithms.RecursiveShadowcast
 local arc = 2 * math.pi -- full circle
 
+local ceil = math.ceil
+
 function OnVisible(x, y)
 	Dungeon.visibility:Set(x, y, 1)
 	Dungeon.visited:Set(x, y, 1)
@@ -45,7 +47,7 @@ function ShadowcastSystem:Tick()
 
 	local blindness = PlayerEntity[Blindness]	
 	if PlayerEntity[Light] ~= nil then
-		radius = math.ceil(2 * radius)
+		radius = ceil(2 * radius)
 	end
 
 	FOV = {}

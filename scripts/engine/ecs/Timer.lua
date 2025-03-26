@@ -2,6 +2,11 @@
 -- if execution is slow, perform a maximum of 4 simultaneous updates in order to keep the fixrate
 local MAX_SKIP_FRAMES = 4
 
+local min = math.min
+local max = math.max
+local abs = math.abs
+local floor = math.floor
+
 local function loop(Time)
 
    local accumulator = 0.0
@@ -47,7 +52,7 @@ local function loop(Time)
             end
          end
       else
-         Time.Interpolation = math.min(math.max(accumulator/dtFixed, 0), 1)
+         Time.Interpolation = min(max(accumulator/dtFixed, 0), 1)
          beforeUpdateFn(Time)
          updateFn(Time)
       end
@@ -95,7 +100,7 @@ function Timer:SetFrequency(frequency)
       frequency = 30
    end
 
-   local safeFrequency  = math.floor(math.abs(frequency)/2)*2
+   local safeFrequency  = floor(abs(frequency)/2)*2
    if safeFrequency < 2 then
       safeFrequency = 2
    end

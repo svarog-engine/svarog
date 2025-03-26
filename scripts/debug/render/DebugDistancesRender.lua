@@ -17,6 +17,9 @@ Palette[-4] = Colors.DarkBrown
 Palette[-5] = Colors.Brown
 Palette[-6] = Colors.LightBrown
 
+local floor = math.floor
+local abs = math.abs
+
 function DebugDistancesRenderSystem:ShouldRender()
 	return Dungeons.created and DebugToggle_DistanceIndex > 0
 end
@@ -42,7 +45,7 @@ function DebugDistancesRenderSystem:Render()
 						local neg = tile < 0
 						local color = Palette[tile] or Colors.White
 
-						local val = math.abs(math.floor(tile + 0.5))
+						local val = abs(floor(tile + 0.5))
 			
 						if val < 10 then
 							char = "" .. val

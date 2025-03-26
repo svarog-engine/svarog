@@ -1,9 +1,11 @@
 
 local ChallengeSystem = Engine.RegisterEnviroSystem("Challenge System")
 
+local sqrt = math.sqrt
+
 local function Distance(x1, y1, x2, y2)
 	local dx, dy = x1 - x2, y1 - y2
-	return math.sqrt(dx * dx + dy * dy)
+	return sqrt(dx * dx + dy * dy)
 end
 
 local function ActiveWordsCount(entity)

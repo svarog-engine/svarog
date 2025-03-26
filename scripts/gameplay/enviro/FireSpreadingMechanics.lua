@@ -4,6 +4,9 @@ function FireSpreadingMechanicsSystem:ShouldTick()
 	return Dungeons.created and Dungeon.floor ~= nil
 end
 
+local floor = math.floor
+local min = math.min
+
 local directNeighbors = { { -1, 0 }, { 1, 0 }, { 0, 1 }, { 0, -1 } }
 local diagonalNeighbors = { { -1, -1 }, { 1, -1 }, { -1, 1 }, { 1, 1 } }
 
@@ -78,7 +81,7 @@ function FireSpreadingMechanicsSystem:Tick()
 				local x, y = pos.x + n[1], pos.y + n[2]
 				if Dungeon.floor:Has(x, y) then
 					local tile = Dungeon.floor:Get(x, y)
-					local c = math.floor(spread.chance)
+					local c = floor(spread.chance)
 					local ch = Chances[c]
 					local yes = false
 					if ch ~= nil then
@@ -112,7 +115,7 @@ function FireSpreadingMechanicsSystem:Tick()
 						elseif tile.entity ~= nil and tile.entity[Burnable] and not tile.entity[Burning] then
 							tile.entity:Unset(Burnable)
 							if tile.entity[Health] == nil then
-								local hp = math.min(life.current - 1, Dungeon.wallDistances:Get(x, y))
+								local hp = min(life.current - 1, Dungeon.wallDistances:Get(x, y))
 								tile.entity:Set(Health(Range(hp, hp)))
 							end
 							tile.entity:Set(Burning{}, Spread{ chance = spread.chance })

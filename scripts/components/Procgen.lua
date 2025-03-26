@@ -40,6 +40,9 @@ IDS = 1
 
 Procgen = {}
 
+local floor = math.floor
+local random = math.random
+
 function Procgen.MakeObject(what, x, y, ...)
 	local dungeon = Dungeon
 	local tile = dungeon.floor:Get(x, y)
@@ -828,7 +831,7 @@ local function MakeTemplate(name, w, h, template, ...)
 			return
 		end
 
-		local w2, h2 = math.floor(w / 2), math.floor(h / 2)
+		local w2, h2 = floor(w / 2), floor(h / 2)
 		for i = 1, w do
 			for j = 1, h do
 				local xx, yy = x + i - w2, y + j - h2
@@ -1140,7 +1143,7 @@ Messages = {
 
 local function ShuffleInPlace(t)
     for i = #t, 2, -1 do
-        local j = math.random(i)
+        local j = random(i)
         t[i], t[j] = t[j], t[i]
     end
 end

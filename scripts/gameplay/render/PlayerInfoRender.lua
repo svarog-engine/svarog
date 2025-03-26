@@ -8,7 +8,7 @@ local Components = {
 	Telepathic = Telepathic, 
 	Invisible = Invisible,
 	Delayed = Delayed,
-	Blindness = Blindness,
+	Blind = Blindness,
 	Paralyzed = Paralyzed,
 	Silenced = Silenced,
 }

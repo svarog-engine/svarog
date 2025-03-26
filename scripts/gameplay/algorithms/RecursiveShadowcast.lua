@@ -39,13 +39,18 @@ local octants = {
 	function(x,y) return x,-y end,
 }
 
+local sqrt = math.sqrt
+local floor = math.floor
+local ceil = math.ceil
+local atan2 = math.atan2
+
 local tau         = 2*math.pi
 local octant_angle= math.pi / 4
 local epsilon     = 1e-5
 
 local function Distance(x1, y1, x2, y2)
 	local dx, dy = x1 - x2, y1 - y2
-	return math.sqrt(dx * dx + dy * dy)
+	return sqrt(dx * dx + dy * dy)
 end
 
 Algorithms.RecursiveShadowcast = function(x0,y0,radius,isTransparent,onVisible,start_angle,last_angle)
@@ -95,11 +100,11 @@ Algorithms.RecursiveShadowcast = function(x0,y0,radius,isTransparent,onVisible,s
 	-- Angle interval of first octant [inclusive,exclusive)
 	-- Touching the end of the interval moves onto the next octant
 	-- Example: [0,pi/4)
-	local first_octant = (math.floor(start_angle / octant_angle) % 8) + 1
+	local first_octant = (floor(start_angle / octant_angle) % 8) + 1
 	-- Angle interval of last octant (exclusive,inclusive]
 	-- Touching the beginning of the interval moves to the prev octant
 	-- Example: (0,pi/4]
-	local last_octant  = ((math.ceil(last_angle / octant_angle) - 1) % 8) + 1
+	local last_octant  = ((ceil(last_angle / octant_angle) - 1) % 8) + 1
 	
 	-- Hack to make large angles work when start/last are in the same octant
 	if last_octant == first_octant and arc_angle > octant_angle then 
@@ -137,14 +142,14 @@ Algorithms.RecursiveShadowcast = function(x0,y0,radius,isTransparent,onVisible,s
 				-- Don't calculate if the view lines didn't change
 				if steep[3] > steep[1] then
 					local steep_slope  = (steep[4]-steep[2]) / (steep[3]-steep[1])
-					yi = math.floor( steep[2] + steep_slope*(x-steep[1]) )
+					yi = floor( steep[2] + steep_slope*(x-steep[1]) )
 				else
 					yi = x
 				end
 				
 				if shallow[4] > shallow[2] then
 					local shallow_slope = (shallow[4]-shallow[2]) / (shallow[3]-shallow[1])
-					yf = math.floor( shallow[2] + shallow_slope*(x-shallow[1]) )
+					yf = floor( shallow[2] + shallow_slope*(x-shallow[1]) )
 				else
 					yf = 0
 				end
@@ -153,7 +158,7 @@ Algorithms.RecursiveShadowcast = function(x0,y0,radius,isTransparent,onVisible,s
 					local tx,ty = coords(x,y)
 					
 					-- The tile is visible if it is within the cone field of view
-					if arc_angle >= tau or arc_angle >= (math.atan2(ty,tx)-start_angle) % tau then
+					if arc_angle >= tau or arc_angle >= (atan2(ty,tx)-start_angle) % tau then
 						if (Distance(x0, y0, x0+tx, y0+ty) <= radius) then
 							onVisible( x0+tx,y0+ty )
 						end
